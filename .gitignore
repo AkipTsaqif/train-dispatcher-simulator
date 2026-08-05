@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# reference diagram images (kept local)
+/example-image.png
+/grid-reference-1.png
+/switch-4.png
