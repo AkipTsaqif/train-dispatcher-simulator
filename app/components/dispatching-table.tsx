@@ -1236,8 +1236,11 @@ export default function DispatchingTable() {
       const approaching =
         m.y === sig.lineY && m.dir === sig.dir && (sig.dir === "right" ? m.x < sig.x : m.x > sig.x);
       if (approaching) return false;
-      // body on the route's track
-      if (distToPoly(m.x, m.y, prospective.pts) < CELL) return true;
+      // body on the route's track — the threshold must stay BELOW the track
+      // spacing (57 px between the upper loop at y=148 and the bottom line at
+      // y=205), or a train parked on the loop would read as sitting on the
+      // bottom line's routes
+      if (distToPoly(m.x, m.y, prospective.pts) < CELL / 3) return true;
       // a train on a bidirectional loop can enter the main/top line through the
       // loop's rejoin point — but only once it is actually NEAR that point. A
       // train parked on the loop (dwelling for an overtake, e.g. at Tambun's
