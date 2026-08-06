@@ -14,11 +14,11 @@
 // Fixed running speed between stations (real km/h) — faster than the schedule's
 // implied speed, so trains arrive early and recover the reserve at stations
 // (they still depart on the scheduled departure time).
-const RUN_SPEED_KMH = 80;
+export const RUN_SPEED_KMH = 80;
 // Real distances between adjacent stations (km), used to convert RUN_SPEED_KMH
 // into map-units/second per leg (the map is schematic, so each leg converts
 // via its own real length). Unknown pairs fall back to the schedule speed.
-const SEGMENT_KM: Record<string, number> = {
+export const SEGMENT_KM: Record<string, number> = {
   "BKST-TB": 4.4,
   "TB-CIT": 3.3,
 };
@@ -37,6 +37,7 @@ export type TrainStop = {
   arr_actual: string; // HH:MM:SS — the schedule time the engine uses
   dep: number;
   dep_actual: string;
+  meets?: { type: string; with: string }[]; // planned overtake/crossing (susul)
 };
 
 export type Train = {
@@ -51,13 +52,35 @@ export const hmsToSeconds = (hms: string): number => {
   return h * 3600 + m * 60 + s;
 };
 
-/** Trains are loaded from data/schedule.json; a few are enabled for testing. */
-const ENABLED_TRAINS = new Set(["107B", "6082B", "30A", "2523"]);
-type ScheduleStop = { station: string; arr_actual: string; dep_actual: string };
+/**
+ * Trains are loaded from data/schedule.json — the FULL timetable by default.
+ * The e2e suite overrides via NEXT_PUBLIC_ENABLED_TRAINS (a comma list) so its
+ * assertions stay deterministic.
+ */
+const ENABLED_TRAINS = process.env.NEXT_PUBLIC_ENABLED_TRAINS
+  ? new Set(process.env.NEXT_PUBLIC_ENABLED_TRAINS.split(","))
+  : null;
+type ScheduleStop = { station: string; arr_actual: string; dep_actual: string; meets?: { type: string; with: string }[] };
 type ScheduleEntry = { train_no: string; train_name: string; stops: ScheduleStop[] };
 
+export const fmtHms = (sec: number): string => {
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  return [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
+};
+
+/** Stopping commuters yield at platforms; everything else (long-distance,
+ * seasonal, cargo) takes priority. */
+const isCommuter = (name: string) => name === "Commuter Line Cikarang";
+
+/** Origin-platform priority — lower sorts first: non-commuters ahead of
+ * commuters, then the smaller train number. */
+export const spawnPriority = (t: { train_no: string; train_name?: string; name?: string }) =>
+  (isCommuter(t.train_name ?? t.name ?? "") ? 1e9 : 0) + (parseInt(t.train_no, 10) || 0);
+
 export const TRAINS: Train[] = (scheduleData as ScheduleEntry[])
-  .filter((t) => ENABLED_TRAINS.has(t.train_no))
+  .filter((t) => !ENABLED_TRAINS || ENABLED_TRAINS.has(t.train_no))
   .map((t) => ({
     train_no: t.train_no,
     name: t.train_name,
@@ -68,6 +91,7 @@ export const TRAINS: Train[] = (scheduleData as ScheduleEntry[])
       arr_actual: s.arr_actual,
       dep: hmsToSeconds(s.dep_actual),
       dep_actual: s.dep_actual,
+      meets: s.meets,
     })),
   }));
 
@@ -94,6 +118,8 @@ export type MoveCtx = {
   switches: Record<number, "normal" | "reversed">;
   aspectOf: (id: string, selfIdx?: number) => Aspect;
   trainHalfLen: number; // half the train marker length (for stops + occupancy)
+  ignoreSignals?: boolean; // placement pass: position per schedule, no red-signal stops
+  meetsHold?: (st: TrainState, legs: LegPlan) => number; // absolute sim time the train must wait until at its current station (0 = none)
 };
 
 export type TrainState = {
@@ -112,16 +138,22 @@ export type TrainState = {
   done: boolean;
   spawned: boolean; // has the train materialized at its origin yet
   originArr: number; // sim time the train appears at its origin
+  approach: boolean; // journey has an off-map approach leg
   time: number; // absolute sim time the train has processed (movement + dwells)
   frontPrev: number | null; // leading-edge x before the current movement step
   passedSignals: string[]; // signals the leading edge crossed this tick
+  actualArr: (number | null)[]; // actual sim time the front reached each scheduled stop
+  holdSince: number | null; // sim time the current signal-hold began
+  holdNotified: boolean; // a >30s hold notification was fired for this hold
+  notificationId: number | null; // id of the fired notification (to resolve it)
   idx: number; // journey index (the aspect's occupancy check skips the caller)
 };
 
-export type LegPlan = { waypointX: number; lineY: number; speed: number; departAt?: number }[];
+export type LegPlan = { waypointX: number; lineY: number; speed: number; departAt?: number; station?: string }[];
 
 export type JourneyPlan = {
   originArr: number;
+  approach: boolean; // has an off-map approach leg (scheduled origin time > 0)
   start: { x: number; y: number; dir: LineDir; firstNode: string | null };
   legs: LegPlan;
 };
@@ -185,6 +217,7 @@ export function buildJourney(
       // the dwell at this leg's start station ends at the anchor (for a pass
       // the train arrives at the anchor, so it does not wait)
       departAt: anchors[i],
+      station: stops[i].trackmark,
     });
   }
 
@@ -196,7 +229,7 @@ export function buildJourney(
     const firstSpeed = legs[0]?.speed ?? 0;
     const rawSpawn = dir === "left" ? originX + firstSpeed * originArr : originX - firstSpeed * originArr;
     spawnX = dir === "left" ? Math.max(rawSpawn, maxX + MARGIN) : Math.min(rawSpawn, minX - MARGIN);
-    legs.unshift({ waypointX: originX, lineY, speed: Math.abs(spawnX - originX) / originArr });
+    legs.unshift({ waypointX: originX, lineY, speed: Math.abs(spawnX - originX) / originArr, station: stops[0].trackmark });
   } else {
     spawnX = originX; // departs at 00:00 — no approach time, start at the platform
   }
@@ -206,7 +239,7 @@ export function buildJourney(
   // stop's dwell anchor applies here (e.g. 30 s at a non-switch terminus).
   const lastSpeed = legs[legs.length - 1].speed;
   const exitX = dir === "left" ? minX - MARGIN : maxX + MARGIN;
-  legs.push({ waypointX: exitX, lineY, speed: lastSpeed, departAt: anchors[stops.length - 1] });
+  legs.push({ waypointX: exitX, lineY, speed: lastSpeed, departAt: anchors[stops.length - 1], station: stops[stops.length - 1].trackmark });
 
   // First node ahead of the (off-map) spawn — nearest junction in the travel direction.
   const first = Object.values(nodes)
@@ -214,7 +247,7 @@ export function buildJourney(
     .sort((a, b) => (dir === "left" ? b.x - a.x : a.x - b.x))[0];
   const firstNode = first ? (Object.keys(nodes).find((k) => nodes[k] === first) ?? null) : null;
   // originArr = 0 → the train becomes visible immediately, approaching from off-map
-  return { originArr: 0, start: { x: spawnX, y: lineY, dir, firstNode }, legs };
+  return { originArr: 0, approach: originArr > 0, start: { x: spawnX, y: lineY, dir, firstNode }, legs };
 }
 
 export function initTrain(journey: JourneyPlan, nodes: Record<string, GraphNodeLike>, speed: number): TrainState {
@@ -236,9 +269,14 @@ export function initTrain(journey: JourneyPlan, nodes: Record<string, GraphNodeL
     done: false,
     spawned: false,
     originArr: journey.originArr,
+    approach: journey.approach,
     time: 0,
     frontPrev: null,
     passedSignals: [],
+    actualArr: [],
+    holdSince: null,
+    holdNotified: false,
+    notificationId: null,
     idx: -1,
   };
 }
@@ -323,22 +361,26 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
 
     // closest limit ahead: red signal | junction node | leg waypoint
     type Limit = { kind: "signal" | "node" | "waypoint"; x: number; y: number; sigId?: string };
-    // scheduled dwell: the train waits at this leg's start station until the
-    // departure time (absolute sim clock) — no movement, but time passes
-    if (leg.departAt !== undefined && st.time < leg.departAt) {
-      const wait = leg.departAt - st.time;
+    // scheduled dwell + meets/susul hold: the train waits at this leg's start
+    // station until its scheduled departure — or until its overtaking partner
+    // has cleared two signals past the station, whichever is later
+    const meets = ctx.meetsHold ? ctx.meetsHold(st, legs) : 0;
+    const departAt =
+      leg.departAt !== undefined || meets > 0 ? Math.max(leg.departAt ?? 0, meets) : undefined;
+    if (departAt !== undefined && st.time < departAt) {
+      const wait = departAt - st.time;
       if (tRemaining <= wait) {
         st.time += tRemaining;
         tRemaining = 0;
         continue; // still within the dwell — stop processing this tick
       }
-      st.time = leg.departAt;
+      st.time = departAt;
       tRemaining -= wait;
     }
 
     let limit: Limit | null = null;
     const near = (l: Limit) => Math.hypot(l.x - st.x, l.y - st.y);
-    if (st.segFrom[1] === st.segTo[1]) {
+    if (st.segFrom[1] === st.segTo[1] && !ctx.ignoreSignals) {
       // signals ahead of the train's LEADING edge — a signal the front has just
       // passed is behind (even if the center still reads ahead of it) and must
       // not re-trigger a stop
@@ -433,6 +475,10 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
       return;
     }
     if (limit.kind === "waypoint") {
+      // record the actual arrival at the scheduled stop this leg serves — with an
+      // approach leg, leg k ends at stop k; without one, leg k ends at stop k+1
+      const stopIdx = st.leg + (st.approach ? 0 : 1);
+      if (stopIdx < st.actualArr.length) st.actualArr[stopIdx] = st.time;
       if (st.leg >= legs.length - 1) {
         st.done = true; // final destination reached
         return;

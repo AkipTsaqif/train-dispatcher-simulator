@@ -9,10 +9,15 @@ import {
   occupiedSections,
   reservationAhead,
   signalSections,
+  spawnPriority,
+  fmtHms,
+  SEGMENT_KM,
+  RUN_SPEED_KMH,
   type JourneyPlan,
   type Train,
   type TrainState,
   type MoveCtx,
+  type LegPlan,
 } from "../lib/trains";
 
 type SwitchState = "normal" | "reversed";
@@ -164,15 +169,15 @@ type SignalDef = {
 };
 
 const SIGNALS: SignalDef[] = [
-  { id: "S1", x: 322, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "bottom line, right direction" },
-  { id: "S2", x: 730, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p5", "p6"], label: "bottom line, left of P6" },
-  { id: "S3", x: 730, y: 264, lineY: 264, dir: "right", mount: "down", edge: ["ll1", "ll2"], label: "lower loop (siding), right direction" },
-  { id: "S4", x: 1076, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "top line, two cells right of P8" },
-  { id: "S5", x: 558, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p4", "p3"], label: "top line, right of P3" },
-  { id: "S6", x: 558, y: 148, lineY: 148, dir: "left", mount: "up", edge: ["ul2", "ul1"], label: "upper loop (siding), left direction" },
-  { id: "S7", x: 558, y: 264, lineY: 264, dir: "left", mount: "down", edge: ["ll2", "ll1"], label: "lower loop (reversed siding), left direction" },
+  { id: "J1", x: 322, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "bottom line, right direction" },
+  { id: "J2", x: 730, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p5", "p6"], label: "bottom line, left of P6" },
+  { id: "J3", x: 730, y: 264, lineY: 264, dir: "right", mount: "down", edge: ["ll1", "ll2"], label: "lower loop (siding), right direction" },
+  { id: "J4", x: 1076, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "top line, two cells right of P8" },
+  { id: "J5", x: 558, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p4", "p3"], label: "top line, right of P3" },
+  { id: "J6", x: 558, y: 148, lineY: 148, dir: "left", mount: "up", edge: ["ul2", "ul1"], label: "upper loop (siding), left direction" },
+  { id: "J7", x: 558, y: 264, lineY: 264, dir: "left", mount: "down", edge: ["ll2", "ll1"], label: "lower loop (reversed siding), left direction" },
   // automatic block signals on the bottom-line approach (always mirror the next signal).
-  // B101 is the smallest number and lies closest to S1 (J4); higher numbers reach further
+  // B101 is the smallest number and lies closest to J1 (J4); higher numbers reach further
   // left (G4, D4, A4).
   { id: "B101", x: 145, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, J4", block: true },
   { id: "B102", x: -29, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, G4", block: true },
@@ -186,7 +191,7 @@ const SIGNALS: SignalDef[] = [
   { id: "B202", x: -203, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, D2", block: true },
   { id: "B203", x: -29, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, G2", block: true },
   { id: "B204", x: 145, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, J2", block: true },
-  // top-line right approach: blocks AC2..AL2 nearest to S4. Displayed as
+  // top-line right approach: blocks AC2..AL2 nearest to J4. Displayed as
   // B201..B204 (internal ids stay unique — two sets share the same codes).
   { id: "B9", code: "B201", x: 1247, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AC2", block: true },
   { id: "B10", code: "B202", x: 1421, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AF2", block: true },
@@ -259,7 +264,7 @@ const colIdx = (letters: string): number => {
 type Station = { name: string; x: number; y: number; w: number; h: number };
 const STATIONS: Station[] = [
   { name: "Bekasi Timur", x: 58 - SHIFT, y: 116, w: 116, h: 58 }, // cells B3–C3, row 3
-  { name: "Tambun", x: 986 - SHIFT, y: 0, w: 116, h: 58 }, // cells R1–S1, row 1
+  { name: "Tambun", x: 986 - SHIFT, y: 0, w: 116, h: 58 }, // cells R1–J1, row 1
   { name: "Cibitung", x: 2030 - SHIFT, y: 116, w: 116, h: 58 }, // cells AJ3–AK3, row 3
 ];
 
@@ -267,7 +272,7 @@ type StationCell = { code: string; cells: { col: string; row: number }[] };
 const STATION_CELLS: StationCell[] = [
   // B2–C2 and B4–C4 → BKST (Bekasi Timur)
   { code: "BKST", cells: [{ col: "B", row: 2 }, { col: "C", row: 2 }, { col: "B", row: 4 }, { col: "C", row: 4 }] },
-  // R2–S2, R3–S3, R4–S4, R5–S5 → TB (Tambun)
+  // R2–J2, R3–J3, R4–J4, R5–J5 → TB (Tambun)
   { code: "TB", cells: [{ col: "R", row: 2 }, { col: "S", row: 2 }, { col: "R", row: 3 }, { col: "S", row: 3 }, { col: "R", row: 4 }, { col: "S", row: 4 }, { col: "R", row: 5 }, { col: "S", row: 5 }] },
   // AJ2–AK2 and AJ4–AK4 → CIT (Cibitung)
   { code: "CIT", cells: [{ col: "AJ", row: 2 }, { col: "AK", row: 2 }, { col: "AJ", row: 4 }, { col: "AK", row: 4 }] },
@@ -295,12 +300,83 @@ const journeyDir = (stops: Train["stops"], platformX: Record<string, number>): D
 const journeyLineY = (stops: Train["stops"], platformX: Record<string, number>): number =>
   journeyDir(stops, platformX) === "left" ? TOP_LINE_Y : BOTTOM_LINE_Y;
 
-const JOURNEYS: { train: Train; plan: JourneyPlan }[] = TRAINS.map((tr) => ({
-  train: tr,
-  plan: buildJourney(tr.stops, PLATFORM_CENTER_X, journeyLineY(tr.stops, PLATFORM_CENTER_X), NODES, journeyDir(tr.stops, PLATFORM_CENTER_X)),
-}));
+const JOURNEYS: { train: Train; plan: JourneyPlan }[] = (() => {
+  // Spawn coincidence resolution: two trains due at the same origin platform
+  // close together form a cluster; within it the higher-priority one goes
+  // first (non-commuters ahead of stopping commuters, then smaller train
+  // number — real dispatching holds the commuter at the previous station for
+  // an additional/seasonal train). A later train may only spawn once the
+  // previous departure is TWO SIGNALS ahead — a position-based platform
+  // clearing, not a fixed clock gap.
+  const trains = TRAINS.map((t) => t);
+  const firstLegSpeed = (stops: Train["stops"], dir: Dir): number => {
+    const from = PLATFORM_CENTER_X[stops[0].trackmark];
+    const to = PLATFORM_CENTER_X[stops[1].trackmark];
+    const km = SEGMENT_KM[`${stops[0].trackmark}-${stops[1].trackmark}`] ?? SEGMENT_KM[`${stops[1].trackmark}-${stops[0].trackmark}`];
+    const distUnits = Math.abs(to - from);
+    return km ? (distUnits * RUN_SPEED_KMH) / (km * 3600) : distUnits / Math.max(1, stops[1].arr - stops[0].dep);
+  };
+  // time for a departing train to be 2 signals ahead of the platform
+  const twoSignalGap = (station: string, stops: Train["stops"], dir: Dir): number => {
+    const lineY = dir === "right" ? BOTTOM_LINE_Y : TOP_LINE_Y;
+    const platformX = PLATFORM_CENTER_X[station];
+    const ahead = SIGNALS.filter(
+      (s) => s.lineY === lineY && s.dir === dir && (dir === "right" ? s.x > platformX : s.x < platformX)
+    ).sort((a, b) => (dir === "right" ? a.x - b.x : b.x - a.x));
+    const second = ahead[1];
+    if (!second) return 30; // fewer than 2 signals ahead — fallback
+    return Math.abs(second.x - platformX) / Math.max(1, firstLegSpeed(stops, dir));
+  };
+  const SPAWN_WINDOW_SECS = 60; // arrivals this close are a coincidence cluster
+  const byStation: Record<string, Train[]> = {};
+  for (const t of trains) {
+    const st = t.stops[0].trackmark;
+    if (!byStation[st]) byStation[st] = [];
+    byStation[st].push(t);
+  }
+  for (const list of Object.values(byStation)) {
+    const dir = journeyDir(list[0].stops, PLATFORM_CENTER_X);
+    const gap = twoSignalGap(list[0].stops[0].trackmark, list[0].stops, dir);
+    list.sort((a, b) => a.stops[0].arr - b.stops[0].arr);
+    // re-order coincident clusters by priority (in place)
+    let i = 0;
+    while (i < list.length) {
+      const clusterStart = list[i].stops[0].arr;
+      let j = i;
+      while (j + 1 < list.length && list[j + 1].stops[0].arr <= clusterStart + SPAWN_WINDOW_SECS) j++;
+      if (j > i) {
+        const cluster = list.slice(i, j + 1).sort((a, b) => spawnPriority(a) - spawnPriority(b));
+        list.splice(i, j - i + 1, ...cluster);
+      }
+      i = j + 1;
+    }
+    // space the platform: the next train spawns only when the previous
+    // departure is 2 signals ahead
+    let clearAt = -Infinity;
+    for (const t of list) {
+      const o = t.stops[0];
+      if (o.arr < clearAt) {
+        o.arr = Math.round(clearAt);
+        o.arr_actual = fmtHms(o.arr);
+        o.dep = Math.max(o.dep, o.arr);
+        o.dep_actual = fmtHms(o.dep);
+      }
+      clearAt = Math.max(o.dep, o.arr) + gap;
+    }
+  }
+  return trains.map((tr) => ({
+    train: tr,
+    plan: buildJourney(
+      tr.stops,
+      PLATFORM_CENTER_X,
+      journeyLineY(tr.stops, PLATFORM_CENTER_X),
+      NODES,
+      journeyDir(tr.stops, PLATFORM_CENTER_X)
+    ),
+  }));
+})();
 // Bidirectional loop tracks (TB passing loops): the static next-signal span
-// leaves the loop's middle unprotected (S7 covers [-∞,558], S3 covers [730,∞]),
+// leaves the loop's middle unprotected (J7 covers [-∞,558], J3 covers [730,∞]),
 // so a train in the middle reddened no loop signal. Widen every loop signal's
 // section to the whole loop — a train anywhere on it reddens all directions.
 const LOOP_LINE_YS = new Set([148, 264]);
@@ -313,6 +389,54 @@ const SIGNAL_SECTIONS = signalSections(
     ? { ...s, lo: Math.min(s.lo, LOOP_X_MIN), hi: Math.max(s.hi, LOOP_X_MAX) }
     : s
 );
+
+// ---------------------------------------------------------------------------
+// Meets / susul: planned overtakes from the timetable. The held train may not
+// leave the meet station until EVERY partner's leading edge has crossed the
+// station platform AND is two signals clear — the same 2-signal principle used
+// for spawn spacing. Partners not loaded (e2e train filters) drop the
+// dependency. The release is expressed as an offset past the partner's recorded
+// crossing time, computed from the partner's post-meet leg speed.
+// ---------------------------------------------------------------------------
+type MeetDep = { partnerIdx: number; meetStopIdx: number; releaseOffset: number };
+const MEETS_BY_TRAIN: Map<number, Map<string, MeetDep[]>> = (() => {
+  const out = new Map<number, Map<string, MeetDep[]>>();
+  JOURNEYS.forEach((j, ti) => {
+    j.train.stops.forEach((s, si) => {
+      if (!s.meets?.length) return;
+      const deps: MeetDep[] = [];
+      for (const m of s.meets) {
+        const pi = JOURNEYS.findIndex((o) => o.train.train_no === m.with);
+        if (pi < 0) continue; // partner not loaded (test filter)
+        const p = JOURNEYS[pi];
+        const pStopIdx = p.train.stops.findIndex((o) => o.trackmark === s.trackmark);
+        if (pStopIdx < 0) continue; // partner never calls at the meet station
+        const platformX = PLATFORM_CENTER_X[s.trackmark];
+        const pDir = journeyDir(p.train.stops, PLATFORM_CENTER_X);
+        const pLineY = journeyLineY(p.train.stops, PLATFORM_CENTER_X);
+        const ahead = SIGNALS.filter(
+          (o) =>
+            o.lineY === pLineY &&
+            o.dir === pDir &&
+            (pDir === "right" ? o.x > platformX : o.x < platformX)
+        ).sort((a, b) => (pDir === "right" ? a.x - b.x : b.x - a.x));
+        const second = ahead[1];
+        const speed = p.plan.legs[Math.min(pStopIdx, p.plan.legs.length - 1)]?.speed ?? 1;
+        deps.push({
+          partnerIdx: pi,
+          meetStopIdx: pStopIdx,
+          releaseOffset: second ? Math.abs(second.x - platformX) / Math.max(1, speed) : 30,
+        });
+      }
+      if (deps.length) {
+        let byStation = out.get(ti);
+        if (!byStation) out.set(ti, (byStation = new Map()));
+        byStation.set(s.trackmark, deps);
+      }
+    });
+  });
+  return out;
+})();
 
 // ---------------------------------------------------------------------------
 // Route walker: from a signal, walk the graph in its direction, following
@@ -460,7 +584,7 @@ const routesOverlap = (a: [number, number][], b: [number, number][]): boolean =>
 // ---------------------------------------------------------------------------
 export default function DispatchingTable() {
   const [switches, setSwitches] = useState<Record<number, SwitchState>>(INITIAL_SWITCHES);
-  const [signalOn, setSignalOn] = useState<Record<string, boolean>>({ S1: false, S2: false, S3: false, S4: false, S5: false, S6: false, S7: false });
+  const [signalOn, setSignalOn] = useState<Record<string, boolean>>({ J1: false, J2: false, J3: false, J4: false, J5: false, J6: false, J7: false });
   const [conflictNote, setConflictNote] = useState<string | null>(null);
   const [showControls, setShowControls] = useState(true); // bottom point & signal buttons
   const [clickLog, setClickLog] = useState<string[]>([]); // debug click history
@@ -471,7 +595,35 @@ export default function DispatchingTable() {
     setClickLog((l) => [...l, `[${fmtTime(simRef.current)}] ${msg}`]);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [timeScale, setTimeScale] = useState<TimeScale>(1);
-  const [paused, setPaused] = useState(false);
+  const [paused, setPaused] = useState(true); // frozen until a start time is chosen
+  const [startModalOpen, setStartModalOpen] = useState(true);
+  const [startTimeInput, setStartTimeInput] = useState("00:00");
+  const [selectedTrain, setSelectedTrain] = useState<number | null>(null); // journey index
+  const [selectedStation, setSelectedStation] = useState<string | null>(null); // station code
+  const openStation = (code: string) => {
+    setSelectedTrain(null);
+    setSelectedStation(code);
+  };
+  const openTrain = (ti: number) => {
+    setSelectedStation(null);
+    setSelectedTrain((cur) => (cur === ti ? null : ti));
+  };
+  const [rosterOpen, setRosterOpen] = useState(false);
+  const [rosterTick, setRosterTick] = useState(0); // periodic refresh for the roster/card
+  const frameCountRef = useRef(0);
+  const selectedIdxRef = useRef<number | null>(null);
+  selectedIdxRef.current = selectedTrain;
+  // held-at-signal notification board (>30 s holds)
+  type Notice = {
+    id: number;
+    trainNo: string;
+    message: string;
+    since: number; // sim time the hold began (live duration = now − since)
+    resolved: boolean;
+    resolvedDuration?: number;
+  };
+  const [notices, setNotices] = useState<Notice[]>([]);
+  const nextNoticeIdRef = useRef(1);
   // Simulation-time accumulator (trains will consume this) + direct DOM clock
   // updates so the display stays smooth without re-rendering the table 60×/s.
   const simRef = useRef(0);
@@ -484,13 +636,38 @@ export default function DispatchingTable() {
     JOURNEYS.map((j, ti) => {
       const st = initTrain(j.plan, NODES, j.plan.legs[0]?.speed ?? 0);
       st.idx = ti;
+      st.actualArr = j.train.stops.map(() => null);
       return st;
     })
   );
+  // Where the meets hold reads a partner's crossing time from — the live train
+  // states during the tick, the pass-1 placement snapshot during initializeSim.
+  const meetsReadRef = useRef<(partnerIdx: number, stopIdx: number) => number | null>(() => null);
+  /** When may train `ti` leave `station` (absolute sim time, 0 = no hold)? */
+  const meetsRelease = (ti: number, station: string): number => {
+    const deps = MEETS_BY_TRAIN.get(ti)?.get(station);
+    if (!deps) return 0;
+    let release = 0;
+    for (const d of deps) {
+      const crossed = meetsReadRef.current(d.partnerIdx, d.meetStopIdx);
+      // the partner hasn't crossed the platform yet (behind / late) — on a
+      // single track it cannot pass the held train, so there is nothing to
+      // wait for: the train leaves on its schedule and the partner follows
+      if (crossed == null || crossed >= simRef.current) continue;
+      release = Math.max(release, crossed + d.releaseOffset);
+    }
+    return release;
+  };
+  /** Engine hook: the meets hold for the leg the train currently runs. */
+  const meetsHold = (st: TrainState, legs: LegPlan): number => {
+    const leg = legs[Math.min(st.leg, legs.length - 1)];
+    return leg.station ? meetsRelease(st.idx, leg.station) : 0;
+  };
   const trainGroupRefs = useRef<(SVGGElement | null)[]>([]);
   const trainRectRefs = useRef<(SVGRectElement | null)[]>([]);
   const trainTextRefs = useRef<(SVGTextElement | null)[]>([]);
   const trainArrowRefs = useRef<(SVGPathElement | null)[]>([]);
+  const trainExclamRefs = useRef<(SVGGElement | null)[]>([]);
   const [occupancyTick, setOccupancyTick] = useState(0);
   const trainSectionKeyRef = useRef("");
   // Independent route reservations: created when the player clears a signal,
@@ -550,6 +727,67 @@ export default function DispatchingTable() {
     return () => document.removeEventListener("keydown", onKey);
   }, [settingsOpen]);
 
+  /**
+   * Start the simulation at a timetable time. Trains whose origin is still in
+   * the future stay hidden; trains already in service are PLACED at their
+   * schedule position for that time (80 km/h running + station recovery/dwell),
+   * signals ignored — the interlocking takes over from there. Trains that
+   * finished before the start time have already left the map.
+   */
+  const initializeSim = (sec: number) => {
+    simRef.current = sec;
+    const mkCtx = (): MoveCtx => ({
+      nodes: NODES,
+      signals: SIGNALS.map((s) => ({ id: s.id, x: s.x, y: s.lineY, dir: s.dir, ai: s.ai })),
+      switches,
+      aspectOf: aspectOfRef.current,
+      trainHalfLen: CELL,
+      ignoreSignals: true,
+    });
+    const place = (ctx: MoveCtx) => {
+      JOURNEYS.forEach((j, ti) => {
+        const st = trainStatesRef.current[ti];
+        const plan = j.plan;
+        if (sec < plan.originArr) {
+          st.spawned = false;
+          return;
+        }
+        st.spawned = true;
+        const travel = sec - st.originArr;
+        if (!st.done) advanceTrain(st, travel, ctx, plan.legs);
+        st.time = travel;
+      });
+    };
+    // pass 1 — place with meets holds OFF so every partner's crossing time is
+    // recorded; pass 2 re-places from scratch with the holds active, reading
+    // the pass-1 crossings (a held train must sit at the meet station even
+    // when a partner crossed late into its dwell window)
+    place(mkCtx());
+    const snapshot = trainStatesRef.current.map((st) => [...st.actualArr]);
+    trainStatesRef.current = trainStatesRef.current.map((st, ti) => {
+      const n = initTrain(JOURNEYS[ti].plan, NODES, JOURNEYS[ti].plan.legs[0]?.speed ?? 0);
+      n.idx = ti;
+      n.actualArr = JOURNEYS[ti].train.stops.map(() => null);
+      return n;
+    });
+    meetsReadRef.current = (pi, si) => snapshot[pi]?.[si] ?? null;
+    const ctx2 = mkCtx();
+    ctx2.meetsHold = meetsHold;
+    place(ctx2);
+    setPaused(false);
+    setStartModalOpen(false);
+  };
+
+  // A ?start=HH:MM query param skips the picker (used by the e2e suite).
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get("start");
+    if (q) {
+      const [h, m] = q.split(":").map(Number);
+      initializeSim((h || 0) * 3600 + (m || 0) * 60);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Simulation clock: advances accumulated sim-time at the selected scale and
   // writes the display directly (no React re-render per frame). Trains advance
   // on the same accumulator; markers move via direct DOM updates and React
@@ -559,7 +797,8 @@ export default function DispatchingTable() {
     let last = Date.now();
     const tick = () => {
       const now = Date.now();
-      const dt = ((now - last) / 1000) * scaleRef.current;
+      // clamp: a wall-clock jump backward (pauseAt, NTP, debugger) must never rewind the sim
+      const dt = Math.max(0, ((now - last) / 1000) * scaleRef.current);
       last = now;
       simRef.current += dt;
       const el = clockRef.current;
@@ -576,7 +815,62 @@ export default function DispatchingTable() {
         switches: switchesRef.current,
         aspectOf: aspectOfRef.current,
         trainHalfLen: CELL,
+        meetsHold,
       };
+      // partner crossings come from the live states each tick
+      meetsReadRef.current = (pi, si) => trainStatesRef.current[pi]?.actualArr[si] ?? null;
+      // Continuous conflict failsafe: a MOVING train whose body overlaps any
+      // other train is stopped with a conflict flag — a collision the signal
+      // system should have prevented. Trains at REST (stopped at a signal, or
+      // dwelling at a station per the schedule) tolerate an overlap — the sim
+      // has no train-to-train spacing, so a queue at a signal or platform
+      // naturally touches. Conflict stops are released here once the
+      // overlapping train moves on or despawns. Also collects the trains in a
+      // live conflict so each marker can show a "!" badge.
+      const live = trainStatesRef.current.filter((m) => m.spawned && !m.done);
+      const atRest = (m: TrainState): boolean => {
+        if (m.stopped) return true;
+        const plan = JOURNEYS[m.idx]?.plan;
+        if (!plan) return false;
+        const leg = plan.legs[Math.min(m.leg, plan.legs.length - 1)];
+        const base = leg.departAt ?? 0;
+        const meets = meetsRelease(m.idx, leg.station ?? "");
+        return base > 0 || meets > 0 ? m.time < Math.max(base, meets) : false; // dwelling
+      };
+      const overlaps = (a: TrainState, b: TrainState) =>
+        Math.abs(a.x - b.x) < 2 * CELL && Math.abs(a.y - b.y) < 2 * CELL;
+      const conflictIdx = new Set<number>();
+      let newConflict = false;
+      for (let i = 0; i < live.length; i++) {
+        for (let j = i + 1; j < live.length; j++) {
+          const a = live[i];
+          const b = live[j];
+          if (!overlaps(a, b) || (atRest(a) && atRest(b))) continue; // tolerated queue
+          conflictIdx.add(a.idx);
+          conflictIdx.add(b.idx);
+          for (const t of [a, b]) {
+            if (!atRest(t)) {
+              t.stopped = true;
+              t.stopReason = "conflict";
+              newConflict = true;
+            }
+          }
+        }
+      }
+      if (newConflict && !conflictReportedRef.current) {
+        conflictReportedRef.current = true;
+        logClick("⚠ conflict — two trains overlap on the track");
+        setConflictNote("Conflict — two trains are on the same track.");
+        window.setTimeout(() => setConflictNote(null), 5000);
+      }
+      if (!newConflict) conflictReportedRef.current = false;
+      for (const m of live) {
+        if (m.stopped && m.stopReason === "conflict" && !live.some((o) => o.idx !== m.idx && overlaps(o, m))) {
+          m.stopped = false;
+          m.stopReason = null;
+          m.time = simRef.current - m.originArr; // absorb the frozen period
+        }
+      }
       const sections = JOURNEYS.map((j, ti) => {
         const st = trainStatesRef.current[ti];
         const plan = j.plan;
@@ -628,6 +922,40 @@ export default function DispatchingTable() {
             }
             return changed ? out : r;
           });
+        }
+        // Held-at-signal notifications: a train held at a signal for >30 s fires
+        // a board notice; it resolves when the train moves again.
+        if (st.stopped && st.stopReason === "signal") {
+          if (st.holdSince === null) {
+            st.holdSince = simRef.current;
+            st.holdNotified = false;
+          } else if (!st.holdNotified && simRef.current - st.holdSince > 30) {
+            st.holdNotified = true;
+            const id = nextNoticeIdRef.current++;
+            st.notificationId = id;
+            setNotices((ns) =>
+              [
+                {
+                  id,
+                  trainNo: j.train.train_no,
+                  message: `Ditahan di sinyal ${codeOf(st.stopSignalId ?? "")}`,
+                  since: st.holdSince!, // non-null here: the hold began on an earlier tick
+                  resolved: false,
+                },
+                ...ns,
+              ].slice(0, 40)
+            );
+          }
+        } else if (st.holdSince !== null) {
+          if (st.notificationId !== null) {
+            const dur = Math.max(0, Math.round(simRef.current - st.holdSince));
+            setNotices((ns) =>
+              ns.map((x) => (x.id === st.notificationId ? { ...x, resolved: true, resolvedDuration: dur } : x))
+            );
+            st.notificationId = null;
+          }
+          st.holdSince = null;
+          st.holdNotified = false;
         }
         // keep reservation highlights in sync with the train's progress (per-cell).
         // The release must NOT depend on the path element existing — once the
@@ -756,7 +1084,8 @@ export default function DispatchingTable() {
         if (rect) {
           const c = TRAIN_COLORS[stopState];
           if (rect.getAttribute("fill") !== c.fill) rect.setAttribute("fill", c.fill);
-          if (rect.getAttribute("stroke") !== c.stroke) rect.setAttribute("stroke", c.stroke);
+          const stroke = selectedIdxRef.current === ti ? "#f59e0b" : c.stroke;
+          if (rect.getAttribute("stroke") !== stroke) rect.setAttribute("stroke", stroke);
         }
         if (txt) txt.setAttribute("transform", `rotate(${-ang})`);
         // Arrow points along the track: on horizontals the marker stays upright,
@@ -767,6 +1096,12 @@ export default function DispatchingTable() {
         if (arrow) {
           arrow.setAttribute("d", horizontal && st.dir === "left" ? ARROW_LEFT : ARROW_RIGHT);
         }
+        // Conflict badge: "!" on every train involved in a live conflict
+        const exclam = trainExclamRefs.current[ti];
+        if (exclam) {
+          exclam.setAttribute("visibility", conflictIdx.has(st.idx) ? "visible" : "hidden");
+          exclam.setAttribute("transform", `translate(48, -12) rotate(${-ang})`);
+        }
         return occupiedSections(st, SIGNAL_SECTIONS, CELL);
       });
       const key = sections.join(",");
@@ -774,52 +1109,8 @@ export default function DispatchingTable() {
         trainSectionKeyRef.current = key;
         setOccupancyTick((t) => t + 1);
       }
-      // Continuous conflict failsafe: a MOVING train whose body overlaps any
-      // other train is stopped with a conflict flag — a collision the signal
-      // system should have prevented. Trains at REST (stopped at a signal, or
-      // dwelling at a station per the schedule) tolerate an overlap — the sim
-      // has no train-to-train spacing, so a queue at a signal or platform
-      // naturally touches. Conflict stops are released here once the
-      // overlapping train moves on or despawns.
-      const live = trainStatesRef.current.filter((m) => m.spawned && !m.done);
-      const atRest = (m: TrainState): boolean => {
-        if (m.stopped) return true;
-        const plan = JOURNEYS[m.idx]?.plan;
-        if (!plan) return false;
-        const leg = plan.legs[Math.min(m.leg, plan.legs.length - 1)];
-        return leg.departAt !== undefined && m.time < leg.departAt; // dwelling
-      };
-      const overlaps = (a: TrainState, b: TrainState) =>
-        Math.abs(a.x - b.x) < 2 * CELL && Math.abs(a.y - b.y) < 2 * CELL;
-      let newConflict = false;
-      for (let i = 0; i < live.length; i++) {
-        for (let j = i + 1; j < live.length; j++) {
-          const a = live[i];
-          const b = live[j];
-          if (!overlaps(a, b) || (atRest(a) && atRest(b))) continue; // tolerated queue
-          for (const t of [a, b]) {
-            if (!atRest(t)) {
-              t.stopped = true;
-              t.stopReason = "conflict";
-              newConflict = true;
-            }
-          }
-        }
-      }
-      if (newConflict && !conflictReportedRef.current) {
-        conflictReportedRef.current = true;
-        logClick("⚠ conflict — two trains overlap on the track");
-        setConflictNote("Conflict — two trains are on the same track.");
-        window.setTimeout(() => setConflictNote(null), 5000);
-      }
-      if (!newConflict) conflictReportedRef.current = false;
-      for (const m of live) {
-        if (m.stopped && m.stopReason === "conflict" && !live.some((o) => o.idx !== m.idx && overlaps(o, m))) {
-          m.stopped = false;
-          m.stopReason = null;
-          m.time = simRef.current - m.originArr; // absorb the frozen period
-        }
-      }
+      // periodic refresh for the roster/timetable panel (~2×/s)
+      if (++frameCountRef.current % 30 === 0) setRosterTick((t) => t + 1);
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -1093,6 +1384,136 @@ export default function DispatchingTable() {
     return nextId ? (aspectOf(nextId, visited, selfIdx) === "red" ? "amber" : "green") : "green";
   };
   aspectOfRef.current = (id: string, selfIdx?: number) => aspectOf(id, undefined, selfIdx); // keep the tick loop's aspect lookup current
+
+  // ---- timetable awareness: per-train info for the card + roster (Indonesian) ----
+  const stationName = (code: string) =>
+    ({ BKST: "Bekasi Timur", TB: "Tambun", CIT: "Cibitung" } as Record<string, string>)[code] ?? code;
+  const fmtDur = (sec: number) => {
+    const a = Math.abs(sec);
+    const m = Math.floor(a / 60);
+    const s = Math.round(a % 60);
+    const parts: string[] = [];
+    if (m > 0) parts.push(`${m} mnt`);
+    if (s > 0) parts.push(`${s} dtk`);
+    return parts.join(" ") || "0 dtk";
+  };
+  /** Delay vs the schedule at the train's current schedule point. Positive =
+   *  late, negative = early. At a station it is departure-facing: on time while
+   *  the train can still leave per its scheduled departure; late once held past it. */
+  const trainInfo = (ti: number) => {
+    const st = trainStatesRef.current[ti];
+    const j = JOURNEYS[ti];
+    if (!st || !j) return null;
+    const { train, plan } = j;
+    const stops = train.stops.map((s, i) => ({
+      name: stationName(s.trackmark),
+      arrLabel: s.arr_actual,
+      depLabel: s.dep_actual,
+      actual: st.actualArr[i],
+      meets: s.meets,
+    }));
+    const dest = stationName(train.stops[train.stops.length - 1].trackmark);
+    const dirLabel = plan.start.dir === "right" ? `ke timur · menuju ${dest}` : `ke barat · menuju ${dest}`;
+    const leg = plan.legs[Math.min(st.leg, plan.legs.length - 1)];
+    // slip at the most recent reached stop
+    let slip = 0;
+    let lastReached = -1;
+    let atStopIdx: number | null = null;
+    for (let i = st.actualArr.length - 1; i >= 0; i--) {
+      if (st.actualArr[i] != null) {
+        slip = st.actualArr[i]! - train.stops[i].arr;
+        lastReached = i;
+        break;
+      }
+    }
+    // departure-facing: dwelling that can still leave on time reads as on time
+    const reached = lastReached >= 0;
+    const dwellStation = st.leg > 0 ? train.stops[st.leg - 1]?.trackmark ?? null : null;
+    const meetsRel = dwellStation ? meetsRelease(ti, dwellStation) : 0;
+    const schedDepart = leg.departAt ?? 0;
+    const effectiveDepart =
+      leg.departAt !== undefined || meetsRel > 0 ? Math.max(schedDepart, meetsRel) : undefined;
+    const dwelling = st.leg > 0 && effectiveDepart !== undefined && st.time < effectiveDepart;
+    if (dwelling) atStopIdx = st.leg - 1;
+    let status: string;
+    let delay: string;
+    let delaySec = slip;
+    if (st.done) {
+      status = "Selesai";
+      delay = "—";
+    } else if (st.stopped) {
+      if (st.stopReason === "signal") status = `Ditahan sinyal ${codeOf(st.stopSignalId ?? "")}`;
+      else if (st.stopReason === "junction") status = "Menunggu wesel";
+      else if (st.stopReason === "conflict") status = "Konflik — kereta bertabrakan";
+      else status = "Berhenti";
+      // held past its scheduled departure at a station → late; otherwise the slip
+      if (st.leg > 0 && leg.departAt !== undefined && st.time > leg.departAt) {
+        delaySec = Math.max(slip, st.time - leg.departAt);
+        delay = `terlambat ${fmtDur(delaySec)}`;
+      } else {
+        delay =
+          !reached || slip === 0
+            ? "tepat waktu"
+            : slip < 0
+            ? `awal ${fmtDur(slip)}`
+            : `terlambat ${fmtDur(slip)}`;
+      }
+    } else if (dwelling) {
+      const heldPastBook = meetsRel > schedDepart && st.time > schedDepart;
+      if (heldPastBook) {
+        // still held by a meet after the book departure — visibly late
+        const partners = (MEETS_BY_TRAIN.get(ti)?.get(dwellStation!) ?? [])
+          .map((d) => JOURNEYS[d.partnerIdx].train.train_no)
+          .join(", ");
+        status = `Menunggu susul ${partners} di ${stationName(dwellStation!)}`;
+        delaySec = Math.max(slip, st.time - schedDepart);
+        delay = `terlambat ${fmtDur(delaySec)}`;
+      } else {
+        const meetDeps = dwellStation ? (MEETS_BY_TRAIN.get(ti)?.get(dwellStation) ?? null) : null;
+        const partners = meetDeps ? meetDeps.map((d) => JOURNEYS[d.partnerIdx].train.train_no).join(", ") : "";
+        status = partners
+          ? `Berhenti di ${stationName(train.stops[st.leg - 1].trackmark)} · susul ${partners}`
+          : `Berhenti di ${stationName(train.stops[st.leg - 1].trackmark)}`;
+        delay = "tepat waktu";
+        delaySec = 0;
+      }
+    } else {
+      status = "Berjalan";
+      const nextName = stationName(train.stops[Math.min(st.leg, train.stops.length - 1)].trackmark);
+      delay =
+        !reached || slip === 0
+          ? "tepat waktu"
+          : slip < 0
+          ? `awal ${fmtDur(slip)} · menunggu jadwal di ${nextName}`
+          : `terlambat ${fmtDur(slip)}`;
+    }
+    return { no: train.train_no, name: train.name, dirLabel, stops, status, delay, delaySec, atStopIdx, dest };
+  };
+
+  /** Trains calling at a station, sorted by scheduled arrival — the station timetable. */
+  const stationSchedule = (code: string) =>
+    JOURNEYS.map((j, ti) => {
+      const idx = j.train.stops.findIndex((s) => s.trackmark === code);
+      if (idx < 0) return null;
+      const stop = j.train.stops[idx];
+      const st = trainStatesRef.current[ti];
+      const info = st && st.spawned && !st.done ? trainInfo(ti) : null;
+      return {
+        no: j.train.train_no,
+        name: j.train.name,
+        arr: stop.arr,
+        arrLabel: stop.arr_actual,
+        depLabel: stop.dep_actual,
+        actual: st?.actualArr[idx] ?? null,
+        meets: stop.meets,
+        active: !!info,
+        atStation: info?.atStopIdx === idx,
+        status: info ? (info.atStopIdx === idx ? "berhenti di stasiun" : info.status) : null,
+        delay: info ? info.delay : null,
+      };
+    })
+      .filter((r): r is NonNullable<typeof r> => r !== null)
+      .sort((a, b) => a.arr - b.arr);
 
   const cellX0 = (sw: Sw) => Math.floor(sw.x / CELL) * CELL;
   const cellY0 = (sw: Sw) => Math.floor(sw.y / CELL) * CELL;
@@ -1381,31 +1802,40 @@ export default function DispatchingTable() {
         </g>
 
         {/* Stations — merged-cell name plates (e.g. Bekasi Timur at E3–F3) */}
-        {STATIONS.map((st) => (
-          <g key={st.name}>
-            <rect
-              x={st.x}
-              y={st.y}
-              width={st.w}
-              height={st.h}
-              rx={6}
-              fill="#94a3b8"
-              stroke="#334155"
-              strokeWidth={2.5}
-            />
-            <text
-              x={st.x + st.w / 2}
-              y={st.y + st.h / 2 + 5}
-              textAnchor="middle"
-              fontSize={14}
-              fontWeight={700}
-              fill="#ffffff"
-              pointerEvents="none"
+        {STATIONS.map((st) => {
+          const code =
+            st.name === "Bekasi Timur" ? "BKST" : st.name === "Tambun" ? "TB" : st.name === "Cibitung" ? "CIT" : st.name;
+          return (
+            <g
+              key={st.name}
+              onClick={() => openStation(code)}
+              className="cursor-pointer"
+              aria-label={`Jadwal stasiun ${st.name}`}
             >
-              {st.name}
-            </text>
-          </g>
-        ))}
+              <rect
+                x={st.x}
+                y={st.y}
+                width={st.w}
+                height={st.h}
+                rx={6}
+                fill="#94a3b8"
+                stroke={selectedStation === code ? "#f59e0b" : "#334155"}
+                strokeWidth={selectedStation === code ? 3 : 2.5}
+              />
+              <text
+                x={st.x + st.w / 2}
+                y={st.y + st.h / 2 + 5}
+                textAnchor="middle"
+                fontSize={14}
+                fontWeight={700}
+                fill="#ffffff"
+                pointerEvents="none"
+              >
+                {st.name}
+              </text>
+            </g>
+          );
+        })}
 
         {/* Per-cell inactive routes: dashed, clipped to the point's own cell */}
         {SWITCHES.map((sw) => {
@@ -1560,6 +1990,8 @@ export default function DispatchingTable() {
               key={train.train_no}
               data-train={train.train_no}
               aria-label={`Train ${train.train_no} ${train.name}, ${right ? "eastbound" : "westbound"}`}
+              onClick={() => openTrain(ti)}
+              className="cursor-pointer"
               ref={(el) => {
                 trainGroupRefs.current[ti] = el;
               }}
@@ -1593,6 +2025,21 @@ export default function DispatchingTable() {
                 fill="none"
                 pointerEvents="none"
               />
+              {/* conflict warning badge — red circle with "!" on every train
+                  involved in a live conflict (counter-rotates to stay upright) */}
+              <g
+                ref={(el) => {
+                  trainExclamRefs.current[ti] = el;
+                }}
+                transform="translate(48, -12)"
+                visibility="hidden"
+                pointerEvents="none"
+              >
+                <circle r={8} fill="#dc2626" stroke="#ffffff" strokeWidth={1.5} />
+                <text y={4.5} textAnchor="middle" fontSize={13} fontWeight={900} fill="#ffffff">
+                  !
+                </text>
+              </g>
               <text
                 ref={(el) => {
                   trainTextRefs.current[ti] = el;
@@ -1691,6 +2138,302 @@ export default function DispatchingTable() {
             className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-lg"
           >
             {conflictNote}
+          </div>
+        )}
+
+        {/* Start-time picker — shown on first load; the sim stays frozen until a
+            time is chosen. Trains already in service are placed per their schedule. */}
+        {startModalOpen && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 p-4">
+            <div className="w-80 rounded-xl border border-slate-200 bg-white p-6 shadow-xl">
+              <h2 className="text-lg font-semibold text-slate-800">Start time</h2>
+              <p className="mt-1 text-xs text-slate-500">
+                Begin at a time in the timetable. Trains already in service are placed at
+                their scheduled position; the interlocking takes over from there.
+              </p>
+              <input
+                type="time"
+                value={startTimeInput}
+                onChange={(e) => setStartTimeInput(e.target.value)}
+                className="mt-4 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 focus:border-slate-400 focus:outline-none"
+              />
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {["00:00", "06:00", "12:00", "18:00"].map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setStartTimeInput(t)}
+                    className="rounded-full border border-slate-300 px-2.5 py-1 text-xs text-slate-600 transition-colors hover:border-slate-400 hover:text-slate-800 cursor-pointer"
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const [h, m] = startTimeInput.split(":").map(Number);
+                  initializeSim((h || 0) * 3600 + (m || 0) * 60);
+                }}
+                className="mt-4 w-full rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-700 cursor-pointer"
+              >
+                Start
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Roster toggle — the timetable panel button under the time controls */}
+        <button
+          type="button"
+          onClick={() => setRosterOpen((v) => !v)}
+          aria-pressed={rosterOpen}
+          className="fixed left-4 top-16 z-50 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 shadow-sm transition-colors cursor-pointer hover:border-slate-400 hover:text-slate-800"
+        >
+          {rosterOpen ? "Tutup daftar" : "Daftar kereta"}
+        </button>
+
+        {/* Timetable roster — active trains with status + delay (Indonesian) */}
+        {rosterOpen && (
+          <div className="fixed left-4 top-24 z-50 flex max-h-[70vh] w-80 flex-col rounded-xl border border-slate-200 bg-white shadow-lg">
+            <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2.5">
+              <p className="text-sm font-semibold text-slate-700">Kereta Aktif</p>
+              <p className="text-xs text-slate-400">{JOURNEYS.length} KA</p>
+            </div>
+            <div className="overflow-auto">
+              {JOURNEYS.map((j, ti) => {
+                const st = trainStatesRef.current[ti];
+                if (!st || !st.spawned || st.done) return null;
+                const info = trainInfo(ti);
+                if (!info) return null;
+                return (
+                  <button
+                    key={j.train.train_no}
+                    type="button"
+                    onClick={() => openTrain(ti)}
+                    className={`flex w-full items-center gap-2 border-b border-slate-50 px-4 py-2 text-left transition-colors cursor-pointer hover:bg-slate-50 ${
+                      selectedTrain === ti ? "bg-amber-50" : ""
+                    }`}
+                  >
+                    <span
+                      className={`h-2.5 w-2.5 shrink-0 rounded-full ${
+                        st.stopped && st.stopReason === "conflict"
+                          ? "bg-red-600"
+                          : st.stopped
+                          ? "bg-red-400"
+                          : info.atStopIdx !== null
+                          ? "bg-green-500"
+                          : "bg-blue-500"
+                      }`}
+                    />
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-semibold text-slate-800">{j.train.train_no}</span>
+                      <span className="block truncate text-xs text-slate-500">{info.status}</span>
+                    </span>
+                    <span
+                      className={`shrink-0 text-xs font-medium ${
+                        info.delay.startsWith("terlambat")
+                          ? "text-red-600"
+                          : info.delay.startsWith("awal")
+                          ? "text-amber-600"
+                          : "text-slate-500"
+                      }`}
+                    >
+                      {info.delay}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Train info card — click a marker or a roster row to inspect its timetable */}
+        {selectedTrain !== null && (() => {
+          const info = trainInfo(selectedTrain);
+          if (!info) return null;
+          const now = fmtTime(simRef.current);
+          return (
+            <div className="fixed right-4 top-16 z-50 w-80 rounded-xl border border-slate-200 bg-white p-4 shadow-lg">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-base font-bold text-slate-800">{info.no}</p>
+                  <p className="text-xs text-slate-500">{info.name}</p>
+                  <p className="mt-0.5 text-xs font-medium text-slate-600">{info.dirLabel}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setSelectedTrain(null)}
+                  aria-label="Tutup"
+                  className="rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+              <p className="mt-2 rounded-md bg-slate-50 px-2.5 py-1.5 text-xs text-slate-600">
+                <span className="font-semibold">{info.status}</span>
+                <span className="text-slate-400"> · jam sim {now}</span>
+              </p>
+              <p
+                className={`mt-1 text-xs font-semibold ${
+                  info.delay.startsWith("terlambat") ? "text-red-600" : info.delay.startsWith("awal") ? "text-amber-600" : "text-slate-500"
+                }`}
+              >
+                {info.delay}
+              </p>
+              <table className="mt-3 w-full text-xs">
+                <thead>
+                  <tr className="text-slate-400">
+                    <th className="pb-1 text-left font-medium">Stasiun</th>
+                    <th className="pb-1 text-right font-medium">Tiba</th>
+                    <th className="pb-1 text-right font-medium">Berangkat</th>
+                    <th className="pb-1 text-right font-medium">Aktual</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {info.stops.map((s, i) => (
+                    <tr key={i} className={info.atStopIdx === i ? "text-slate-800" : "text-slate-500"}>
+                      <td className="py-1">
+                        {s.name}
+                        {s.meets && s.meets.length > 0 && (
+                          <span className="ml-1 text-[10px] font-semibold text-purple-600">
+                            susul {s.meets.map((m) => m.with).join(", ")}
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-1 text-right tabular-nums">{s.arrLabel}</td>
+                      <td className="py-1 text-right tabular-nums">{s.depLabel}</td>
+                      <td className="py-1 text-right tabular-nums">
+                        {s.actual != null ? fmtTime(s.actual) : "—"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        })()}
+
+        {/* Station timetable — click a nameplate to inspect the trains at a station */}
+        {selectedStation !== null && (() => {
+          const rows = stationSchedule(selectedStation);
+          const now = simRef.current;
+          return (
+            <div className="fixed right-4 top-16 z-50 flex max-h-[70vh] w-96 flex-col rounded-xl border border-slate-200 bg-white shadow-lg">
+              <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2.5">
+                <p className="text-sm font-semibold text-slate-700">Jadwal {stationName(selectedStation)}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-xs text-slate-400">jam sim {fmtTime(now)}</p>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedStation(null)}
+                    aria-label="Tutup"
+                    className="rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+              <div className="overflow-auto">
+                <table className="w-full text-xs">
+                  <thead className="sticky top-0 bg-white">
+                    <tr className="text-slate-400">
+                      <th className="px-3 py-1.5 text-left font-medium">Kereta</th>
+                      <th className="px-2 py-1.5 text-right font-medium">Tiba</th>
+                      <th className="px-2 py-1.5 text-right font-medium">Berangkat</th>
+                      <th className="px-3 py-1.5 text-right font-medium">Aktual / Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.map((r) => (
+                      <tr
+                        key={r.no}
+                        onClick={() => openTrain(JOURNEYS.findIndex((j) => j.train.train_no === r.no))}
+                        className={`border-t border-slate-50 cursor-pointer hover:bg-slate-50 ${
+                          r.atStation ? "bg-green-50" : ""
+                        }`}
+                      >
+                        <td className="px-3 py-1.5 font-semibold text-slate-800">
+                          {r.no}
+                          {r.meets && r.meets.length > 0 && (
+                            <span
+                              title={`Susul ${r.meets.map((m) => m.with).join(", ")}`}
+                              className="ml-1.5 rounded bg-purple-100 px-1 py-0.5 text-[9px] font-semibold text-purple-700"
+                            >
+                              susul
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-2 py-1.5 text-right tabular-nums text-slate-600">{r.arrLabel}</td>
+                        <td className="px-2 py-1.5 text-right tabular-nums text-slate-600">{r.depLabel}</td>
+                        <td className="px-3 py-1.5 text-right">
+                          {r.atStation ? (
+                            <span className="font-semibold text-green-700">{r.delay}</span>
+                          ) : r.actual != null ? (
+                            <span className="tabular-nums text-slate-500">{fmtTime(r.actual)}</span>
+                          ) : r.active ? (
+                            <span className="text-blue-600">{r.status}</span>
+                          ) : r.arr < now ? (
+                            <span className="text-slate-400">lewat</span>
+                          ) : (
+                            <span className="text-slate-300">—</span>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* Notification board — live queue of trains held at a signal >30 s */}
+        {notices.length > 0 && (
+          <div
+            data-board="notifications"
+            className="fixed left-1/2 top-4 z-50 w-80 -translate-x-1/2 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg"
+          >
+            <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2">
+              <p className="text-sm font-semibold text-slate-700">Notifikasi</p>
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">
+                  {notices.filter((x) => !x.resolved).length}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setNotices([])}
+                  aria-label="Bersihkan notifikasi"
+                  className="rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 cursor-pointer"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+            <div className="max-h-56 overflow-auto">
+              {notices.map((n) => {
+                const dur = n.resolved ? (n.resolvedDuration ?? 0) : Math.max(0, Math.round(simRef.current - n.since));
+                return (
+                  <div
+                    key={n.id}
+                    className={`flex items-start gap-2 border-b border-slate-50 px-4 py-2 ${n.resolved ? "opacity-50" : ""}`}
+                  >
+                    <span
+                      className={`mt-1 h-2 w-2 shrink-0 rounded-full ${
+                        n.resolved ? "bg-green-500" : "animate-pulse bg-red-500"
+                      }`}
+                    />
+                    <div className="min-w-0 flex-1">
+                      <p className={`text-sm font-semibold ${n.resolved ? "text-slate-500 line-through" : "text-slate-800"}`}>
+                        {n.trainNo}
+                      </p>
+                      <p className="text-xs text-slate-600">{n.message}</p>
+                    </div>
+                    <span className="shrink-0 text-xs font-medium tabular-nums text-slate-500">{fmtDur(dur)}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 

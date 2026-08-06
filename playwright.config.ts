@@ -34,6 +34,8 @@ export default defineConfig({
   webServer: {
     command: "bun run build && bun run start -p 3100",
     url: "http://localhost:3100",
+    // the suite is deterministic on a fixed train set (the app defaults to ALL)
+    env: { NEXT_PUBLIC_ENABLED_TRAINS: "107B,6082B,30A,2523" },
     reuseExistingServer: true,
     timeout: 180_000,
   },
