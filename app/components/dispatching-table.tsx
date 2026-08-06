@@ -627,7 +627,7 @@ export default function DispatchingTable() {
   const frameCountRef = useRef(0);
   const selectedIdxRef = useRef<number | null>(null);
   selectedIdxRef.current = selectedTrain;
-  // held-at-signal notification board (>30 s holds)
+  // held-at-signal notification board (>30 s holds) + susul warnings
   type Notice = {
     id: number;
     trainNo: string;
@@ -635,6 +635,7 @@ export default function DispatchingTable() {
     since: number; // sim time the hold began (live duration = now − since)
     resolved: boolean;
     resolvedDuration?: number;
+    kind?: "susul"; // one-shot overtake warning (amber) vs a signal hold (red)
   };
   const [notices, setNotices] = useState<Notice[]>([]);
   const nextNoticeIdRef = useRef(1);
@@ -788,6 +789,17 @@ export default function DispatchingTable() {
     const ctx2 = mkCtx();
     ctx2.meetsHold = meetsHold;
     place(ctx2);
+    // trains that left their origin before the start time get no live susul
+    // warning (it would be stale the moment the panel opens). Same CENTER-based
+    // crossing test as the live check.
+    JOURNEYS.forEach((j, ti) => {
+      const st = trainStatesRef.current[ti];
+      if (MEETS_BY_TRAIN.has(ti) && st.spawned && !st.done) {
+        const origin = j.train.stops[0].trackmark;
+        const originX = PLATFORM_CENTER_X[origin];
+        st.susulWarned = st.dir === "right" ? st.x > originX : st.x < originX;
+      }
+    });
     setPaused(false);
     setStartModalOpen(false);
   };
@@ -987,6 +999,36 @@ export default function DispatchingTable() {
           }
           st.holdSince = null;
           st.holdNotified = false;
+        }
+        // Susul warning: once a held train LEAVES its origin (BKST eastbound /
+        // CIT westbound), tell the user the passing train is approaching — the
+        // overtake at Tambun is on its way. One-shot per train. The CENTER must
+        // cross the origin column: the front passes it on arrival (the marker
+        // stops with its center at the platform), and originArr=0 trains start
+        // already sitting on it.
+        if (!st.susulWarned) {
+          const origin = j.train.stops[0].trackmark;
+          const originX = PLATFORM_CENTER_X[origin];
+          const departed = st.dir === "right" ? st.x > originX : st.x < originX;
+          if (departed) {
+            st.susulWarned = true;
+            const passers = (MEETS_BY_TRAIN.get(ti)?.get("TB") ?? []).map((d) => JOURNEYS[d.partnerIdx].train.train_no);
+            if (passers.length) {
+              setNotices((ns) =>
+                [
+                  ...passers.map((p) => ({
+                    id: nextNoticeIdRef.current++,
+                    kind: "susul" as const,
+                    trainNo: `KA ${p}`,
+                    message: `sudah mendekati ${stationName(origin)}!`,
+                    since: simRef.current,
+                    resolved: false,
+                  })),
+                  ...ns,
+                ].slice(0, 40)
+              );
+            }
+          }
         }
         // keep reservation highlights in sync with the train's progress (per-cell).
         // The release must NOT depend on the path element existing — once the
@@ -2477,17 +2519,25 @@ export default function DispatchingTable() {
                     className={`flex items-start gap-2 border-b border-slate-50 px-4 py-2 ${n.resolved ? "opacity-50" : ""}`}
                   >
                     <span
-                      className={`mt-1 h-2 w-2 shrink-0 rounded-full ${
-                        n.resolved ? "bg-green-500" : "animate-pulse bg-red-500"
+                      className={`mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
+                        n.kind === "susul"
+                          ? "bg-amber-100 text-amber-700"
+                          : n.resolved
+                          ? "bg-green-500 text-white"
+                          : "bg-red-500 text-white"
                       }`}
-                    />
+                    >
+                      {n.kind === "susul" ? "!" : n.resolved ? "✓" : ""}
+                    </span>
                     <div className="min-w-0 flex-1">
                       <p className={`text-sm font-semibold ${n.resolved ? "text-slate-500 line-through" : "text-slate-800"}`}>
                         {n.trainNo}
                       </p>
                       <p className="text-xs text-slate-600">{n.message}</p>
                     </div>
-                    <span className="shrink-0 text-xs font-medium tabular-nums text-slate-500">{fmtDur(dur)}</span>
+                    <span className="shrink-0 text-xs font-medium tabular-nums text-slate-500">
+                      {n.kind === "susul" ? "" : fmtDur(dur)}
+                    </span>
                   </div>
                 );
               })}

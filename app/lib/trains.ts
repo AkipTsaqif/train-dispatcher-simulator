@@ -146,6 +146,7 @@ export type TrainState = {
   holdSince: number | null; // sim time the current signal-hold began
   holdNotified: boolean; // a >30s hold notification was fired for this hold
   notificationId: number | null; // id of the fired notification (to resolve it)
+  susulWarned: boolean; // the origin-departure susul warning was shown for this train
   idx: number; // journey index (the aspect's occupancy check skips the caller)
 };
 
@@ -277,6 +278,7 @@ export function initTrain(journey: JourneyPlan, nodes: Record<string, GraphNodeL
     holdSince: null,
     holdNotified: false,
     notificationId: null,
+    susulWarned: false,
     idx: -1,
   };
 }
