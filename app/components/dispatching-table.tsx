@@ -586,7 +586,7 @@ export default function DispatchingTable() {
   const [switches, setSwitches] = useState<Record<number, SwitchState>>(INITIAL_SWITCHES);
   const [signalOn, setSignalOn] = useState<Record<string, boolean>>({ J1: false, J2: false, J3: false, J4: false, J5: false, J6: false, J7: false });
   const [conflictNote, setConflictNote] = useState<string | null>(null);
-  const [showControls, setShowControls] = useState(true); // bottom point & signal buttons
+  const [showControls, setShowControls] = useState(false); // bottom point & signal buttons hidden by default
   const [clickLog, setClickLog] = useState<string[]>([]); // debug click history
   const [debugOpen, setDebugOpen] = useState(false);
 
@@ -778,13 +778,16 @@ export default function DispatchingTable() {
     setStartModalOpen(false);
   };
 
-  // A ?start=HH:MM query param skips the picker (used by the e2e suite).
+  // A ?start=HH:MM query param skips the picker (used by the e2e suite);
+  // ?controls=1 unlocks the point & signal buttons (the e2e suite drives them).
   useEffect(() => {
-    const q = new URLSearchParams(window.location.search).get("start");
-    if (q) {
-      const [h, m] = q.split(":").map(Number);
+    const q = new URLSearchParams(window.location.search);
+    const start = q.get("start");
+    if (start) {
+      const [h, m] = start.split(":").map(Number);
       initializeSim((h || 0) * 3600 + (m || 0) * 60);
     }
+    if (q.get("controls") === "1") setShowControls(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -2060,7 +2063,7 @@ export default function DispatchingTable() {
         </g>
       </svg>
 
-      {/* Control buttons (legend text lives in the settings panel if needed) */}
+      {/* Control buttons (hidden by default — show them in Settings) */}
       <div className="mt-6">
         {showControls && (
         <div className="flex flex-wrap justify-center gap-2">

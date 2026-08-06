@@ -10,7 +10,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("dispatching table", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     // first build/serve of the page can be slow
     await expect(
       page.locator('svg[aria-label^="Railway dispatching table"]')
@@ -32,25 +32,27 @@ test.describe("dispatching table", () => {
     await expect(page.locator("text=All points normal.")).toHaveCount(0);
   });
 
-  test("settings popover opens, toggle defaults on, Escape closes", async ({ page }) => {
+  test("settings popover opens, control toggle defaults off, Escape closes", async ({ page }) => {
+    // fresh reload: control buttons start hidden (the beforeEach shows them)
+    await page.goto("/?start=00:00");
     await page.getByRole("button", { name: "Settings" }).click();
     const toggle = page.getByRole("switch", { name: "Show control buttons" });
     await expect(toggle).toBeVisible();
-    await expect(toggle).toHaveAttribute("aria-checked", "true");
+    await expect(toggle).toHaveAttribute("aria-checked", "false");
     await page.keyboard.press("Escape");
     await expect(toggle).toBeHidden();
   });
 
-  test("control buttons can be hidden and restored", async ({ page }) => {
+  test("control buttons are hidden by default and shown via settings", async ({ page }) => {
+    // fresh reload: the row is not rendered
+    await page.goto("/?start=00:00");
     const p3 = page.getByRole("button", { name: /P3 ·/ });
-    await expect(p3).toBeVisible();
+    await expect(p3).toHaveCount(0);
     await page.getByRole("button", { name: "Settings" }).click();
     await page.getByRole("switch", { name: "Show control buttons" }).click();
-    // the whole bottom row unmounts; the settings gear stays
-    await expect(p3).toHaveCount(0);
-    await expect(page.getByRole("button", { name: "Settings" })).toBeVisible();
-    await page.getByRole("switch", { name: "Show control buttons" }).click();
     await expect(p3).toBeVisible();
+    await page.getByRole("switch", { name: "Show control buttons" }).click();
+    await expect(p3).toHaveCount(0);
   });
 
   test("throwing a point reverses it", async ({ page }) => {
@@ -80,7 +82,7 @@ test.describe("dispatching table", () => {
     // reserved routes overlap, so J4 must be refused. Run it after 14:00 when
     // the lines are empty (a route into occupied track is refused first).
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     // let the eastbound trains run through and exit first (a route into the
     // occupied line is refused), then test the pure route overlap
@@ -124,7 +126,7 @@ test.describe("dispatching table", () => {
     // after 14:00 when the bottom line is empty (a route into occupied track is
     // refused first).
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     // let the trains run out (cleared signals), move 2523 past J4 with a
     // re-clear at 9:50, then set the wrong-way route at 17:00 on the empty line
@@ -269,7 +271,7 @@ test.describe("dispatching table", () => {
 
   test("trains 30A and 2523 run per their schedules", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     await expect(page.locator('[data-train="30A"]')).toHaveCount(1);
     await expect(page.locator('[data-train="2523"]')).toHaveCount(1);
@@ -296,7 +298,7 @@ test.describe("dispatching table", () => {
 
   test("every train marker carries a hidden conflict badge", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     // all four enabled trains are running — each marker must have a badge that
     // stays hidden while there is no live conflict (it only shows on the trains
@@ -310,7 +312,7 @@ test.describe("dispatching table", () => {
 
   test("the conflict failsafe does not false-positive on queued trains", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     // with nothing cleared, every train is held at a red signal — queues form,
     // but the block cascade spaces them (30A stops at B101 behind 6082B at J1,
@@ -327,7 +329,7 @@ test.describe("dispatching table", () => {
   test("train 107B follows its schedule (CIT 0:00 → TB 3:30 → BKST, held by 6082B)", async ({ page }) => {
     // faked clock: drive the sim deterministically instead of waiting real time
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     // the train must pass the player-controlled signals — clear them so it can run
     await page.getByRole("button", { name: /J5 ·/ }).click();
@@ -353,7 +355,7 @@ test.describe("dispatching table", () => {
 
   test("train 6082B stops at TB per its schedule (BKST 0:00 → TB 6:00–11:00 → CIT 14:00)", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     const marker = page.locator('[data-train="6082B"]');
     const x = async () => await marker.evaluate((el) => parseFloat(el.getAttribute("data-x") ?? "NaN"));
@@ -381,7 +383,7 @@ test.describe("dispatching table", () => {
 
   test("train marker color clues the stop state (station vs signal)", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     const fill = async (no: string) =>
       await page.locator('[data-train="' + no + '"] rect').getAttribute("fill");
@@ -402,7 +404,7 @@ test.describe("dispatching table", () => {
 
   test("a train held at a red signal snaps one cell behind it, never over it", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     const marker = page.locator('[data-train="6082B"]');
     // leave J1 red: 6082B (eastbound) stops with its leading edge at J1 (x 322,
@@ -447,7 +449,7 @@ test.describe("dispatching table", () => {
   for (const c of SIGNAL_CONSUMPTION_CASES) {
     test(`signal ${c.sig} is consumed when a train stopped at it resumes after the clear`, async ({ page }) => {
       await page.clock.install();
-      await page.goto("/?start=00:00");
+      await page.goto("/?start=00:00&controls=1");
       await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
       const chip = async (id: string) => {
         const l = page.locator("button", { hasText: id + " ·" });
@@ -481,7 +483,7 @@ test.describe("dispatching table", () => {
 
   test("a train diverted onto the TB loop still stops at TB per its schedule", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     const marker = page.locator('[data-train="6082B"]');
     const xy = async () => ({
@@ -508,7 +510,7 @@ test.describe("dispatching table", () => {
 
   test("train stops at a player-red signal and resumes when cleared", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     const marker = page.locator('[data-train="107B"]');
     const x = async () => await marker.evaluate((el) => parseFloat(el.getAttribute("data-x") ?? "NaN"));
@@ -528,7 +530,7 @@ test.describe("dispatching table", () => {
 
   test("train diverts when the right crossover is reversed", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     const marker = page.locator('[data-train="107B"]');
     const y = async () => await marker.evaluate((el) => parseFloat(el.getAttribute("data-y") ?? "NaN"));
@@ -552,7 +554,7 @@ test.describe("dispatching table", () => {
 
   test("train stays on the top line with points normal", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     await page.getByRole("button", { name: /J5 ·/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
@@ -565,7 +567,7 @@ test.describe("dispatching table", () => {
 
   test("train passage holds a section red and cascades the blocks", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     // clear J4 + J5 so the train can run through to TB
     await page.getByRole("button", { name: /J5 ·/ }).click();
@@ -589,7 +591,7 @@ test.describe("dispatching table", () => {
 
   test("player signal stays red after the train passes until re-cleared", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     await page.getByRole("button", { name: /J5 ·/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
@@ -614,7 +616,7 @@ test.describe("dispatching table", () => {
 
   test("reservation highlight shrinks to the unpassed cells as the train advances", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     // clear ONLY J4: its reservation runs from J4 (x 1076) west to J5 (x 558)
     await page.getByRole("button", { name: /J4 ·/ }).click();
@@ -636,7 +638,7 @@ test.describe("dispatching table", () => {
 
   test("route unlocks behind the train and auto-releases after it despawns", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     // wrong-way diversion: 107B goes down the reversed right crossover onto the
     // bottom line and runs west through J4's route. The left crossover is also
@@ -667,7 +669,7 @@ test.describe("dispatching table", () => {
 
   test("train position never jumps backward while passing signals", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     await page.getByRole("button", { name: /J5 ·/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
@@ -689,7 +691,7 @@ test.describe("dispatching table", () => {
 
   test("block signal behind stays red until the train's tail clears the section", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     await page.getByRole("button", { name: /J5 ·/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
@@ -708,7 +710,7 @@ test.describe("dispatching table", () => {
 
   test("diverted route: J4 stays player-controlled and the highlight follows the train", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     // reverse both crossovers: J4's route diverts down through P7+P8, west on
     // the bottom line, and back up through P1+P2
@@ -749,9 +751,10 @@ test.describe("dispatching table", () => {
     });
   });
 
-  test("visual — control buttons hidden", async ({ page }) => {
+  test("visual — control buttons hidden by default", async ({ page }) => {
+    // fresh reload: the row is not rendered at all — the table is not flooded
+    await page.goto("/?start=00:00");
     await page.getByRole("button", { name: "Settings" }).click();
-    await page.getByRole("switch", { name: "Show control buttons" }).click();
     await expect(page.getByRole("button", { name: /P3 ·/ })).toHaveCount(0);
     await expect(page).toHaveScreenshot("controls-hidden.png", {
       fullPage: true,
@@ -772,7 +775,7 @@ test.describe("dispatching table", () => {
   test("visual — conflict toast", async ({ page }) => {
     // run on the empty lines (a route into occupied track is refused first)
     await page.clock.install();
-    await page.goto("/?start=00:00");
+    await page.goto("/?start=00:00&controls=1");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     for (const re of [/J1 ·/, /J2 ·/, /J4 ·/, /J5 ·/]) {
       await page.getByRole("button", { name: re }).click();
