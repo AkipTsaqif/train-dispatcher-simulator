@@ -72,14 +72,14 @@ type Sw = {
 };
 
 const SWITCHES: Sw[] = [
-  { id: 1, x: 326, y: 89, lineY: 89, dashSide: "right", branch: "M326 90 L438 205", label: "left crossover, upper end" },
-  { id: 2, x: 438, y: 205, lineY: 205, dashSide: "left", branch: "M326 90 L438 205", label: "left crossover, lower end" },
-  { id: 3, x: 500, y: 89, lineY: 89, dashSide: "right", branch: "M500 89 L556 148", label: "upper loop, west end" },
-  { id: 4, x: 786, y: 89, lineY: 89, dashSide: "left", branch: "M730 148 L786 89", label: "upper loop, east end" },
-  { id: 5, x: 500, y: 205, lineY: 205, dashSide: "right", branch: "M500 205 L556 264", label: "lower loop, west end" },
-  { id: 6, x: 788, y: 205, lineY: 205, dashSide: "left", branch: "M730 264 L788 205", label: "lower loop, east end" },
-  { id: 7, x: 846, y: 205, lineY: 205, dashSide: "right", branch: "M846 205 L960 89", label: "right crossover, lower end" },
-  { id: 8, x: 960, y: 89, lineY: 89, dashSide: "left", branch: "M846 205 L960 89", label: "right crossover, upper end" },
+  { id: 1, x: 326, y: 89, lineY: 89, dashSide: "right", branch: "M326 90 L438 205", label: "persilangan kiri, ujung atas" },
+  { id: 2, x: 438, y: 205, lineY: 205, dashSide: "left", branch: "M326 90 L438 205", label: "persilangan kiri, ujung bawah" },
+  { id: 3, x: 500, y: 89, lineY: 89, dashSide: "right", branch: "M500 89 L556 148", label: "lintas simpang atas, ujung barat" },
+  { id: 4, x: 786, y: 89, lineY: 89, dashSide: "left", branch: "M730 148 L786 89", label: "lintas simpang atas, ujung timur" },
+  { id: 5, x: 500, y: 205, lineY: 205, dashSide: "right", branch: "M500 205 L556 264", label: "lintas simpang bawah, ujung barat" },
+  { id: 6, x: 788, y: 205, lineY: 205, dashSide: "left", branch: "M730 264 L788 205", label: "lintas simpang bawah, ujung timur" },
+  { id: 7, x: 846, y: 205, lineY: 205, dashSide: "right", branch: "M846 205 L960 89", label: "persilangan kanan, ujung bawah" },
+  { id: 8, x: 960, y: 89, lineY: 89, dashSide: "left", branch: "M846 205 L960 89", label: "persilangan kanan, ujung atas" },
 ];
 
 /**
@@ -169,40 +169,40 @@ type SignalDef = {
 };
 
 const SIGNALS: SignalDef[] = [
-  { id: "J1", x: 322, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "bottom line, right direction" },
-  { id: "J2", x: 730, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p5", "p6"], label: "bottom line, left of P6" },
-  { id: "J3", x: 730, y: 264, lineY: 264, dir: "right", mount: "down", edge: ["ll1", "ll2"], label: "lower loop (siding), right direction" },
-  { id: "J4", x: 1076, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "top line, two cells right of P8" },
-  { id: "J5", x: 558, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p4", "p3"], label: "top line, right of P3" },
-  { id: "J6", x: 558, y: 148, lineY: 148, dir: "left", mount: "up", edge: ["ul2", "ul1"], label: "upper loop (siding), left direction" },
-  { id: "J7", x: 558, y: 264, lineY: 264, dir: "left", mount: "down", edge: ["ll2", "ll1"], label: "lower loop (reversed siding), left direction" },
+  { id: "J1", x: 322, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "jalur bawah, arah kanan" },
+  { id: "J2", x: 730, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p5", "p6"], label: "jalur bawah, kiri P6" },
+  { id: "J3", x: 730, y: 264, lineY: 264, dir: "right", mount: "down", edge: ["ll1", "ll2"], label: "lintas simpang bawah, arah kanan" },
+  { id: "J4", x: 1076, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "jalur atas, dua sel kanan P8" },
+  { id: "J5", x: 558, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p4", "p3"], label: "jalur atas, kanan P3" },
+  { id: "J6", x: 558, y: 148, lineY: 148, dir: "left", mount: "up", edge: ["ul2", "ul1"], label: "lintas simpang atas, arah kiri" },
+  { id: "J7", x: 558, y: 264, lineY: 264, dir: "left", mount: "down", edge: ["ll2", "ll1"], label: "lintas simpang bawah, arah kiri" },
   // automatic block signals on the bottom-line approach (always mirror the next signal).
   // B101 is the smallest number and lies closest to J1 (J4); higher numbers reach further
   // left (G4, D4, A4).
-  { id: "B101", x: 145, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, J4", block: true },
-  { id: "B102", x: -29, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, G4", block: true },
-  { id: "B103", x: -203, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, D4", block: true },
-  { id: "B104", x: -377, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, A4", block: true },
+  { id: "B101", x: 145, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "sinyal blok, J4", block: true },
+  { id: "B102", x: -29, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "sinyal blok, G4", block: true },
+  { id: "B103", x: -203, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "sinyal blok, D4", block: true },
+  { id: "B104", x: -377, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "sinyal blok, A4", block: true },
   // top-line approach (right→left): blocks J2→G2→D2→A2. The A2 entry signal sits
   // at the map's west edge, ahead of B201 (red until the AI clears it) — so B201
   // mirrors it and defaults to amber.
-  { id: "A2", x: -400, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "entry signal, A2 (AI-controlled)", ai: true },
-  { id: "B201", x: -377, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, A2", block: true },
-  { id: "B202", x: -203, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, D2", block: true },
-  { id: "B203", x: -29, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, G2", block: true },
-  { id: "B204", x: 145, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, J2", block: true },
+  { id: "A2", x: -400, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "sinyal masuk, A2 (dikendalikan AI)", ai: true },
+  { id: "B201", x: -377, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "sinyal blok, A2", block: true },
+  { id: "B202", x: -203, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "sinyal blok, D2", block: true },
+  { id: "B203", x: -29, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "sinyal blok, G2", block: true },
+  { id: "B204", x: 145, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "sinyal blok, J2", block: true },
   // top-line right approach: blocks AC2..AL2 nearest to J4. Displayed as
   // B201..B204 (internal ids stay unique — two sets share the same codes).
-  { id: "B9", code: "B201", x: 1247, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AC2", block: true },
-  { id: "B10", code: "B202", x: 1421, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AF2", block: true },
-  { id: "B11", code: "B203", x: 1595, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AI2", block: true },
-  { id: "B12", code: "B204", x: 1769, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AL2", block: true },
+  { id: "B9", code: "B201", x: 1247, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "sinyal blok, AC2", block: true },
+  { id: "B10", code: "B202", x: 1421, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "sinyal blok, AF2", block: true },
+  { id: "B11", code: "B203", x: 1595, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "sinyal blok, AI2", block: true },
+  { id: "B12", code: "B204", x: 1769, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "sinyal blok, AL2", block: true },
   // bottom-line right exit: blocks AC4..AL4 — entry root is beyond the map, so no next
   // signal here and they all read green. Numbered away from the map (B109 = AC4 nearest).
-  { id: "B109", x: 1247, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "block signal, AC4", block: true },
-  { id: "B108", x: 1421, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "block signal, AF4", block: true },
-  { id: "B107", x: 1595, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "block signal, AI4", block: true },
-  { id: "B106", x: 1769, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "block signal, AL4", block: true },
+  { id: "B109", x: 1247, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "sinyal blok, AC4", block: true },
+  { id: "B108", x: 1421, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "sinyal blok, AF4", block: true },
+  { id: "B107", x: 1595, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "sinyal blok, AI4", block: true },
+  { id: "B106", x: 1769, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "sinyal blok, AL4", block: true },
 ];
 
 /** Display code for a signal — internal ids may differ from what is shown on the page. */
@@ -486,7 +486,7 @@ const walkRoute = (
     const hit = nextSignalOn(fromX, node);
     if (hit) {
       pts.push([hit.x, hit.y]);
-      return done(`to ${hit.id}`, hit.id);
+      return done(`ke ${hit.id}`, hit.id);
     }
 
     if (node.sw !== undefined) {
@@ -499,7 +499,7 @@ const walkRoute = (
       if (cameFromBranch) {
         if (!reversed) {
           pts.push([node.x, node.y]);
-          return done(`ends at P${node.sw}`, undefined, true);
+          return done(`berakhir di P${node.sw}`, undefined, true);
         }
       } else if (branchAhead && reversed) {
         // divert: push this junction first (in path order), then the branch path
@@ -511,7 +511,7 @@ const walkRoute = (
           const hit2 = nextSignalOn(nx, n);
           if (hit2) {
             pts.push([hit2.x, hit2.y]);
-            return done(`to ${hit2.id}`, hit2.id);
+            return done(`ke ${hit2.id}`, hit2.id);
           }
           pts.push([n.x, n.y]);
         }
@@ -521,15 +521,15 @@ const walkRoute = (
           // rejoin the other line and keep going in the same direction
           incoming = last >= 1 ? branchAhead.path[last - 1] : cur;
           cur = far.straight[dir];
-          if (!cur) return done(dir === "right" ? "to the far right" : "to the far left");
+          if (!cur) return done(dir === "right" ? "ke ujung kanan" : "ke ujung kiri");
           continue; // junction already pushed — skip the fall-through push
         }
         // exit not set — trapped at the far end
-        return done(`ends at P${branchAhead.farSw} — not set`, undefined, true);
+        return done(`berakhir di P${branchAhead.farSw} — belum diatur`, undefined, true);
       } else if (reversed) {
         // branch behind (or none) + reversed = straight blocked
         pts.push([node.x, node.y]);
-        return done(`ends at P${node.sw}`, undefined, true);
+        return done(`berakhir di P${node.sw}`, undefined, true);
       }
     }
 
@@ -538,10 +538,10 @@ const walkRoute = (
     incoming = cur;
     cur = next;
     if (!cur) {
-      return done(dir === "right" ? "to the far right" : "to the far left");
+      return done(dir === "right" ? "ke ujung kanan" : "ke ujung kiri");
     }
   }
-  return done("unknown", undefined, true);
+  return done("tidak dikenal", undefined, true);
 };
 
 // ---------------------------------------------------------------------------
@@ -609,6 +609,20 @@ export default function DispatchingTable() {
     setSelectedTrain((cur) => (cur === ti ? null : ti));
   };
   const [rosterOpen, setRosterOpen] = useState(false);
+  const rosterScrollRef = useRef<HTMLDivElement>(null);
+  const stationScrollRef = useRef<HTMLDivElement>(null);
+  // Auto-scroll a just-opened panel to the row nearest the current sim time
+  // (instead of starting at the top of the timetable).
+  useEffect(() => {
+    if (rosterOpen) {
+      rosterScrollRef.current?.querySelector<HTMLElement>("[data-now]")?.scrollIntoView({ block: "center" });
+    }
+  }, [rosterOpen]);
+  useEffect(() => {
+    if (selectedStation !== null) {
+      stationScrollRef.current?.querySelector<HTMLElement>("[data-now]")?.scrollIntoView({ block: "center" });
+    }
+  }, [selectedStation]);
   const [rosterTick, setRosterTick] = useState(0); // periodic refresh for the roster/card
   const frameCountRef = useRef(0);
   const selectedIdxRef = useRef<number | null>(null);
@@ -809,7 +823,7 @@ export default function DispatchingTable() {
         const t = fmtTime(simRef.current);
         if (el.textContent !== t) {
           el.textContent = t;
-          el.setAttribute("aria-label", `Simulation time ${t}`);
+          el.setAttribute("aria-label", `Waktu simulasi ${t}`);
         }
       }
       const ctx: MoveCtx = {
@@ -877,7 +891,7 @@ export default function DispatchingTable() {
       if (newConflict && !conflictReportedRef.current) {
         conflictReportedRef.current = true;
         logClick(`⚠ conflict — two trains overlap on the track${conflictPair ? ` (${conflictPair})` : ""}`);
-        setConflictNote("Conflict — two trains are on the same track.");
+        setConflictNote("Konflik — dua kereta di jalur yang sama.");
         window.setTimeout(() => setConflictNote(null), 5000);
       }
       if (!newConflict) conflictReportedRef.current = false;
@@ -1163,9 +1177,9 @@ export default function DispatchingTable() {
     const owner = group.map((gid) => lockedBy(gid)).find((o) => o !== undefined);
     if (owner) {
       const name = group.length > 1 ? `P${group.join("+P")}` : `P${group[0]}`;
-      setConflictNote(`${name} is locked by ${codeOf(owner)}'s reservation — set ${codeOf(owner)} to red first.`);
+      setConflictNote(`${name} terkunci oleh reservasi ${codeOf(owner)} — ubah ${codeOf(owner)} menjadi merah dulu.`);
       window.setTimeout(() => setConflictNote(null), 3000);
-      logClick(`${name} × locked by ${codeOf(owner)}`);
+      logClick(`${name} × terkunci oleh ${codeOf(owner)}`);
       return; // locked under a route
     }
     const newState = switches[id] === "normal" ? "reversed" : "normal";
@@ -1174,7 +1188,7 @@ export default function DispatchingTable() {
       for (const gid of group) next[gid] = newState; // coupled ends move together
       return next;
     });
-    logClick(`${group.length > 1 ? `P${group.join("+P")}` : `P${group[0]}`} → ${newState.toUpperCase()}`);
+    logClick(`${group.length > 1 ? `P${group.join("+P")}` : `P${group[0]}`} → ${newState === "reversed" ? "BELOK" : "LURUS"}`);
   };
 
   /**
@@ -1189,7 +1203,7 @@ export default function DispatchingTable() {
         return rest;
       });
       delete reservedByRef.current[id];
-      logClick(`${codeOf(id)} → RED`);
+      logClick(`${codeOf(id)} → MERAH`);
       return;
     }
     // A train may have consumed the clear (light red) while the route is still
@@ -1208,9 +1222,9 @@ export default function DispatchingTable() {
     const sig = SIGNALS.find((s) => s.id === id)!;
     const prospective = walkRoute(sig, switches);
     if (prospective.blocked) {
-      setConflictNote(`${codeOf(sig.id)} cannot clear — points not set (${prospective.note}).`);
+      setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — wesel belum diatur (${prospective.note}).`);
       window.setTimeout(() => setConflictNote(null), 3000);
-      logClick(`${codeOf(sig.id)} × cannot clear (${prospective.note})`);
+      logClick(`${codeOf(sig.id)} × tidak bisa dibuka (${prospective.note})`);
       return; // stay red
     }
     // A route cannot be set into track a train PHYSICALLY occupies — a wrong-way
@@ -1236,9 +1250,9 @@ export default function DispatchingTable() {
       return false;
     });
     if (routeOccupied) {
-      setConflictNote(`${codeOf(sig.id)} cannot clear — a train is on the route.`);
+      setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — ada kereta di rute.`);
       window.setTimeout(() => setConflictNote(null), 3000);
-      logClick(`${codeOf(sig.id)} × cannot clear (train on route)`);
+      logClick(`${codeOf(sig.id)} × tidak bisa dibuka (ada kereta di rute)`);
       return; // stay red
     }
     const clash = SIGNALS.find((other) => {
@@ -1257,9 +1271,9 @@ export default function DispatchingTable() {
       return otherRoute ? routesOverlap(prospective.pts, otherRoute) : false;
     });
     if (clash) {
-      setConflictNote(`${codeOf(sig.id)} cannot clear — its route overlaps ${codeOf(clash.id)}'s reservation.`);
+      setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — rutenya berimpit dengan reservasi ${codeOf(clash.id)}.`);
       window.setTimeout(() => setConflictNote(null), 3000);
-      logClick(`${codeOf(sig.id)} × overlaps ${codeOf(clash.id)}`);
+      logClick(`${codeOf(sig.id)} × berimpit dengan ${codeOf(clash.id)}`);
       return; // stay red
     }
     setSignalOn((o) => ({ ...o, [id]: true }));
@@ -1270,7 +1284,7 @@ export default function DispatchingTable() {
     }));
     // log the aspect it will light with (green unless the next signal is red)
     const nextAsp = prospective.nextSignalId ? aspectOf(prospective.nextSignalId) : "green";
-    logClick(`${codeOf(id)} → ${nextAsp === "red" ? "AMBER" : "GREEN"}`);
+    logClick(`${codeOf(id)} → ${nextAsp === "red" ? "KUNING" : "HIJAU"}`);
   };
 
   /**
@@ -1549,7 +1563,7 @@ export default function DispatchingTable() {
         <span
           ref={clockRef}
           role="timer"
-          aria-label="Simulation time 00:00:00.00"
+          aria-label="Waktu simulasi 00:00:00.00"
           className="font-mono text-sm font-medium tabular-nums text-slate-700"
         >
           00:00:00.00
@@ -1558,9 +1572,9 @@ export default function DispatchingTable() {
         <button
           type="button"
           onClick={() => setPaused((v) => !v)}
-          aria-label={paused ? "Resume simulation" : "Pause simulation"}
+          aria-label={paused ? "Lanjutkan simulasi" : "Jeda simulasi"}
           aria-pressed={paused}
-          title={paused ? "Resume" : "Pause"}
+          title={paused ? "Lanjutkan" : "Jeda"}
           className={`rounded-full px-2.5 py-0.5 text-xs font-bold transition-colors cursor-pointer ${
             paused
               ? "bg-amber-500 text-white hover:bg-amber-600"
@@ -1570,7 +1584,7 @@ export default function DispatchingTable() {
           {paused ? "▶ Play" : "❚❚ Pause"}
         </button>
         <span className="h-4 w-px bg-slate-200" aria-hidden="true" />
-        <div role="group" aria-label="Time scale" className="flex items-center gap-1">
+        <div role="group" aria-label="Skala waktu" className="flex items-center gap-1">
           {TIME_SCALES.map((s) => (
             <button
               key={s}
@@ -1595,8 +1609,8 @@ export default function DispatchingTable() {
           type="button"
           onClick={() => setSettingsOpen((o) => !o)}
           aria-expanded={settingsOpen}
-          aria-label="Settings"
-          title="Settings"
+          aria-label="Pengaturan"
+          title="Pengaturan"
           className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-600 shadow-sm transition-colors cursor-pointer hover:border-slate-400 hover:text-slate-800"
         >
           <svg
@@ -1628,20 +1642,20 @@ export default function DispatchingTable() {
             <div
               className="absolute right-0 z-50 mt-2 w-64 rounded-lg border border-slate-200 bg-white p-4 shadow-lg"
               role="dialog"
-              aria-label="Settings"
+              aria-label="Pengaturan"
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-sm font-medium text-slate-700">Control buttons</p>
+                  <p className="text-sm font-medium text-slate-700">Tombol kontrol</p>
                   <p className="mt-0.5 text-xs text-slate-400">
-                    Show the point &amp; signal buttons below the table
+                    Tampilkan tombol wesel &amp; sinyal di bawah tabel
                   </p>
                 </div>
                 <button
                   type="button"
                   role="switch"
                   aria-checked={showControls}
-                  aria-label="Show control buttons"
+                  aria-label="Tampilkan tombol kontrol"
                   onClick={() => setShowControls((v) => !v)}
                   className={`relative h-6 w-11 shrink-0 rounded-full transition-colors cursor-pointer ${
                     showControls ? "bg-green-600" : "bg-slate-300"
@@ -1655,27 +1669,27 @@ export default function DispatchingTable() {
                 </button>
               </div>
               <div className="mt-3 border-t border-slate-100 pt-3">
-                <p className="text-xs font-semibold text-slate-600">Train colors</p>
+                <p className="text-xs font-semibold text-slate-600">Warna kereta</p>
                 <ul className="mt-1.5 space-y-1 text-xs text-slate-500">
                   <li className="flex items-center gap-2">
                     <span className="inline-block h-3 w-8 rounded-sm border border-blue-600 bg-blue-200" aria-hidden="true" />
-                    running
+                    berjalan
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="inline-block h-3 w-8 rounded-sm border border-emerald-600 bg-emerald-200" aria-hidden="true" />
-                    stopped at a station (scheduled stop)
+                    berhenti di stasiun (sesuai jadwal)
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="inline-block h-3 w-8 rounded-sm border border-red-600 bg-red-200" aria-hidden="true" />
-                    held at a red signal
+                    ditahan di sinyal merah
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="inline-block h-3 w-8 rounded-sm border border-amber-600 bg-amber-200" aria-hidden="true" />
-                    waiting at a junction
+                    menunggu di persilangan
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="inline-block h-3 w-8 rounded-sm border border-red-900 bg-red-500" aria-hidden="true" />
-                    conflict (two trains on the same track)
+                    konflik (dua kereta di jalur yang sama)
                   </li>
                 </ul>
               </div>
@@ -1688,7 +1702,7 @@ export default function DispatchingTable() {
         viewBox={`${-26} ${-22} ${RIGHT + 52} 401`}
         className="w-full h-auto"
         role="img"
-        aria-label="Railway dispatching table: two main lines with crossovers, passing loops, and signals"
+        aria-label="Meja pengatur perjalanan kereta: dua jalur utama dengan persilangan, lintas simpang, dan sinyal"
       >
         {/* Full-width graph-paper grid, 58px cells (incl. the EXT-cell extensions) */}
         <g stroke="#e7e7e7" strokeWidth={1}>
@@ -1880,7 +1894,7 @@ export default function DispatchingTable() {
               role="button"
               aria-pressed={reversed}
               aria-disabled={locked}
-              aria-label={`${ctl.coupled ? "Coupled" : "Point"} ${ctl.coupled ? ctl.ids.map((i) => `P${i}`).join("+") : ctl.ids[0]} (${ctl.label}), ${reversed ? "reversed" : "normal"}${locked ? ", locked" : ""}`}
+              aria-label={`Wesel ${ctl.coupled ? ctl.ids.map((i) => `P${i}`).join("+") : ctl.ids[0]} (${ctl.label}), ${reversed ? "belok" : "lurus"}${locked ? ", terkunci" : ""}`}
               tabIndex={locked ? -1 : 0}
               onClick={() => toggleSwitch(id)}
               onKeyDown={(e) => {
@@ -2101,7 +2115,7 @@ export default function DispatchingTable() {
                     : "bg-white border-slate-300 text-slate-600 hover:border-slate-400 cursor-pointer"
                 }`}
               >
-                {name} · {reversed ? "REVERSED" : "NORMAL"}
+                {name} · {reversed ? "BELOK" : "LURUS"}
                 {locked && " 🔒"}
               </button>
             );
@@ -2109,14 +2123,14 @@ export default function DispatchingTable() {
           {SIGNALS.map((sig) => {
             if (sig.ai) return null; // hidden — AI-controlled
             const aspect = aspectOf(sig.id);
-            const label = aspect === "green" ? "GREEN" : aspect === "amber" ? "AMBER" : "RED";
+            const label = aspect === "green" ? "HIJAU" : aspect === "amber" ? "KUNING" : "MERAH";
             if (sig.block) {
               return (
                 <button
                   key={sig.id}
                   type="button"
                   disabled
-                  title={`${sig.label} — ${sig.block ? "automatic, mirrors the next signal" : "AI-controlled"}`}
+                  title={`${sig.label} — ${sig.block ? "otomatis, mengikuti sinyal berikutnya" : "dikendalikan AI"}`}
                   className={`px-3 py-1.5 rounded-full text-sm font-medium border cursor-default ${
                     aspect === "green"
                       ? "bg-green-50 border-green-200 text-green-700"
@@ -2163,10 +2177,11 @@ export default function DispatchingTable() {
         {startModalOpen && (
           <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/60 p-4">
             <div className="w-80 rounded-xl border border-slate-200 bg-white p-6 shadow-xl">
-              <h2 className="text-lg font-semibold text-slate-800">Start time</h2>
+              <h2 className="text-lg font-semibold text-slate-800">Waktu mulai</h2>
               <p className="mt-1 text-xs text-slate-500">
-                Begin at a time in the timetable. Trains already in service are placed at
-                their scheduled position; the interlocking takes over from there.
+                Mulai pada waktu tertentu dalam jadwal. Kereta yang sudah beroperasi
+                ditempatkan sesuai posisi jadwalnya; sistem interlocking mengambil alih
+                setelahnya.
               </p>
               <input
                 type="time"
@@ -2194,7 +2209,7 @@ export default function DispatchingTable() {
                 }}
                 className="mt-4 w-full rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-green-700 cursor-pointer"
               >
-                Start
+                Mulai
               </button>
             </div>
           </div>
@@ -2217,17 +2232,29 @@ export default function DispatchingTable() {
               <p className="text-sm font-semibold text-slate-700">Kereta Aktif</p>
               <p className="text-xs text-slate-400">{JOURNEYS.length} KA</p>
             </div>
-            <div className="overflow-auto">
-              {JOURNEYS.map((j, ti) => {
-                const st = trainStatesRef.current[ti];
-                if (!st || !st.spawned || st.done) return null;
-                const info = trainInfo(ti);
-                if (!info) return null;
-                return (
-                  <button
-                    key={j.train.train_no}
-                    type="button"
-                    onClick={() => openTrain(ti)}
+            <div ref={rosterScrollRef} className="overflow-auto">
+              {(() => {
+                // the active train whose origin is nearest the current sim time
+                let best = -1;
+                let bestD = Infinity;
+                JOURNEYS.forEach((j, ti) => {
+                  const st = trainStatesRef.current[ti];
+                  if (!st || !st.spawned || st.done) return;
+                  const d = Math.abs(j.train.stops[0].arr - simRef.current);
+                  if (d < bestD) { bestD = d; best = ti; }
+                });
+                const nowTarget = best;
+                return JOURNEYS.map((j, ti) => {
+                  const st = trainStatesRef.current[ti];
+                  if (!st || !st.spawned || st.done) return null;
+                  const info = trainInfo(ti);
+                  if (!info) return null;
+                  return (
+                    <button
+                      key={j.train.train_no}
+                      type="button"
+                      onClick={() => openTrain(ti)}
+                      data-now={ti === nowTarget ? "true" : undefined}
                     className={`flex w-full items-center gap-2 border-b border-slate-50 px-4 py-2 text-left transition-colors cursor-pointer hover:bg-slate-50 ${
                       selectedTrain === ti ? "bg-amber-50" : ""
                     }`}
@@ -2260,7 +2287,8 @@ export default function DispatchingTable() {
                     </span>
                   </button>
                 );
-              })}
+                });
+              })()}
             </div>
           </div>
         )}
@@ -2351,7 +2379,7 @@ export default function DispatchingTable() {
                   </button>
                 </div>
               </div>
-              <div className="overflow-auto">
+              <div ref={stationScrollRef} className="overflow-auto">
                 <table className="w-full text-xs">
                   <thead className="sticky top-0 bg-white">
                     <tr className="text-slate-400">
@@ -2362,10 +2390,14 @@ export default function DispatchingTable() {
                     </tr>
                   </thead>
                   <tbody>
-                    {rows.map((r) => (
+                    {rows.map((r) => {
+                      // nearest scheduled arrival to the current sim time
+                      const isNow = Math.abs(r.arr - simRef.current) < 240;
+                      return (
                       <tr
                         key={r.no}
                         onClick={() => openTrain(JOURNEYS.findIndex((j) => j.train.train_no === r.no))}
+                        data-now={isNow ? "true" : undefined}
                         className={`border-t border-slate-50 cursor-pointer hover:bg-slate-50 ${
                           r.atStation ? "bg-green-50" : ""
                         }`}
@@ -2397,7 +2429,8 @@ export default function DispatchingTable() {
                           )}
                         </td>
                       </tr>
-                    ))}
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -2494,7 +2527,7 @@ export default function DispatchingTable() {
             type="button"
             onClick={() => setDebugOpen((o) => !o)}
             aria-expanded={debugOpen}
-            aria-label="Debug click log"
+            aria-label="Log klik"
             className="flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 shadow-sm transition-colors hover:border-slate-400 hover:text-slate-800 cursor-pointer"
           >
             <span aria-hidden="true">🐛</span> Debug log

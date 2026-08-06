@@ -13,15 +13,15 @@ test.describe("dispatching table", () => {
     await page.goto("/?start=00:00&controls=1");
     // first build/serve of the page can be slow
     await expect(
-      page.locator('svg[aria-label^="Railway dispatching table"]')
+      page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')
     ).toBeVisible({ timeout: 30_000 });
   });
 
   test("renders the table and settings button; no persistent status line", async ({ page }) => {
     await expect(
-      page.locator('svg[aria-label^="Railway dispatching table"]')
+      page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')
     ).toBeVisible();
-    await expect(page.getByRole("button", { name: "Settings" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Pengaturan" })).toBeVisible();
     // renamed block signals on the approach lines; two sets share display codes
     await expect(page.getByRole("button", { name: /B101 ·/ })).toBeVisible();
     await expect(page.getByRole("button", { name: /B106 ·/ })).toBeVisible();
@@ -35,8 +35,8 @@ test.describe("dispatching table", () => {
   test("settings popover opens, control toggle defaults off, Escape closes", async ({ page }) => {
     // fresh reload: control buttons start hidden (the beforeEach shows them)
     await page.goto("/?start=00:00");
-    await page.getByRole("button", { name: "Settings" }).click();
-    const toggle = page.getByRole("switch", { name: "Show control buttons" });
+    await page.getByRole("button", { name: "Pengaturan" }).click();
+    const toggle = page.getByRole("switch", { name: "Tampilkan tombol kontrol" });
     await expect(toggle).toBeVisible();
     await expect(toggle).toHaveAttribute("aria-checked", "false");
     await page.keyboard.press("Escape");
@@ -48,23 +48,23 @@ test.describe("dispatching table", () => {
     await page.goto("/?start=00:00");
     const p3 = page.getByRole("button", { name: /P3 ·/ });
     await expect(p3).toHaveCount(0);
-    await page.getByRole("button", { name: "Settings" }).click();
-    await page.getByRole("switch", { name: "Show control buttons" }).click();
+    await page.getByRole("button", { name: "Pengaturan" }).click();
+    await page.getByRole("switch", { name: "Tampilkan tombol kontrol" }).click();
     await expect(p3).toBeVisible();
-    await page.getByRole("switch", { name: "Show control buttons" }).click();
+    await page.getByRole("switch", { name: "Tampilkan tombol kontrol" }).click();
     await expect(p3).toHaveCount(0);
   });
 
   test("throwing a point reverses it", async ({ page }) => {
     await page.getByRole("button", { name: /P3 ·/ }).click();
-    await expect(page.getByRole("button", { name: /P3 · REVERSED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /P3 · BELOK/ })).toBeVisible();
   });
 
   test("clearing a signal shows green and draws the reserved route", async ({ page }) => {
     // J2's next signal (B13 block chain) is clear, so J2 shows green;
     // J1 would only show amber because its next signal J2 is red.
     await page.getByRole("button", { name: /J2 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J2 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J2 · HIJAU/ })).toBeVisible();
     // the reserved route overlay (amber) is drawn for the cleared signal
     await expect(page.locator('path[stroke="#f59e0b"]')).toHaveCount(1);
   });
@@ -72,8 +72,8 @@ test.describe("dispatching table", () => {
   test("signal whose route needs a thrown point stays red", async ({ page }) => {
     // J7 rejoins the main line at P5 only when P5 is reversed
     await page.getByRole("button", { name: /J7 ·/ }).click();
-    await expect(page.locator("text=points not set (ends at P5)")).toBeVisible();
-    await expect(page.getByRole("button", { name: /J7 · RED/ })).toBeVisible();
+    await expect(page.locator("text=wesel belum diatur (berakhir di P5)")).toBeVisible();
+    await expect(page.getByRole("button", { name: /J7 · MERAH/ })).toBeVisible();
   });
 
   test("opposite-direction overlap is refused with a conflict note", async ({ page }) => {
@@ -83,7 +83,7 @@ test.describe("dispatching table", () => {
     // the lines are empty (a route into occupied track is refused first).
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     // let the eastbound trains run through and exit first (a route into the
     // occupied line is refused), then test the pure route overlap
     for (const re of [/J1 ·/, /J2 ·/, /J4 ·/, /J5 ·/]) {
@@ -97,25 +97,25 @@ test.describe("dispatching table", () => {
     await page.getByRole("button", { name: /J2 ·/ }).click();
     await page.clock.fastForward("00:04:20"); // → t=1020 (17:00)
     await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
-    await expect(page.getByRole("button", { name: /P7\+P8 · REVERSED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /P7\+P8 · BELOK/ })).toBeVisible();
     await page.getByRole("button", { name: /J2 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J2 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J2 · HIJAU/ })).toBeVisible();
     await page.getByRole("button", { name: /J4 ·/ }).click();
     await expect(
-      page.locator("text=J4 cannot clear — its route overlaps J2's reservation")
+      page.locator("text=J4 tidak bisa dibuka — rutenya berimpit dengan reservasi J2.")
     ).toBeVisible();
-    await expect(page.getByRole("button", { name: /J4 · RED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · MERAH/ })).toBeVisible();
   });
 
   test("points under a cleared route are approach-locked", async ({ page }) => {
     await page.getByRole("button", { name: /J1 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J1 · AMBER/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J1 · KUNING/ })).toBeVisible();
     // J1's route passes through P2 and P5; the coupled P1+P2 control reports
     // the pair by its full name in the conflict toast.
     const p2 = page.getByRole("button", { name: /P2 ·/ });
     await expect(p2).toHaveAttribute("aria-disabled", "true");
     await p2.click({ force: true });
-    await expect(page.locator("text=P1+P2 is locked by J1")).toBeVisible();
+    await expect(page.locator("text=P1+P2 terkunci oleh reservasi J1")).toBeVisible();
   });
 
   test("wrong-way reservation holds the opposite chain at red", async ({ page }) => {
@@ -127,7 +127,7 @@ test.describe("dispatching table", () => {
     // refused first).
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     // let the trains run out (cleared signals), move 2523 past J4 with a
     // re-clear at 9:50, then set the wrong-way route at 17:00 on the empty line
     // (a route into occupied track is refused first)
@@ -142,14 +142,14 @@ test.describe("dispatching table", () => {
     await page.getByRole("button", { name: /J2 ·/ }).click();
     await page.clock.fastForward("00:04:20"); // → t=1020 (17:00)
     await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
-    await expect(page.getByRole("button", { name: /P7\+P8 · REVERSED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /P7\+P8 · BELOK/ })).toBeVisible();
     await page.getByRole("button", { name: /J4 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J4 · GREEN/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: /J1 · RED/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: /B101 · RED/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: /B104 · RED/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: /B109 · GREEN/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: /B106 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · HIJAU/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J1 · MERAH/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /B101 · MERAH/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /B104 · MERAH/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /B109 · HIJAU/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /B106 · HIJAU/ })).toBeVisible();
   });
 
   test("both crossovers reversed: bounded wrong-way diversion reds only what it covers", async ({ page }) => {
@@ -159,16 +159,16 @@ test.describe("dispatching table", () => {
     // chain stays untouched too.
     await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
     await page.getByRole("button", { name: /P1\+P2 ·/ }).click();
-    await expect(page.getByRole("button", { name: /P7\+P8 · REVERSED/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: /P1\+P2 · REVERSED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /P7\+P8 · BELOK/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /P1\+P2 · BELOK/ })).toBeVisible();
     await page.getByRole("button", { name: /J4 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J4 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · HIJAU/ })).toBeVisible();
     // B103's section (D4, west of the left crossover) is not covered by the
     // bounded wrong-way span → stays green (B104 itself is red because 6082B,
     // eastbound on the bottom line, spawns at BKST inside its section)
-    await expect(page.getByRole("button", { name: /B103 · GREEN/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: /B109 · GREEN/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: /B106 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /B103 · HIJAU/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /B109 · HIJAU/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /B106 · HIJAU/ })).toBeVisible();
   });
 
   test("station platform cells are tinted; nameplates remain", async ({ page }) => {
@@ -195,7 +195,7 @@ test.describe("dispatching table", () => {
 
   test("time controls show the clock and speed scales; x1 is default", async ({ page }) => {
     await expect(page.getByRole("timer")).toHaveText(/^\d{2}:\d{2}:\d{2}\.\d{2}$/);
-    await expect(page.getByRole("group", { name: "Time scale" })).toBeVisible();
+    await expect(page.getByRole("group", { name: "Skala waktu" })).toBeVisible();
     await expect(page.getByRole("button", { name: "×1", exact: true })).toHaveAttribute("aria-pressed", "true");
     await page.getByRole("button", { name: "×10", exact: true }).click();
     await expect(page.getByRole("button", { name: "×10", exact: true })).toHaveAttribute("aria-pressed", "true");
@@ -258,13 +258,13 @@ test.describe("dispatching table", () => {
     await page.getByRole("button", { name: "×10", exact: true }).click();
     await page.waitForTimeout(1100);
     expect(await secs()).toBeGreaterThan(5);
-    await page.getByRole("button", { name: "Pause simulation" }).click();
-    await expect(page.getByRole("button", { name: "Resume simulation" })).toHaveAttribute("aria-pressed", "true");
+    await page.getByRole("button", { name: "Jeda simulasi" }).click();
+    await expect(page.getByRole("button", { name: "Lanjutkan simulasi" })).toHaveAttribute("aria-pressed", "true");
     await page.waitForTimeout(800);
     const t2 = await secs();
     await page.waitForTimeout(800);
     expect(await secs()).toBe(t2); // frozen while paused
-    await page.getByRole("button", { name: "Resume simulation" }).click();
+    await page.getByRole("button", { name: "Lanjutkan simulasi" }).click();
     await page.waitForTimeout(800);
     expect(await secs()).toBeGreaterThan(t2 + 2); // resumes
   });
@@ -272,7 +272,7 @@ test.describe("dispatching table", () => {
   test("trains 30A and 2523 run per their schedules", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     await expect(page.locator('[data-train="30A"]')).toHaveCount(1);
     await expect(page.locator('[data-train="2523"]')).toHaveCount(1);
     // clear both lines so they can move
@@ -299,7 +299,7 @@ test.describe("dispatching table", () => {
   test("every train marker carries a hidden conflict badge", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     // all four enabled trains are running — each marker must have a badge that
     // stays hidden while there is no live conflict (it only shows on the trains
     // in an overlapping pair, toggled by the same condition as the failsafe)
@@ -313,7 +313,7 @@ test.describe("dispatching table", () => {
   test("the conflict failsafe does not false-positive on queued trains", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     // with nothing cleared, every train is held at a red signal — queues form,
     // but the block cascade spaces them (30A stops at B101 behind 6082B at J1,
     // 107B/2523 at J4). No conflict may fire: no marker may turn the conflict
@@ -330,7 +330,7 @@ test.describe("dispatching table", () => {
     // faked clock: drive the sim deterministically instead of waiting real time
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     // the train must pass the player-controlled signals — clear them so it can run
     await page.getByRole("button", { name: /J5 ·/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
@@ -356,7 +356,7 @@ test.describe("dispatching table", () => {
   test("train 6082B stops at TB per its schedule (BKST 0:00 → TB 6:00–11:00 → CIT 14:00)", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     const marker = page.locator('[data-train="6082B"]');
     const x = async () => await marker.evaluate((el) => parseFloat(el.getAttribute("data-x") ?? "NaN"));
     // 6082B runs eastbound on the bottom line — clear its signals so it can run
@@ -384,7 +384,7 @@ test.describe("dispatching table", () => {
   test("train marker color clues the stop state (station vs signal)", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     const fill = async (no: string) =>
       await page.locator('[data-train="' + no + '"] rect').getAttribute("fill");
     // clear both trains' routes so they can run on time
@@ -405,7 +405,7 @@ test.describe("dispatching table", () => {
   test("a train held at a red signal snaps one cell behind it, never over it", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     const marker = page.locator('[data-train="6082B"]');
     // leave J1 red: 6082B (eastbound) stops with its leading edge at J1 (x 322,
     // cell M4). The 2-cell marker must snap BEHIND the signal — box 174..290
@@ -450,7 +450,7 @@ test.describe("dispatching table", () => {
     test(`signal ${c.sig} is consumed when a train stopped at it resumes after the clear`, async ({ page }) => {
       await page.clock.install();
       await page.goto("/?start=00:00&controls=1");
-      await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+      await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
       const chip = async (id: string) => {
         const l = page.locator("button", { hasText: id + " ·" });
         return (await l.count()) ? (await l.first().textContent())!.trim().replace(/\s+/g, " ") : "?";
@@ -470,21 +470,21 @@ test.describe("dispatching table", () => {
       }
       // let the train run up to and stop at the (red) signal
       await page.clock.fastForward(c.wait);
-      await expect.poll(async () => await chip(c.sig)).toBe(c.sig + " · RED");
+      await expect.poll(async () => await chip(c.sig)).toBe(c.sig + " · MERAH");
       // clear while it stands there → it resumes, passes, and the clear is consumed
       await page.getByRole("button", { name: new RegExp("^" + c.sig + " ·") }).click();
       await page.clock.fastForward(c.after);
-      await expect.poll(async () => await chip(c.sig)).toBe(c.sig + " · RED");
+      await expect.poll(async () => await chip(c.sig)).toBe(c.sig + " · MERAH");
       // must STAY red — never re-light like a block signal
       await page.clock.fastForward("00:01:00");
-      await expect.poll(async () => await chip(c.sig)).toBe(c.sig + " · RED");
+      await expect.poll(async () => await chip(c.sig)).toBe(c.sig + " · MERAH");
     });
   }
 
   test("a train diverted onto the TB loop still stops at TB per its schedule", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     const marker = page.locator('[data-train="6082B"]');
     const xy = async () => ({
       x: parseFloat((await marker.getAttribute("data-x")) ?? "NaN"),
@@ -511,7 +511,7 @@ test.describe("dispatching table", () => {
   test("train stops at a player-red signal and resumes when cleared", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     const marker = page.locator('[data-train="107B"]');
     const x = async () => await marker.evaluate((el) => parseFloat(el.getAttribute("data-x") ?? "NaN"));
     // J4 left red: the train stops with its LEADING edge at the signal — the
@@ -531,7 +531,7 @@ test.describe("dispatching table", () => {
   test("train diverts when the right crossover is reversed", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     const marker = page.locator('[data-train="107B"]');
     const y = async () => await marker.evaluate((el) => parseFloat(el.getAttribute("data-y") ?? "NaN"));
     // throw the crossovers FIRST — clearing J4 would lock P8 via its route, and
@@ -539,12 +539,12 @@ test.describe("dispatching table", () => {
     // eastbound trains hold the far-west line (a route into occupied track is
     // refused)
     await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
-    await expect(page.getByRole("button", { name: /P7\+P8 · REVERSED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /P7\+P8 · BELOK/ })).toBeVisible();
     await page.getByRole("button", { name: /P1\+P2 ·/ }).click();
     // then clear the signals so the train can run to the crossover
     await page.getByRole("button", { name: /J5 ·/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J4 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · HIJAU/ })).toBeVisible();
     // ~2:30 — the train is down the crossover, running west on the bottom line
     // (before the left crossover brings it back up)
     await page.clock.fastForward("00:02:30");
@@ -555,7 +555,7 @@ test.describe("dispatching table", () => {
   test("train stays on the top line with points normal", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     await page.getByRole("button", { name: /J5 ·/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
     await page.clock.fastForward("00:04:00"); // west of p8, still on the top line
@@ -568,39 +568,39 @@ test.describe("dispatching table", () => {
   test("train passage holds a section red and cascades the blocks", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     // clear J4 + J5 so the train can run through to TB
     await page.getByRole("button", { name: /J5 ·/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J4 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · HIJAU/ })).toBeVisible();
     // the exit B201 is green (mirroring the cleared J4); the approach B201 is
     // amber (mirroring the red A2 entry signal west of it)
-    await expect(page.getByRole("button", { name: /B201 · GREEN/ })).toHaveCount(1);
-    await expect(page.getByRole("button", { name: /B201 · AMBER/ })).toHaveCount(1);
+    await expect(page.getByRole("button", { name: /B201 · HIJAU/ })).toHaveCount(1);
+    await expect(page.getByRole("button", { name: /B201 · KUNING/ })).toHaveCount(1);
     // t≈150: 107B has passed J4 (clear consumed) and its body is still inside
     // J4's protected section — J4 reads red, both B201 sets mirror red → amber
     await page.clock.fastForward("00:02:30");
-    await expect(page.getByRole("button", { name: /J4 · RED/ })).toBeVisible();
-    await expect(page.getByRole("button", { name: /B201 · GREEN/ })).toHaveCount(0);
-    await expect(page.getByRole("button", { name: /B201 · AMBER/ })).toHaveCount(2);
+    await expect(page.getByRole("button", { name: /J4 · MERAH/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /B201 · HIJAU/ })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /B201 · KUNING/ })).toHaveCount(2);
     // the pass consumed the clear: J4 stays red even after the train leaves
     // its section (re-cleared only by the player)
     await page.clock.fastForward("00:05:30");
-    await expect(page.getByRole("button", { name: /J4 · RED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · MERAH/ })).toBeVisible();
   });
 
   test("player signal stays red after the train passes until re-cleared", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     await page.getByRole("button", { name: /J5 ·/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J4 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · HIJAU/ })).toBeVisible();
     // the train passes J4 (~1:50); from then on J4 must stay red
     await page.clock.fastForward("00:04:00");
-    await expect(page.getByRole("button", { name: /J4 · RED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · MERAH/ })).toBeVisible();
     await page.clock.fastForward("00:03:00");
-    await expect(page.getByRole("button", { name: /J4 · RED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · MERAH/ })).toBeVisible();
     // 6082B dwells at TB (inside J4's section) until 11:00 — wait until it has
     // passed J4, then the player re-clears → J4 lights again (amber: J5 was also
     // consumed by 107B's pass)
@@ -608,19 +608,19 @@ test.describe("dispatching table", () => {
     // freeze the sim (its Pause sets the scale to 0) so 2523 — waiting right at
     // J4 — can't pass through and consume the re-clear mid-assertion; the
     // re-clear must then read AMBER (J5 was consumed by 107B's pass)
-    await page.getByRole("button", { name: /Pause simulation/ }).click();
+    await page.getByRole("button", { name: /Jeda simulasi/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J4 · AMBER/ })).toBeVisible();
-    await page.getByRole("button", { name: /Resume simulation/ }).click();
+    await expect(page.getByRole("button", { name: /J4 · KUNING/ })).toBeVisible();
+    await page.getByRole("button", { name: /Lanjutkan simulasi/ }).click();
   });
 
   test("reservation highlight shrinks to the unpassed cells as the train advances", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     // clear ONLY J4: its reservation runs from J4 (x 1076) west to J5 (x 558)
     await page.getByRole("button", { name: /J4 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J4 · AMBER/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · KUNING/ })).toBeVisible();
     // before the train reaches it: the full reservation is highlighted (starts at J4)
     await page.clock.fastForward("00:01:00");
     const earlyD = (await page.locator('path[stroke="#f59e0b"]').first().getAttribute("d")) ?? "";
@@ -639,38 +639,38 @@ test.describe("dispatching table", () => {
   test("route unlocks behind the train and auto-releases after it despawns", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     // wrong-way diversion: 107B goes down the reversed right crossover onto the
     // bottom line and runs west through J4's route. The left crossover is also
     // reversed so J4's route is bounded (a route into the occupied far-west
     // line is refused) — 107B loops back up to the top line and carries on.
     await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
-    await expect(page.getByRole("button", { name: /P7\+P8 · REVERSED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /P7\+P8 · BELOK/ })).toBeVisible();
     await page.getByRole("button", { name: /P1\+P2 ·/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J4 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · HIJAU/ })).toBeVisible();
     // t≈6:00 — the train has passed the crossover, so the points are free again
     // (only the UNPASSED portion of J4's route still locks them)
     await page.clock.fastForward("00:06:00");
-    await expect(page.getByRole("button", { name: /P7\+P8 · REVERSED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /P7\+P8 · BELOK/ })).toBeVisible();
     await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
-    await expect(page.getByRole("button", { name: /P7\+P8 · NORMAL/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /P7\+P8 · LURUS/ })).toBeVisible();
     // J2 can clear while J4's route is still reserved behind the train
     await page.getByRole("button", { name: /J2 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J2 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J2 · HIJAU/ })).toBeVisible();
     await page.getByRole("button", { name: /J2 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J2 · RED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J2 · MERAH/ })).toBeVisible();
     // t≈15:00 — 107B has exited the map; J4's reservation auto-releases, so J2
     // clears again instead of refusing with an overlap
     await page.clock.fastForward("00:08:00");
     await page.getByRole("button", { name: /J2 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J2 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J2 · HIJAU/ })).toBeVisible();
   });
 
   test("train position never jumps backward while passing signals", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     await page.getByRole("button", { name: /J5 ·/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
     const x = async () =>
@@ -692,42 +692,42 @@ test.describe("dispatching table", () => {
   test("block signal behind stays red until the train's tail clears the section", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     await page.getByRole("button", { name: /J5 ·/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
     // t≈70: 107B's body still overlaps the exit section [1076,1247] (it runs
     // at 80 km/h now, so it reaches this band much sooner) — B201 stays red;
     // B202-exit mirrors it → amber
     await page.clock.fastForward("00:01:10");
-    await expect(page.getByRole("button", { name: /B201 · RED/ })).toHaveCount(1);
-    await expect(page.getByRole("button", { name: /B202 · AMBER/ })).toHaveCount(1);
+    await expect(page.getByRole("button", { name: /B201 · MERAH/ })).toHaveCount(1);
+    await expect(page.getByRole("button", { name: /B202 · KUNING/ })).toHaveCount(1);
     // t≈110: the tail has cleared — the block now mirrors the consumed J4 →
     // amber; the approach B201 is also amber (mirrors the red A2 entry), so 2
     await page.clock.fastForward("00:00:40");
-    await expect(page.getByRole("button", { name: /B201 · RED/ })).toHaveCount(0);
-    await expect(page.getByRole("button", { name: /B201 · AMBER/ })).toHaveCount(2);
+    await expect(page.getByRole("button", { name: /B201 · MERAH/ })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /B201 · KUNING/ })).toHaveCount(2);
   });
 
   test("diverted route: J4 stays player-controlled and the highlight follows the train", async ({ page }) => {
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     // reverse both crossovers: J4's route diverts down through P7+P8, west on
     // the bottom line, and back up through P1+P2
     await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
     await page.getByRole("button", { name: /P1\+P2 ·/ }).click();
     await page.getByRole("button", { name: /J4 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J4 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · HIJAU/ })).toBeVisible();
     // t≈60: the train is still east of J4 — J4 stays green (player-controlled)
     // and the full reservation is highlighted
     await page.clock.fastForward("00:01:00");
-    await expect(page.getByRole("button", { name: /J4 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · HIJAU/ })).toBeVisible();
     const earlyD = (await page.locator('path[stroke="#f59e0b"]').first().getAttribute("d")) ?? "";
     expect(earlyD).toContain("1076");
     // t≈150: the train has passed J4 (consumed → red) and is heading to the
     // crossover — the highlight must follow it, not revert to the full route
     await page.clock.fastForward("00:01:30");
-    await expect(page.getByRole("button", { name: /J4 · RED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J4 · MERAH/ })).toBeVisible();
     const paths = page.locator('path[stroke="#f59e0b"]');
     const ds: string[] = [];
     for (let i = 0; i < (await paths.count()); i++) ds.push((await paths.nth(i).getAttribute("d")) ?? "");
@@ -738,37 +738,37 @@ test.describe("dispatching table", () => {
     await expect(page).toHaveScreenshot("dispatching-default.png", {
       fullPage: true,
       // the running clock and the moving train change every frame — exclude them
-      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Debug click log" }), page.locator("[data-board=notifications]")],
+      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Log klik" }), page.locator("[data-board=notifications]")],
     });
   });
 
   test("visual — settings popover open", async ({ page }) => {
-    await page.getByRole("button", { name: "Settings" }).click();
-    await expect(page.getByRole("switch", { name: "Show control buttons" })).toBeVisible();
+    await page.getByRole("button", { name: "Pengaturan" }).click();
+    await expect(page.getByRole("switch", { name: "Tampilkan tombol kontrol" })).toBeVisible();
     await expect(page).toHaveScreenshot("settings-open.png", {
       fullPage: true,
-      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Debug click log" }), page.locator("[data-board=notifications]")],
+      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Log klik" }), page.locator("[data-board=notifications]")],
     });
   });
 
   test("visual — control buttons hidden by default", async ({ page }) => {
     // fresh reload: the row is not rendered at all — the table is not flooded
     await page.goto("/?start=00:00");
-    await page.getByRole("button", { name: "Settings" }).click();
+    await page.getByRole("button", { name: "Pengaturan" }).click();
     await expect(page.getByRole("button", { name: /P3 ·/ })).toHaveCount(0);
     await expect(page).toHaveScreenshot("controls-hidden.png", {
       fullPage: true,
-      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Debug click log" }), page.locator("[data-board=notifications]")],
+      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Log klik" }), page.locator("[data-board=notifications]")],
     });
   });
 
   test("visual — cleared route and reversed point", async ({ page }) => {
     await page.getByRole("button", { name: /P3 ·/ }).click();
     await page.getByRole("button", { name: /J2 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J2 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J2 · HIJAU/ })).toBeVisible();
     await expect(page).toHaveScreenshot("interacted.png", {
       fullPage: true,
-      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Debug click log" }), page.locator("[data-board=notifications]")],
+      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Log klik" }), page.locator("[data-board=notifications]")],
     });
   });
 
@@ -776,7 +776,7 @@ test.describe("dispatching table", () => {
     // run on the empty lines (a route into occupied track is refused first)
     await page.clock.install();
     await page.goto("/?start=00:00&controls=1");
-    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     for (const re of [/J1 ·/, /J2 ·/, /J4 ·/, /J5 ·/]) {
       await page.getByRole("button", { name: re }).click();
     }
@@ -789,12 +789,12 @@ test.describe("dispatching table", () => {
     await page.clock.fastForward("00:04:20"); // → t=1020 (17:00)
     await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
     await page.getByRole("button", { name: /J2 ·/ }).click();
-    await expect(page.getByRole("button", { name: /J2 · GREEN/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J2 · HIJAU/ })).toBeVisible();
     await page.getByRole("button", { name: /J4 ·/ }).click();
-    await expect(page.locator("text=J4 cannot clear")).toBeVisible();
+    await expect(page.locator("text=J4 tidak bisa dibuka")).toBeVisible();
     await expect(page).toHaveScreenshot("conflict-toast.png", {
       fullPage: true,
-      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Debug click log" }), page.locator("[data-board=notifications]")],
+      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Log klik" }), page.locator("[data-board=notifications]")],
     });
   });
 });
