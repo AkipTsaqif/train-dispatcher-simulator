@@ -32,7 +32,13 @@
 			{
 				"station": "TB",
 				"arr_actual": "00:06:00",
-				"dep_actual": "00:11:00"
+				"dep_actual": "00:11:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "30A"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -724,8 +730,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "04:25:00",
-				"dep_actual": "04:31:00"
+				"arr_actual": "04:22:00",
+				"dep_actual": "04:31:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "3B"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -872,7 +884,13 @@
 			{
 				"station": "TB",
 				"arr_actual": "04:54:00",
-				"dep_actual": "05:03:00"
+				"dep_actual": "05:03:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "149"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -1145,7 +1163,13 @@
 			{
 				"station": "TB",
 				"arr_actual": "06:05:00",
-				"dep_actual": "06:13:00"
+				"dep_actual": "06:13:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "74B"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -1166,7 +1190,13 @@
 			{
 				"station": "TB",
 				"arr_actual": "06:06:00",
-				"dep_actual": "06:13:00"
+				"dep_actual": "06:13:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "245B"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -1291,7 +1321,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "06:29:00",
+				"arr_actual": "06:26:00",
 				"dep_actual": "06:30:00"
 			},
 			{
@@ -1487,7 +1517,13 @@
 			{
 				"station": "TB",
 				"arr_actual": "06:58:00",
-				"dep_actual": "07:04:00"
+				"dep_actual": "07:04:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "114C"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -1550,7 +1586,13 @@
 			{
 				"station": "TB",
 				"arr_actual": "07:06:00",
-				"dep_actual": "07:17:00"
+				"dep_actual": "07:17:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "255B"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -1634,7 +1676,13 @@
 			{
 				"station": "TB",
 				"arr_actual": "07:21:00",
-				"dep_actual": "07:28:00"
+				"dep_actual": "07:28:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "131B"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -1787,7 +1835,13 @@
 			{
 				"station": "TB",
 				"arr_actual": "07:43:00",
-				"dep_actual": "07:53:00"
+				"dep_actual": "07:53:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "20A"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -1934,7 +1988,13 @@
 			{
 				"station": "TB",
 				"arr_actual": "08:11:00",
-				"dep_actual": "08:17:00"
+				"dep_actual": "08:17:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "46"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -2018,7 +2078,13 @@
 			{
 				"station": "TB",
 				"arr_actual": "08:25:00",
-				"dep_actual": "08:32:00"
+				"dep_actual": "08:32:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "106B"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -2249,7 +2315,13 @@
 			{
 				"station": "TB",
 				"arr_actual": "09:01:00",
-				"dep_actual": "09:07:00"
+				"dep_actual": "09:07:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "128B"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -2521,7 +2593,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "09:41:00",
+				"arr_actual": "09:38:00",
 				"dep_actual": "09:42:00"
 			},
 			{
@@ -2605,7 +2677,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "09:59:00",
+				"arr_actual": "09:56:00",
 				"dep_actual": "10:00:00"
 			},
 			{
@@ -2622,11 +2694,17 @@
 			{
 				"station": "BKST",
 				"arr_actual": "09:54:00",
-				"dep_actual": "09:54:30"
+				"dep_actual": "09:54:30",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "PLB 7050"
+					}
+				]
 			},
 			{
 				"station": "TB",
-				"arr_actual": "10:04:00",
+				"arr_actual": "09:59:00",
 				"dep_actual": "10:05:00",
 				"meets": [
 					{
@@ -2721,12 +2799,24 @@
 			{
 				"station": "TB",
 				"arr_actual": "10:12:00",
-				"dep_actual": "10:13:00"
+				"dep_actual": "10:13:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "PLB 7006"
+					}
+				]
 			},
 			{
 				"station": "CIT",
 				"arr_actual": "10:16:00",
-				"dep_actual": "10:16:30"
+				"dep_actual": "10:16:30",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "PLB 7006"
+					}
+				]
 			}
 		]
 	},
@@ -2783,7 +2873,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "10:25:00",
+				"arr_actual": "10:22:00",
 				"dep_actual": "10:26:00"
 			},
 			{
@@ -2846,7 +2936,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "10:42:00",
+				"arr_actual": "10:36:00",
 				"dep_actual": "10:43:00",
 				"meets": [
 					{
@@ -2894,7 +2984,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "10:43:00",
+				"arr_actual": "10:40:00",
 				"dep_actual": "10:44:00"
 			},
 			{
@@ -3188,8 +3278,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "11:35:00",
-				"dep_actual": "11:36:00"
+				"arr_actual": "11:24:00",
+				"dep_actual": "11:36:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "17"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -3293,8 +3389,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "11:50:00",
-				"dep_actual": "11:51:00"
+				"arr_actual": "11:42:00",
+				"dep_actual": "11:51:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "2527"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -3587,7 +3689,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "12:33:00",
+				"arr_actual": "12:30:00",
 				"dep_actual": "12:34:00"
 			},
 			{
@@ -3629,8 +3731,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "12:46:00",
-				"dep_actual": "12:47:00"
+				"arr_actual": "12:40:00",
+				"dep_actual": "12:47:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "146"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -3719,7 +3827,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "12:53:00",
+				"arr_actual": "12:48:00",
 				"dep_actual": "12:54:00"
 			},
 			{
@@ -3761,8 +3869,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "13:07:00",
-				"dep_actual": "13:08:00"
+				"arr_actual": "12:58:00",
+				"dep_actual": "13:08:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "43"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -3929,8 +4043,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "13:38:00",
-				"dep_actual": "13:39:00"
+				"arr_actual": "13:30:00",
+				"dep_actual": "13:39:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "133B"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -3992,8 +4112,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "13:55:00",
-				"dep_actual": "13:56:00"
+				"arr_actual": "13:46:00",
+				"dep_actual": "13:56:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "109B"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -4181,7 +4307,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "14:29:00",
+				"arr_actual": "14:26:00",
 				"dep_actual": "14:30:00"
 			},
 			{
@@ -4286,8 +4412,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "14:56:00",
-				"dep_actual": "14:57:00"
+				"arr_actual": "14:49:00",
+				"dep_actual": "14:57:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "13"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -4412,7 +4544,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "15:18:00",
+				"arr_actual": "15:15:00",
 				"dep_actual": "15:19:00"
 			},
 			{
@@ -4496,8 +4628,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "15:44:00",
-				"dep_actual": "15:45:00"
+				"arr_actual": "15:36:00",
+				"dep_actual": "15:45:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "39"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -4601,8 +4739,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "16:06:00",
-				"dep_actual": "16:07:00"
+				"arr_actual": "15:59:00",
+				"dep_actual": "16:07:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "75B"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -4664,8 +4808,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "16:25:00",
-				"dep_actual": "16:26:00"
+				"arr_actual": "16:17:00",
+				"dep_actual": "16:26:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "1B"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -4790,7 +4940,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "16:39:00",
+				"arr_actual": "16:36:00",
 				"dep_actual": "16:40:00"
 			},
 			{
@@ -4832,7 +4982,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "16:49:00",
+				"arr_actual": "16:42:00",
 				"dep_actual": "16:50:00",
 				"meets": [
 					{
@@ -5069,7 +5219,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "17:34:00",
+				"arr_actual": "17:31:00",
 				"dep_actual": "17:35:00"
 			},
 			{
@@ -5153,8 +5303,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "17:52:00",
-				"dep_actual": "17:53:00"
+				"arr_actual": "17:46:00",
+				"dep_actual": "17:53:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "300A"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -5258,8 +5414,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "18:16:00",
-				"dep_actual": "18:17:00"
+				"arr_actual": "18:06:00",
+				"dep_actual": "18:17:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "123B"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -5363,8 +5525,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "18:32:00",
-				"dep_actual": "18:33:00"
+				"arr_actual": "18:24:00",
+				"dep_actual": "18:33:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "89"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -5426,8 +5594,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "18:43:00",
-				"dep_actual": "18:44:00"
+				"arr_actual": "18:36:00",
+				"dep_actual": "18:44:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "104B"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -5590,11 +5764,17 @@
 			{
 				"station": "CIT",
 				"arr_actual": "18:58:00",
-				"dep_actual": "18:58:30"
+				"dep_actual": "18:58:30",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "5169C"
+					}
+				]
 			},
 			{
 				"station": "TB",
-				"arr_actual": "19:05:00",
+				"arr_actual": "19:02:00",
 				"dep_actual": "19:06:00"
 			},
 			{
@@ -5657,8 +5837,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "19:14:00",
-				"dep_actual": "19:15:00"
+				"arr_actual": "19:08:00",
+				"dep_actual": "19:15:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "115B"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -5783,8 +5969,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "19:37:00",
-				"dep_actual": "19:38:00"
+				"arr_actual": "19:33:00",
+				"dep_actual": "19:38:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "304"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -5909,7 +6101,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "19:53:00",
+				"arr_actual": "19:49:00",
 				"dep_actual": "19:54:00"
 			},
 			{
@@ -5930,8 +6122,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "20:03:00",
-				"dep_actual": "20:04:00"
+				"arr_actual": "19:56:00",
+				"dep_actual": "20:04:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "203"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -6035,8 +6233,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "20:16:00",
-				"dep_actual": "20:17:00"
+				"arr_actual": "20:07:00",
+				"dep_actual": "20:17:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "257B"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -6077,8 +6281,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "20:27:00",
-				"dep_actual": "20:28:00"
+				"arr_actual": "20:20:00",
+				"dep_actual": "20:28:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "47"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -6119,8 +6329,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "20:29:00",
-				"dep_actual": "20:30:00"
+				"arr_actual": "20:24:00",
+				"dep_actual": "20:30:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "32"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -6266,8 +6482,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "21:00:00",
-				"dep_actual": "21:01:00"
+				"arr_actual": "20:53:00",
+				"dep_actual": "21:01:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "4B"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -6350,8 +6572,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "21:15:00",
-				"dep_actual": "21:16:00"
+				"arr_actual": "21:09:00",
+				"dep_actual": "21:16:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "14"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -6434,8 +6662,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "21:28:00",
-				"dep_actual": "21:29:00"
+				"arr_actual": "21:22:00",
+				"dep_actual": "21:29:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "54"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -6518,8 +6752,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "21:49:00",
-				"dep_actual": "21:50:00"
+				"arr_actual": "21:39:00",
+				"dep_actual": "21:50:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "139B"
+					}
+				]
 			},
 			{
 				"station": "BKST",
@@ -6560,7 +6800,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "21:50:00",
+				"arr_actual": "21:44:00",
 				"dep_actual": "21:51:00",
 				"meets": [
 					{
@@ -6650,7 +6890,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "22:02:00",
+				"arr_actual": "21:57:00",
 				"dep_actual": "22:03:00",
 				"meets": [
 					{
@@ -6698,8 +6938,14 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "22:13:00",
-				"dep_actual": "22:14:00"
+				"arr_actual": "22:08:00",
+				"dep_actual": "22:14:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "76B"
+					}
+				]
 			},
 			{
 				"station": "CIT",
@@ -6824,7 +7070,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "22:38:00",
+				"arr_actual": "22:30:00",
 				"dep_actual": "22:39:00",
 				"meets": [
 					{
@@ -7166,7 +7412,7 @@
 			},
 			{
 				"station": "TB",
-				"arr_actual": "23:52:00",
+				"arr_actual": "23:46:00",
 				"dep_actual": "23:53:00",
 				"meets": [
 					{

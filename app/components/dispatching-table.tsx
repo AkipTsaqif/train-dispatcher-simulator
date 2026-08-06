@@ -840,10 +840,23 @@ export default function DispatchingTable() {
         const meets = meetsRelease(m.idx, leg.station ?? "");
         return base > 0 || meets > 0 ? m.time < Math.max(base, meets) : false; // dwelling
       };
+      // Two trains conflict only when their BODIES share a track: the same
+      // line, or the same segment (loop-entry diagonals). The old ±2-cell
+      // square was wider than the track spacing (59 px — the lines sit at
+      // y 89/148/205/264), so trains on different parallel tracks or their
+      // diagonal approaches (e.g. one entering the lower loop while another is
+      // held at the upper-loop signal) were falsely flagged as conflicting.
+      const sameTrack = (a: TrainState, b: TrainState) =>
+        (a.segFrom[0] === b.segFrom[0] &&
+          a.segFrom[1] === b.segFrom[1] &&
+          a.segTo[0] === b.segTo[0] &&
+          a.segTo[1] === b.segTo[1]) ||
+        Math.abs(a.y - b.y) < CELL / 2;
       const overlaps = (a: TrainState, b: TrainState) =>
-        Math.abs(a.x - b.x) < 2 * CELL && Math.abs(a.y - b.y) < 2 * CELL;
+        Math.abs(a.x - b.x) < 2 * CELL && sameTrack(a, b);
       const conflictIdx = new Set<number>();
       let newConflict = false;
+      let conflictPair: string | null = null;
       for (let i = 0; i < live.length; i++) {
         for (let j = i + 1; j < live.length; j++) {
           const a = live[i];
@@ -851,6 +864,7 @@ export default function DispatchingTable() {
           if (!overlaps(a, b) || (atRest(a) && atRest(b))) continue; // tolerated queue
           conflictIdx.add(a.idx);
           conflictIdx.add(b.idx);
+          conflictPair = `${JOURNEYS[a.idx]?.train.train_no ?? "?"} vs ${JOURNEYS[b.idx]?.train.train_no ?? "?"}`;
           for (const t of [a, b]) {
             if (!atRest(t)) {
               t.stopped = true;
@@ -862,7 +876,7 @@ export default function DispatchingTable() {
       }
       if (newConflict && !conflictReportedRef.current) {
         conflictReportedRef.current = true;
-        logClick("⚠ conflict — two trains overlap on the track");
+        logClick(`⚠ conflict — two trains overlap on the track${conflictPair ? ` (${conflictPair})` : ""}`);
         setConflictNote("Conflict — two trains are on the same track.");
         window.setTimeout(() => setConflictNote(null), 5000);
       }
