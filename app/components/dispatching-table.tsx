@@ -635,7 +635,7 @@ export default function DispatchingTable() {
     since: number; // sim time the hold began (live duration = now − since)
     resolved: boolean;
     resolvedDuration?: number;
-    kind?: "susul"; // one-shot overtake warning (amber) vs a signal hold (red)
+    kind?: "susul" | "countdown"; // susul warning (amber), departure countdown (blue), or a signal hold (red)
   };
   const [notices, setNotices] = useState<Notice[]>([]);
   const nextNoticeIdRef = useRef(1);
@@ -1029,6 +1029,39 @@ export default function DispatchingTable() {
                 ].slice(0, 40)
               );
             }
+          }
+        }
+        // Departure countdown: any train dwelling at Tambun announces its
+        // scheduled departure ≤30 s ahead, then the SAME notice flips to the
+        // ≤15 s version (found by train no + kind — never a duplicate). It is
+        // marked resolved once the train has left.
+        const tbStop = j.train.stops[1];
+        if (tbStop?.trackmark === "TB" && tbStop.arr < tbStop.dep) {
+          const leg = plan.legs[Math.min(st.leg, plan.legs.length - 1)];
+          const atTB = leg.station === "TB" && st.time < (leg.departAt ?? 0);
+          const remaining = tbStop.dep - simRef.current;
+          const key = `KA ${j.train.train_no}`;
+          if (atTB && remaining > 0 && remaining <= 30) {
+            const msg = `dijadwalkan berangkat ${remaining <= 15 ? "15 detik lagi" : "30 detik lagi"}`;
+            setNotices((ns) => {
+              const existing = ns.find((x) => x.kind === "countdown" && x.trainNo === key);
+              if (existing) {
+                if (existing.message === msg) return ns;
+                return ns.map((x) => (x.id === existing.id ? { ...x, message: msg } : x));
+              }
+              return [
+                { id: nextNoticeIdRef.current++, kind: "countdown" as const, trainNo: key, message: msg, since: simRef.current, resolved: false },
+                ...ns,
+              ].slice(0, 40);
+            });
+          } else if (remaining <= 0) {
+            setNotices((ns) =>
+              ns.map((x) =>
+                x.kind === "countdown" && x.trainNo === key && !x.resolved
+                  ? { ...x, resolved: true, resolvedDuration: 0 }
+                  : x
+              )
+            );
           }
         }
         // keep reservation highlights in sync with the train's progress (per-cell).
@@ -2536,6 +2569,8 @@ export default function DispatchingTable() {
                       className={`mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
                         n.kind === "susul"
                           ? "bg-amber-100 text-amber-700"
+                          : n.kind === "countdown"
+                          ? "bg-blue-500 text-white"
                           : n.resolved
                           ? "bg-green-500 text-white"
                           : "bg-red-500 text-white"
@@ -2550,7 +2585,7 @@ export default function DispatchingTable() {
                       <p className="text-xs text-slate-600">{n.message}</p>
                     </div>
                     <span className="shrink-0 text-xs font-medium tabular-nums text-slate-500">
-                      {n.kind === "susul" ? "" : fmtDur(dur)}
+                      {n.kind === "susul" || n.kind === "countdown" ? "" : fmtDur(dur)}
                     </span>
                   </div>
                 );
