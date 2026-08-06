@@ -639,6 +639,7 @@ export default function DispatchingTable() {
   };
   const [notices, setNotices] = useState<Notice[]>([]);
   const nextNoticeIdRef = useRef(1);
+  const [noticesFolded, setNoticesFolded] = useState(false); // collapse the board, keep its history
   // Simulation-time accumulator (trains will consume this) + direct DOM clock
   // updates so the display stays smooth without re-rendering the table 60×/s.
   const simRef = useRef(0);
@@ -2488,7 +2489,8 @@ export default function DispatchingTable() {
           );
         })()}
 
-        {/* Notification board — live queue of trains held at a signal >30 s */}
+        {/* Notification board — live queue of trains held at a signal >30 s +
+            susul warnings. Folds to the header (history kept); the trash clears. */}
         {notices.length > 0 && (
           <div
             data-board="notifications"
@@ -2496,7 +2498,7 @@ export default function DispatchingTable() {
           >
             <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2">
               <p className="text-sm font-semibold text-slate-700">Notifikasi</p>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">
                   {notices.filter((x) => !x.resolved).length}
                 </span>
@@ -2504,13 +2506,25 @@ export default function DispatchingTable() {
                   type="button"
                   onClick={() => setNotices([])}
                   aria-label="Bersihkan notifikasi"
+                  title="Bersihkan notifikasi"
                   className="rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 cursor-pointer"
                 >
-                  ✕
+                  🗑
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setNoticesFolded((v) => !v)}
+                  aria-label={noticesFolded ? "Bentangkan notifikasi" : "Lipat notifikasi"}
+                  title={noticesFolded ? "Bentangkan" : "Lipat"}
+                  className="rounded-full p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 cursor-pointer"
+                >
+                  {noticesFolded ? "⌄" : "⌃"}
                 </button>
               </div>
             </div>
-            <div className="max-h-56 overflow-auto">
+            {/* fixed height so the visual-test mask box stays deterministic */}
+            {!noticesFolded && (
+            <div className="h-56 overflow-auto">
               {notices.map((n) => {
                 const dur = n.resolved ? (n.resolvedDuration ?? 0) : Math.max(0, Math.round(simRef.current - n.since));
                 return (
@@ -2542,6 +2556,7 @@ export default function DispatchingTable() {
                 );
               })}
             </div>
+            )}
           </div>
         )}
 
