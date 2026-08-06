@@ -1,6 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  TRAINS,
+  buildJourney,
+  initTrain,
+  advanceTrain,
+  occupiedSections,
+  reservationAhead,
+  signalSections,
+  type JourneyPlan,
+  type Train,
+  type TrainState,
+  type MoveCtx,
+} from "../lib/trains";
 
 type SwitchState = "normal" | "reversed";
 type Aspect = "red" | "amber" | "green";
@@ -8,9 +21,10 @@ type Dir = "right" | "left";
 
 const CELL = 58; // grid cell size in viewBox units
 
-const EXT = 10; // how many cells the running lines are extended on each end
-const SHIFT = EXT * CELL; // the whole original diagram is shifted right by this (580)
-const RIGHT = 41 * CELL; // new full width in cells (21 original + EXT each side) = 2378
+const EXT = 10; // how many cells the running lines are extended at the right end
+const CUT_LEFT = 3; // columns (A–C) cut from the left side of the map
+const SHIFT = (EXT - CUT_LEFT) * CELL; // diagram translate — the left extension is now 7 cells (406)
+const RIGHT = (21 + EXT * 2 - CUT_LEFT) * CELL; // full width in cells: 21 + EXT + (EXT − CUT_LEFT) = 2204
 
 /** Spreadsheet-style column letter for a 0-based index (0=A, 25=Z, 26=AA, ...). */
 const colsName = (i: number): string => {
@@ -103,7 +117,7 @@ const NODES: Record<string, GNode> = {
   ul2: { x: 730, y: 148, straight: { right: "p4", left: "ul1" } },
   p4: { x: 786, y: 89, sw: 4, straight: { right: "p8", left: "p3" }, branch: { left: { path: ["ul2", "ul1", "p3"], farSw: 3 } } },
   p8: { x: 960, y: 89, sw: 8, straight: { right: "tlR", left: "p4" }, branch: { left: { path: ["p7"], farSw: 7 } } },
-  tlR: { x: SHIFT + 1218, y: 89, straight: { right: null, left: "p8" } },
+  tlR: { x: 1218 + EXT * CELL, y: 89, straight: { right: null, left: "p8" } },
   // bottom line (y=205) — traffic runs left → right
   blL: { x: -SHIFT, y: 205, straight: { right: "p2", left: null } },
   p2: { x: 438, y: 205, sw: 2, straight: { right: "p5", left: "blL" }, branch: { left: { path: ["p1"], farSw: 1 } } },
@@ -112,7 +126,7 @@ const NODES: Record<string, GNode> = {
   ll2: { x: 730, y: 264, straight: { right: "p6", left: "ll1" } },
   p6: { x: 788, y: 205, sw: 6, straight: { right: "p7", left: "p5" }, branch: { left: { path: ["ll2", "ll1", "p5"], farSw: 5 } } },
   p7: { x: 846, y: 205, sw: 7, straight: { right: "blR", left: "p6" }, branch: { right: { path: ["p8"], farSw: 8 } } },
-  blR: { x: SHIFT + 1218, y: 205, straight: { right: null, left: "p7" } },
+  blR: { x: 1218 + EXT * CELL, y: 205, straight: { right: null, left: "p7" } },
 };
 
 // ---------------------------------------------------------------------------
@@ -120,7 +134,8 @@ const NODES: Record<string, GNode> = {
 // edge = [behind node, ahead node] in the signal's travel direction.
 // ---------------------------------------------------------------------------
 type SignalDef = {
-  id: string;
+  id: string; // internal id — unique, used for routing logic, keys, lookups
+  code?: string; // display code shown on the diagram/buttons (defaults to id)
   x: number;
   y: number;
   lineY: number;
@@ -141,38 +156,42 @@ const SIGNALS: SignalDef[] = [
   { id: "S6", x: 558, y: 148, lineY: 148, dir: "left", mount: "up", edge: ["ul2", "ul1"], label: "upper loop (siding), left direction" },
   { id: "S7", x: 558, y: 264, lineY: 264, dir: "left", mount: "down", edge: ["ll2", "ll1"], label: "lower loop (reversed siding), left direction" },
   // automatic block signals on the bottom-line approach (always mirror the next signal).
-  // B1 is the smallest number and lies closest to S1 (M4); higher numbers reach further
-  // left (J4, G4, D4).
-  { id: "B1", x: 145, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, M4", block: true },
-  { id: "B2", x: -29, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, J4", block: true },
-  { id: "B3", x: -203, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, G4", block: true },
-  { id: "B4", x: -377, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, D4", block: true },
-  // top-line approach (right→left): entry at A2, then blocks M2→J2→G2→D2 (D2 = B5 closest to A2)
-  { id: "A2", x: -551, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "entry signal, A2 (AI-controlled)", ai: true },
-  { id: "B5", x: -377, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, D2", block: true },
-  { id: "B6", x: -203, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, G2", block: true },
-  { id: "B7", x: -29, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, J2", block: true },
-  { id: "B8", x: 145, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, M2", block: true },
-  // top-line right approach: blocks AF2..AO2 nearest to S4 (B9 = AF2 = smallest)
-  { id: "B9", x: 1247, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AF2", block: true },
-  { id: "B10", x: 1421, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AI2", block: true },
-  { id: "B11", x: 1595, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AL2", block: true },
-  { id: "B12", x: 1769, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AO2", block: true },
-  // bottom-line right exit: blocks AF4..AO4 — entry root is beyond the map, so no next
-  // signal here and they all read green
-  { id: "B13", x: 1247, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "block signal, AF4", block: true },
-  { id: "B14", x: 1421, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "block signal, AI4", block: true },
-  { id: "B15", x: 1595, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "block signal, AL4", block: true },
-  { id: "B16", x: 1769, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "block signal, AO4", block: true },
+  // B101 is the smallest number and lies closest to S1 (J4); higher numbers reach further
+  // left (G4, D4, A4).
+  { id: "B101", x: 145, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, J4", block: true },
+  { id: "B102", x: -29, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, G4", block: true },
+  { id: "B103", x: -203, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, D4", block: true },
+  { id: "B104", x: -377, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "block signal, A4", block: true },
+  // top-line approach (right→left): blocks J2→G2→D2→A2 (A2 = B201 at the map edge;
+  // the former AI entry signal was cut with columns A–C)
+  { id: "B201", x: -377, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, A2", block: true },
+  { id: "B202", x: -203, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, D2", block: true },
+  { id: "B203", x: -29, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, G2", block: true },
+  { id: "B204", x: 145, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "block signal, J2", block: true },
+  // top-line right approach: blocks AC2..AL2 nearest to S4. Displayed as
+  // B201..B204 (internal ids stay unique — two sets share the same codes).
+  { id: "B9", code: "B201", x: 1247, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AC2", block: true },
+  { id: "B10", code: "B202", x: 1421, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AF2", block: true },
+  { id: "B11", code: "B203", x: 1595, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AI2", block: true },
+  { id: "B12", code: "B204", x: 1769, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "block signal, AL2", block: true },
+  // bottom-line right exit: blocks AC4..AL4 — entry root is beyond the map, so no next
+  // signal here and they all read green. Numbered away from the map (B109 = AC4 nearest).
+  { id: "B109", x: 1247, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "block signal, AC4", block: true },
+  { id: "B108", x: 1421, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "block signal, AF4", block: true },
+  { id: "B107", x: 1595, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "block signal, AI4", block: true },
+  { id: "B106", x: 1769, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "block signal, AL4", block: true },
 ];
+
+/** Display code for a signal — internal ids may differ from what is shown on the page. */
+const codeOf = (id: string): string => SIGNALS.find((s) => s.id === id)?.code ?? id;
 
 // ---------------------------------------------------------------------------
 // All track geometry (always drawn solid black; per-cell styling is overlaid)
 // ---------------------------------------------------------------------------
 const ALL_TRACKS: string[] = [
-  // running-line extensions (EXT cells each end)
-  `M${-SHIFT} 89 H64`, `M1162 89 H${SHIFT + 1218}`,
-  `M${-SHIFT} 205 H62`, `M1162 205 H${SHIFT + 1218}`,
+  // running-line extensions (EXT cells at the right end, EXT−CUT_LEFT at the left)
+  `M${-SHIFT} 89 H64`, `M1162 89 H${1218 + EXT * CELL}`,
+  `M${-SHIFT} 205 H62`, `M1162 205 H${1218 + EXT * CELL}`,
   "M64 89 H326", "M326 89 H500", "M500 89 H786", "M786 89 H960", "M960 89 H1162",
   "M62 205 H438", "M438 205 H500", "M500 205 H788", "M788 205 H846", "M846 205 H1162",
   "M326 90 L438 205",
@@ -186,16 +205,73 @@ const INITIAL_SWITCHES: Record<number, SwitchState> = {
   5: "normal", 6: "normal", 7: "normal", 8: "normal",
 };
 
+// Main-line normal traffic direction by line y (top runs right→left, bottom left→right).
+const NORMAL_DIR: Record<number, Dir> = { 89: "left", 205: "right" };
+const TOP_LINE_Y = 89;
+
+// Simulation speed scales (×1 real-time through ×10).
+const TIME_SCALES = [1, 2, 5, 10] as const;
+type TimeScale = (typeof TIME_SCALES)[number];
+
+/** Simulation clock display, HH:MM:SS.hh (hours may exceed two digits). */
+const fmtTime = (sec: number): string => {
+  const total = Math.floor(sec);
+  const cs = Math.floor(sec * 100) % 100;
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  return [h, m, s].map((n) => String(n).padStart(2, "0")).join(":") + "." + String(cs).padStart(2, "0");
+};
+
 // ---------------------------------------------------------------------------
-// Stations — a name plate across merged grid cells (pre-shift coords, rendered
-// inside the shifted diagram between the two running lines).
+// Stations — two layers: the full-name nameplates between the running lines,
+// and the platform cells that form each station's footprint (tagged with the
+// official station code). Cell refs are grid letters/rows; origins are computed
+// in pre-shift coordinates (rendered inside the shifted diagram).
 // ---------------------------------------------------------------------------
+// Column letter → 0-based index (A=0, Z=25, AA=26, ...).
+const colIdx = (letters: string): number => {
+  let n = 0;
+  for (const ch of letters) n = n * 26 + (ch.charCodeAt(0) - 64);
+  return n - 1;
+};
+
+// Nameplates — merged-cell plates between the running lines.
 type Station = { name: string; x: number; y: number; w: number; h: number };
 const STATIONS: Station[] = [
-  { name: "Bekasi Timur", x: 232 - SHIFT, y: 116, w: 116, h: 58 }, // cells E3–F3, row 3
-  { name: "Tambun", x: 1160 - SHIFT, y: 0, w: 116, h: 58 }, // cells U1–V1, row 1
-  { name: "Cibitung", x: 2204 - SHIFT, y: 116, w: 116, h: 58 }, // cells AM3–AN3, row 3
+  { name: "Bekasi Timur", x: 58 - SHIFT, y: 116, w: 116, h: 58 }, // cells B3–C3, row 3
+  { name: "Tambun", x: 986 - SHIFT, y: 0, w: 116, h: 58 }, // cells R1–S1, row 1
+  { name: "Cibitung", x: 2030 - SHIFT, y: 116, w: 116, h: 58 }, // cells AJ3–AK3, row 3
 ];
+
+type StationCell = { code: string; cells: { col: string; row: number }[] };
+const STATION_CELLS: StationCell[] = [
+  // B2–C2 and B4–C4 → BKST (Bekasi Timur)
+  { code: "BKST", cells: [{ col: "B", row: 2 }, { col: "C", row: 2 }, { col: "B", row: 4 }, { col: "C", row: 4 }] },
+  // R2–S2, R3–S3, R4–S4, R5–S5 → TB (Tambun)
+  { code: "TB", cells: [{ col: "R", row: 2 }, { col: "S", row: 2 }, { col: "R", row: 3 }, { col: "S", row: 3 }, { col: "R", row: 4 }, { col: "S", row: 4 }, { col: "R", row: 5 }, { col: "S", row: 5 }] },
+  // AJ2–AK2 and AJ4–AK4 → CIT (Cibitung)
+  { code: "CIT", cells: [{ col: "AJ", row: 2 }, { col: "AK", row: 2 }, { col: "AJ", row: 4 }, { col: "AK", row: 4 }] },
+];
+
+/** Station footprint cell → pre-shift origin inside the shifted diagram. */
+const cellOrigin = (c: { col: string; row: number }): [number, number] => [colIdx(c.col) * CELL - SHIFT, (c.row - 1) * CELL];
+
+// Top-line platform CENTER x per station code (row-2 cells of the footprint),
+// used by the train journey planner.
+const PLATFORM_CENTER_X: Record<string, number> = Object.fromEntries(
+  STATION_CELLS.map((st) => {
+    const cols = st.cells.filter((c) => c.row === 2).map((c) => colIdx(c.col));
+    return [st.code, ((Math.min(...cols) + Math.max(...cols) + 1) / 2) * CELL - SHIFT];
+  })
+);
+
+// Prototype trains: journey plans (schedule → per-leg speeds) + static sections.
+const JOURNEYS: { train: Train; plan: JourneyPlan }[] = TRAINS.map((tr) => ({
+  train: tr,
+  plan: buildJourney(tr.stops, PLATFORM_CENTER_X, TOP_LINE_Y, NODES, "left"),
+}));
+const SIGNAL_SECTIONS = signalSections(SIGNALS.map((s) => ({ id: s.id, x: s.x, y: s.lineY, dir: s.dir })));
 
 // ---------------------------------------------------------------------------
 // Route walker: from a signal, walk the graph in its direction, following
@@ -345,6 +421,167 @@ export default function DispatchingTable() {
   const [switches, setSwitches] = useState<Record<number, SwitchState>>(INITIAL_SWITCHES);
   const [signalOn, setSignalOn] = useState<Record<string, boolean>>({ S1: false, S2: false, S3: false, S4: false, S5: false, S6: false, S7: false });
   const [conflictNote, setConflictNote] = useState<string | null>(null);
+  const [showControls, setShowControls] = useState(true); // bottom point & signal buttons
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [timeScale, setTimeScale] = useState<TimeScale>(1);
+  // Simulation-time accumulator (trains will consume this) + direct DOM clock
+  // updates so the display stays smooth without re-rendering the table 60×/s.
+  const simRef = useRef(0);
+  const clockRef = useRef<HTMLSpanElement>(null);
+  const scaleRef = useRef<TimeScale>(1);
+  scaleRef.current = timeScale; // keep the tick loop in sync with the selected scale
+  // Train movement state (mutated per tick) — markers move via direct DOM
+  // updates; React re-renders only when a train's occupied section changes.
+  const trainStatesRef = useRef<TrainState[]>(
+    JOURNEYS.map((j) => initTrain(j.plan, NODES, j.plan.legs[0]?.speed ?? 0))
+  );
+  const trainGroupRefs = useRef<(SVGGElement | null)[]>([]);
+  const trainTextRefs = useRef<(SVGTextElement | null)[]>([]);
+  const [occupancyTick, setOccupancyTick] = useState(0);
+  const trainSectionKeyRef = useRef("");
+  // Independent route reservations: created when the player clears a signal,
+  // persist while a train uses them, and are consumed progressively by the train.
+  type Reservation = { pts: [number, number][]; nextSignalId?: string; lineY: number };
+  const [reservations, setReservations] = useState<Record<string, Reservation>>({});
+  const reservationsRef = useRef(reservations);
+  reservationsRef.current = reservations;
+  const reservationPathRefs = useRef<Record<string, SVGPathElement | null>>({});
+  // latest ctx for the tick loop (mutated each render)
+  const switchesRef = useRef(switches);
+  switchesRef.current = switches;
+  const aspectOfRef = useRef<(id: string) => Aspect>(() => "red");
+
+  // Close the settings popover on Escape.
+  useEffect(() => {
+    if (!settingsOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSettingsOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [settingsOpen]);
+
+  // Simulation clock: advances accumulated sim-time at the selected scale and
+  // writes the display directly (no React re-render per frame). Trains advance
+  // on the same accumulator; markers move via direct DOM updates and React
+  // re-renders only when a train's occupied signal section changes.
+  useEffect(() => {
+    let raf = 0;
+    let last = Date.now();
+    const tick = () => {
+      const now = Date.now();
+      const dt = ((now - last) / 1000) * scaleRef.current;
+      last = now;
+      simRef.current += dt;
+      const el = clockRef.current;
+      if (el) {
+        const t = fmtTime(simRef.current);
+        if (el.textContent !== t) {
+          el.textContent = t;
+          el.setAttribute("aria-label", `Simulation time ${t}`);
+        }
+      }
+      const ctx: MoveCtx = {
+        nodes: NODES,
+        signals: SIGNALS.map((s) => ({ id: s.id, x: s.x, y: s.lineY, dir: s.dir })),
+        switches: switchesRef.current,
+        aspectOf: aspectOfRef.current,
+        trainHalfLen: CELL,
+      };
+      const sections = JOURNEYS.map((j, ti) => {
+        const st = trainStatesRef.current[ti];
+        const plan = j.plan;
+        const g = trainGroupRefs.current[ti];
+        const txt = trainTextRefs.current[ti];
+        if (simRef.current < plan.originArr) {
+          g?.setAttribute("visibility", "hidden");
+          return "";
+        }
+        st.spawned = true;
+        // advance only the travel time since the origin (big sim jumps must not
+        // let the train run before it materializes). While stopped, no travel
+        // time is consumed — the engine only re-checks the release condition,
+        // and on release the budget resets so the train resumes without a jump.
+        const travel = Math.max(0, simRef.current - st.originArr);
+        if (st.stopped) {
+          advanceTrain(st, 0, ctx, plan.legs);
+          if (!st.stopped) st.advanced = travel;
+        } else {
+          const delta = travel - st.advanced;
+          if (delta > 0 && !st.done) advanceTrain(st, delta, ctx, plan.legs);
+          st.advanced = travel;
+        }
+        // Signal-pass consumption: signals the train's leading edge crossed this
+        // tick lose their player clear (they stay red until re-clicked) and the
+        // reservations whose routes ended there are released.
+        for (const pid of st.passedSignals) {
+          const s = SIGNALS.find((x) => x.id === pid);
+          if (!s) continue;
+          if (!s.block && !s.ai) {
+            setSignalOn((o) => (o[s.id] ? { ...o, [s.id]: false } : o));
+          }
+          setReservations((r) => {
+            let changed = false;
+            const out: Record<string, Reservation> = {};
+            for (const [k, v] of Object.entries(r)) {
+              if (v.nextSignalId === s.id) changed = true;
+              else out[k] = v;
+            }
+            return changed ? out : r;
+          });
+        }
+        // keep reservation highlights in sync with the train's progress (per-cell)
+        const resFronts = trainStatesRef.current
+          .filter((m) => m.spawned && !m.done)
+          .map((m) => ({ lineY: m.y, front: m.dir === "left" ? m.x - CELL : m.x + CELL }));
+        for (const [id, res] of Object.entries(reservationsRef.current)) {
+          const el = reservationPathRefs.current[id];
+          if (!el) continue;
+          const ahead = reservationAhead(res.pts, resFronts);
+          const d = ahead && ahead.length >= 2 ? "M" + ahead.map(([x, y]) => `${x},${y}`).join(" ") : "";
+          if (el.getAttribute("d") !== d) el.setAttribute("d", d);
+        }
+        // render: straights snap to the nearest 2-cell span (grid-aligned hops);
+        // diagonals (crossovers) follow the track continuously, rotated
+        const horizontal = st.segFrom[1] === st.segTo[1];
+        let rx = st.x;
+        let ry = st.y;
+        let ang = 0;
+        if (horizontal) {
+          const col = Math.round((st.x + SHIFT) / CELL) - 1;
+          rx = (col + 1) * CELL - SHIFT;
+        } else {
+          // diagonal: advance in discrete CELL steps along the segment, so the
+          // crossing is grid-based too (not a smooth slide)
+          const [fx, fy] = st.segFrom;
+          const [tx, ty] = st.segTo;
+          const len = Math.hypot(tx - fx, ty - fy) || 1;
+          const progress = Math.hypot(st.x - fx, st.y - fy);
+          const stepped = Math.min(len, Math.round(progress / CELL) * CELL);
+          const t = stepped / len;
+          rx = fx + (tx - fx) * t;
+          ry = fy + (ty - fy) * t;
+          ang = (Math.atan2(ty - fy, tx - fx) * 180) / Math.PI;
+        }
+        if (g) {
+          g.setAttribute("transform", `translate(${rx}, ${ry}) rotate(${ang})`);
+          g.setAttribute("visibility", "visible");
+          g.setAttribute("data-x", String(Math.round(rx)));
+          g.setAttribute("data-y", String(Math.round(ry)));
+        }
+        if (txt) txt.setAttribute("transform", `rotate(${-ang})`);
+        return occupiedSections(st, SIGNAL_SECTIONS, CELL);
+      });
+      const key = sections.join(",");
+      if (key !== trainSectionKeyRef.current) {
+        trainSectionKeyRef.current = key;
+        setOccupancyTick((t) => t + 1);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   /**
    * Approach locking: a point is locked while any cleared (proceed) route passes
@@ -353,8 +590,12 @@ export default function DispatchingTable() {
   const lockedBy = (swId: number): string | undefined => {
     const sw = SWITCHES.find((s) => s.id === swId)!;
     return SIGNALS.find((sig) => {
-      if (sig.block || aspectOf(sig.id) === "red") return false;
-      return routeOf(sig.id).pts.some(([x, y]) => x === sw.x && y === sw.y);
+      if (sig.block) return false;
+      // a reservation locks its points even after the train passed the signal
+      // (the clear is consumed but the route stays reserved while the train uses it)
+      const res = reservations[sig.id];
+      if (!res) return false;
+      return res.pts.some(([x, y]) => x === sw.x && y === sw.y);
     })?.id;
   };
 
@@ -367,7 +608,8 @@ export default function DispatchingTable() {
     const group = coupledWith(id);
     const owner = group.map((gid) => lockedBy(gid)).find((o) => o !== undefined);
     if (owner) {
-      setConflictNote(`P${id} is locked by ${owner}'s reservation — set ${owner} to red first.`);
+      const name = group.length > 1 ? `P${group.join("+P")}` : `P${group[0]}`;
+      setConflictNote(`${name} is locked by ${codeOf(owner)}'s reservation — set ${codeOf(owner)} to red first.`);
       window.setTimeout(() => setConflictNote(null), 3000);
       return; // locked under a route
     }
@@ -386,29 +628,34 @@ export default function DispatchingTable() {
   const toggleSignal = (id: string) => {
     if (signalOn[id]) {
       setSignalOn((o) => ({ ...o, [id]: false }));
+      setReservations((r) => {
+        const { [id]: _, ...rest } = r;
+        return rest;
+      });
       return;
     }
     const sig = SIGNALS.find((s) => s.id === id)!;
     const prospective = walkRoute(sig, switches);
     if (prospective.blocked) {
-      setConflictNote(`${sig.id} cannot clear — points not set (${prospective.note}).`);
+      setConflictNote(`${codeOf(sig.id)} cannot clear — points not set (${prospective.note}).`);
       window.setTimeout(() => setConflictNote(null), 3000);
       return; // stay red
     }
-    const clash = SIGNALS.find(
-      (other) =>
-        other.id !== id &&
-        !other.block &&
-        other.dir !== sig.dir &&
-        aspectOf(other.id) !== "red" &&
-        routesOverlap(prospective.pts, routeOf(other.id).pts)
-    );
+    const clash = SIGNALS.find((other) => {
+      if (other.id === id || other.block || other.dir === sig.dir) return false;
+      const otherRoute = reservations[other.id]?.pts ?? (signalOn[other.id] ? routeOf(other.id).pts : undefined);
+      return otherRoute ? routesOverlap(prospective.pts, otherRoute) : false;
+    });
     if (clash) {
-      setConflictNote(`${sig.id} cannot clear — its route overlaps ${clash.id}'s reservation.`);
+      setConflictNote(`${codeOf(sig.id)} cannot clear — its route overlaps ${codeOf(clash.id)}'s reservation.`);
       window.setTimeout(() => setConflictNote(null), 3000);
       return; // stay red
     }
     setSignalOn((o) => ({ ...o, [id]: true }));
+    setReservations((r) => ({
+      ...r,
+      [id]: { pts: prospective.pts, nextSignalId: prospective.nextSignalId, lineY: sig.lineY },
+    }));
   };
 
   /**
@@ -419,11 +666,92 @@ export default function DispatchingTable() {
    */
   const routeOf = (id: string) => walkRoute(SIGNALS.find((s) => s.id === id)!, switches);
 
+  /**
+   * Wrong-direction operation: x-intervals on a main line that a cleared route
+   * currently reserves against the normal traffic direction.
+   */
+  const wrongWaySpans = (y: number, normalDir: Dir): [number, number][] => {
+    const spans: [number, number][] = [];
+    for (const sig of SIGNALS) {
+      if (sig.block || !signalOn[sig.id]) continue;
+      const r = walkRoute(sig, switches);
+      if (r.blocked) continue;
+      for (let i = 0; i + 1 < r.pts.length; i++) {
+        const [x1, y1] = r.pts[i];
+        const [x2, y2] = r.pts[i + 1];
+        // collinear horizontal segment on this line, running against the flow
+        if (y1 === y2 && y1 === y && (normalDir === "right" ? x1 > x2 : x1 < x2)) {
+          spans.push([Math.min(x1, x2), Math.max(x1, x2)]);
+        }
+      }
+    }
+    return spans;
+  };
+
+  /**
+   * A normal-direction signal is held at red while a wrong-way route reserves
+   * its ENTIRE protected section (fully covers it). A bounded wrong-way
+   * diversion between crossovers only reds what it physically covers — the
+   * train's own occupancy handles that. Signals beyond the reserved stretch
+   * (e.g. the exit chain east of the map) are unaffected.
+   */
+  const forcedRed = (id: string): boolean => {
+    const sig = SIGNALS.find((s) => s.id === id)!;
+    const normalDir = NORMAL_DIR[sig.lineY];
+    if (!normalDir || sig.dir !== normalDir) return false;
+    const spans = wrongWaySpans(sig.lineY, normalDir);
+    if (!spans.length) return false;
+    // merge adjacent/overlapping spans into a union of intervals
+    const sorted = [...spans].sort((a, b) => a[0] - b[0]);
+    const merged: [number, number][] = [];
+    for (const [a, b] of sorted) {
+      if (merged.length && a <= merged[merged.length - 1][1]) {
+        merged[merged.length - 1][1] = Math.max(merged[merged.length - 1][1], b);
+      } else {
+        merged.push([a, b]);
+      }
+    }
+    // the section this signal protects: between it and its next same-direction signal
+    const nextId = routeOf(id).nextSignalId;
+    const farSig = nextId ? SIGNALS.find((s) => s.id === nextId) : undefined;
+    const farX = farSig ? farSig.x : sig.dir === "right" ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+    const lo = Math.min(sig.x, farX);
+    const hi = Math.max(sig.x, farX);
+    return merged.some(([a, b]) => a <= lo && b >= hi); // fully covered by a wrong-way span
+  };
+
+  /**
+   * Occupancy: does a currently-shown train occupy any part of the x-range
+   * [x1, x2] on the given line? (Prototype trains run the top line.)
+   */
+  const trainOccupies = (lineY: number, x1: number, x2: number): boolean =>
+    // body-based: a section is occupied while ANY part of the train overlaps it —
+    // it clears only after the rear leaves. A train stopped AT a signal (front
+    // touching the section edge) does not occupy the section beyond it.
+    trainStatesRef.current.some((m) => {
+      if (!m.spawned || m.done || m.y !== lineY) return false;
+      return m.x - CELL < x2 && m.x + CELL > x1;
+    });
+
   const aspectOf = (id: string, visited: Set<string> = new Set()): Aspect => {
     if (visited.has(id)) return "red";
     visited.add(id);
     const sig = SIGNALS.find((s) => s.id === id)!;
+    // Wrong-way reservation on this line → the signals serving the reserved
+    // stretch (and the chain feeding them) are held red.
+    const normalDir = NORMAL_DIR[sig.lineY];
+    if (normalDir && sig.dir === normalDir && forcedRed(id)) {
+      return "red";
+    }
     const nextId = routeOf(id).nextSignalId;
+    // Occupancy: a train in the protected section (between this signal and the
+    // next same-direction signal) holds it at red — overriding a player clear
+    // and driving the block cascade behind the train.
+    const farSig = nextId ? SIGNALS.find((s) => s.id === nextId) : undefined;
+    const farX = farSig ? farSig.x : sig.dir === "right" ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+    if (trainOccupies(sig.lineY, Math.min(sig.x, farX), Math.max(sig.x, farX))) {
+      return "red";
+    }
     if (sig.block) {
       // automatic block signal: always active — amber when the next signal is RED,
       // green otherwise (amber or green next). Only the signal right before a red
@@ -436,12 +764,13 @@ export default function DispatchingTable() {
     // green unless the next signal is red (1-2 blocks clear); amber if the next is red
     return nextId ? (aspectOf(nextId, visited) === "red" ? "amber" : "green") : "green";
   };
+  aspectOfRef.current = aspectOf; // keep the tick loop's aspect lookup current
 
-  const reversedCount = Object.values(switches).filter((v) => v === "reversed").length;
-  const routes = SIGNALS.filter((s) => !s.block && aspectOf(s.id) !== "red").map((s) => ({
-    sig: s,
-    route: routeOf(s.id),
-  }));
+  /** Leading-edge positions of the currently shown trains. */
+  const trainFronts = (): { lineY: number; front: number }[] =>
+    trainStatesRef.current
+      .filter((m) => m.spawned && !m.done)
+      .map((m) => ({ lineY: m.y, front: m.dir === "left" ? m.x - CELL : m.x + CELL }));
 
   const cellX0 = (sw: Sw) => Math.floor(sw.x / CELL) * CELL;
   const cellY0 = (sw: Sw) => Math.floor(sw.y / CELL) * CELL;
@@ -455,6 +784,106 @@ export default function DispatchingTable() {
 
   return (
     <div className="w-full max-w-[2000px]">
+      {/* Time controls — fixed top-left: simulation clock + speed scale */}
+      <div className="fixed top-4 left-4 z-50 flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1.5 shadow-sm">
+        <span
+          ref={clockRef}
+          role="timer"
+          aria-label="Simulation time 00:00:00.00"
+          className="font-mono text-sm font-medium tabular-nums text-slate-700"
+        >
+          00:00:00.00
+        </span>
+        <span className="h-4 w-px bg-slate-200" aria-hidden="true" />
+        <div role="group" aria-label="Time scale" className="flex items-center gap-1">
+          {TIME_SCALES.map((s) => (
+            <button
+              key={s}
+              type="button"
+              aria-pressed={timeScale === s}
+              onClick={() => setTimeScale(s)}
+              className={`rounded-full px-2 py-0.5 text-xs font-semibold transition-colors cursor-pointer ${
+                timeScale === s
+                  ? "bg-green-600 text-white"
+                  : "text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+              }`}
+            >
+              ×{s}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Settings — fixed top-right; a gear opens a popover with toggles */}
+      <div className="fixed top-4 right-4 z-50">
+        <button
+          type="button"
+          onClick={() => setSettingsOpen((o) => !o)}
+          aria-expanded={settingsOpen}
+          aria-label="Settings"
+          title="Settings"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-600 shadow-sm transition-colors cursor-pointer hover:border-slate-400 hover:text-slate-800"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="h-5 w-5"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"
+            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+          </svg>
+        </button>
+
+        {settingsOpen && (
+          <>
+            {/* invisible backdrop — click anywhere to close */}
+            <div
+              className="fixed inset-0 z-40"
+              onClick={() => setSettingsOpen(false)}
+              aria-hidden="true"
+            />
+            <div
+              className="absolute right-0 z-50 mt-2 w-64 rounded-lg border border-slate-200 bg-white p-4 shadow-lg"
+              role="dialog"
+              aria-label="Settings"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-sm font-medium text-slate-700">Control buttons</p>
+                  <p className="mt-0.5 text-xs text-slate-400">
+                    Show the point &amp; signal buttons below the table
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={showControls}
+                  aria-label="Show control buttons"
+                  onClick={() => setShowControls((v) => !v)}
+                  className={`relative h-6 w-11 shrink-0 rounded-full transition-colors cursor-pointer ${
+                    showControls ? "bg-green-600" : "bg-slate-300"
+                  }`}
+                >
+                  <span
+                    className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${
+                      showControls ? "translate-x-5" : ""
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
       <svg
         viewBox={`${-26} ${-22} ${RIGHT + 52} 401`}
         className="w-full h-auto"
@@ -530,6 +959,29 @@ export default function DispatchingTable() {
             ))}
           </defs>
 
+          {/* Station platform cells — tinted footprint under the tracks */}
+          <g>
+            {STATION_CELLS.map((st) =>
+              st.cells.map((c) => {
+                const [x, y] = cellOrigin(c);
+                return (
+                  <rect
+                    key={`${st.code}-${c.col}${c.row}`}
+                    x={x}
+                    y={y}
+                    width={CELL}
+                    height={CELL}
+                    fill="#fef3c7"
+                    stroke="#f59e0b"
+                    strokeWidth={1}
+                    strokeOpacity={0.5}
+                    opacity={0.55}
+                  />
+                );
+              })
+            )}
+          </g>
+
           {/* All tracks — always solid black outside of point cells */}
           <g stroke="#000" strokeWidth={2} strokeLinecap="round" fill="none">
             {ALL_TRACKS.map((d, i) => (
@@ -537,16 +989,32 @@ export default function DispatchingTable() {
             ))}
           </g>
 
-        {/* Reserved routes (amber) for every cleared signal */}
+        {/* Reserved routes (amber) — independent of the signal aspect; only the
+            unpassed portion of each reservation stays highlighted (per-cell).
+            The tick loop keeps the paths in sync with the train's progress. */}
         <g strokeLinecap="round" strokeLinejoin="round" fill="none">
-          {routes.map(({ sig, route }) => (
-            <path key={sig.id} d={route.d} stroke="#f59e0b" strokeWidth={6} opacity={0.85} />
-          ))}
+          {Object.entries(reservations).map(([id, res]) => {
+            const ahead = reservationAhead(res.pts, trainFronts());
+            if (!ahead || ahead.length < 2) return null;
+            const d = "M" + ahead.map(([x, y]) => `${x},${y}`).join(" ");
+            return (
+              <path
+                key={id}
+                ref={(el) => {
+                  reservationPathRefs.current[id] = el;
+                }}
+                d={d}
+                stroke="#f59e0b"
+                strokeWidth={6}
+                opacity={0.85}
+              />
+            );
+          })}
         </g>
 
         {/* Direction arrows (traffic flow: top runs right→left, bottom left→right) */}
         <g fill="#000">
-          <polygon points="-570,83 -570,95 -580,89" />
+          <polygon points="-396,83 -396,95 -406,89" />
           <polygon points="1788,199 1788,211 1798,205" />
         </g>
 
@@ -662,7 +1130,7 @@ export default function DispatchingTable() {
               className={passive ? "select-none" : "group cursor-pointer select-none focus:outline-none"}
               role={passive ? undefined : "button"}
               aria-pressed={passive ? undefined : aspect !== "red"}
-              aria-label={`Signal ${sig.id} (${sig.label}), aspect ${aspect}${sig.block ? ", automatic block" : sig.ai ? ", AI-controlled" : ""}`}
+              aria-label={`Signal ${codeOf(sig.id)} (${sig.label}), aspect ${aspect}${sig.block ? ", automatic block" : sig.ai ? ", AI-controlled" : ""}`}
               tabIndex={passive ? -1 : 0}
               onClick={passive ? undefined : () => toggleSignal(sig.id)}
               onKeyDown={(e) => {
@@ -712,32 +1180,48 @@ export default function DispatchingTable() {
                 fill="#64748b"
                 pointerEvents="none"
               >
-                {sig.id}
+                {codeOf(sig.id)}
               </text>
             </g>
           );
         })}
+
+        {/* Trains — block markers on the track with their train number. The tick
+            loop moves them via direct transform updates for smooth motion. */}
+        {JOURNEYS.map(({ train }, ti) => (
+          <g
+            key={train.train_no}
+            data-train={train.train_no}
+            aria-label={`Train ${train.train_no} ${train.name}`}
+            ref={(el) => {
+              trainGroupRefs.current[ti] = el;
+            }}
+            transform="translate(-1000, -1000)"
+            visibility="hidden"
+          >
+            <rect x={-58} y={-11} width={116} height={22} rx={5} fill="#bfdbfe" stroke="#2563eb" strokeWidth={1.5} />
+            <text
+              ref={(el) => {
+                trainTextRefs.current[ti] = el;
+              }}
+              x={0}
+              y={4}
+              textAnchor="middle"
+              fontSize={12}
+              fontWeight={800}
+              fill="#1e3a8a"
+              pointerEvents="none"
+            >
+              {train.train_no}
+            </text>
+          </g>
+        ))}
         </g>
       </svg>
 
-      {/* Legend + live status */}
+      {/* Control buttons (legend text lives in the settings panel if needed) */}
       <div className="mt-6">
-        <p className="text-sm text-slate-500 text-center mb-3">
-          Tracks are shown per grid cell; a point&apos;s own cell shows the inactive route
-          as dashed. Click a point to throw it. Signals default to{" "}
-          <span className="text-red-600 font-medium">red</span>; click to clear —{" "}
-          <span className="text-green-700 font-medium">green</span> when the next signal
-          is clear, <span className="text-amber-600 font-medium">amber</span> (caution)
-          when the next signal is red. A signal only clears when the points are set for
-          its route, and never into an opposite-direction reservation. Points under a
-          reserved route are locked <span className="text-red-500">🔒</span> until the
-          signal is put back to red. Crossovers P1⇄P2 and P7⇄P8 are coupled — one click
-          throws both ends together. B1–B16 are automatic block signals — they cannot be
-          controlled and always mirror the next signal; the smallest number is closest to
-          its signalled route (B1→M4, B5→D2, B9→AF2). B13–B16 (AF4..AO4) are beyond the
-          map at the bottom-line exit, so they read green. A2 is the AI-controlled entry
-          signal — red for now, it will be cleared by the AI later.
-        </p>
+        {showControls && (
         <div className="flex flex-wrap justify-center gap-2">
           {POINT_CONTROLS.map((ctl) => {
             const id = ctl.ids[0];
@@ -782,7 +1266,7 @@ export default function DispatchingTable() {
                       : "bg-slate-50 border-slate-200 text-slate-500"
                   }`}
                 >
-                  {sig.id} · {label}
+                  {codeOf(sig.id)} · {label}
                 </button>
               );
             }
@@ -800,27 +1284,20 @@ export default function DispatchingTable() {
                     : "bg-white border-slate-300 text-slate-600 hover:border-slate-400"
                 }`}
               >
-                {sig.id} · {label}
+                {codeOf(sig.id)} · {label}
               </button>
             );
           })}
         </div>
-        <p className="text-xs text-slate-400 text-center mt-3">
-          {reversedCount === 0
-            ? "All points normal."
-            : `${reversedCount} point${reversedCount === 1 ? "" : "s"} reversed.`}{" "}
-          {routes.length === 0
-            ? "All signals at danger (red)."
-            : `${routes.length} signal${routes.length === 1 ? "" : "s"} clear: ${routes
-                .map(({ sig, route }) => {
-                  const asp = aspectOf(sig.id);
-                  return `${sig.id} (${asp}) → ${route.note}`;
-                })
-                .join(", ")}.`}
-          {conflictNote && (
-            <span className="text-red-600 font-medium"> {conflictNote}</span>
-          )}
-        </p>
+        )}
+        {conflictNote && (
+          <div
+            role="alert"
+            className="fixed bottom-4 left-1/2 z-50 -translate-x-1/2 rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-lg"
+          >
+            {conflictNote}
+          </div>
+        )}
       </div>
     </div>
   );
