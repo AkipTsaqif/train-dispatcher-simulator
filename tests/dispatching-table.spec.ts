@@ -77,7 +77,23 @@ test.describe("dispatching table", () => {
   test("opposite-direction overlap is refused with a conflict note", async ({ page }) => {
     // Reverse the right crossover: S2 (right) diverts up through P7/P8 onto
     // the top line, while S4 (left) diverts down the same way — the two
-    // reserved routes overlap, so S4 must be refused.
+    // reserved routes overlap, so S4 must be refused. Run it after 14:00 when
+    // the lines are empty (a route into occupied track is refused first).
+    await page.clock.install();
+    await page.goto("/");
+    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    // let the eastbound trains run through and exit first (a route into the
+    // occupied line is refused), then test the pure route overlap
+    for (const re of [/S1 ·/, /S2 ·/, /S4 ·/, /S5 ·/]) {
+      await page.getByRole("button", { name: re }).click();
+    }
+    await page.clock.fastForward("00:09:50");
+    await page.getByRole("button", { name: /S4 ·/ }).click(); // re-clear for 2523
+    await page.getByRole("button", { name: /S5 ·/ }).click();
+    await page.clock.fastForward("00:02:50"); // → t=760 (12:40) — 6082B has left S1/S2
+    await page.getByRole("button", { name: /S1 ·/ }).click(); // re-clear for 30A
+    await page.getByRole("button", { name: /S2 ·/ }).click();
+    await page.clock.fastForward("00:04:20"); // → t=1020 (17:00)
     await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
     await expect(page.getByRole("button", { name: /P7\+P8 · REVERSED/ })).toBeVisible();
     await page.getByRole("button", { name: /S2 ·/ }).click();
@@ -104,7 +120,25 @@ test.describe("dispatching table", () => {
     // S4 with the right crossover reversed drops onto the bottom line running
     // against normal traffic → S1 and the B101–B104 approach chain must be held
     // at red (the section is reserved by the wrong-way move). The exit chain
-    // east of the map is beyond the reserved stretch, so it stays green.
+    // east of the map is beyond the reserved stretch, so it stays green. Run
+    // after 14:00 when the bottom line is empty (a route into occupied track is
+    // refused first).
+    await page.clock.install();
+    await page.goto("/");
+    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    // let the trains run out (cleared signals), move 2523 past S4 with a
+    // re-clear at 9:50, then set the wrong-way route at 17:00 on the empty line
+    // (a route into occupied track is refused first)
+    for (const re of [/S1 ·/, /S2 ·/, /S4 ·/, /S5 ·/]) {
+      await page.getByRole("button", { name: re }).click();
+    }
+    await page.clock.fastForward("00:09:50");
+    await page.getByRole("button", { name: /S4 ·/ }).click(); // re-clear for 2523
+    await page.getByRole("button", { name: /S5 ·/ }).click();
+    await page.clock.fastForward("00:02:50"); // → t=760 (12:40) — 6082B has left S1/S2
+    await page.getByRole("button", { name: /S1 ·/ }).click(); // re-clear for 30A
+    await page.getByRole("button", { name: /S2 ·/ }).click();
+    await page.clock.fastForward("00:04:20"); // → t=1020 (17:00)
     await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
     await expect(page.getByRole("button", { name: /P7\+P8 · REVERSED/ })).toBeVisible();
     await page.getByRole("button", { name: /S4 ·/ }).click();
@@ -127,9 +161,10 @@ test.describe("dispatching table", () => {
     await expect(page.getByRole("button", { name: /P1\+P2 · REVERSED/ })).toBeVisible();
     await page.getByRole("button", { name: /S4 ·/ }).click();
     await expect(page.getByRole("button", { name: /S4 · GREEN/ })).toBeVisible();
-    // B104's section (A4, west of the left crossover) is not covered by the
-    // bounded wrong-way span → stays green
-    await expect(page.getByRole("button", { name: /B104 · GREEN/ })).toBeVisible();
+    // B103's section (D4, west of the left crossover) is not covered by the
+    // bounded wrong-way span → stays green (B104 itself is red because 6082B,
+    // eastbound on the bottom line, spawns at BKST inside its section)
+    await expect(page.getByRole("button", { name: /B103 · GREEN/ })).toBeVisible();
     await expect(page.getByRole("button", { name: /B109 · GREEN/ })).toBeVisible();
     await expect(page.getByRole("button", { name: /B106 · GREEN/ })).toBeVisible();
   });
@@ -186,7 +221,96 @@ test.describe("dispatching table", () => {
     expect(d2).toBeLessThan(20);
   });
 
-  test("train 107B follows its schedule (CIT 1:00 → TB 4:30 → BKST 9:00)", async ({ page }) => {
+  test("the speed scales include ×20, ×50 and ×100", async ({ page }) => {
+    for (const n of ["×20", "×50", "×100"]) {
+      await page.getByRole("button", { name: n, exact: true }).click();
+      await expect(page.getByRole("button", { name: n, exact: true })).toHaveAttribute("aria-pressed", "true");
+    }
+  });
+
+  test("×100 advances the clock about ten times faster than ×10", async ({ page }) => {
+    const clock = page.getByRole("timer");
+    const secs = async () => {
+      const s = await clock.textContent();
+      const [h, m, sec] = (s ?? "00:00:00").split(":").map(Number);
+      return h * 3600 + m * 60 + sec;
+    };
+    await page.getByRole("button", { name: "×10", exact: true }).click();
+    const t1 = await secs();
+    await page.waitForTimeout(1100);
+    const d10 = (await secs()) - t1;
+    await page.getByRole("button", { name: "×100", exact: true }).click();
+    const t2 = await secs();
+    await page.waitForTimeout(1100);
+    const d100 = (await secs()) - t2;
+    expect(d100).toBeGreaterThan(d10 * 3);
+  });
+
+  test("pause freezes the clock; resume continues from the same time", async ({ page }) => {
+    const clock = page.getByRole("timer");
+    const secs = async () => {
+      const s = await clock.textContent();
+      const [h, m, sec] = (s ?? "00:00:00").split(":").map(Number);
+      return h * 3600 + m * 60 + sec;
+    };
+    await page.getByRole("button", { name: "×10", exact: true }).click();
+    await page.waitForTimeout(1100);
+    expect(await secs()).toBeGreaterThan(5);
+    await page.getByRole("button", { name: "Pause simulation" }).click();
+    await expect(page.getByRole("button", { name: "Resume simulation" })).toHaveAttribute("aria-pressed", "true");
+    await page.waitForTimeout(800);
+    const t2 = await secs();
+    await page.waitForTimeout(800);
+    expect(await secs()).toBe(t2); // frozen while paused
+    await page.getByRole("button", { name: "Resume simulation" }).click();
+    await page.waitForTimeout(800);
+    expect(await secs()).toBeGreaterThan(t2 + 2); // resumes
+  });
+
+  test("trains 30A and 2523 run per their schedules", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/");
+    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    await expect(page.locator('[data-train="30A"]')).toHaveCount(1);
+    await expect(page.locator('[data-train="2523"]')).toHaveCount(1);
+    // clear both lines so they can move
+    for (const re of [/S5 ·/, /S4 ·/, /S1 ·/, /S2 ·/]) {
+      await page.getByRole("button", { name: re }).click();
+    }
+    const x = async (no: string) =>
+      parseFloat((await page.locator('[data-train="' + no + '"]').getAttribute("data-x")) ?? "NaN");
+    // 30A (eastbound): reaches BKST ~5:00 and heads east (it may be held at S1
+    // behind 6082B's TB dwell, but is past BKST by then)
+    await page.clock.fastForward("00:05:40");
+    await expect.poll(async () => await x("30A")).toBeGreaterThan(-290);
+    // 2523 (westbound): reaches CIT ~10:00 and heads west; re-clear its
+    // signals (107B consumed S4/S5 earlier on its own run)
+    await page.clock.fastForward("00:04:30"); // → t≈610 (10:10)
+    await expect.poll(async () => await x("2523")).toBeLessThan(1682);
+    await page.getByRole("button", { name: /S4 ·/ }).click();
+    await page.getByRole("button", { name: /S5 ·/ }).click();
+    // 2523 passes TB (a pass — no stop) and continues toward BKST
+    await page.clock.fastForward("00:04:30"); // → t≈880 (14:40)
+    await expect.poll(async () => await x("2523")).toBeLessThan(500);
+  });
+
+  test("the conflict failsafe does not false-positive on queued trains", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/");
+    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    // with nothing cleared, every train is held at a red signal — queues form,
+    // but the block cascade spaces them (30A stops at B101 behind 6082B at S1,
+    // 107B/2523 at S4). No conflict may fire: no marker may turn the conflict
+    // color, all stay the signal-held red.
+    for (let i = 0; i < 4; i++) await page.clock.fastForward("00:05:00"); // → t=20:00
+    for (const t of ["107B", "6082B", "30A", "2523"]) {
+      await expect
+        .poll(async () => await page.locator('[data-train="' + t + '"] rect').getAttribute("fill"))
+        .toBe("#fecaca");
+    }
+  });
+
+  test("train 107B follows its schedule (CIT 0:00 → TB 3:30 → BKST, held by 6082B)", async ({ page }) => {
     // faked clock: drive the sim deterministically instead of waiting real time
     await page.clock.install();
     await page.goto("/");
@@ -196,23 +320,176 @@ test.describe("dispatching table", () => {
     await page.getByRole("button", { name: /S4 ·/ }).click();
     const marker = page.locator('[data-train="107B"]');
     const x = async () => await marker.evaluate((el) => parseFloat(el.getAttribute("data-x") ?? "NaN"));
-    // before 1:00 the train has not materialized
-    await page.clock.fastForward("00:00:59");
-    await expect(marker).toBeHidden();
-    // pre-spawn: block signals read normally — no phantom occupancy from the
-    // not-yet-appeared train (both B204 sets must be green)
-    await expect(page.getByRole("button", { name: /B204 · GREEN/ })).toHaveCount(2);
-    // just after 1:00 → at CIT platform (center ≈ 1682)
-    await page.clock.fastForward("00:00:03");
+    // t≈0: 107B departs CIT platform (center ≈ 1682) at 00:00
     await expect(marker).toBeVisible();
-    expect(Math.abs((await x()) - 1682)).toBeLessThan(40);
-    // just after 4:30 → at TB platform (center ≈ 638), grid-aligned
-    await page.clock.fastForward("00:03:31");
-    expect(Math.abs((await x()) - 638)).toBeLessThan(40);
-    expect((await x()) % 58).toBe(0); // snapped to the cell grid
-    // just after 9:00 → at BKST platform (center ≈ -290)
-    await page.clock.fastForward("00:04:31");
-    expect(Math.abs((await x()) - -290)).toBeLessThan(20);
+    await expect.poll(async () => Math.abs((await x()) - 1682)).toBeLessThan(40);
+    // t≈2:30 — 107B PASSES TB at ~2:29: the schedule has arr == dep (a passing
+    // train), so it does not stop — running at 80 km/h it arrives early and
+    // rolls straight through (marker not station-green)
+    await page.clock.fastForward("00:02:30");
+    await expect.poll(async () => Math.abs((await x()) - 638)).toBeLessThan(40);
+    await expect.poll(async () => (await x()) % 58).toBe(0);
+    await expect.poll(async () => await marker.locator("rect").getAttribute("fill")).not.toBe("#bbf7d0");
+    // 6082B dwells at TB on the opposite line, so 107B is not held — it reaches
+    // BKST (~-290) early (~5:47) and rolls to the exit. Step in minute chunks
+    // so both trains advance together, and assert completion by ~11:40.
+    for (let i = 0; i < 10; i++) await page.clock.fastForward("00:01:00"); // → t≈813
+    await expect.poll(async () => (await x())).toBeLessThanOrEqual(-290);
+  });
+
+  test("train 6082B stops at TB per its schedule (BKST 0:00 → TB 6:00–11:00 → CIT 14:00)", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/");
+    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    const marker = page.locator('[data-train="6082B"]');
+    const x = async () => await marker.evaluate((el) => parseFloat(el.getAttribute("data-x") ?? "NaN"));
+    // 6082B runs eastbound on the bottom line — clear its signals so it can run
+    await page.getByRole("button", { name: /S1 ·/ }).click();
+    await page.getByRole("button", { name: /S2 ·/ }).click();
+    // t≈0: at BKST platform (≈ -290); origin dwell 0:00→0:30
+    await expect(marker).toBeVisible();
+    await expect.poll(async () => Math.abs((await x()) - -290)).toBeLessThan(20);
+    // 0:20 — still at BKST (hasn't departed)
+    await page.clock.fastForward("00:00:20");
+    await expect.poll(async () => Math.abs((await x()) - -290)).toBeLessThan(20);
+    // just after 6:00 — at TB (arrived early at ~3:48 at 80 km/h; dwelling
+    // until the scheduled 11:00 departure)
+    await page.clock.fastForward("00:05:43");
+    await expect.poll(async () => Math.abs((await x()) - 638)).toBeLessThan(20);
+    // 9:00 — still stopped at TB (scheduled dwell 6:00 → 11:00)
+    await page.clock.fastForward("00:03:00");
+    await expect.poll(async () => Math.abs((await x()) - 638)).toBeLessThan(20);
+    // ~13:30 — arrived at CIT early (scheduled 14:00; 80 km/h recovers the
+    // reserve), then it rolls to the exit. Arrival ≈ t 808.5; land at t=810.
+    await page.clock.fastForward("00:04:27"); // 543 → 810 (13:30)
+    await expect.poll(async () => Math.abs((await x()) - 1682)).toBeLessThan(20);
+  });
+
+  test("train marker color clues the stop state (station vs signal)", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/");
+    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    const fill = async (no: string) =>
+      await page.locator('[data-train="' + no + '"] rect').getAttribute("fill");
+    // clear both trains' routes so they can run on time
+    for (const re of [/S5 ·/, /S4 ·/, /S1 ·/, /S2 ·/]) {
+      await page.getByRole("button", { name: re }).click();
+    }
+    // t≈6:00 — 6082B arrived at TB (6:00) and dwells until 11:00 → green
+    await page.clock.fastForward("00:06:00");
+    await expect.poll(async () => await fill("6082B")).toBe("#bbf7d0");
+    // t=11:00 — dwell ends and it departs (blue); then S2 goes red ahead of it
+    await page.clock.fastForward("00:05:00");
+    await expect.poll(async () => await fill("6082B")).toBe("#bfdbfe"); // departing TB
+    await page.getByRole("button", { name: /S2 ·/ }).click();
+    await page.clock.fastForward("00:00:30");
+    await expect.poll(async () => await fill("6082B")).toBe("#fecaca"); // held at red S2
+  });
+
+  test("a train held at a red signal snaps one cell behind it, never over it", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/");
+    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    const marker = page.locator('[data-train="6082B"]');
+    // leave S1 red: 6082B (eastbound) stops with its leading edge at S1 (x 322,
+    // cell M4). The 2-cell marker must snap BEHIND the signal — box 174..290
+    // (K4–L4) — not protrude into/over M4.
+    await page.clock.fastForward("00:04:15");
+    const x = async () => parseFloat((await marker.getAttribute("data-x")) ?? "NaN");
+    await expect.poll(async () => await x()).toBe(232);
+    expect((await x()) + 58).toBeLessThanOrEqual(322); // leading edge at/behind S1
+    await expect.poll(async () => await marker.locator("rect").getAttribute("fill")).toBe("#fecaca");
+  });
+
+  // Every player signal: a train held at the (red) signal resumes when it is
+  // cleared, passes, and the clear is consumed — the signal must go red and
+  // STAY red (never re-light like an automatic block signal). Each case sets up
+  // the route that puts a train at that signal (points BEFORE signals so the
+  // approach lock doesn't refuse the throw).
+  const SIGNAL_CONSUMPTION_CASES: {
+    sig: string;
+    setup: [string, number][];
+    // optional mid-flight step: fast-forward to a time (seconds), perform clicks
+    mid?: { at: number; clicks: string[] };
+    wait: string;
+    after: string;
+  }[] = [
+    { sig: "S1", setup: [], wait: "00:05:00", after: "00:00:40" }, // 6082B eastbound, bottom line
+    { sig: "S2", setup: [["S1", 1]], wait: "00:11:30", after: "00:00:30" }, // 6082B after its TB dwell
+    // 6082B on the TB loop; re-click S1 at 5:30 so 30A (following on the bottom
+    // line, also diverted by P5) is held at S1 and doesn't stack at S3
+    {
+      sig: "S3",
+      setup: [["P5", 1], ["P6", 1], ["S1", 1]],
+      mid: { at: 330, clicks: ["S1", "S1"] }, // re-clear then re-red, so 30A is held at S1
+      wait: "00:06:10", // 11:40 minus the 5:30 mid-step
+      after: "00:01:00",
+    },
+    { sig: "S4", setup: [], wait: "00:02:00", after: "00:00:40" }, // 107B westbound, top line
+    { sig: "S5", setup: [["S4", 1]], wait: "00:02:30", after: "00:00:40" }, // 107B past S4
+    { sig: "S6", setup: [["P4", 1], ["S4", 1]], wait: "00:03:00", after: "00:00:40" }, // 107B on the upper loop
+    { sig: "S7", setup: [["P7+P8", 1], ["P6", 1], ["S4", 1], ["S5", 1]], wait: "00:03:00", after: "00:00:40" }, // 107B on the lower loop, west
+  ];
+  for (const c of SIGNAL_CONSUMPTION_CASES) {
+    test(`signal ${c.sig} is consumed when a train stopped at it resumes after the clear`, async ({ page }) => {
+      await page.clock.install();
+      await page.goto("/");
+      await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+      const chip = async (id: string) => {
+        const l = page.locator("button", { hasText: id + " ·" });
+        return (await l.count()) ? (await l.first().textContent())!.trim().replace(/\s+/g, " ") : "?";
+      };
+      const clickLabel = async (label: string) => {
+        const re = new RegExp("^" + label.replace(/[+.()]/g, "\\$&") + " ·");
+        await page.getByRole("button", { name: re }).click({ timeout: 5000 });
+      };
+      for (const [label, n] of c.setup) {
+        for (let i = 0; i < n; i++) await clickLabel(label);
+      }
+      if (c.mid) {
+        const m = Math.floor(c.mid.at / 60);
+        const s = c.mid.at % 60;
+        await page.clock.fastForward("00:" + String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0"));
+        for (const label of c.mid.clicks) await clickLabel(label);
+      }
+      // let the train run up to and stop at the (red) signal
+      await page.clock.fastForward(c.wait);
+      await expect.poll(async () => await chip(c.sig)).toBe(c.sig + " · RED");
+      // clear while it stands there → it resumes, passes, and the clear is consumed
+      await page.getByRole("button", { name: new RegExp("^" + c.sig + " ·") }).click();
+      await page.clock.fastForward(c.after);
+      await expect.poll(async () => await chip(c.sig)).toBe(c.sig + " · RED");
+      // must STAY red — never re-light like a block signal
+      await page.clock.fastForward("00:01:00");
+      await expect.poll(async () => await chip(c.sig)).toBe(c.sig + " · RED");
+    });
+  }
+
+  test("a train diverted onto the TB loop still stops at TB per its schedule", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/");
+    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    const marker = page.locator('[data-train="6082B"]');
+    const xy = async () => ({
+      x: parseFloat((await marker.getAttribute("data-x")) ?? "NaN"),
+      y: parseFloat((await marker.getAttribute("data-y")) ?? "NaN"),
+    });
+    // divert the eastbound train onto the lower loop (row 5) at TB: reverse P5,
+    // and clear S1 so it can reach the junction at all
+    await page.getByRole("button", { name: /P5 ·/ }).click();
+    await page.getByRole("button", { name: /S1 ·/ }).click();
+    // ~7:00 — it should be stopped at TB ON THE LOOP (x≈638, y≈264) and dwelling
+    await page.clock.fastForward("00:07:00");
+    await expect.poll(async () => Math.abs((await xy()).x - 638)).toBeLessThan(10);
+    await expect.poll(async () => Math.abs((await xy()).y - 264)).toBeLessThan(10);
+    await expect.poll(async () => await marker.locator("rect").getAttribute("fill")).toBe("#bbf7d0");
+    // still there at 10:00 (dwell runs until 11:00)
+    await page.clock.fastForward("00:03:00");
+    await expect.poll(async () => Math.abs((await xy()).x - 638)).toBeLessThan(10);
+    // 11:30 — dwell over; it departed east and is now held at the red loop
+    // signal S3 (snapped one cell behind it, back at the TB column)
+    await page.clock.fastForward("00:01:30");
+    await expect.poll(async () => await marker.locator("rect").getAttribute("fill")).toBe("#fecaca");
   });
 
   test("train stops at a player-red signal and resumes when cleared", async ({ page }) => {
@@ -223,16 +500,16 @@ test.describe("dispatching table", () => {
     const x = async () => await marker.evaluate((el) => parseFloat(el.getAttribute("data-x") ?? "NaN"));
     // S4 left red: the train stops with its LEADING edge at the signal — the
     // center holds at 1076+58, the snapped span is [29,30] → box center 1160
-    await page.clock.fastForward("00:04:00");
+    await page.clock.fastForward("00:02:30"); // t=150
     await expect(marker).toBeVisible();
-    expect(Math.abs((await x()) - 1160)).toBeLessThan(20);
+    await expect.poll(async () => Math.abs((await x()) - 1160)).toBeLessThan(20);
     // still stopped a while later
-    await page.clock.fastForward("00:02:00");
-    expect(Math.abs((await x()) - 1160)).toBeLessThan(20);
-    // clear S4 → the train resumes west (toward S5)
+    await page.clock.fastForward("00:01:00");
+    await expect.poll(async () => Math.abs((await x()) - 1160)).toBeLessThan(20);
+    // clear S4 BEFORE 6082B reaches TB (it would hold S4's section red) → resumes west
     await page.getByRole("button", { name: /S4 ·/ }).click();
     await page.clock.fastForward("00:00:40");
-    expect(await x()).toBeLessThan(1160 - 100);
+    await expect.poll(async () => (await x())).toBeLessThan(1160 - 100);
   });
 
   test("train diverts when the right crossover is reversed", async ({ page }) => {
@@ -241,16 +518,22 @@ test.describe("dispatching table", () => {
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     const marker = page.locator('[data-train="107B"]');
     const y = async () => await marker.evaluate((el) => parseFloat(el.getAttribute("data-y") ?? "NaN"));
-    // throw the right crossover FIRST — clearing S4 would lock P8 via its route
+    // throw the crossovers FIRST — clearing S4 would lock P8 via its route, and
+    // the left crossover bounds S4's wrong-way route so it can be set while the
+    // eastbound trains hold the far-west line (a route into occupied track is
+    // refused)
     await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
     await expect(page.getByRole("button", { name: /P7\+P8 · REVERSED/ })).toBeVisible();
+    await page.getByRole("button", { name: /P1\+P2 ·/ }).click();
     // then clear the signals so the train can run to the crossover
     await page.getByRole("button", { name: /S5 ·/ }).click();
     await page.getByRole("button", { name: /S4 ·/ }).click();
-    // by ~3:40 the train has passed p8 — diverted, it descends the crossover
-    await page.clock.fastForward("00:03:40");
+    await expect(page.getByRole("button", { name: /S4 · GREEN/ })).toBeVisible();
+    // ~2:30 — the train is down the crossover, running west on the bottom line
+    // (before the left crossover brings it back up)
+    await page.clock.fastForward("00:02:30");
     await expect(marker).toBeVisible();
-    expect(await y()).toBeGreaterThan(100); // left the top line (y=89)
+    await expect.poll(async () => (await y())).toBeGreaterThan(100); // left the top line (y=89)
   });
 
   test("train stays on the top line with points normal", async ({ page }) => {
@@ -259,14 +542,14 @@ test.describe("dispatching table", () => {
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     await page.getByRole("button", { name: /S5 ·/ }).click();
     await page.getByRole("button", { name: /S4 ·/ }).click();
-    await page.clock.fastForward("00:04:00"); // past p8, still on the top line
+    await page.clock.fastForward("00:04:00"); // west of p8, still on the top line
     const y = await page
       .locator('[data-train="107B"]')
       .evaluate((el) => parseFloat(el.getAttribute("data-y") ?? "NaN"));
     expect(Math.abs(y - 89)).toBeLessThan(1);
   });
 
-  test("train occupancy overrides a cleared signal and cascades the blocks", async ({ page }) => {
+  test("train passage holds a section red and cascades the blocks", async ({ page }) => {
     await page.clock.install();
     await page.goto("/");
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
@@ -274,20 +557,19 @@ test.describe("dispatching table", () => {
     await page.getByRole("button", { name: /S5 ·/ }).click();
     await page.getByRole("button", { name: /S4 ·/ }).click();
     await expect(page.getByRole("button", { name: /S4 · GREEN/ })).toBeVisible();
-    // both B201 blocks are green: the approach set (no signal west of it since
-    // A2 was cut) and the exit set (mirroring the cleared S4)
-    await expect(page.getByRole("button", { name: /B201 · GREEN/ })).toHaveCount(2);
-    // train reaches TB (inside S4's protected section) just after 4:30
-    await page.clock.fastForward("00:04:31");
-    // S4 forced red despite being cleared (the train occupies its section)
-    await expect(page.getByRole("button", { name: /S4 · RED/ })).toBeVisible();
-    // the exit B201 drops to amber (mirroring the occupancy-red S4); the
-    // approach B201 stays green (no next signal)
+    // the exit B201 is green (mirroring the cleared S4); the approach B201 is
+    // amber (mirroring the red A2 entry signal west of it)
     await expect(page.getByRole("button", { name: /B201 · GREEN/ })).toHaveCount(1);
     await expect(page.getByRole("button", { name: /B201 · AMBER/ })).toHaveCount(1);
-    // the train's pass consumed the clear: S4 stays red even after the train
-    // leaves its section (re-cleared only by the player)
-    await page.clock.fastForward("00:04:00");
+    // t≈150: 107B has passed S4 (clear consumed) and its body is still inside
+    // S4's protected section — S4 reads red, both B201 sets mirror red → amber
+    await page.clock.fastForward("00:02:30");
+    await expect(page.getByRole("button", { name: /S4 · RED/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /B201 · GREEN/ })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /B201 · AMBER/ })).toHaveCount(2);
+    // the pass consumed the clear: S4 stays red even after the train leaves
+    // its section (re-cleared only by the player)
+    await page.clock.fastForward("00:05:30");
     await expect(page.getByRole("button", { name: /S4 · RED/ })).toBeVisible();
   });
 
@@ -298,12 +580,15 @@ test.describe("dispatching table", () => {
     await page.getByRole("button", { name: /S5 ·/ }).click();
     await page.getByRole("button", { name: /S4 ·/ }).click();
     await expect(page.getByRole("button", { name: /S4 · GREEN/ })).toBeVisible();
-    // the train passes S4 (~3:02); from then on S4 must stay red
+    // the train passes S4 (~1:50); from then on S4 must stay red
     await page.clock.fastForward("00:04:00");
     await expect(page.getByRole("button", { name: /S4 · RED/ })).toBeVisible();
     await page.clock.fastForward("00:03:00");
     await expect(page.getByRole("button", { name: /S4 · RED/ })).toBeVisible();
-    // the player re-clears → it lights again (amber: the next signal S5 was also consumed)
+    // 6082B dwells at TB (inside S4's section) until 11:00 — wait until it has
+    // passed S4, then the player re-clears → S4 lights again (amber: S5 was also
+    // consumed by 107B's pass)
+    await page.clock.fastForward("00:06:00"); // → t≈780, 6082B is east of S4
     await page.getByRole("button", { name: /S4 ·/ }).click();
     await expect(page.getByRole("button", { name: /S4 · AMBER/ })).toBeVisible();
   });
@@ -319,15 +604,46 @@ test.describe("dispatching table", () => {
     await page.clock.fastForward("00:01:00");
     const earlyD = (await page.locator('path[stroke="#f59e0b"]').first().getAttribute("d")) ?? "";
     expect(earlyD).toContain("1076");
-    // train midway (t≈4:00, front ≈ 729): the passed cells un-highlight, the far
-    // end (S5) stays lit
-    await page.clock.fastForward("00:03:00");
+    // t≈120: train midway (front ≈ 780) — the passed cells un-highlight, the
+    // far end (S5 at 558) stays lit
+    await page.clock.fastForward("00:01:00");
     const paths = page.locator('path[stroke="#f59e0b"]');
     const ds: string[] = [];
     for (let i = 0; i < (await paths.count()); i++) ds.push((await paths.nth(i).getAttribute("d")) ?? "");
     const joined = ds.join(" ");
     expect(joined).not.toContain("1076");
     expect(joined).toContain("558");
+  });
+
+  test("route unlocks behind the train and auto-releases after it despawns", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/");
+    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    // wrong-way diversion: 107B goes down the reversed right crossover onto the
+    // bottom line and runs west through S4's route. The left crossover is also
+    // reversed so S4's route is bounded (a route into the occupied far-west
+    // line is refused) — 107B loops back up to the top line and carries on.
+    await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
+    await expect(page.getByRole("button", { name: /P7\+P8 · REVERSED/ })).toBeVisible();
+    await page.getByRole("button", { name: /P1\+P2 ·/ }).click();
+    await page.getByRole("button", { name: /S4 ·/ }).click();
+    await expect(page.getByRole("button", { name: /S4 · GREEN/ })).toBeVisible();
+    // t≈6:00 — the train has passed the crossover, so the points are free again
+    // (only the UNPASSED portion of S4's route still locks them)
+    await page.clock.fastForward("00:06:00");
+    await expect(page.getByRole("button", { name: /P7\+P8 · REVERSED/ })).toBeVisible();
+    await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
+    await expect(page.getByRole("button", { name: /P7\+P8 · NORMAL/ })).toBeVisible();
+    // S2 can clear while S4's route is still reserved behind the train
+    await page.getByRole("button", { name: /S2 ·/ }).click();
+    await expect(page.getByRole("button", { name: /S2 · GREEN/ })).toBeVisible();
+    await page.getByRole("button", { name: /S2 ·/ }).click();
+    await expect(page.getByRole("button", { name: /S2 · RED/ })).toBeVisible();
+    // t≈15:00 — 107B has exited the map; S4's reservation auto-releases, so S2
+    // clears again instead of refusing with an overlap
+    await page.clock.fastForward("00:08:00");
+    await page.getByRole("button", { name: /S2 ·/ }).click();
+    await expect(page.getByRole("button", { name: /S2 · GREEN/ })).toBeVisible();
   });
 
   test("train position never jumps backward while passing signals", async ({ page }) => {
@@ -340,13 +656,13 @@ test.describe("dispatching table", () => {
       await page
         .locator('[data-train="107B"]')
         .evaluate((el) => parseFloat(el.getAttribute("data-x") ?? "NaN"));
-    // step through the train passing B203/B202/B201/S4/S5 — the marker must
-    // move strictly west (never flicker back and forth at a signal boundary)
+    // step through the train passing B9/S4/S5 — the marker must move strictly
+    // west (never flicker back and forth at a signal boundary)
     let prev = Infinity;
     for (let t = 0; t < 240; t += 10) {
       await page.clock.fastForward("00:00:10");
       const v = await x();
-      if (Number.isNaN(v)) continue; // not spawned yet
+      if (Number.isNaN(v)) continue;
       expect(v).toBeLessThanOrEqual(prev);
       prev = v;
     }
@@ -358,16 +674,17 @@ test.describe("dispatching table", () => {
     await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
     await page.getByRole("button", { name: /S5 ·/ }).click();
     await page.getByRole("button", { name: /S4 ·/ }).click();
-    // t≈180: the front has passed B201-exit (x 1247) but the rear is still in
-    // the section [1076,1247] — body occupancy keeps it red; B202-exit mirrors it
-    await page.clock.fastForward("00:03:00");
+    // t≈70: 107B's body still overlaps the exit section [1076,1247] (it runs
+    // at 80 km/h now, so it reaches this band much sooner) — B201 stays red;
+    // B202-exit mirrors it → amber
+    await page.clock.fastForward("00:01:10");
     await expect(page.getByRole("button", { name: /B201 · RED/ })).toHaveCount(1);
     await expect(page.getByRole("button", { name: /B202 · AMBER/ })).toHaveCount(1);
-    // t≈210: the tail has cleared — the occupancy red ends; the block now
-    // mirrors the consumed S4 → amber, not red
-    await page.clock.fastForward("00:00:30");
+    // t≈110: the tail has cleared — the block now mirrors the consumed S4 →
+    // amber; the approach B201 is also amber (mirrors the red A2 entry), so 2
+    await page.clock.fastForward("00:00:40");
     await expect(page.getByRole("button", { name: /B201 · RED/ })).toHaveCount(0);
-    await expect(page.getByRole("button", { name: /B201 · AMBER/ })).toHaveCount(1);
+    await expect(page.getByRole("button", { name: /B201 · AMBER/ })).toHaveCount(2);
   });
 
   test("diverted route: S4 stays player-controlled and the highlight follows the train", async ({ page }) => {
@@ -380,15 +697,15 @@ test.describe("dispatching table", () => {
     await page.getByRole("button", { name: /P1\+P2 ·/ }).click();
     await page.getByRole("button", { name: /S4 ·/ }).click();
     await expect(page.getByRole("button", { name: /S4 · GREEN/ })).toBeVisible();
-    // before the train reaches it, S4 stays green (player-controlled) and the
-    // full reservation is highlighted
-    await page.clock.fastForward("00:02:30"); // t≈150 — train still approaching
+    // t≈60: the train is still east of S4 — S4 stays green (player-controlled)
+    // and the full reservation is highlighted
+    await page.clock.fastForward("00:01:00");
     await expect(page.getByRole("button", { name: /S4 · GREEN/ })).toBeVisible();
     const earlyD = (await page.locator('path[stroke="#f59e0b"]').first().getAttribute("d")) ?? "";
     expect(earlyD).toContain("1076");
-    // t≈230: the train has passed S4 (consumed → red) and is on the crossover /
-    // bottom line — the highlight must follow it, not revert to the full route
-    await page.clock.fastForward("00:01:20");
+    // t≈150: the train has passed S4 (consumed → red) and is heading to the
+    // crossover — the highlight must follow it, not revert to the full route
+    await page.clock.fastForward("00:01:30");
     await expect(page.getByRole("button", { name: /S4 · RED/ })).toBeVisible();
     const paths = page.locator('path[stroke="#f59e0b"]');
     const ds: string[] = [];
@@ -399,8 +716,8 @@ test.describe("dispatching table", () => {
   test("visual — default layout", async ({ page }) => {
     await expect(page).toHaveScreenshot("dispatching-default.png", {
       fullPage: true,
-      // the running clock changes every frame — exclude it from comparison
-      mask: [page.getByRole("timer")],
+      // the running clock and the moving train change every frame — exclude them
+      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Debug click log" })],
     });
   });
 
@@ -409,7 +726,7 @@ test.describe("dispatching table", () => {
     await expect(page.getByRole("switch", { name: "Show control buttons" })).toBeVisible();
     await expect(page).toHaveScreenshot("settings-open.png", {
       fullPage: true,
-      mask: [page.getByRole("timer")],
+      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Debug click log" })],
     });
   });
 
@@ -419,7 +736,7 @@ test.describe("dispatching table", () => {
     await expect(page.getByRole("button", { name: /P3 ·/ })).toHaveCount(0);
     await expect(page).toHaveScreenshot("controls-hidden.png", {
       fullPage: true,
-      mask: [page.getByRole("timer")],
+      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Debug click log" })],
     });
   });
 
@@ -429,11 +746,25 @@ test.describe("dispatching table", () => {
     await expect(page.getByRole("button", { name: /S2 · GREEN/ })).toBeVisible();
     await expect(page).toHaveScreenshot("interacted.png", {
       fullPage: true,
-      mask: [page.getByRole("timer")],
+      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Debug click log" })],
     });
   });
 
   test("visual — conflict toast", async ({ page }) => {
+    // run on the empty lines (a route into occupied track is refused first)
+    await page.clock.install();
+    await page.goto("/");
+    await expect(page.locator('svg[aria-label^="Railway dispatching table"]')).toBeVisible();
+    for (const re of [/S1 ·/, /S2 ·/, /S4 ·/, /S5 ·/]) {
+      await page.getByRole("button", { name: re }).click();
+    }
+    await page.clock.fastForward("00:09:50");
+    await page.getByRole("button", { name: /S4 ·/ }).click();
+    await page.getByRole("button", { name: /S5 ·/ }).click();
+    await page.clock.fastForward("00:02:50");
+    await page.getByRole("button", { name: /S1 ·/ }).click();
+    await page.getByRole("button", { name: /S2 ·/ }).click();
+    await page.clock.fastForward("00:04:20"); // → t=1020 (17:00)
     await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
     await page.getByRole("button", { name: /S2 ·/ }).click();
     await expect(page.getByRole("button", { name: /S2 · GREEN/ })).toBeVisible();
@@ -441,7 +772,7 @@ test.describe("dispatching table", () => {
     await expect(page.locator("text=S4 cannot clear")).toBeVisible();
     await expect(page).toHaveScreenshot("conflict-toast.png", {
       fullPage: true,
-      mask: [page.getByRole("timer")],
+      mask: [page.getByRole("timer"), page.locator("[data-train]"), page.getByRole("button", { name: "Debug click log" })],
     });
   });
 });

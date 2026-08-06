@@ -11,6 +11,26 @@
 // Prototype: 107B "Senja Utama Yogyakarta" — westbound CIT → TB → BKST.
 // ---------------------------------------------------------------------------
 
+// Fixed running speed between stations (real km/h) — faster than the schedule's
+// implied speed, so trains arrive early and recover the reserve at stations
+// (they still depart on the scheduled departure time).
+const RUN_SPEED_KMH = 80;
+// Real distances between adjacent stations (km), used to convert RUN_SPEED_KMH
+// into map-units/second per leg (the map is schematic, so each leg converts
+// via its own real length). Unknown pairs fall back to the schedule speed.
+const SEGMENT_KM: Record<string, number> = {
+  "BKST-TB": 4.4,
+  "TB-CIT": 3.3,
+};
+// Station stop policy: passing trains (schedule arr == dep) run through; a
+// station with switches can hold a train off the main line until its scheduled
+// departure (the early 80 km/h arrival becomes recovery time there); every
+// other station stops for a fixed dwell.
+const SWITCH_HOLD_STATIONS: Record<string, boolean> = { TB: true };
+const MIN_STOP_SECS = 30;
+
+import scheduleData from "../../data/schedule.json";
+
 export type TrainStop = {
   trackmark: string;
   arr: number;
@@ -26,23 +46,30 @@ export type Train = {
   stops: TrainStop[];
 };
 
-export const TRAINS: Train[] = [
-  {
-    train_no: "107B",
-    name: "Senja Utama Yogyakarta",
-    consist: "eksekutif",
-    stops: [
-      { trackmark: "CIT", arr: 60, arr_actual: "00:01:00", dep: 60, dep_actual: "00:01:00" },
-      { trackmark: "TB", arr: 180, arr_actual: "00:04:30", dep: 180, dep_actual: "00:04:30" },
-      { trackmark: "BKST", arr: 360, arr_actual: "00:09:00", dep: 360, dep_actual: "00:09:00" },
-    ],
-  },
-];
-
 export const hmsToSeconds = (hms: string): number => {
   const [h, m, s] = hms.split(":").map(Number);
   return h * 3600 + m * 60 + s;
 };
+
+/** Trains are loaded from data/schedule.json; a few are enabled for testing. */
+const ENABLED_TRAINS = new Set(["107B", "6082B", "30A", "2523"]);
+type ScheduleStop = { station: string; arr_actual: string; dep_actual: string };
+type ScheduleEntry = { train_no: string; train_name: string; stops: ScheduleStop[] };
+
+export const TRAINS: Train[] = (scheduleData as ScheduleEntry[])
+  .filter((t) => ENABLED_TRAINS.has(t.train_no))
+  .map((t) => ({
+    train_no: t.train_no,
+    name: t.train_name,
+    consist: "eksekutif",
+    stops: t.stops.map((s) => ({
+      trackmark: s.station,
+      arr: hmsToSeconds(s.arr_actual),
+      arr_actual: s.arr_actual,
+      dep: hmsToSeconds(s.dep_actual),
+      dep_actual: s.dep_actual,
+    })),
+  }));
 
 // ---------------------------------------------------------------------------
 // Movement engine
@@ -59,13 +86,13 @@ export type GraphNodeLike = {
   sw?: number;
 };
 
-export type SignalLike = { id: string; x: number; y: number; dir: LineDir };
+export type SignalLike = { id: string; x: number; y: number; dir: LineDir; ai?: boolean };
 
 export type MoveCtx = {
   nodes: Record<string, GraphNodeLike>;
   signals: SignalLike[];
   switches: Record<number, "normal" | "reversed">;
-  aspectOf: (id: string) => Aspect;
+  aspectOf: (id: string, selfIdx?: number) => Aspect;
   trainHalfLen: number; // half the train marker length (for stops + occupancy)
 };
 
@@ -80,17 +107,18 @@ export type TrainState = {
   speed: number;
   leg: number;
   stopped: boolean;
-  stopReason: "signal" | "junction" | null;
+  stopReason: "signal" | "junction" | "conflict" | null;
   stopSignalId: string | null;
   done: boolean;
   spawned: boolean; // has the train materialized at its origin yet
   originArr: number; // sim time the train appears at its origin
-  advanced: number; // travel time already consumed (sim − originArr)
+  time: number; // absolute sim time the train has processed (movement + dwells)
   frontPrev: number | null; // leading-edge x before the current movement step
   passedSignals: string[]; // signals the leading edge crossed this tick
+  idx: number; // journey index (the aspect's occupancy check skips the caller)
 };
 
-export type LegPlan = { waypointX: number; lineY: number; speed: number }[];
+export type LegPlan = { waypointX: number; lineY: number; speed: number; departAt?: number }[];
 
 export type JourneyPlan = {
   originArr: number;
@@ -111,19 +139,82 @@ export function buildJourney(
   dir: LineDir
 ): JourneyPlan {
   const originX = platformX[stops[0].trackmark];
-  const first = Object.values(nodes)
-    .filter((n) => n.y === lineY && (dir === "left" ? n.x < originX : n.x > originX))
-    .sort((a, b) => (dir === "left" ? b.x - a.x : a.x - b.x))[0];
+  const originArr = hmsToSeconds(stops[0].arr_actual);
+  const edgeXs = Object.values(nodes).map((n) => n.x);
+  const maxX = Math.max(...edgeXs); // map right edge (pre-shift coords)
+  const minX = Math.min(...edgeXs); // map left edge (pre-shift coords)
+  const MARGIN = 2 * 58; // ~2 cells off the map, so the train starts/ends out of frame
+
+  // Per-leg running speed: fixed RUN_SPEED_KMH converted via each leg's real
+  // km (the map is schematic, so the same real speed maps to different
+  // units/second per leg). Unknown station pairs fall back to the schedule
+  // derived speed.
+  const legInfo: { speed: number; travel: number }[] = [];
+  for (let i = 0; i < stops.length - 1; i++) {
+    const fromCode = stops[i].trackmark;
+    const toCode = stops[i + 1].trackmark;
+    const from = platformX[fromCode];
+    const to = platformX[toCode];
+    const secs = stops[i + 1].arr - stops[i].dep; // scheduled travel time between stops
+    const distUnits = Math.abs(to - from); // platform spacing in map units
+    const km =
+      SEGMENT_KM[`${fromCode}-${toCode}`] ?? SEGMENT_KM[`${toCode}-${fromCode}`];
+    const speed = km ? (distUnits * RUN_SPEED_KMH) / (km * 3600) : distUnits / secs;
+    legInfo.push({ speed, travel: distUnits / speed });
+  }
+  // Expected timeline (running at RUN_SPEED_KMH with the stop policy below) so
+  // each dwell anchor is an absolute sim time. Departure anchor per station:
+  //   • pass (arr == dep in the schedule): anchor = expected arrival (no stop)
+  //   • station with switches: anchor = the scheduled departure (the early
+  //     arrival is recovered there)
+  //   • any other station: anchor = expected arrival + MIN_STOP_SECS
+  const anchors: number[] = [];
+  for (let i = 0; i < stops.length; i++) {
+    const arr = i === 0 ? stops[0].arr : anchors[i - 1] + legInfo[i - 1].travel;
+    const s = stops[i];
+    anchors[i] =
+      s.arr === s.dep ? arr : SWITCH_HOLD_STATIONS[s.trackmark] ? s.dep : arr + MIN_STOP_SECS;
+  }
+
   const legs: LegPlan = [];
   for (let i = 0; i < stops.length - 1; i++) {
-    const from = platformX[stops[i].trackmark];
-    const to = platformX[stops[i + 1].trackmark];
-    const secs = hmsToSeconds(stops[i + 1].arr_actual) - hmsToSeconds(stops[i].dep_actual);
-    const distUnits = Math.abs(to - from); // platform spacing in map units
-    legs.push({ waypointX: to, lineY, speed: distUnits / secs }); // units per sim-second
+    legs.push({
+      waypointX: platformX[stops[i + 1].trackmark],
+      lineY,
+      speed: legInfo[i].speed,
+      // the dwell at this leg's start station ends at the anchor (for a pass
+      // the train arrives at the anchor, so it does not wait)
+      departAt: anchors[i],
+    });
   }
+
+  // Approach leg: the train enters from off the map and arrives at its origin
+  // platform at the scheduled origin time. Prefer continuing at the first-leg
+  // speed (smooth approach); clamp so the spawn is always beyond the map edge.
+  let spawnX: number;
+  if (originArr > 0) {
+    const firstSpeed = legs[0]?.speed ?? 0;
+    const rawSpawn = dir === "left" ? originX + firstSpeed * originArr : originX - firstSpeed * originArr;
+    spawnX = dir === "left" ? Math.max(rawSpawn, maxX + MARGIN) : Math.min(rawSpawn, minX - MARGIN);
+    legs.unshift({ waypointX: originX, lineY, speed: Math.abs(spawnX - originX) / originArr });
+  } else {
+    spawnX = originX; // departs at 00:00 — no approach time, start at the platform
+  }
+
+  // Exit leg: after the final stop keep going at the last-leg speed and leave
+  // the map at the far edge (the train is hidden once it gets there). The final
+  // stop's dwell anchor applies here (e.g. 30 s at a non-switch terminus).
+  const lastSpeed = legs[legs.length - 1].speed;
+  const exitX = dir === "left" ? minX - MARGIN : maxX + MARGIN;
+  legs.push({ waypointX: exitX, lineY, speed: lastSpeed, departAt: anchors[stops.length - 1] });
+
+  // First node ahead of the (off-map) spawn — nearest junction in the travel direction.
+  const first = Object.values(nodes)
+    .filter((n) => n.y === lineY && (dir === "left" ? n.x < spawnX : n.x > spawnX))
+    .sort((a, b) => (dir === "left" ? b.x - a.x : a.x - b.x))[0];
   const firstNode = first ? (Object.keys(nodes).find((k) => nodes[k] === first) ?? null) : null;
-  return { originArr: hmsToSeconds(stops[0].arr_actual), start: { x: originX, y: lineY, dir, firstNode }, legs };
+  // originArr = 0 → the train becomes visible immediately, approaching from off-map
+  return { originArr: 0, start: { x: spawnX, y: lineY, dir, firstNode }, legs };
 }
 
 export function initTrain(journey: JourneyPlan, nodes: Record<string, GraphNodeLike>, speed: number): TrainState {
@@ -145,9 +236,10 @@ export function initTrain(journey: JourneyPlan, nodes: Record<string, GraphNodeL
     done: false,
     spawned: false,
     originArr: journey.originArr,
-    advanced: 0,
+    time: 0,
     frontPrev: null,
     passedSignals: [],
+    idx: -1,
   };
 }
 
@@ -199,7 +291,7 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
   // release checks while stopped
   if (st.stopped) {
     if (st.stopReason === "signal" && st.stopSignalId) {
-      if (ctx.aspectOf(st.stopSignalId) !== "red") {
+      if (ctx.aspectOf(st.stopSignalId, st.idx) !== "red") {
         st.stopped = false;
         st.stopReason = null;
         st.stopSignalId = null;
@@ -211,6 +303,9 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
         st.stopReason = null;
         setSegment(st, res as { next: string }, ctx);
       }
+    } else if (st.stopReason === "conflict") {
+      // a collision stop — the tick loop releases it once the overlapping
+      // train has moved on or despawned
     } else {
       st.stopped = false;
       st.stopReason = null;
@@ -228,6 +323,19 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
 
     // closest limit ahead: red signal | junction node | leg waypoint
     type Limit = { kind: "signal" | "node" | "waypoint"; x: number; y: number; sigId?: string };
+    // scheduled dwell: the train waits at this leg's start station until the
+    // departure time (absolute sim clock) — no movement, but time passes
+    if (leg.departAt !== undefined && st.time < leg.departAt) {
+      const wait = leg.departAt - st.time;
+      if (tRemaining <= wait) {
+        st.time += tRemaining;
+        tRemaining = 0;
+        continue; // still within the dwell — stop processing this tick
+      }
+      st.time = leg.departAt;
+      tRemaining -= wait;
+    }
+
     let limit: Limit | null = null;
     const near = (l: Limit) => Math.hypot(l.x - st.x, l.y - st.y);
     if (st.segFrom[1] === st.segTo[1]) {
@@ -238,10 +346,11 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
         .filter((s) =>
           s.dir === st.dir &&
           s.y === st.y &&
+          !s.ai && // AI-controlled entry signals don't stop the automatic train
           (st.dir === "left" ? s.x < st.x - ctx.trainHalfLen : s.x > st.x + ctx.trainHalfLen)
         )
         .sort((a, b) => (st.dir === "left" ? b.x - a.x : a.x - b.x));
-      const red = ahead.find((s) => ctx.aspectOf(s.id) === "red");
+      const red = ahead.find((s) => ctx.aspectOf(s.id, st.idx) === "red");
       if (red) {
         // stop so the train's LEADING edge sits at the signal — the marker must
         // never protrude past a red signal
@@ -254,7 +363,15 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
       const l: Limit = { kind: "node", x: n.x, y: n.y };
       if (!limit || near(l) < near(limit)) limit = l;
     }
-    if (st.y === leg.lineY) {
+    // Waypoint stop: the train stops at the station's column x on WHATEVER
+    // track it currently runs on — a train diverted onto a loop or siding at
+    // the station must still dwell there (the stop x comes from the schedule's
+    // platform column; the y is the train's current line). Only a waypoint
+    // AHEAD of the train counts — after a divert the leg can lag behind (the
+    // diverted-away stations were skipped), and a behind waypoint must never
+    // pull the train backward.
+    const ahead = st.dir === "right" ? leg.waypointX > st.x : leg.waypointX < st.x;
+    if (ahead) {
       const l: Limit = { kind: "waypoint", x: leg.waypointX, y: st.y };
       if (!limit || near(l) < near(limit)) limit = l;
     }
@@ -281,12 +398,17 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
       const lineY = st.segFrom[1];
       for (const s of ctx.signals) {
         if (s.dir !== st.dir || s.y !== lineY) continue;
-        if (s.x > lo && s.x <= hi && !st.passedSignals.includes(s.id)) st.passedSignals.push(s.id);
+        // `>=` on the low end so a train released from a stop exactly AT the
+        // signal (front == signal x) re-detects the pass and consumes a clear
+        // set while it was standing there — otherwise the signal would stay
+        // lit like an automatic block signal
+        if (s.x >= lo && s.x <= hi && !st.passedSignals.includes(s.id)) st.passedSignals.push(s.id);
       }
     };
 
     if (!limit) {
       move(leg.speed * tRemaining);
+      st.time += tRemaining;
       checkPass();
       tRemaining = 0;
       continue;
@@ -294,11 +416,13 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
     const tToLimit = near(limit) / leg.speed;
     if (tRemaining < tToLimit) {
       move(leg.speed * tRemaining);
+      st.time += tRemaining;
       checkPass();
       tRemaining = 0;
       continue;
     }
     tRemaining -= tToLimit;
+    st.time += tToLimit;
     st.x = limit.x;
     st.y = limit.y;
     checkPass();
@@ -324,8 +448,14 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
       return;
     }
     if ("offmap" in res) {
-      st.done = true; // track ran out
-      return;
+      // Track ran out at the map edge — jump to the EXIT leg (the schedule legs
+      // may be stale after a divert) and keep going straight off the map to its
+      // waypoint, which is always beyond the frame in the travel direction.
+      st.leg = legs.length - 1;
+      st.segFrom = [st.x, st.y];
+      st.segTo = [legs[st.leg].waypointX, st.y];
+      st.nxtNode = null;
+      continue;
     }
     setSegment(st, res, ctx);
   }
