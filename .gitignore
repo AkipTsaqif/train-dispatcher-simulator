@@ -13,6 +13,13 @@
 # testing
 /coverage
 
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+.playwright-mcp/
+
 # next.js
 /.next/
 /out/
@@ -44,3 +51,6 @@ next-env.d.ts
 /example-image.png
 /grid-reference-1.png
 /switch-4.png
+
+# local notes
+notes.txt
