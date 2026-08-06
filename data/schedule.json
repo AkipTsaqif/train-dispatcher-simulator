@@ -1,0 +1,7248 @@
+[
+	{
+		"train_no": "107B",
+		"train_name": "Senja Utama Yogyakarta",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "00:00:00",
+				"dep_actual": "00:00:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:03:30",
+				"dep_actual": "00:03:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "00:08:00",
+				"dep_actual": "00:08:00"
+			}
+		]
+	},
+	{
+		"train_no": "6082B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "00:00:00",
+				"dep_actual": "00:00:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:06:00",
+				"dep_actual": "00:11:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "00:14:00",
+				"dep_actual": "00:14:30"
+			}
+		]
+	},
+	{
+		"train_no": "30A",
+		"train_name": "Argo Anjasmoro",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "00:05:00",
+				"dep_actual": "00:05:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:09:30",
+				"dep_actual": "00:09:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "00:13:00",
+				"dep_actual": "00:13:00"
+			}
+		]
+	},
+	{
+		"train_no": "2523",
+		"train_name": "Massao Cargo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "00:10:00",
+				"dep_actual": "00:10:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:13:30",
+				"dep_actual": "00:13:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "00:18:00",
+				"dep_actual": "00:18:00"
+			}
+		]
+	},
+	{
+		"train_no": "180B",
+		"train_name": "Tawangjaya Premium",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "00:15:00",
+				"dep_actual": "00:15:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:19:30",
+				"dep_actual": "00:19:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "00:23:00",
+				"dep_actual": "00:23:00"
+			}
+		]
+	},
+	{
+		"train_no": "5192B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "00:18:00",
+				"dep_actual": "00:18:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:23:00",
+				"dep_actual": "00:24:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "00:27:00",
+				"dep_actual": "00:27:30"
+			}
+		]
+	},
+	{
+		"train_no": "271A",
+		"train_name": "Airlangga",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "00:20:00",
+				"dep_actual": "00:20:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:23:30",
+				"dep_actual": "00:23:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "00:28:00",
+				"dep_actual": "00:28:00"
+			}
+		]
+	},
+	{
+		"train_no": "126F",
+		"train_name": "Cheribon Fakultatif",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "00:26:00",
+				"dep_actual": "00:26:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:30:30",
+				"dep_actual": "00:30:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "00:34:00",
+				"dep_actual": "00:34:00"
+			}
+		]
+	},
+	{
+		"train_no": "5194B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "00:29:00",
+				"dep_actual": "00:29:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:34:00",
+				"dep_actual": "00:35:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "00:38:00",
+				"dep_actual": "00:38:30"
+			}
+		]
+	},
+	{
+		"train_no": "127C",
+		"train_name": "Pangandaran",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "00:29:00",
+				"dep_actual": "00:29:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:32:30",
+				"dep_actual": "00:32:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "00:37:00",
+				"dep_actual": "00:37:00"
+			}
+		]
+	},
+	{
+		"train_no": "163A",
+		"train_name": "Gumarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "00:36:00",
+				"dep_actual": "00:36:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:39:30",
+				"dep_actual": "00:39:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "00:44:00",
+				"dep_actual": "00:44:00"
+			}
+		]
+	},
+	{
+		"train_no": "PLB 7002A",
+		"train_name": "Gajayana Tambahan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "00:42:00",
+				"dep_actual": "00:42:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:46:30",
+				"dep_actual": "00:46:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "00:50:00",
+				"dep_actual": "00:50:00"
+			}
+		]
+	},
+	{
+		"train_no": "2526A",
+		"train_name": "Priukmas Cargo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "00:43:00",
+				"dep_actual": "00:43:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:47:30",
+				"dep_actual": "00:47:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "00:51:00",
+				"dep_actual": "00:51:00"
+			}
+		]
+	},
+	{
+		"train_no": "5198B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "00:46:00",
+				"dep_actual": "00:46:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "00:51:00",
+				"dep_actual": "00:52:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "00:55:00",
+				"dep_actual": "00:55:30"
+			}
+		]
+	},
+	{
+		"train_no": "151",
+		"train_name": "Brantas",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "01:02:00",
+				"dep_actual": "01:02:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "01:05:30",
+				"dep_actual": "01:05:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "01:10:00",
+				"dep_actual": "01:10:00"
+			}
+		]
+	},
+	{
+		"train_no": "91",
+		"train_name": "Jayabaya",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "01:22:00",
+				"dep_actual": "01:22:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "01:25:30",
+				"dep_actual": "01:25:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "01:30:00",
+				"dep_actual": "01:30:00"
+			}
+		]
+	},
+	{
+		"train_no": "57F",
+		"train_name": "Purwojaya",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "01:29:00",
+				"dep_actual": "01:29:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "01:32:30",
+				"dep_actual": "01:32:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "01:37:00",
+				"dep_actual": "01:37:00"
+			}
+		]
+	},
+	{
+		"train_no": "2704",
+		"train_name": "Bramnambo Service",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "01:42:00",
+				"dep_actual": "01:42:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "01:46:30",
+				"dep_actual": "01:46:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "01:50:00",
+				"dep_actual": "01:50:00"
+			}
+		]
+	},
+	{
+		"train_no": "113B",
+		"train_name": "Sawunggalih",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "01:51:00",
+				"dep_actual": "01:51:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "01:54:30",
+				"dep_actual": "01:54:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "01:59:00",
+				"dep_actual": "01:59:00"
+			}
+		]
+	},
+	{
+		"train_no": "251B",
+		"train_name": "Jayakarta",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "01:59:00",
+				"dep_actual": "01:59:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "02:02:30",
+				"dep_actual": "02:02:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "02:07:00",
+				"dep_actual": "02:07:00"
+			}
+		]
+	},
+	{
+		"train_no": "2536A",
+		"train_name": "Kalingga Cargo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "02:09:00",
+				"dep_actual": "02:09:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "02:13:30",
+				"dep_actual": "02:13:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "02:17:00",
+				"dep_actual": "02:17:00"
+			}
+		]
+	},
+	{
+		"train_no": "73B",
+		"train_name": "Senja Utama Solo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "02:15:00",
+				"dep_actual": "02:15:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "02:18:30",
+				"dep_actual": "02:18:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "02:23:00",
+				"dep_actual": "02:23:00"
+			}
+		]
+	},
+	{
+		"train_no": "35",
+		"train_name": "Gajayana",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "02:24:00",
+				"dep_actual": "02:24:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "02:27:30",
+				"dep_actual": "02:27:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "02:32:00",
+				"dep_actual": "02:32:00"
+			}
+		]
+	},
+	{
+		"train_no": "45",
+		"train_name": "Taksaka",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "02:41:00",
+				"dep_actual": "02:41:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "02:44:30",
+				"dep_actual": "02:44:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "02:49:00",
+				"dep_actual": "02:49:00"
+			}
+		]
+	},
+	{
+		"train_no": "2502",
+		"train_name": "Kenlimas Cargo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "02:50:00",
+				"dep_actual": "02:50:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "02:54:30",
+				"dep_actual": "02:54:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "02:58:00",
+				"dep_actual": "02:58:00"
+			}
+		]
+	},
+	{
+		"train_no": "15",
+		"train_name": "Argo Dwipangga",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "02:56:00",
+				"dep_actual": "02:56:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "02:59:30",
+				"dep_actual": "02:59:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "03:04:00",
+				"dep_actual": "03:04:00"
+			}
+		]
+	},
+	{
+		"train_no": "19",
+		"train_name": "Argo Sindoro",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "03:09:00",
+				"dep_actual": "03:09:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "03:12:30",
+				"dep_actual": "03:12:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "03:17:00",
+				"dep_actual": "03:17:00"
+			}
+		]
+	},
+	{
+		"train_no": "37",
+		"train_name": "Brawijaya",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "03:30:00",
+				"dep_actual": "03:30:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "03:33:30",
+				"dep_actual": "03:33:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "03:38:00",
+				"dep_actual": "03:38:00"
+			}
+		]
+	},
+	{
+		"train_no": "2520",
+		"train_name": "Aksa Cargo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "03:36:00",
+				"dep_actual": "03:36:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "03:40:30",
+				"dep_actual": "03:40:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "03:44:00",
+				"dep_actual": "03:44:00"
+			}
+		]
+	},
+	{
+		"train_no": "287A",
+		"train_name": "Serayu",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "03:39:00",
+				"dep_actual": "03:39:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "03:42:30",
+				"dep_actual": "03:42:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "03:47:00",
+				"dep_actual": "03:47:00"
+			}
+		]
+	},
+	{
+		"train_no": "31",
+		"train_name": "Pandalungan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "03:50:00",
+				"dep_actual": "03:50:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "03:53:30",
+				"dep_actual": "03:53:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "03:58:00",
+				"dep_actual": "03:58:00"
+			}
+		]
+	},
+	{
+		"train_no": "105B",
+		"train_name": "Gajahwong",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "03:57:30",
+				"dep_actual": "03:57:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "04:01:00",
+				"dep_actual": "04:01:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "04:05:30",
+				"dep_actual": "04:05:30"
+			}
+		]
+	},
+	{
+		"train_no": "41",
+		"train_name": "Sembrani",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "04:04:00",
+				"dep_actual": "04:04:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "04:07:30",
+				"dep_actual": "04:07:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "04:12:00",
+				"dep_actual": "04:12:00"
+			}
+		]
+	},
+	{
+		"train_no": "5000",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "04:14:00",
+				"dep_actual": "04:14:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "04:20:00",
+				"dep_actual": "04:21:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "04:24:00",
+				"dep_actual": "04:24:30"
+			}
+		]
+	},
+	{
+		"train_no": "5027B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "04:18:00",
+				"dep_actual": "04:18:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "04:25:00",
+				"dep_actual": "04:31:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "04:36:00",
+				"dep_actual": "04:36:30"
+			}
+		]
+	},
+	{
+		"train_no": "KP/11014",
+		"train_name": "Brumbung Cargo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "04:23:00",
+				"dep_actual": "04:23:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "04:27:30",
+				"dep_actual": "04:27:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "04:31:00",
+				"dep_actual": "04:31:00"
+			}
+		]
+	},
+	{
+		"train_no": "3B",
+		"train_name": "Anggrek",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "04:26:00",
+				"dep_actual": "04:26:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "04:29:30",
+				"dep_actual": "04:29:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "04:34:00",
+				"dep_actual": "04:34:00"
+			}
+		]
+	},
+	{
+		"train_no": "5505B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "04:34:00",
+				"dep_actual": "04:34:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "04:40:00",
+				"dep_actual": "04:41:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "04:45:00",
+				"dep_actual": "04:45:30"
+			}
+		]
+	},
+	{
+		"train_no": "5029B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "04:40:00",
+				"dep_actual": "04:40:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "04:46:00",
+				"dep_actual": "04:47:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "04:51:00",
+				"dep_actual": "04:51:30"
+			}
+		]
+	},
+	{
+		"train_no": "2510A",
+		"train_name": "Banteng Cargo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "04:41:00",
+				"dep_actual": "04:41:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "04:45:30",
+				"dep_actual": "04:45:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "04:49:00",
+				"dep_actual": "04:49:00"
+			}
+		]
+	},
+	{
+		"train_no": "5002",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "04:45:00",
+				"dep_actual": "04:45:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "04:51:00",
+				"dep_actual": "04:52:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "04:55:00",
+				"dep_actual": "04:55:30"
+			}
+		]
+	},
+	{
+		"train_no": "5507B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "04:50:00",
+				"dep_actual": "04:50:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "04:54:00",
+				"dep_actual": "05:03:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "05:07:00",
+				"dep_actual": "05:07:30"
+			}
+		]
+	},
+	{
+		"train_no": "149",
+		"train_name": "Singasari",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "04:56:00",
+				"dep_actual": "04:56:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "04:59:30",
+				"dep_actual": "04:59:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "05:04:00",
+				"dep_actual": "05:04:00"
+			}
+		]
+	},
+	{
+		"train_no": "2534",
+		"train_name": "Abangpriuk Cargo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "05:01:00",
+				"dep_actual": "05:01:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "05:05:30",
+				"dep_actual": "05:05:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "05:09:00",
+				"dep_actual": "05:09:00"
+			}
+		]
+	},
+	{
+		"train_no": "7",
+		"train_name": "Bima",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "05:07:00",
+				"dep_actual": "05:07:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "05:10:30",
+				"dep_actual": "05:10:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "05:15:00",
+				"dep_actual": "05:15:00"
+			}
+		]
+	},
+	{
+		"train_no": "5500A",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "05:14:00",
+				"dep_actual": "05:14:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "05:19:00",
+				"dep_actual": "05:20:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "05:23:00",
+				"dep_actual": "05:23:30"
+			}
+		]
+	},
+	{
+		"train_no": "177B",
+		"train_name": "Menoreh",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "05:12:30",
+				"dep_actual": "05:12:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "05:16:00",
+				"dep_actual": "05:16:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "05:20:30",
+				"dep_actual": "05:20:30"
+			}
+		]
+	},
+	{
+		"train_no": "5033B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "05:17:00",
+				"dep_actual": "05:17:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "05:23:00",
+				"dep_actual": "05:24:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "05:28:00",
+				"dep_actual": "05:28:30"
+			}
+		]
+	},
+	{
+		"train_no": "5509B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "05:25:00",
+				"dep_actual": "05:25:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "05:31:00",
+				"dep_actual": "05:32:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "05:36:00",
+				"dep_actual": "05:36:30"
+			}
+		]
+	},
+	{
+		"train_no": "5010",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "05:27:00",
+				"dep_actual": "05:27:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "05:33:00",
+				"dep_actual": "05:34:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "05:37:00",
+				"dep_actual": "05:37:30"
+			}
+		]
+	},
+	{
+		"train_no": "5511C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "05:39:00",
+				"dep_actual": "05:39:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "05:45:00",
+				"dep_actual": "05:46:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "05:50:00",
+				"dep_actual": "05:50:30"
+			}
+		]
+	},
+	{
+		"train_no": "5014",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "05:46:00",
+				"dep_actual": "05:46:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "05:52:00",
+				"dep_actual": "05:53:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "05:56:00",
+				"dep_actual": "05:56:30"
+			}
+		]
+	},
+	{
+		"train_no": "63B",
+		"train_name": "Manahan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "05:50:00",
+				"dep_actual": "05:50:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "05:53:30",
+				"dep_actual": "05:53:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "05:58:00",
+				"dep_actual": "05:58:00"
+			}
+		]
+	},
+	{
+		"train_no": "5039C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "05:54:00",
+				"dep_actual": "05:54:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:00:00",
+				"dep_actual": "06:01:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "06:05:00",
+				"dep_actual": "06:05:30"
+			}
+		]
+	},
+	{
+		"train_no": "5018B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "06:01:00",
+				"dep_actual": "06:01:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:05:00",
+				"dep_actual": "06:13:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "06:16:00",
+				"dep_actual": "06:16:30"
+			}
+		]
+	},
+	{
+		"train_no": "5043C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "06:01:00",
+				"dep_actual": "06:01:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:06:00",
+				"dep_actual": "06:13:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "06:17:00",
+				"dep_actual": "06:17:30"
+			}
+		]
+	},
+	{
+		"train_no": "74B",
+		"train_name": "Fajar Utama Solo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "06:07:00",
+				"dep_actual": "06:07:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:11:30",
+				"dep_actual": "06:11:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "06:15:00",
+				"dep_actual": "06:15:00"
+			}
+		]
+	},
+	{
+		"train_no": "245B",
+		"train_name": "Majapahit",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "06:07:00",
+				"dep_actual": "06:07:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:10:30",
+				"dep_actual": "06:10:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "06:15:00",
+				"dep_actual": "06:15:00"
+			}
+		]
+	},
+	{
+		"train_no": "6007",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "06:12:00",
+				"dep_actual": "06:12:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:18:00",
+				"dep_actual": "06:19:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "06:23:00",
+				"dep_actual": "06:23:30"
+			}
+		]
+	},
+	{
+		"train_no": "5020A",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "06:13:00",
+				"dep_actual": "06:13:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:18:00",
+				"dep_actual": "06:19:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "06:22:00",
+				"dep_actual": "06:22:30"
+			}
+		]
+	},
+	{
+		"train_no": "5504",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "06:18:00",
+				"dep_actual": "06:18:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:24:00",
+				"dep_actual": "06:25:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "06:28:00",
+				"dep_actual": "06:28:30"
+			}
+		]
+	},
+	{
+		"train_no": "5022C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "06:21:00",
+				"dep_actual": "06:21:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:29:00",
+				"dep_actual": "06:30:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "06:32:30",
+				"dep_actual": "06:32:30"
+			}
+		]
+	},
+	{
+		"train_no": "PLB 7005",
+		"train_name": "Batavia",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "06:21:00",
+				"dep_actual": "06:21:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:24:30",
+				"dep_actual": "06:24:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "06:29:00",
+				"dep_actual": "06:29:00"
+			}
+		]
+	},
+	{
+		"train_no": "5049B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "06:25:00",
+				"dep_actual": "06:25:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:31:00",
+				"dep_actual": "06:32:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "06:36:00",
+				"dep_actual": "06:36:30"
+			}
+		]
+	},
+	{
+		"train_no": "26",
+		"train_name": "Argo Merbabu",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "06:31:00",
+				"dep_actual": "06:31:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:35:30",
+				"dep_actual": "06:35:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "06:39:00",
+				"dep_actual": "06:39:00"
+			}
+		]
+	},
+	{
+		"train_no": "5026",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "06:35:00",
+				"dep_actual": "06:35:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:41:00",
+				"dep_actual": "06:42:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "06:45:00",
+				"dep_actual": "06:45:30"
+			}
+		]
+	},
+	{
+		"train_no": "5515B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "06:34:30",
+				"dep_actual": "06:34:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:36:00",
+				"dep_actual": "06:37:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "06:41:00",
+				"dep_actual": "06:41:30"
+			}
+		]
+	},
+	{
+		"train_no": "6009",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "06:44:00",
+				"dep_actual": "06:44:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:48:00",
+				"dep_actual": "06:52:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "06:56:00",
+				"dep_actual": "06:56:30"
+			}
+		]
+	},
+	{
+		"train_no": "6",
+		"train_name": "Argo Semeru",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "06:48:00",
+				"dep_actual": "06:48:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:52:30",
+				"dep_actual": "06:52:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "06:56:00",
+				"dep_actual": "06:56:00"
+			}
+		]
+	},
+	{
+		"train_no": "5517B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "06:51:00",
+				"dep_actual": "06:51:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:56:00",
+				"dep_actual": "07:03:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "281"
+					}
+				]
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "07:07:00",
+				"dep_actual": "07:07:30"
+			}
+		]
+	},
+	{
+		"train_no": "6002B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "06:53:00",
+				"dep_actual": "06:53:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "06:58:00",
+				"dep_actual": "07:04:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "07:07:00",
+				"dep_actual": "07:07:30"
+			}
+		]
+	},
+	{
+		"train_no": "281",
+		"train_name": "Bengawan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "06:57:00",
+				"dep_actual": "06:57:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:00:30",
+				"dep_actual": "07:00:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "07:05:00",
+				"dep_actual": "07:05:00"
+			}
+		]
+	},
+	{
+		"train_no": "114C",
+		"train_name": "Sawunggalih",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "06:58:00",
+				"dep_actual": "06:58:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:02:30",
+				"dep_actual": "07:02:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "07:06:00",
+				"dep_actual": "07:06:00"
+			}
+		]
+	},
+	{
+		"train_no": "5055C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "07:01:00",
+				"dep_actual": "07:01:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:06:00",
+				"dep_actual": "07:17:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "07:21:00",
+				"dep_actual": "07:21:30"
+			}
+		]
+	},
+	{
+		"train_no": "130B",
+		"train_name": "Papandayan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "07:08:00",
+				"dep_actual": "07:08:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:12:30",
+				"dep_actual": "07:12:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "07:16:00",
+				"dep_actual": "07:16:00"
+			}
+		]
+	},
+	{
+		"train_no": "255B",
+		"train_name": "Jaka Tingkir",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "07:10:00",
+				"dep_actual": "07:10:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:13:30",
+				"dep_actual": "07:13:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "07:18:00",
+				"dep_actual": "07:18:00"
+			}
+		]
+	},
+	{
+		"train_no": "178B",
+		"train_name": "Tawangjaya Premium",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "07:14:00",
+				"dep_actual": "07:14:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:18:30",
+				"dep_actual": "07:18:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "07:22:00",
+				"dep_actual": "07:22:00"
+			}
+		]
+	},
+	{
+		"train_no": "5519C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "07:16:00",
+				"dep_actual": "07:16:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:21:00",
+				"dep_actual": "07:28:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "07:32:00",
+				"dep_actual": "07:32:30"
+			}
+		]
+	},
+	{
+		"train_no": "6004C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "07:19:00",
+				"dep_actual": "07:19:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:24:00",
+				"dep_actual": "07:25:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "07:27:00",
+				"dep_actual": "07:27:30"
+			}
+		]
+	},
+	{
+		"train_no": "131B",
+		"train_name": "Parahyangan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "07:22:00",
+				"dep_actual": "07:22:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:25:30",
+				"dep_actual": "07:25:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "07:30:00",
+				"dep_actual": "07:30:00"
+			}
+		]
+	},
+	{
+		"train_no": "50F",
+		"train_name": "Purwojaya",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "07:29:00",
+				"dep_actual": "07:29:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:33:30",
+				"dep_actual": "07:33:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "07:37:00",
+				"dep_actual": "07:37:00"
+			}
+		]
+	},
+	{
+		"train_no": "PLB 7001A",
+		"train_name": "Gajayana Tambahan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "07:29:00",
+				"dep_actual": "07:29:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:32:30",
+				"dep_actual": "07:32:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "07:37:00",
+				"dep_actual": "07:37:00"
+			}
+		]
+	},
+	{
+		"train_no": "6013",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "07:33:00",
+				"dep_actual": "07:33:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:38:00",
+				"dep_actual": "07:45:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "145"
+					}
+				]
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "07:49:00",
+				"dep_actual": "07:49:30"
+			}
+		]
+	},
+	{
+		"train_no": "5034C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "07:34:00",
+				"dep_actual": "07:34:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:40:00",
+				"dep_actual": "07:41:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "07:44:00",
+				"dep_actual": "07:44:30"
+			}
+		]
+	},
+	{
+		"train_no": "5510",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "07:39:00",
+				"dep_actual": "07:39:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:43:00",
+				"dep_actual": "07:53:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "07:56:00",
+				"dep_actual": "07:56:30"
+			}
+		]
+	},
+	{
+		"train_no": "145",
+		"train_name": "Blambangan Ekspres",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "07:39:00",
+				"dep_actual": "07:39:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:42:30",
+				"dep_actual": "07:42:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "07:47:00",
+				"dep_actual": "07:47:00"
+			}
+		]
+	},
+	{
+		"train_no": "20A",
+		"train_name": "Argo Muria",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "07:47:00",
+				"dep_actual": "07:47:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:51:30",
+				"dep_actual": "07:51:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "07:55:00",
+				"dep_actual": "07:55:00"
+			}
+		]
+	},
+	{
+		"train_no": "117B",
+		"train_name": "Gunungjati",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "07:48:00",
+				"dep_actual": "07:48:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "07:51:30",
+				"dep_actual": "07:51:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "07:56:00",
+				"dep_actual": "07:56:00"
+			}
+		]
+	},
+	{
+		"train_no": "5063C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "07:56:00",
+				"dep_actual": "07:56:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:00:00",
+				"dep_actual": "08:04:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "08:08:00",
+				"dep_actual": "08:08:30"
+			}
+		]
+	},
+	{
+		"train_no": "132B",
+		"train_name": "Parahyangan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "07:58:00",
+				"dep_actual": "07:58:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:02:30",
+				"dep_actual": "08:02:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "08:06:00",
+				"dep_actual": "08:06:00"
+			}
+		]
+	},
+	{
+		"train_no": "110B",
+		"train_name": "Fajar Utama Yogyakarta",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "08:03:00",
+				"dep_actual": "08:03:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:07:30",
+				"dep_actual": "08:07:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "08:11:00",
+				"dep_actual": "08:11:00"
+			}
+		]
+	},
+	{
+		"train_no": "5038C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "08:06:00",
+				"dep_actual": "08:06:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:11:00",
+				"dep_actual": "08:17:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "08:20:00",
+				"dep_actual": "08:20:30"
+			}
+		]
+	},
+	{
+		"train_no": "5065B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "08:07:00",
+				"dep_actual": "08:07:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:13:00",
+				"dep_actual": "08:14:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "08:18:00",
+				"dep_actual": "08:18:30"
+			}
+		]
+	},
+	{
+		"train_no": "46",
+		"train_name": "Taksaka",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "08:10:00",
+				"dep_actual": "08:10:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:14:30",
+				"dep_actual": "08:14:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "08:18:00",
+				"dep_actual": "08:18:00"
+			}
+		]
+	},
+	{
+		"train_no": "5044D",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "08:19:00",
+				"dep_actual": "08:19:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:24:00",
+				"dep_actual": "08:25:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "08:25:00",
+				"dep_actual": "08:25:30"
+			}
+		]
+	},
+	{
+		"train_no": "5514A",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "08:21:00",
+				"dep_actual": "08:21:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:25:00",
+				"dep_actual": "08:32:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "08:35:00",
+				"dep_actual": "08:35:30"
+			}
+		]
+	},
+	{
+		"train_no": "253",
+		"train_name": "Kertajaya",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "08:24:00",
+				"dep_actual": "08:24:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:27:30",
+				"dep_actual": "08:27:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "08:32:00",
+				"dep_actual": "08:32:00"
+			}
+		]
+	},
+	{
+		"train_no": "106B",
+		"train_name": "Gajahwong",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "08:26:00",
+				"dep_actual": "08:26:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:30:30",
+				"dep_actual": "08:30:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "08:34:00",
+				"dep_actual": "08:34:00"
+			}
+		]
+	},
+	{
+		"train_no": "KP/10973",
+		"train_name": "Brumbung Cargo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "08:30:00",
+				"dep_actual": "08:30:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:33:30",
+				"dep_actual": "08:33:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "08:38:00",
+				"dep_actual": "08:38:00"
+			}
+		]
+	},
+	{
+		"train_no": "5069C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "08:32:00",
+				"dep_actual": "08:32:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:38:00",
+				"dep_actual": "08:39:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "08:43:00",
+				"dep_actual": "08:43:30"
+			}
+		]
+	},
+	{
+		"train_no": "166A",
+		"train_name": "Dharmawangsa Ekspres",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "08:37:00",
+				"dep_actual": "08:37:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:41:30",
+				"dep_actual": "08:41:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "08:45:00",
+				"dep_actual": "08:45:00"
+			}
+		]
+	},
+	{
+		"train_no": "165",
+		"train_name": "Dharmawangsa Ekspres",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "08:42:00",
+				"dep_actual": "08:42:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:45:30",
+				"dep_actual": "08:45:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "08:50:00",
+				"dep_actual": "08:50:00"
+			}
+		]
+	},
+	{
+		"train_no": "2B",
+		"train_name": "Anggrek",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "08:45:00",
+				"dep_actual": "08:45:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:49:30",
+				"dep_actual": "08:49:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "08:53:00",
+				"dep_actual": "08:53:00"
+			}
+		]
+	},
+	{
+		"train_no": "303",
+		"train_name": "Parcel Utara",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "08:48:00",
+				"dep_actual": "08:48:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:51:30",
+				"dep_actual": "08:51:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "08:56:00",
+				"dep_actual": "08:56:00"
+			}
+		]
+	},
+	{
+		"train_no": "5048D",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "08:51:00",
+				"dep_actual": "08:51:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:55:00",
+				"dep_actual": "08:56:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "08:59:00",
+				"dep_actual": "08:59:30"
+			}
+		]
+	},
+	{
+		"train_no": "5527B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "08:51:00",
+				"dep_actual": "08:51:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "08:57:00",
+				"dep_actual": "08:58:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "09:02:00",
+				"dep_actual": "09:02:30"
+			}
+		]
+	},
+	{
+		"train_no": "5050C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "08:56:00",
+				"dep_actual": "08:56:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:01:00",
+				"dep_actual": "09:07:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "09:10:00",
+				"dep_actual": "09:10:30"
+			}
+		]
+	},
+	{
+		"train_no": "128B",
+		"train_name": "Pangandaran",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "09:01:00",
+				"dep_actual": "09:01:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:05:30",
+				"dep_actual": "09:05:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "09:09:00",
+				"dep_actual": "09:09:00"
+			}
+		]
+	},
+	{
+		"train_no": "135B",
+		"train_name": "Parahyangan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "09:01:00",
+				"dep_actual": "09:01:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:04:30",
+				"dep_actual": "09:04:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "09:09:00",
+				"dep_actual": "09:09:00"
+			}
+		]
+	},
+	{
+		"train_no": "5073B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "09:06:00",
+				"dep_actual": "09:06:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:12:00",
+				"dep_actual": "09:13:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "09:17:00",
+				"dep_actual": "09:17:30"
+			}
+		]
+	},
+	{
+		"train_no": "5075B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "09:11:00",
+				"dep_actual": "09:11:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:17:00",
+				"dep_actual": "09:18:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "09:22:00",
+				"dep_actual": "09:22:30"
+			}
+		]
+	},
+	{
+		"train_no": "16",
+		"train_name": "Argo Dwipangga",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "09:15:00",
+				"dep_actual": "09:15:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:19:30",
+				"dep_actual": "09:19:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "09:23:00",
+				"dep_actual": "09:23:00"
+			}
+		]
+	},
+	{
+		"train_no": "5052C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "09:21:00",
+				"dep_actual": "09:21:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:23:00",
+				"dep_actual": "09:24:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "09:24:00",
+				"dep_actual": "09:24:30"
+			}
+		]
+	},
+	{
+		"train_no": "5077B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "09:21:00",
+				"dep_actual": "09:21:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:27:00",
+				"dep_actual": "09:28:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "09:32:00",
+				"dep_actual": "09:32:30"
+			}
+		]
+	},
+	{
+		"train_no": "301",
+		"train_name": "Parcel Tengah",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "09:22:00",
+				"dep_actual": "09:22:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:25:30",
+				"dep_actual": "09:25:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "09:30:00",
+				"dep_actual": "09:30:00"
+			}
+		]
+	},
+	{
+		"train_no": "282",
+		"train_name": "Bengawan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "09:24:00",
+				"dep_actual": "09:24:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:28:30",
+				"dep_actual": "09:28:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "09:32:00",
+				"dep_actual": "09:32:00"
+			}
+		]
+	},
+	{
+		"train_no": "118B",
+		"train_name": "Gunungjati",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "09:30:00",
+				"dep_actual": "09:30:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:34:30",
+				"dep_actual": "09:34:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "09:38:00",
+				"dep_actual": "09:38:00"
+			}
+		]
+	},
+	{
+		"train_no": "2533",
+		"train_name": "Abangpriuk Cargo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "09:31:00",
+				"dep_actual": "09:31:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:34:30",
+				"dep_actual": "09:34:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "09:39:00",
+				"dep_actual": "09:39:00"
+			}
+		]
+	},
+	{
+		"train_no": "5520",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "09:33:00",
+				"dep_actual": "09:33:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:39:00",
+				"dep_actual": "09:40:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "09:43:00",
+				"dep_actual": "09:43:30"
+			}
+		]
+	},
+	{
+		"train_no": "5079B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "09:34:00",
+				"dep_actual": "09:34:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:41:00",
+				"dep_actual": "09:42:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "09:46:00",
+				"dep_actual": "09:46:30"
+			}
+		]
+	},
+	{
+		"train_no": "272B",
+		"train_name": "Airlangga",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "09:42:00",
+				"dep_actual": "09:42:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:46:30",
+				"dep_actual": "09:46:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "09:50:00",
+				"dep_actual": "09:50:00"
+			}
+		]
+	},
+	{
+		"train_no": "121B",
+		"train_name": "Cakrabuana",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "09:46:00",
+				"dep_actual": "09:46:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:49:30",
+				"dep_actual": "09:49:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "09:54:00",
+				"dep_actual": "09:54:00"
+			}
+		]
+	},
+	{
+		"train_no": "138B",
+		"train_name": "Parahyangan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "09:48:00",
+				"dep_actual": "09:48:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:52:30",
+				"dep_actual": "09:52:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "09:56:00",
+				"dep_actual": "09:56:00"
+			}
+		]
+	},
+	{
+		"train_no": "5531C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "09:52:00",
+				"dep_actual": "09:52:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:59:00",
+				"dep_actual": "10:00:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "10:04:00",
+				"dep_actual": "10:04:30"
+			}
+		]
+	},
+	{
+		"train_no": "5522A",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "09:54:00",
+				"dep_actual": "09:54:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:04:00",
+				"dep_actual": "10:05:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "284B"
+					},
+					{
+						"type": "susul",
+						"with": "PLB 7006"
+					}
+				]
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "10:08:00",
+				"dep_actual": "10:08:30"
+			}
+		]
+	},
+	{
+		"train_no": "PLB 7050",
+		"train_name": "Pandalungan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "09:54:00",
+				"dep_actual": "09:54:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "09:58:30",
+				"dep_actual": "09:58:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "10:02:00",
+				"dep_actual": "10:02:00"
+			}
+		]
+	},
+	{
+		"train_no": "284B",
+		"train_name": "Serayu",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "09:58:00",
+				"dep_actual": "09:58:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:02:30",
+				"dep_actual": "10:02:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "10:06:00",
+				"dep_actual": "10:06:00"
+			}
+		]
+	},
+	{
+		"train_no": "6023A",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "10:07:00",
+				"dep_actual": "10:07:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:13:00",
+				"dep_actual": "10:14:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "10:18:00",
+				"dep_actual": "10:18:30"
+			}
+		]
+	},
+	{
+		"train_no": "6016B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "10:07:00",
+				"dep_actual": "10:07:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:12:00",
+				"dep_actual": "10:13:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "10:16:00",
+				"dep_actual": "10:16:30"
+			}
+		]
+	},
+	{
+		"train_no": "PLB 7006",
+		"train_name": "Batavia",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "10:08:00",
+				"dep_actual": "10:08:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:12:30",
+				"dep_actual": "10:12:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "10:16:00",
+				"dep_actual": "10:16:00"
+			}
+		]
+	},
+	{
+		"train_no": "5524",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "10:12:00",
+				"dep_actual": "10:12:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:18:00",
+				"dep_actual": "10:19:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "10:22:00",
+				"dep_actual": "10:22:30"
+			}
+		]
+	},
+	{
+		"train_no": "5085B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "10:18:00",
+				"dep_actual": "10:18:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:25:00",
+				"dep_actual": "10:26:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "10:30:00",
+				"dep_actual": "10:30:30"
+			}
+		]
+	},
+	{
+		"train_no": "KP/11060",
+		"train_name": "Ronggo Cargo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "10:21:00",
+				"dep_actual": "10:21:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:25:30",
+				"dep_actual": "10:25:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "10:29:00",
+				"dep_actual": "10:29:00"
+			}
+		]
+	},
+	{
+		"train_no": "5064B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "10:26:00",
+				"dep_actual": "10:26:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:31:00",
+				"dep_actual": "10:32:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "10:35:00",
+				"dep_actual": "10:35:30"
+			}
+		]
+	},
+	{
+		"train_no": "5526",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "10:31:00",
+				"dep_actual": "10:31:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:42:00",
+				"dep_actual": "10:43:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "136B"
+					}
+				]
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "10:46:00",
+				"dep_actual": "10:46:30"
+			}
+		]
+	},
+	{
+		"train_no": "23",
+		"train_name": "Argo Merbabu",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "10:30:00",
+				"dep_actual": "10:30:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:33:30",
+				"dep_actual": "10:33:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "10:38:00",
+				"dep_actual": "10:38:00"
+			}
+		]
+	},
+	{
+		"train_no": "6025D",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "10:36:00",
+				"dep_actual": "10:36:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:43:00",
+				"dep_actual": "10:44:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "10:48:00",
+				"dep_actual": "10:48:30"
+			}
+		]
+	},
+	{
+		"train_no": "136B",
+		"train_name": "Parahyangan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "10:37:00",
+				"dep_actual": "10:37:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:41:30",
+				"dep_actual": "10:41:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "10:45:00",
+				"dep_actual": "10:45:00"
+			}
+		]
+	},
+	{
+		"train_no": "5091B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "10:46:00",
+				"dep_actual": "10:46:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:52:00",
+				"dep_actual": "10:53:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "10:57:00",
+				"dep_actual": "10:57:30"
+			}
+		]
+	},
+	{
+		"train_no": "2535A",
+		"train_name": "Kalingga Cargo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "10:45:00",
+				"dep_actual": "10:45:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:48:30",
+				"dep_actual": "10:48:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "10:53:00",
+				"dep_actual": "10:53:00"
+			}
+		]
+	},
+	{
+		"train_no": "40",
+		"train_name": "Sembrani",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "10:48:00",
+				"dep_actual": "10:48:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:52:30",
+				"dep_actual": "10:52:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "10:56:00",
+				"dep_actual": "10:56:00"
+			}
+		]
+	},
+	{
+		"train_no": "6018C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "10:51:00",
+				"dep_actual": "10:51:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "10:56:00",
+				"dep_actual": "10:57:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "10:59:30",
+				"dep_actual": "10:59:30"
+			}
+		]
+	},
+	{
+		"train_no": "62B",
+		"train_name": "Manahan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "10:58:00",
+				"dep_actual": "10:58:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:02:30",
+				"dep_actual": "11:02:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "11:06:00",
+				"dep_actual": "11:06:00"
+			}
+		]
+	},
+	{
+		"train_no": "299A",
+		"train_name": "Cikuray",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "10:58:00",
+				"dep_actual": "10:58:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:01:30",
+				"dep_actual": "11:01:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "11:06:00",
+				"dep_actual": "11:06:00"
+			}
+		]
+	},
+	{
+		"train_no": "5537B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "11:02:30",
+				"dep_actual": "11:02:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:04:00",
+				"dep_actual": "11:05:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "11:09:00",
+				"dep_actual": "11:09:30"
+			}
+		]
+	},
+	{
+		"train_no": "204",
+		"train_name": "Tegal Bahari",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "11:05:00",
+				"dep_actual": "11:05:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:09:30",
+				"dep_actual": "11:09:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "11:13:00",
+				"dep_actual": "11:13:00"
+			}
+		]
+	},
+	{
+		"train_no": "2525",
+		"train_name": "Priukmas Cargo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "11:06:00",
+				"dep_actual": "11:06:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:09:30",
+				"dep_actual": "11:09:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "11:14:00",
+				"dep_actual": "11:14:00"
+			}
+		]
+	},
+	{
+		"train_no": "5070B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "11:09:00",
+				"dep_actual": "11:09:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:14:00",
+				"dep_actual": "11:15:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "11:18:00",
+				"dep_actual": "11:18:30"
+			}
+		]
+	},
+	{
+		"train_no": "5095B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "11:10:00",
+				"dep_actual": "11:10:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:16:00",
+				"dep_actual": "11:17:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "11:21:00",
+				"dep_actual": "11:21:30"
+			}
+		]
+	},
+	{
+		"train_no": "KP/11027",
+		"train_name": "Ronggo Cargo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "11:17:00",
+				"dep_actual": "11:17:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:20:30",
+				"dep_actual": "11:20:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "11:25:00",
+				"dep_actual": "11:25:00"
+			}
+		]
+	},
+	{
+		"train_no": "5539B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "11:20:00",
+				"dep_actual": "11:20:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:35:00",
+				"dep_actual": "11:36:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "11:40:00",
+				"dep_actual": "11:40:30"
+			}
+		]
+	},
+	{
+		"train_no": "122B",
+		"train_name": "Cakrabuana",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "11:19:00",
+				"dep_actual": "11:19:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:23:30",
+				"dep_actual": "11:23:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "11:27:00",
+				"dep_actual": "11:27:00"
+			}
+		]
+	},
+	{
+		"train_no": "6020B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "11:24:00",
+				"dep_actual": "11:24:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:29:00",
+				"dep_actual": "11:30:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "11:33:00",
+				"dep_actual": "11:33:30"
+			}
+		]
+	},
+	{
+		"train_no": "17",
+		"train_name": "Argo Sindoro",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "11:29:00",
+				"dep_actual": "11:29:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:32:30",
+				"dep_actual": "11:32:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "11:37:00",
+				"dep_actual": "11:37:00"
+			}
+		]
+	},
+	{
+		"train_no": "90",
+		"train_name": "Gayabaru Malam Selatan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "11:36:00",
+				"dep_actual": "11:36:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:40:30",
+				"dep_actual": "11:40:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "11:44:00",
+				"dep_actual": "11:44:00"
+			}
+		]
+	},
+	{
+		"train_no": "5101C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "11:38:00",
+				"dep_actual": "11:38:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:50:00",
+				"dep_actual": "11:51:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "11:55:00",
+				"dep_actual": "11:55:30"
+			}
+		]
+	},
+	{
+		"train_no": "5074B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "11:40:00",
+				"dep_actual": "11:40:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:45:00",
+				"dep_actual": "11:46:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "11:49:00",
+				"dep_actual": "11:49:30"
+			}
+		]
+	},
+	{
+		"train_no": "2527",
+		"train_name": "Limasdan Cargo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "11:41:00",
+				"dep_actual": "11:41:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:44:30",
+				"dep_actual": "11:44:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "11:49:00",
+				"dep_actual": "11:49:00"
+			}
+		]
+	},
+	{
+		"train_no": "5541C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "11:49:00",
+				"dep_actual": "11:49:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:55:00",
+				"dep_actual": "11:56:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "12:00:00",
+				"dep_actual": "12:00:30"
+			}
+		]
+	},
+	{
+		"train_no": "270",
+		"train_name": "Matarmaja",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "11:50:00",
+				"dep_actual": "11:50:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "11:54:30",
+				"dep_actual": "11:54:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "11:58:00",
+				"dep_actual": "11:58:00"
+			}
+		]
+	},
+	{
+		"train_no": "5532",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "11:54:00",
+				"dep_actual": "11:54:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:00:00",
+				"dep_actual": "12:01:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "12:04:00",
+				"dep_actual": "12:04:30"
+			}
+		]
+	},
+	{
+		"train_no": "175B",
+		"train_name": "Menoreh",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "11:58:00",
+				"dep_actual": "11:58:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:01:30",
+				"dep_actual": "12:01:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "12:06:00",
+				"dep_actual": "12:06:00"
+			}
+		]
+	},
+	{
+		"train_no": "2522",
+		"train_name": "Kalimas Cargo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "12:02:00",
+				"dep_actual": "12:02:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:06:30",
+				"dep_actual": "12:06:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "12:10:00",
+				"dep_actual": "12:10:00"
+			}
+		]
+	},
+	{
+		"train_no": "111B",
+		"train_name": "Sawunggalih",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "12:06:00",
+				"dep_actual": "12:06:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:09:30",
+				"dep_actual": "12:09:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "12:14:00",
+				"dep_actual": "12:14:00"
+			}
+		]
+	},
+	{
+		"train_no": "6031",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "12:10:00",
+				"dep_actual": "12:10:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:15:00",
+				"dep_actual": "12:16:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "12:20:00",
+				"dep_actual": "12:20:30"
+			}
+		]
+	},
+	{
+		"train_no": "5082C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "12:12:00",
+				"dep_actual": "12:12:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:14:00",
+				"dep_actual": "12:15:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "12:15:00",
+				"dep_actual": "12:15:30"
+			}
+		]
+	},
+	{
+		"train_no": "256B",
+		"train_name": "Jaka Tingkir",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "12:15:00",
+				"dep_actual": "12:15:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:19:30",
+				"dep_actual": "12:19:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "12:23:00",
+				"dep_actual": "12:23:00"
+			}
+		]
+	},
+	{
+		"train_no": "53F",
+		"train_name": "Purwojaya",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "12:18:00",
+				"dep_actual": "12:18:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:21:30",
+				"dep_actual": "12:21:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "12:26:00",
+				"dep_actual": "12:26:00"
+			}
+		]
+	},
+	{
+		"train_no": "5084C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "12:24:00",
+				"dep_actual": "12:24:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:26:00",
+				"dep_actual": "12:27:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "12:27:00",
+				"dep_actual": "12:27:30"
+			}
+		]
+	},
+	{
+		"train_no": "5543B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "12:26:00",
+				"dep_actual": "12:26:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:33:00",
+				"dep_actual": "12:34:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "12:38:00",
+				"dep_actual": "12:38:30"
+			}
+		]
+	},
+	{
+		"train_no": "24",
+		"train_name": "Argo Merbabu",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "12:31:00",
+				"dep_actual": "12:31:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:35:30",
+				"dep_actual": "12:35:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "12:39:00",
+				"dep_actual": "12:39:00"
+			}
+		]
+	},
+	{
+		"train_no": "5086B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "12:35:00",
+				"dep_actual": "12:35:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:46:00",
+				"dep_actual": "12:47:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "12:50:00",
+				"dep_actual": "12:50:30"
+			}
+		]
+	},
+	{
+		"train_no": "6024C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "12:37:00",
+				"dep_actual": "12:37:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:39:00",
+				"dep_actual": "12:40:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "24"
+					}
+				]
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "12:40:00",
+				"dep_actual": "12:40:30"
+			}
+		]
+	},
+	{
+		"train_no": "141B",
+		"train_name": "Parahyangan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "12:38:00",
+				"dep_actual": "12:38:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:41:30",
+				"dep_actual": "12:41:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "12:46:00",
+				"dep_actual": "12:46:00"
+			}
+		]
+	},
+	{
+		"train_no": "146",
+		"train_name": "Blambangan Ekspres",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "12:41:00",
+				"dep_actual": "12:41:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:45:30",
+				"dep_actual": "12:45:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "12:49:00",
+				"dep_actual": "12:49:00"
+			}
+		]
+	},
+	{
+		"train_no": "5109B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "12:44:00",
+				"dep_actual": "12:44:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:53:00",
+				"dep_actual": "12:54:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "12:58:00",
+				"dep_actual": "12:58:30"
+			}
+		]
+	},
+	{
+		"train_no": "162",
+		"train_name": "Bangunkarta",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "12:52:00",
+				"dep_actual": "12:52:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "12:56:30",
+				"dep_actual": "12:56:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "13:00:00",
+				"dep_actual": "13:00:00"
+			}
+		]
+	},
+	{
+		"train_no": "5111C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "12:54:00",
+				"dep_actual": "12:54:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:07:00",
+				"dep_actual": "13:08:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "13:12:00",
+				"dep_actual": "13:12:30"
+			}
+		]
+	},
+	{
+		"train_no": "5088B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "12:55:00",
+				"dep_actual": "12:55:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:00:00",
+				"dep_actual": "13:01:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "13:04:00",
+				"dep_actual": "13:04:30"
+			}
+		]
+	},
+	{
+		"train_no": "43",
+		"train_name": "Taksaka",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "13:01:00",
+				"dep_actual": "13:01:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:04:30",
+				"dep_actual": "13:04:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "13:09:00",
+				"dep_actual": "13:09:00"
+			}
+		]
+	},
+	{
+		"train_no": "2524",
+		"train_name": "Massao Cargo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "13:03:00",
+				"dep_actual": "13:03:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:07:30",
+				"dep_actual": "13:07:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "13:11:00",
+				"dep_actual": "13:11:00"
+			}
+		]
+	},
+	{
+		"train_no": "5538",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "13:06:00",
+				"dep_actual": "13:06:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:12:00",
+				"dep_actual": "13:13:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "13:16:00",
+				"dep_actual": "13:16:30"
+			}
+		]
+	},
+	{
+		"train_no": "5115B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "13:20:00",
+				"dep_actual": "13:20:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:26:00",
+				"dep_actual": "13:27:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "13:31:00",
+				"dep_actual": "13:31:30"
+			}
+		]
+	},
+	{
+		"train_no": "6028C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "13:23:00",
+				"dep_actual": "13:23:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:25:00",
+				"dep_actual": "13:26:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "13:26:00",
+				"dep_actual": "13:26:30"
+			}
+		]
+	},
+	{
+		"train_no": "5094B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "13:26:00",
+				"dep_actual": "13:26:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:31:00",
+				"dep_actual": "13:32:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "13:35:00",
+				"dep_actual": "13:35:30"
+			}
+		]
+	},
+	{
+		"train_no": "5547B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "13:26:00",
+				"dep_actual": "13:26:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:38:00",
+				"dep_actual": "13:39:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "13:43:00",
+				"dep_actual": "13:43:30"
+			}
+		]
+	},
+	{
+		"train_no": "133B",
+		"train_name": "Parahyangan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "13:33:00",
+				"dep_actual": "13:33:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:36:30",
+				"dep_actual": "13:36:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "13:41:00",
+				"dep_actual": "13:41:00"
+			}
+		]
+	},
+	{
+		"train_no": "112B",
+		"train_name": "Sawunggalih",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "13:40:00",
+				"dep_actual": "13:40:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:44:30",
+				"dep_actual": "13:44:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "13:48:00",
+				"dep_actual": "13:48:00"
+			}
+		]
+	},
+	{
+		"train_no": "5119C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "13:42:00",
+				"dep_actual": "13:42:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:55:00",
+				"dep_actual": "13:56:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "14:00:00",
+				"dep_actual": "14:00:30"
+			}
+		]
+	},
+	{
+		"train_no": "109B",
+		"train_name": "Fajar Utama Yogyakarta",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "13:48:30",
+				"dep_actual": "13:48:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:52:00",
+				"dep_actual": "13:52:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "13:56:30",
+				"dep_actual": "13:56:30"
+			}
+		]
+	},
+	{
+		"train_no": "58F",
+		"train_name": "Purwojaya",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "13:54:00",
+				"dep_actual": "13:54:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "13:58:30",
+				"dep_actual": "13:58:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "14:02:00",
+				"dep_actual": "14:02:00"
+			}
+		]
+	},
+	{
+		"train_no": "5549B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "14:00:00",
+				"dep_actual": "14:00:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "14:06:00",
+				"dep_actual": "14:07:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "14:11:00",
+				"dep_actual": "14:11:30"
+			}
+		]
+	},
+	{
+		"train_no": "176B",
+		"train_name": "Menoreh",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "14:02:00",
+				"dep_actual": "14:02:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "14:06:30",
+				"dep_actual": "14:06:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "14:10:00",
+				"dep_actual": "14:10:00"
+			}
+		]
+	},
+	{
+		"train_no": "5100C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "14:08:00",
+				"dep_actual": "14:08:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "14:10:00",
+				"dep_actual": "14:11:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "14:11:00",
+				"dep_actual": "14:11:30"
+			}
+		]
+	},
+	{
+		"train_no": "6043A",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "14:12:00",
+				"dep_actual": "14:12:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "14:18:00",
+				"dep_actual": "14:19:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "14:23:00",
+				"dep_actual": "14:23:30"
+			}
+		]
+	},
+	{
+		"train_no": "142B",
+		"train_name": "Parahyangan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "14:13:00",
+				"dep_actual": "14:13:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "14:17:30",
+				"dep_actual": "14:17:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "14:21:00",
+				"dep_actual": "14:21:00"
+			}
+		]
+	},
+	{
+		"train_no": "2501",
+		"train_name": "Kenlimas Cargo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "14:20:00",
+				"dep_actual": "14:20:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "14:23:30",
+				"dep_actual": "14:23:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "14:28:00",
+				"dep_actual": "14:28:00"
+			}
+		]
+	},
+	{
+		"train_no": "6045",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "14:22:00",
+				"dep_actual": "14:22:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "14:29:00",
+				"dep_actual": "14:30:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "14:34:00",
+				"dep_actual": "14:34:30"
+			}
+		]
+	},
+	{
+		"train_no": "44",
+		"train_name": "Taksaka",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "14:25:00",
+				"dep_actual": "14:25:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "14:29:30",
+				"dep_actual": "14:29:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "14:33:00",
+				"dep_actual": "14:33:00"
+			}
+		]
+	},
+	{
+		"train_no": "152",
+		"train_name": "Brantas",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "14:36:00",
+				"dep_actual": "14:36:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "14:40:30",
+				"dep_actual": "14:40:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "14:44:00",
+				"dep_actual": "14:44:00"
+			}
+		]
+	},
+	{
+		"train_no": "5104C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "14:42:00",
+				"dep_actual": "14:42:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "14:44:00",
+				"dep_actual": "14:45:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "14:45:00",
+				"dep_actual": "14:45:30"
+			}
+		]
+	},
+	{
+		"train_no": "6036C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "14:45:00",
+				"dep_actual": "14:45:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "14:50:00",
+				"dep_actual": "14:51:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "14:54:00",
+				"dep_actual": "14:54:30"
+			}
+		]
+	},
+	{
+		"train_no": "5553B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "14:45:00",
+				"dep_actual": "14:45:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "14:56:00",
+				"dep_actual": "14:57:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "15:01:00",
+				"dep_actual": "15:01:30"
+			}
+		]
+	},
+	{
+		"train_no": "13",
+		"train_name": "Argo Lawu",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "14:51:00",
+				"dep_actual": "14:51:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "14:54:30",
+				"dep_actual": "14:54:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "14:59:00",
+				"dep_actual": "14:59:00"
+			}
+		]
+	},
+	{
+		"train_no": "254B",
+		"train_name": "Kertajaya",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "14:58:00",
+				"dep_actual": "14:58:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "15:02:30",
+				"dep_actual": "15:02:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "15:06:00",
+				"dep_actual": "15:06:00"
+			}
+		]
+	},
+	{
+		"train_no": "6038B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "15:02:00",
+				"dep_actual": "15:02:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "15:07:00",
+				"dep_actual": "15:08:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "15:11:00",
+				"dep_actual": "15:11:30"
+			}
+		]
+	},
+	{
+		"train_no": "2521",
+		"train_name": "Kalimas Cargo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "15:08:00",
+				"dep_actual": "15:08:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "15:11:30",
+				"dep_actual": "15:11:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "15:16:00",
+				"dep_actual": "15:16:00"
+			}
+		]
+	},
+	{
+		"train_no": "5546",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "15:10:00",
+				"dep_actual": "15:10:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "15:16:00",
+				"dep_actual": "15:17:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "15:20:00",
+				"dep_actual": "15:20:30"
+			}
+		]
+	},
+	{
+		"train_no": "6049A",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "15:11:00",
+				"dep_actual": "15:11:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "15:18:00",
+				"dep_actual": "15:19:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "15:23:00",
+				"dep_actual": "15:23:30"
+			}
+		]
+	},
+	{
+		"train_no": "103B",
+		"train_name": "Bogowonto",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "15:21:00",
+				"dep_actual": "15:21:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "15:24:30",
+				"dep_actual": "15:24:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "15:29:00",
+				"dep_actual": "15:29:00"
+			}
+		]
+	},
+	{
+		"train_no": "5112B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "15:23:00",
+				"dep_actual": "15:23:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "15:28:00",
+				"dep_actual": "15:29:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "15:32:00",
+				"dep_actual": "15:32:30"
+			}
+		]
+	},
+	{
+		"train_no": "137B",
+		"train_name": "Parahyangan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "15:27:00",
+				"dep_actual": "15:27:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "15:30:30",
+				"dep_actual": "15:30:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "15:35:00",
+				"dep_actual": "15:35:00"
+			}
+		]
+	},
+	{
+		"train_no": "5133C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "15:32:00",
+				"dep_actual": "15:32:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "15:44:00",
+				"dep_actual": "15:45:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "15:49:00",
+				"dep_actual": "15:49:30"
+			}
+		]
+	},
+	{
+		"train_no": "5114B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "15:37:00",
+				"dep_actual": "15:37:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "15:42:00",
+				"dep_actual": "15:43:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "15:46:00",
+				"dep_actual": "15:46:30"
+			}
+		]
+	},
+	{
+		"train_no": "39",
+		"train_name": "Sembrani",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "15:39:00",
+				"dep_actual": "15:39:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "15:42:30",
+				"dep_actual": "15:42:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "15:47:00",
+				"dep_actual": "15:47:00"
+			}
+		]
+	},
+	{
+		"train_no": "5139B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "15:48:00",
+				"dep_actual": "15:48:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "15:54:00",
+				"dep_actual": "15:55:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "15:59:00",
+				"dep_actual": "15:59:30"
+			}
+		]
+	},
+	{
+		"train_no": "5116B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "15:50:00",
+				"dep_actual": "15:50:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "15:55:00",
+				"dep_actual": "15:56:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "15:59:00",
+				"dep_actual": "15:59:30"
+			}
+		]
+	},
+	{
+		"train_no": "5141B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "15:55:00",
+				"dep_actual": "15:55:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:06:00",
+				"dep_actual": "16:07:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "16:11:00",
+				"dep_actual": "16:11:30"
+			}
+		]
+	},
+	{
+		"train_no": "75B",
+		"train_name": "Mataram",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "15:58:00",
+				"dep_actual": "15:58:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:01:30",
+				"dep_actual": "16:01:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "16:06:00",
+				"dep_actual": "16:06:00"
+			}
+		]
+	},
+	{
+		"train_no": "6053",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "16:07:00",
+				"dep_actual": "16:07:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:13:00",
+				"dep_actual": "16:14:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "16:18:00",
+				"dep_actual": "16:18:30"
+			}
+		]
+	},
+	{
+		"train_no": "5145B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "16:13:00",
+				"dep_actual": "16:13:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:25:00",
+				"dep_actual": "16:26:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "16:30:00",
+				"dep_actual": "16:30:30"
+			}
+		]
+	},
+	{
+		"train_no": "38",
+		"train_name": "Brawijaya",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "16:13:00",
+				"dep_actual": "16:13:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:17:30",
+				"dep_actual": "16:17:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "16:21:00",
+				"dep_actual": "16:21:00"
+			}
+		]
+	},
+	{
+		"train_no": "5122C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "16:19:00",
+				"dep_actual": "16:19:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:24:00",
+				"dep_actual": "16:25:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "16:28:00",
+				"dep_actual": "16:28:30"
+			}
+		]
+	},
+	{
+		"train_no": "1B",
+		"train_name": "Anggrek",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "16:20:00",
+				"dep_actual": "16:20:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:23:30",
+				"dep_actual": "16:23:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "16:28:00",
+				"dep_actual": "16:28:00"
+			}
+		]
+	},
+	{
+		"train_no": "5552",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "16:26:00",
+				"dep_actual": "16:26:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:32:00",
+				"dep_actual": "16:33:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "16:36:00",
+				"dep_actual": "16:36:30"
+			}
+		]
+	},
+	{
+		"train_no": "143B",
+		"train_name": "Madiun Jaya",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "16:27:00",
+				"dep_actual": "16:27:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:30:30",
+				"dep_actual": "16:30:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "16:35:00",
+				"dep_actual": "16:35:00"
+			}
+		]
+	},
+	{
+		"train_no": "5147C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "16:32:00",
+				"dep_actual": "16:32:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:39:00",
+				"dep_actual": "16:40:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "16:44:00",
+				"dep_actual": "16:44:30"
+			}
+		]
+	},
+	{
+		"train_no": "2532",
+		"train_name": "Abangpriuk Cargo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "16:35:00",
+				"dep_actual": "16:35:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:39:30",
+				"dep_actual": "16:39:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "16:43:00",
+				"dep_actual": "16:43:00"
+			}
+		]
+	},
+	{
+		"train_no": "6057",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "16:38:00",
+				"dep_actual": "16:38:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:49:00",
+				"dep_actual": "16:50:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "283A"
+					}
+				]
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "16:54:00",
+				"dep_actual": "16:54:30"
+			}
+		]
+	},
+	{
+		"train_no": "5124B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "16:39:00",
+				"dep_actual": "16:39:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:44:00",
+				"dep_actual": "16:45:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "16:48:00",
+				"dep_actual": "16:48:30"
+			}
+		]
+	},
+	{
+		"train_no": "283A",
+		"train_name": "Serayu",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "16:44:00",
+				"dep_actual": "16:44:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:47:30",
+				"dep_actual": "16:47:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "16:52:00",
+				"dep_actual": "16:52:00"
+			}
+		]
+	},
+	{
+		"train_no": "6048B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "16:48:00",
+				"dep_actual": "16:48:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:53:00",
+				"dep_actual": "16:54:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "16:57:00",
+				"dep_actual": "16:57:30"
+			}
+		]
+	},
+	{
+		"train_no": "61B",
+		"train_name": "Manahan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "16:56:00",
+				"dep_actual": "16:56:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "16:59:30",
+				"dep_actual": "16:59:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "17:04:00",
+				"dep_actual": "17:04:00"
+			}
+		]
+	},
+	{
+		"train_no": "5151C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "16:58:00",
+				"dep_actual": "16:58:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:04:00",
+				"dep_actual": "17:05:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "17:09:00",
+				"dep_actual": "17:09:30"
+			}
+		]
+	},
+	{
+		"train_no": "6059A",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "17:04:00",
+				"dep_actual": "17:04:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:10:00",
+				"dep_actual": "17:11:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "17:15:00",
+				"dep_actual": "17:15:30"
+			}
+		]
+	},
+	{
+		"train_no": "5126C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "17:08:00",
+				"dep_actual": "17:08:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:10:00",
+				"dep_actual": "17:11:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "17:11:00",
+				"dep_actual": "17:11:30"
+			}
+		]
+	},
+	{
+		"train_no": "259B",
+		"train_name": "Tawang Jaya",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "17:13:00",
+				"dep_actual": "17:13:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:16:30",
+				"dep_actual": "17:16:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "17:21:00",
+				"dep_actual": "17:21:00"
+			}
+		]
+	},
+	{
+		"train_no": "18",
+		"train_name": "Argo Sindoro",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "17:17:00",
+				"dep_actual": "17:17:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:21:30",
+				"dep_actual": "17:21:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "17:25:00",
+				"dep_actual": "17:25:00"
+			}
+		]
+	},
+	{
+		"train_no": "129B",
+		"train_name": "Papandayan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "17:21:00",
+				"dep_actual": "17:21:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:24:30",
+				"dep_actual": "17:24:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "17:29:00",
+				"dep_actual": "17:29:00"
+			}
+		]
+	},
+	{
+		"train_no": "6061",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "17:27:00",
+				"dep_actual": "17:27:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:34:00",
+				"dep_actual": "17:35:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "17:39:00",
+				"dep_actual": "17:39:30"
+			}
+		]
+	},
+	{
+		"train_no": "8",
+		"train_name": "Bima",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "17:28:00",
+				"dep_actual": "17:28:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:32:30",
+				"dep_actual": "17:32:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "17:36:00",
+				"dep_actual": "17:36:00"
+			}
+		]
+	},
+	{
+		"train_no": "252B",
+		"train_name": "Jayakarta",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "17:37:00",
+				"dep_actual": "17:37:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:41:30",
+				"dep_actual": "17:41:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "17:45:00",
+				"dep_actual": "17:45:00"
+			}
+		]
+	},
+	{
+		"train_no": "2703",
+		"train_name": "Bramnambo Service",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "17:37:00",
+				"dep_actual": "17:37:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:40:30",
+				"dep_actual": "17:40:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "17:45:00",
+				"dep_actual": "17:45:00"
+			}
+		]
+	},
+	{
+		"train_no": "5132B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "17:41:00",
+				"dep_actual": "17:41:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:52:00",
+				"dep_actual": "17:53:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "17:56:00",
+				"dep_actual": "17:56:30"
+			}
+		]
+	},
+	{
+		"train_no": "5159B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "17:47:00",
+				"dep_actual": "17:47:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:53:00",
+				"dep_actual": "17:54:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "17:57:00",
+				"dep_actual": "17:57:30"
+			}
+		]
+	},
+	{
+		"train_no": "300A",
+		"train_name": "Cikuray",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "17:47:00",
+				"dep_actual": "17:47:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:51:30",
+				"dep_actual": "17:51:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "17:55:00",
+				"dep_actual": "17:55:00"
+			}
+		]
+	},
+	{
+		"train_no": "5136B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "17:55:00",
+				"dep_actual": "17:55:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:00:00",
+				"dep_actual": "18:01:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "18:04:00",
+				"dep_actual": "18:04:30"
+			}
+		]
+	},
+	{
+		"train_no": "161",
+		"train_name": "Bangunkarta",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "17:56:00",
+				"dep_actual": "17:56:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "17:59:30",
+				"dep_actual": "17:59:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "18:04:00",
+				"dep_actual": "18:04:00"
+			}
+		]
+	},
+	{
+		"train_no": "5565C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "18:02:00",
+				"dep_actual": "18:02:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:16:00",
+				"dep_actual": "18:17:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "18:21:00",
+				"dep_actual": "18:21:30"
+			}
+		]
+	},
+	{
+		"train_no": "246B",
+		"train_name": "Majapahit",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "18:07:00",
+				"dep_actual": "18:07:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:11:30",
+				"dep_actual": "18:11:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "18:15:00",
+				"dep_actual": "18:15:00"
+			}
+		]
+	},
+	{
+		"train_no": "123B",
+		"train_name": "Cakrabuana",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "18:10:00",
+				"dep_actual": "18:10:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:13:30",
+				"dep_actual": "18:13:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "18:18:00",
+				"dep_actual": "18:18:00"
+			}
+		]
+	},
+	{
+		"train_no": "302",
+		"train_name": "Parcel Tengah",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "18:13:00",
+				"dep_actual": "18:13:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:17:30",
+				"dep_actual": "18:17:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "18:21:00",
+				"dep_actual": "18:21:00"
+			}
+		]
+	},
+	{
+		"train_no": "6054B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "18:17:00",
+				"dep_actual": "18:17:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:22:00",
+				"dep_actual": "18:23:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "18:26:00",
+				"dep_actual": "18:26:30"
+			}
+		]
+	},
+	{
+		"train_no": "5567B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "18:20:00",
+				"dep_actual": "18:20:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:32:00",
+				"dep_actual": "18:33:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "18:37:00",
+				"dep_actual": "18:37:30"
+			}
+		]
+	},
+	{
+		"train_no": "5142B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "18:22:00",
+				"dep_actual": "18:22:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:24:00",
+				"dep_actual": "18:25:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "18:31:00",
+				"dep_actual": "18:31:30"
+			}
+		]
+	},
+	{
+		"train_no": "89",
+		"train_name": "Gayabaru Malam Selatan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "18:26:00",
+				"dep_actual": "18:26:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:29:30",
+				"dep_actual": "18:29:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "18:34:00",
+				"dep_actual": "18:34:00"
+			}
+		]
+	},
+	{
+		"train_no": "6056B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "18:31:00",
+				"dep_actual": "18:31:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:43:00",
+				"dep_actual": "18:44:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "18:47:00",
+				"dep_actual": "18:47:30"
+			}
+		]
+	},
+	{
+		"train_no": "27",
+		"train_name": "Argo Merbabu",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "18:34:00",
+				"dep_actual": "18:34:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:37:30",
+				"dep_actual": "18:37:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "18:42:00",
+				"dep_actual": "18:42:00"
+			}
+		]
+	},
+	{
+		"train_no": "104B",
+		"train_name": "Bogowonto",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "18:38:00",
+				"dep_actual": "18:38:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:42:30",
+				"dep_actual": "18:42:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "18:46:00",
+				"dep_actual": "18:46:00"
+			}
+		]
+	},
+	{
+		"train_no": "5167B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "18:40:00",
+				"dep_actual": "18:40:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:45:00",
+				"dep_actual": "18:46:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "18:50:00",
+				"dep_actual": "18:50:30"
+			}
+		]
+	},
+	{
+		"train_no": "5146C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "18:45:00",
+				"dep_actual": "18:45:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:50:00",
+				"dep_actual": "18:51:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "18:53:30",
+				"dep_actual": "18:53:30"
+			}
+		]
+	},
+	{
+		"train_no": "260B",
+		"train_name": "Tawang Jaya",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "18:50:00",
+				"dep_actual": "18:50:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:54:30",
+				"dep_actual": "18:54:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "18:58:00",
+				"dep_actual": "18:58:00"
+			}
+		]
+	},
+	{
+		"train_no": "5",
+		"train_name": "Argo Semeru",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "18:50:00",
+				"dep_actual": "18:50:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "18:53:30",
+				"dep_actual": "18:53:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "18:58:00",
+				"dep_actual": "18:58:00"
+			}
+		]
+	},
+	{
+		"train_no": "134B",
+		"train_name": "Parahyangan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "18:56:00",
+				"dep_actual": "18:56:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:00:30",
+				"dep_actual": "19:00:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "19:04:00",
+				"dep_actual": "19:04:00"
+			}
+		]
+	},
+	{
+		"train_no": "5171C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "18:58:00",
+				"dep_actual": "18:58:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:05:00",
+				"dep_actual": "19:06:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "19:10:00",
+				"dep_actual": "19:10:30"
+			}
+		]
+	},
+	{
+		"train_no": "5148B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "19:01:00",
+				"dep_actual": "19:01:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:06:00",
+				"dep_actual": "19:07:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "19:10:00",
+				"dep_actual": "19:10:30"
+			}
+		]
+	},
+	{
+		"train_no": "5169C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "18:58:30",
+				"dep_actual": "18:58:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:00:00",
+				"dep_actual": "19:01:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "19:05:00",
+				"dep_actual": "19:05:30"
+			}
+		]
+	},
+	{
+		"train_no": "5173C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "19:04:00",
+				"dep_actual": "19:04:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:14:00",
+				"dep_actual": "19:15:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "19:19:00",
+				"dep_actual": "19:19:30"
+			}
+		]
+	},
+	{
+		"train_no": "5562",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "19:06:00",
+				"dep_actual": "19:06:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:12:00",
+				"dep_actual": "19:13:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "19:16:00",
+				"dep_actual": "19:16:30"
+			}
+		]
+	},
+	{
+		"train_no": "115B",
+		"train_name": "Sawunggalih",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "19:10:00",
+				"dep_actual": "19:10:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:13:30",
+				"dep_actual": "19:13:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "19:18:00",
+				"dep_actual": "19:18:00"
+			}
+		]
+	},
+	{
+		"train_no": "36",
+		"train_name": "Gajayana",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "19:18:00",
+				"dep_actual": "19:18:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:22:30",
+				"dep_actual": "19:22:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "19:26:00",
+				"dep_actual": "19:26:00"
+			}
+		]
+	},
+	{
+		"train_no": "179B",
+		"train_name": "Tawangjaya Premium",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "19:23:00",
+				"dep_actual": "19:23:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:26:30",
+				"dep_actual": "19:26:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "19:31:00",
+				"dep_actual": "19:31:00"
+			}
+		]
+	},
+	{
+		"train_no": "108B",
+		"train_name": "Senja Utama Yogyakarta",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "19:25:00",
+				"dep_actual": "19:25:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:29:30",
+				"dep_actual": "19:29:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "19:33:00",
+				"dep_actual": "19:33:00"
+			}
+		]
+	},
+	{
+		"train_no": "6060B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "19:28:00",
+				"dep_actual": "19:28:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:37:00",
+				"dep_actual": "19:38:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "19:41:00",
+				"dep_actual": "19:41:30"
+			}
+		]
+	},
+	{
+		"train_no": "5575C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "19:29:00",
+				"dep_actual": "19:29:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:35:00",
+				"dep_actual": "19:36:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "19:40:00",
+				"dep_actual": "19:40:30"
+			}
+		]
+	},
+	{
+		"train_no": "304",
+		"train_name": "Parcel Utara",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "19:32:00",
+				"dep_actual": "19:32:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:36:30",
+				"dep_actual": "19:36:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "19:40:00",
+				"dep_actual": "19:40:00"
+			}
+		]
+	},
+	{
+		"train_no": "49",
+		"train_name": "Purwojaya",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "19:37:00",
+				"dep_actual": "19:37:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:40:30",
+				"dep_actual": "19:40:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "19:45:00",
+				"dep_actual": "19:45:00"
+			}
+		]
+	},
+	{
+		"train_no": "124B",
+		"train_name": "Cakrabuana",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "19:39:00",
+				"dep_actual": "19:39:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:43:30",
+				"dep_actual": "19:43:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "19:47:00",
+				"dep_actual": "19:47:00"
+			}
+		]
+	},
+	{
+		"train_no": "5564A",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "19:43:00",
+				"dep_actual": "19:43:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:48:00",
+				"dep_actual": "19:49:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "19:52:00",
+				"dep_actual": "19:52:30"
+			}
+		]
+	},
+	{
+		"train_no": "5177A",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "19:45:00",
+				"dep_actual": "19:45:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:53:00",
+				"dep_actual": "19:54:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "19:58:00",
+				"dep_actual": "19:58:30"
+			}
+		]
+	},
+	{
+		"train_no": "5577B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "19:52:00",
+				"dep_actual": "19:52:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:03:00",
+				"dep_actual": "20:04:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "20:08:00",
+				"dep_actual": "20:08:30"
+			}
+		]
+	},
+	{
+		"train_no": "288",
+		"train_name": "Serayu",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "19:51:00",
+				"dep_actual": "19:51:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "19:55:30",
+				"dep_actual": "19:55:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "19:59:00",
+				"dep_actual": "19:59:00"
+			}
+		]
+	},
+	{
+		"train_no": "42",
+		"train_name": "Sembrani",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "19:58:00",
+				"dep_actual": "19:58:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:02:30",
+				"dep_actual": "20:02:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "20:06:00",
+				"dep_actual": "20:06:00"
+			}
+		]
+	},
+	{
+		"train_no": "203",
+		"train_name": "Tegal Bahari",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "19:58:00",
+				"dep_actual": "19:58:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:01:30",
+				"dep_actual": "20:01:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "20:06:00",
+				"dep_actual": "20:06:00"
+			}
+		]
+	},
+	{
+		"train_no": "5156B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "20:02:00",
+				"dep_actual": "20:02:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:07:00",
+				"dep_actual": "20:08:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "20:11:00",
+				"dep_actual": "20:11:30"
+			}
+		]
+	},
+	{
+		"train_no": "5179B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "20:03:00",
+				"dep_actual": "20:03:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:16:00",
+				"dep_actual": "20:17:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "20:21:00",
+				"dep_actual": "20:21:30"
+			}
+		]
+	},
+	{
+		"train_no": "257B",
+		"train_name": "Progo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "20:10:00",
+				"dep_actual": "20:10:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:13:30",
+				"dep_actual": "20:13:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "20:18:00",
+				"dep_actual": "20:18:00"
+			}
+		]
+	},
+	{
+		"train_no": "5181B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "20:16:00",
+				"dep_actual": "20:16:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:27:00",
+				"dep_actual": "20:28:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "20:32:00",
+				"dep_actual": "20:32:30"
+			}
+		]
+	},
+	{
+		"train_no": "28",
+		"train_name": "Argo Merbabu",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "20:16:00",
+				"dep_actual": "20:16:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:20:30",
+				"dep_actual": "20:20:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "20:24:00",
+				"dep_actual": "20:24:00"
+			}
+		]
+	},
+	{
+		"train_no": "5158B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "20:19:00",
+				"dep_actual": "20:19:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:29:00",
+				"dep_actual": "20:30:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "20:33:00",
+				"dep_actual": "20:33:30"
+			}
+		]
+	},
+	{
+		"train_no": "47",
+		"train_name": "Taksaka",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "20:22:00",
+				"dep_actual": "20:22:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:25:30",
+				"dep_actual": "20:25:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "20:30:00",
+				"dep_actual": "20:30:00"
+			}
+		]
+	},
+	{
+		"train_no": "32",
+		"train_name": "Pandalungan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "20:24:00",
+				"dep_actual": "20:24:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:28:30",
+				"dep_actual": "20:28:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "20:32:00",
+				"dep_actual": "20:32:00"
+			}
+		]
+	},
+	{
+		"train_no": "29A",
+		"train_name": "Argo Anjasmoro",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "20:30:00",
+				"dep_actual": "20:30:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:33:30",
+				"dep_actual": "20:33:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "20:38:00",
+				"dep_actual": "20:38:00"
+			}
+		]
+	},
+	{
+		"train_no": "6075",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "20:35:00",
+				"dep_actual": "20:35:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:41:00",
+				"dep_actual": "20:42:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "20:46:00",
+				"dep_actual": "20:46:30"
+			}
+		]
+	},
+	{
+		"train_no": "116B",
+		"train_name": "Sawunggalih",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "20:34:00",
+				"dep_actual": "20:34:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:38:30",
+				"dep_actual": "20:38:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "20:42:00",
+				"dep_actual": "20:42:00"
+			}
+		]
+	},
+	{
+		"train_no": "5568A 💐",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "20:38:00",
+				"dep_actual": "20:38:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:44:00",
+				"dep_actual": "20:45:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "20:48:00",
+				"dep_actual": "20:48:30"
+			}
+		]
+	},
+	{
+		"train_no": "6066B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "20:48:00",
+				"dep_actual": "20:48:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:00:00",
+				"dep_actual": "21:01:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "21:04:00",
+				"dep_actual": "21:04:30"
+			}
+		]
+	},
+	{
+		"train_no": "4B",
+		"train_name": "Anggrek",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "20:55:00",
+				"dep_actual": "20:55:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "20:59:30",
+				"dep_actual": "20:59:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "21:03:00",
+				"dep_actual": "21:03:00"
+			}
+		]
+	},
+	{
+		"train_no": "5581C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "20:59:00",
+				"dep_actual": "20:59:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:05:00",
+				"dep_actual": "21:06:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "21:10:00",
+				"dep_actual": "21:10:30"
+			}
+		]
+	},
+	{
+		"train_no": "119B",
+		"train_name": "Gunungjati",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "20:57:30",
+				"dep_actual": "20:57:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:01:00",
+				"dep_actual": "21:01:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "21:05:30",
+				"dep_actual": "21:05:30"
+			}
+		]
+	},
+	{
+		"train_no": "5166B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "21:04:00",
+				"dep_actual": "21:04:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:15:00",
+				"dep_actual": "21:16:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "21:19:00",
+				"dep_actual": "21:19:30"
+			}
+		]
+	},
+	{
+		"train_no": "14",
+		"train_name": "Argo Lawu",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "21:10:00",
+				"dep_actual": "21:10:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:14:30",
+				"dep_actual": "21:14:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "21:18:00",
+				"dep_actual": "21:18:00"
+			}
+		]
+	},
+	{
+		"train_no": "2531",
+		"train_name": "Abangpriuk Cargo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "21:12:00",
+				"dep_actual": "21:12:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:15:30",
+				"dep_actual": "21:15:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "21:20:00",
+				"dep_actual": "21:20:00"
+			}
+		]
+	},
+	{
+		"train_no": "5187B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "21:14:00",
+				"dep_actual": "21:14:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:20:00",
+				"dep_actual": "21:21:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "21:25:00",
+				"dep_actual": "21:25:30"
+			}
+		]
+	},
+	{
+		"train_no": "5168C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "21:17:00",
+				"dep_actual": "21:17:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:28:00",
+				"dep_actual": "21:29:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "21:32:00",
+				"dep_actual": "21:32:30"
+			}
+		]
+	},
+	{
+		"train_no": "54",
+		"train_name": "Purwojaya",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "21:23:00",
+				"dep_actual": "21:23:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:27:30",
+				"dep_actual": "21:27:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "21:31:00",
+				"dep_actual": "21:31:00"
+			}
+		]
+	},
+	{
+		"train_no": "PLB 7049",
+		"train_name": "Pandalungan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "21:26:00",
+				"dep_actual": "21:26:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:29:30",
+				"dep_actual": "21:29:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "21:34:00",
+				"dep_actual": "21:34:00"
+			}
+		]
+	},
+	{
+		"train_no": "21A",
+		"train_name": "Argo Muria",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "21:30:00",
+				"dep_actual": "21:30:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:33:30",
+				"dep_actual": "21:33:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "21:38:00",
+				"dep_actual": "21:38:00"
+			}
+		]
+	},
+	{
+		"train_no": "5191B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "21:35:00",
+				"dep_actual": "21:35:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:49:00",
+				"dep_actual": "21:50:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "21:54:00",
+				"dep_actual": "21:54:30"
+			}
+		]
+	},
+	{
+		"train_no": "144B",
+		"train_name": "Madiun Jaya",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "21:35:00",
+				"dep_actual": "21:35:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:39:30",
+				"dep_actual": "21:39:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "21:43:00",
+				"dep_actual": "21:43:00"
+			}
+		]
+	},
+	{
+		"train_no": "5576",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "21:39:00",
+				"dep_actual": "21:39:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:50:00",
+				"dep_actual": "21:51:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "48"
+					}
+				]
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "21:54:00",
+				"dep_actual": "21:54:30"
+			}
+		]
+	},
+	{
+		"train_no": "139B",
+		"train_name": "Parahyangan",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "21:42:00",
+				"dep_actual": "21:42:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:45:30",
+				"dep_actual": "21:45:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "21:50:00",
+				"dep_actual": "21:50:00"
+			}
+		]
+	},
+	{
+		"train_no": "48",
+		"train_name": "Taksaka",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "21:45:00",
+				"dep_actual": "21:45:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:49:30",
+				"dep_actual": "21:49:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "21:53:00",
+				"dep_actual": "21:53:00"
+			}
+		]
+	},
+	{
+		"train_no": "5193B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "21:49:00",
+				"dep_actual": "21:49:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "21:55:00",
+				"dep_actual": "21:56:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "22:00:00",
+				"dep_actual": "22:00:30"
+			}
+		]
+	},
+	{
+		"train_no": "5174B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "21:52:00",
+				"dep_actual": "21:52:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:02:00",
+				"dep_actual": "22:03:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "164A"
+					}
+				]
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "22:06:00",
+				"dep_actual": "22:06:30"
+			}
+		]
+	},
+	{
+		"train_no": "164A",
+		"train_name": "Gumarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "21:57:00",
+				"dep_actual": "21:57:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:01:30",
+				"dep_actual": "22:01:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "22:05:00",
+				"dep_actual": "22:05:00"
+			}
+		]
+	},
+	{
+		"train_no": "5578A",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "22:03:00",
+				"dep_actual": "22:03:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:13:00",
+				"dep_actual": "22:14:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "22:17:00",
+				"dep_actual": "22:17:30"
+			}
+		]
+	},
+	{
+		"train_no": "2509",
+		"train_name": "Banteng Cargo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "22:04:00",
+				"dep_actual": "22:04:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:07:30",
+				"dep_actual": "22:07:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "22:12:00",
+				"dep_actual": "22:12:00"
+			}
+		]
+	},
+	{
+		"train_no": "76B",
+		"train_name": "Mataram",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "22:08:00",
+				"dep_actual": "22:08:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:12:30",
+				"dep_actual": "22:12:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "22:16:00",
+				"dep_actual": "22:16:00"
+			}
+		]
+	},
+	{
+		"train_no": "5195",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "22:10:00",
+				"dep_actual": "22:10:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:16:00",
+				"dep_actual": "22:17:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "22:21:00",
+				"dep_actual": "22:21:30"
+			}
+		]
+	},
+	{
+		"train_no": "150",
+		"train_name": "Singasari",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "22:19:00",
+				"dep_actual": "22:19:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:23:30",
+				"dep_actual": "22:23:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "22:27:00",
+				"dep_actual": "22:27:00"
+			}
+		]
+	},
+	{
+		"train_no": "5176B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "22:23:00",
+				"dep_actual": "22:23:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:28:00",
+				"dep_actual": "22:29:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "22:32:00",
+				"dep_actual": "22:32:30"
+			}
+		]
+	},
+	{
+		"train_no": "5197C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "22:26:00",
+				"dep_actual": "22:26:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:38:00",
+				"dep_actual": "22:39:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "269B"
+					}
+				]
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "22:43:00",
+				"dep_actual": "22:43:30"
+			}
+		]
+	},
+	{
+		"train_no": "269B",
+		"train_name": "Matarmaja",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "22:32:00",
+				"dep_actual": "22:32:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:35:30",
+				"dep_actual": "22:35:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "22:40:00",
+				"dep_actual": "22:40:00"
+			}
+		]
+	},
+	{
+		"train_no": "120B",
+		"train_name": "Gunungjati",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "22:36:00",
+				"dep_actual": "22:36:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:40:30",
+				"dep_actual": "22:40:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "22:44:00",
+				"dep_actual": "22:44:00"
+			}
+		]
+	},
+	{
+		"train_no": "125F",
+		"train_name": "Cheribon Fakultatif",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "22:42:00",
+				"dep_actual": "22:42:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:45:30",
+				"dep_actual": "22:45:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "22:50:00",
+				"dep_actual": "22:50:00"
+			}
+		]
+	},
+	{
+		"train_no": "92",
+		"train_name": "Jayabaya",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "22:44:00",
+				"dep_actual": "22:44:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:48:30",
+				"dep_actual": "22:48:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "22:52:00",
+				"dep_actual": "22:52:00"
+			}
+		]
+	},
+	{
+		"train_no": "5201",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "22:49:00",
+				"dep_actual": "22:49:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:55:00",
+				"dep_actual": "22:56:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "23:00:00",
+				"dep_actual": "23:00:30"
+			}
+		]
+	},
+	{
+		"train_no": "5182B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "22:51:00",
+				"dep_actual": "22:51:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "22:56:00",
+				"dep_actual": "22:57:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "23:00:00",
+				"dep_actual": "23:00:30"
+			}
+		]
+	},
+	{
+		"train_no": "5203",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "22:57:00",
+				"dep_actual": "22:57:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "23:03:00",
+				"dep_actual": "23:04:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "23:08:00",
+				"dep_actual": "23:08:30"
+			}
+		]
+	},
+	{
+		"train_no": "6078B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "22:58:00",
+				"dep_actual": "22:58:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "23:03:00",
+				"dep_actual": "23:04:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "23:07:00",
+				"dep_actual": "23:07:30"
+			}
+		]
+	},
+	{
+		"train_no": "22",
+		"train_name": "Argo Muria",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "23:11:00",
+				"dep_actual": "23:11:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "23:15:30",
+				"dep_actual": "23:15:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "23:19:00",
+				"dep_actual": "23:19:00"
+			}
+		]
+	},
+	{
+		"train_no": "2519",
+		"train_name": "Aksa Cargo",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "23:15:00",
+				"dep_actual": "23:15:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "23:18:30",
+				"dep_actual": "23:18:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "23:23:00",
+				"dep_actual": "23:23:00"
+			}
+		]
+	},
+	{
+		"train_no": "64B",
+		"train_name": "Manahan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "23:19:00",
+				"dep_actual": "23:19:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "23:23:30",
+				"dep_actual": "23:23:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "23:27:00",
+				"dep_actual": "23:27:00"
+			}
+		]
+	},
+	{
+		"train_no": "5186C",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "23:27:00",
+				"dep_actual": "23:27:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "23:29:00",
+				"dep_actual": "23:30:00"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "23:30:00",
+				"dep_actual": "23:30:30"
+			}
+		]
+	},
+	{
+		"train_no": "6085A",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "23:29:00",
+				"dep_actual": "23:29:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "23:35:00",
+				"dep_actual": "23:36:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "23:39:00",
+				"dep_actual": "23:39:30"
+			}
+		]
+	},
+	{
+		"train_no": "140B",
+		"train_name": "Parahyangan",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "23:36:00",
+				"dep_actual": "23:36:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "23:40:30",
+				"dep_actual": "23:40:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "23:44:00",
+				"dep_actual": "23:44:00"
+			}
+		]
+	},
+	{
+		"train_no": "25",
+		"train_name": "Argo Merbabu",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "23:38:00",
+				"dep_actual": "23:38:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "23:41:30",
+				"dep_actual": "23:41:30"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "23:46:00",
+				"dep_actual": "23:46:00"
+			}
+		]
+	},
+	{
+		"train_no": "6080B",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "23:41:00",
+				"dep_actual": "23:41:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "23:52:00",
+				"dep_actual": "23:53:00",
+				"meets": [
+					{
+						"type": "susul",
+						"with": "258B"
+					}
+				]
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "23:56:00",
+				"dep_actual": "23:56:30"
+			}
+		]
+	},
+	{
+		"train_no": "5205A",
+		"train_name": "Commuter Line Cikarang",
+		"stops": [
+			{
+				"station": "CIT",
+				"arr_actual": "23:46:00",
+				"dep_actual": "23:46:30"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "23:52:00",
+				"dep_actual": "23:53:00"
+			},
+			{
+				"station": "BKST",
+				"arr_actual": "23:57:00",
+				"dep_actual": "23:57:30"
+			}
+		]
+	},
+	{
+		"train_no": "258B",
+		"train_name": "Progo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "23:47:00",
+				"dep_actual": "23:47:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "23:51:30",
+				"dep_actual": "23:51:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "23:55:00",
+				"dep_actual": "23:55:00"
+			}
+		]
+	},
+	{
+		"train_no": "2528",
+		"train_name": "Limasdan Cargo",
+		"stops": [
+			{
+				"station": "BKST",
+				"arr_actual": "23:55:00",
+				"dep_actual": "23:55:00"
+			},
+			{
+				"station": "TB",
+				"arr_actual": "23:59:30",
+				"dep_actual": "23:59:30"
+			},
+			{
+				"station": "CIT",
+				"arr_actual": "24:03:00",
+				"dep_actual": "24:03:00"
+			}
+		]
+	}
+]
