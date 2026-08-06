@@ -1239,13 +1239,18 @@ export default function DispatchingTable() {
       // body on the route's track
       if (distToPoly(m.x, m.y, prospective.pts) < CELL) return true;
       // a train on a bidirectional loop can enter the main/top line through the
-      // loop's rejoin point — if that point (in its travel direction) lies on
-      // this route, the train is in the route's way
+      // loop's rejoin point — but only once it is actually NEAR that point. A
+      // train parked on the loop (dwelling for an overtake, e.g. at Tambun's
+      // column while the express runs the main line) must not block the through
+      // signals, or the express could never pass.
       if (Math.abs(m.y - 148) < 1 || Math.abs(m.y - 264) < 1) {
         const upper = Math.abs(m.y - 148) < 1;
         const rejoinX = m.dir === "right" ? (upper ? 786 : 788) : 500;
         const rejoinY = upper ? 89 : 205;
-        return distToPoly(rejoinX, rejoinY, prospective.pts) < CELL;
+        if (Math.abs(m.x - rejoinX) < 2 * CELL && distToPoly(rejoinX, rejoinY, prospective.pts) < CELL) {
+          return true;
+        }
+        return false;
       }
       return false;
     });
