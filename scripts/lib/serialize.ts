@@ -20,7 +20,7 @@ type Tagged =
   | { $nan: true }
   | { $set: Tagged[] }
   | { $map: [Tagged, Tagged][] }
-  | Record<string, Tagged>
+  | { [key: string]: Tagged }
   | Tagged[]
   | string
   | number
