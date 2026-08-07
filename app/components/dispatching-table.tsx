@@ -11,6 +11,8 @@ import {
   type LegPlan,
 } from "../lib/train-engine";
 import { BEKASI_TAMBUN_CIBITUNG_DISPATCH } from "../dispatching/bekasi-tambun-cibitung";
+import { bearingDot, bearingOf } from "../lib/topology";
+import type { Bearing, GNodeExit } from "../lib/topology";
 import type {
   Dir,
   DispatchMapDefinition,
@@ -42,7 +44,10 @@ const {
     viewBox: GRID_VIEWBOX,
     ticks: GRID_TICKS,
   },
-  lines: { normalDirectionByY: NORMAL_DIR },
+  lines: {
+    normalDirectionByY: NORMAL_DIR,
+    normalBearingByLineY: NORMAL_BEARING,
+  },
   loops: {
     lineYs: LOOP_LINE_YS,
     rejoinByLineY: LOOP_REJOIN_BY_LINE_Y,
@@ -182,13 +187,23 @@ const walkRoute = (
       return done(`ke ${hit.id}`, hit.id);
     }
 
+    // incoming travel bearing — the direction from the previous point to here.
+    // A signal sitting exactly at a corner node gives a zero-length first step,
+    // in which case the signal's own facing bearing is the travel direction.
+    const prevPoint = pts[pts.length - 1];
+    const incBearing =
+      prevPoint[0] === node.x && prevPoint[1] === node.y
+        ? sig.bearing
+        : bearingOf(prevPoint, [node.x, node.y]);
+
     if (node.sw !== undefined) {
       const reversed = switches[node.sw] === "reversed";
-      const branchAhead = node.branch?.[dir];
+      const branchExit = node.exits.find((exit) => exit.viaSwitchPort === "reversed");
+      const branchAhead =
+        branchExit !== undefined && bearingDot(incBearing, branchExit.bearing) > 0;
       // arriving via the branch edge (loop/crossover exit) — the point must be
       // reversed for the exit to be open, otherwise the route ends here
-      const cameFromBranch =
-        (node.branch?.right?.path[0] ?? node.branch?.left?.path[0]) === incoming;
+      const cameFromBranch = branchExit !== undefined && incoming === branchExit.neighbor;
       if (cameFromBranch) {
         if (!reversed) {
           pts.push([node.x, node.y]);
@@ -197,8 +212,9 @@ const walkRoute = (
       } else if (branchAhead && reversed) {
         // divert: push this junction first (in path order), then the branch path
         pts.push([node.x, node.y]);
-        for (let i = 0; i < branchAhead.path.length; i++) {
-          const nid = branchAhead.path[i];
+        const branchPath = branchExit!.branchPath ?? [];
+        for (let i = 0; i < branchPath.length; i++) {
+          const nid = branchPath[i];
           const n = nodes[nid];
           const nx = pts[pts.length - 1][0];
           const hit2 = nextSignalOn(nx, n);
@@ -208,17 +224,29 @@ const walkRoute = (
           }
           pts.push([n.x, n.y]);
         }
-        const last = branchAhead.path.length - 1;
-        const far = nodes[branchAhead.path[last]];
-        if (switches[branchAhead.farSw] === "reversed") {
+        const last = branchPath.length - 1;
+        const far = nodes[branchPath[last]];
+        if (switches[branchExit!.farSw!] === "reversed") {
           // rejoin the other line and keep going in the same direction
-          incoming = last >= 1 ? branchAhead.path[last - 1] : cur;
-          cur = far.straight[dir];
+          incoming = last >= 1 ? branchPath[last - 1] : cur;
+          // the far node's exit continuing most nearly straight (non-reversing)
+          const farPrev = pts[pts.length - 2]; // the branch node before the far node
+          const farBearing = bearingOf(farPrev, [far.x, far.y]);
+          let bestExit: GNodeExit | undefined;
+          let bestDot = -Infinity;
+          for (const exit of far.exits) {
+            const d = bearingDot(farBearing, exit.bearing);
+            if (d > 0 && d > bestDot) {
+              bestDot = d;
+              bestExit = exit;
+            }
+          }
+          cur = bestExit ? bestExit.neighbor : null;
           if (!cur) return done(dir === "right" ? "ke ujung kanan" : "ke ujung kiri");
           continue; // junction already pushed — skip the fall-through push
         }
         // exit not set — trapped at the far end
-        return done(`berakhir di P${branchAhead.farSw} — belum diatur`, undefined, true);
+        return done(`berakhir di P${branchExit!.farSw} — belum diatur`, undefined, true);
       } else if (reversed) {
         // branch behind (or none) + reversed = straight blocked
         pts.push([node.x, node.y]);
@@ -227,9 +255,20 @@ const walkRoute = (
     }
 
     pts.push([node.x, node.y]);
-    const next = node.straight[dir];
+    // the open, non-reversing exit continuing most nearly straight
+    const reversed = node.sw !== undefined && switches[node.sw] === "reversed";
+    let bestExit: GNodeExit | undefined;
+    let bestDot = -Infinity;
+    for (const exit of node.exits) {
+      if (exit.viaSwitchPort === "reversed" && !reversed) continue; // branch exit is gated
+      const d = bearingDot(incBearing, exit.bearing);
+      if (d > 0 && d > bestDot) {
+        bestDot = d;
+        bestExit = exit;
+      }
+    }
     incoming = cur;
-    cur = next;
+    cur = bestExit ? bestExit.neighbor : null;
     if (!cur) {
       return done(dir === "right" ? "ke ujung kanan" : "ke ujung kiri");
     }
@@ -1222,7 +1261,9 @@ export default function DispatchingTable() {
    * Wrong-direction operation: x-intervals on a main line that a cleared route
    * currently reserves against the normal traffic direction.
    */
-  const wrongWaySpans = (y: number, normalDir: Dir): [number, number][] => {
+  const wrongWaySpans = (y: number): [number, number][] => {
+    const normal = NORMAL_BEARING[y];
+    if (!normal) return [];
     const spans: [number, number][] = [];
     for (const sig of SIGNALS) {
       if (sig.block) continue;
@@ -1235,9 +1276,13 @@ export default function DispatchingTable() {
       for (let i = 0; i + 1 < pts.length; i++) {
         const [x1, y1] = pts[i];
         const [x2, y2] = pts[i + 1];
-        // collinear horizontal segment on this line, running against the flow
-        if (y1 === y2 && y1 === y && (normalDir === "right" ? x1 > x2 : x1 < x2)) {
-          spans.push([Math.min(x1, x2), Math.max(x1, x2)]);
+        // a reserved segment on this line whose travel bearing opposes the
+        // group's normal bearing is running against the flow
+        if (y1 === y2 && y1 === y) {
+          const segBearing = bearingOf([x1, y1], [x2, y2]);
+          if (bearingDot(segBearing, normal) < 0) {
+            spans.push([Math.min(x1, x2), Math.max(x1, x2)]);
+          }
         }
       }
     }
@@ -1255,7 +1300,7 @@ export default function DispatchingTable() {
     const sig = SIGNALS.find((s) => s.id === id)!;
     const normalDir = NORMAL_DIR[sig.lineY];
     if (!normalDir || sig.dir !== normalDir) return false;
-    const spans = wrongWaySpans(sig.lineY, normalDir);
+    const spans = wrongWaySpans(sig.lineY);
     if (!spans.length) return false;
     // merge adjacent/overlapping spans into a union of intervals
     const sorted = [...spans].sort((a, b) => a[0] - b[0]);

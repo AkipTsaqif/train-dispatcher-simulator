@@ -8,8 +8,8 @@ import type { MoveCtx, TrainState, TrainStop } from "../app/lib/trains";
 const PLATFORM_X: Record<string, number> = { BKST: -290, TB: 638, CIT: 1682 };
 // map-edge nodes with a through path so the journey's segments stay straight
 const NODES = {
-  edgeL: { x: -1000, y: 205, straight: { right: "edgeR", left: null } },
-  edgeR: { x: 2000, y: 205, straight: { right: null, left: "edgeL" } },
+  edgeL: { x: -1000, y: 205, exits: [{ neighbor: "edgeR", bearing: { dx: 1, dy: 0 } }] },
+  edgeR: { x: 2000, y: 205, exits: [{ neighbor: "edgeL", bearing: { dx: -1, dy: 0 } }] },
 };
 const hms = (s: string) => {
   const [h, m, sec] = s.split(":").map(Number);

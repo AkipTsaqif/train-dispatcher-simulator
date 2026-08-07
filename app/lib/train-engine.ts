@@ -102,18 +102,26 @@ export const spawnPriority = (
 // Movement engine
 // ---------------------------------------------------------------------------
 
+import { bearingDot, bearingOf, type Bearing, type GNodeExit } from "./topology";
+
 export type LineDir = "right" | "left";
 export type Aspect = "red" | "amber" | "green";
 
 export type GraphNodeLike = {
   x: number;
   y: number;
-  straight: Record<LineDir, string | null>;
-  branch?: Partial<Record<LineDir, { path: string[]; farSw: number }>>;
   sw?: number;
+  exits: GNodeExit[];
 };
 
-export type SignalLike = { id: string; x: number; y: number; dir: LineDir; ai?: boolean };
+export type SignalLike = {
+  id: string;
+  x: number;
+  y: number;
+  dir: LineDir;
+  bearing: Bearing;
+  ai?: boolean;
+};
 
 export type MoveCtx = {
   nodes: Record<string, GraphNodeLike>;
@@ -295,10 +303,16 @@ export function initTrain(journey: JourneyPlan, nodes: Record<string, GraphNodeL
   };
 }
 
-/** Resolve the outgoing node from a junction, mirroring walkRoute's point rules. */
+/**
+ * Resolve the outgoing node from a junction, mirroring walkRoute's point rules.
+ * The selection is bearing-based: the exit that is open per the switch state
+ * and continues most nearly straight (max bearing dot with the arrival
+ * bearing) among non-reversing exits. The old straight/branch behavior for the
+ * horizontal case is reproduced exactly.
+ */
 const resolveNode = (
   nodeId: string,
-  dir: LineDir,
+  incomingBearing: Bearing,
   incoming: string | null,
   ctx: MoveCtx
 ): { next: string } | { blocked: true } | { offmap: true } => {
@@ -306,19 +320,32 @@ const resolveNode = (
   if (!node) return { offmap: true };
   if (node.sw !== undefined) {
     const reversed = ctx.switches[node.sw] === "reversed";
-    const branchAhead = node.branch?.[dir];
+    const branchExit = node.exits.find((exit) => exit.viaSwitchPort === "reversed");
+    const branchAhead =
+      branchExit !== undefined && bearingDot(incomingBearing, branchExit.bearing) > 0;
     const cameFromBranch =
-      incoming !== null && (node.branch?.right?.path[0] ?? node.branch?.left?.path[0]) === incoming;
+      incoming !== null && branchExit !== undefined && incoming === branchExit.neighbor;
     if (cameFromBranch) {
       if (!reversed) return { blocked: true };
     } else if (branchAhead && reversed) {
-      return { next: branchAhead.path[0] };
+      return { next: branchExit!.neighbor };
     } else if (reversed) {
       return { blocked: true };
     }
   }
-  const next = node.straight[dir];
-  return next ? { next } : { offmap: true };
+  // straight-through: the open, non-reversing exit continuing most nearly straight
+  const reversed = node.sw !== undefined && ctx.switches[node.sw] === "reversed";
+  let best: GNodeExit | undefined;
+  let bestDot = -Infinity;
+  for (const exit of node.exits) {
+    if (exit.viaSwitchPort === "reversed" && !reversed) continue; // branch exit is gated
+    const dot = bearingDot(incomingBearing, exit.bearing);
+    if (dot > 0 && dot > bestDot) {
+      bestDot = dot;
+      best = exit;
+    }
+  }
+  return best ? { next: best.neighbor } : { offmap: true };
 };
 
 const setSegment = (st: TrainState, res: { next: string }, ctx: MoveCtx): void => {
@@ -349,7 +376,7 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
         st.stopSignalId = null;
       }
     } else if (st.stopReason === "junction" && st.nxtNode) {
-      const res = resolveNode(st.nxtNode, st.dir, st.incoming, ctx);
+      const res = resolveNode(st.nxtNode, bearingOf(st.segFrom, st.segTo), st.incoming, ctx);
       if (!("blocked" in res)) {
         st.stopped = false;
         st.stopReason = null;
@@ -394,24 +421,57 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
 
     let limit: Limit | null = null;
     const near = (l: Limit) => Math.hypot(l.x - st.x, l.y - st.y);
-    if (st.segFrom[1] === st.segTo[1] && !ctx.ignoreSignals) {
+    if (!ctx.ignoreSignals) {
+      const segHorizontal = st.segFrom[1] === st.segTo[1];
+      const segBearing = segHorizontal ? undefined : bearingOf(st.segFrom, st.segTo);
+      const [fx, fy] = st.segFrom;
+      const [tx, ty] = st.segTo;
+      const dx = tx - fx;
+      const dy = ty - fy;
+      const segLen = Math.hypot(dx, dy) || 1;
       // signals ahead of the train's LEADING edge — a signal the front has just
       // passed is behind (even if the center still reads ahead of it) and must
       // not re-trigger a stop
-      const ahead = ctx.signals
-        .filter((s) =>
-          s.dir === st.dir &&
-          s.y === st.y &&
-          !s.ai && // AI-controlled entry signals don't stop the automatic train
-          (st.dir === "left" ? s.x < st.x - ctx.trainHalfLen : s.x > st.x + ctx.trainHalfLen)
-        )
-        .sort((a, b) => (st.dir === "left" ? b.x - a.x : a.x - b.x));
+      let ahead: SignalLike[];
+      if (segHorizontal) {
+        // horizontal fast path — identical to the pre-bearing behavior
+        ahead = ctx.signals
+          .filter(
+            (s) =>
+              s.dir === st.dir &&
+              s.y === st.y &&
+              !s.ai && // AI-controlled entry signals don't stop the automatic train
+              (st.dir === "left"
+                ? s.x < st.x - ctx.trainHalfLen
+                : s.x > st.x + ctx.trainHalfLen)
+          )
+          .sort((a, b) => (st.dir === "left" ? b.x - a.x : a.x - b.x));
+      } else {
+        // projection path: a signal is ahead if it lies on the train's segment
+        // (positive dot with the segment bearing) and past the leading edge
+        // (parameter t along the segment)
+        const len2 = dx * dx + dy * dy || 1;
+        const tOf = (px: number, py: number) => ((px - fx) * dx + (py - fy) * dy) / len2;
+        const tFront = tOf(st.x + (dx / segLen) * ctx.trainHalfLen, st.y + (dy / segLen) * ctx.trainHalfLen);
+        ahead = ctx.signals
+          .filter((s) => !s.ai && bearingDot(segBearing!, s.bearing) > 0 && tOf(s.x, s.y) > tFront)
+          .sort((a, b) => tOf(b.x, b.y) - tOf(a.x, a.y));
+      }
       const red = ahead.find((s) => ctx.aspectOf(s.id, st.idx) === "red");
       if (red) {
         // stop so the train's LEADING edge sits at the signal — the marker must
         // never protrude past a red signal
-        const stopX = red.x - (st.dir === "left" ? -ctx.trainHalfLen : ctx.trainHalfLen);
-        limit = { kind: "signal", x: stopX, y: red.y, sigId: red.id };
+        if (segHorizontal) {
+          const stopX = red.x - (st.dir === "left" ? -ctx.trainHalfLen : ctx.trainHalfLen);
+          limit = { kind: "signal", x: stopX, y: red.y, sigId: red.id };
+        } else {
+          limit = {
+            kind: "signal",
+            x: red.x - (dx / segLen) * ctx.trainHalfLen,
+            y: red.y - (dy / segLen) * ctx.trainHalfLen,
+            sigId: red.id,
+          };
+        }
       }
     }
     if (st.nxtNode && ctx.nodes[st.nxtNode]) {
@@ -501,7 +561,7 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
       continue;
     }
     // junction node
-    const res = resolveNode(st.nxtNode!, st.dir, st.incoming, ctx);
+    const res = resolveNode(st.nxtNode!, bearingOf(st.segFrom, st.segTo), st.incoming, ctx);
     if ("blocked" in res) {
       st.stopped = true;
       st.stopReason = "junction";

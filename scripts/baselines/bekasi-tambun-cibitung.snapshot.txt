@@ -1,5 +1,23 @@
 {
   "map": {
+    "lines": {
+      "bottomY": 205,
+      "normalBearingByLineY": {
+        "89": {
+          "dx": -1,
+          "dy": 0
+        },
+        "205": {
+          "dx": 1,
+          "dy": 0
+        }
+      },
+      "normalDirectionByY": {
+        "89": "left",
+        "205": "right"
+      },
+      "topY": 89
+    },
     "loops": {
       "lineYs": {
         "$set": [
@@ -24,210 +42,414 @@
     },
     "nodes": {
       "blL": {
-        "straight": {
-          "left": null,
-          "right": "p2"
-        },
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "p2"
+          }
+        ],
         "x": -406,
         "y": 205
       },
       "blR": {
-        "straight": {
-          "left": "p7",
-          "right": null
-        },
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "p7"
+          }
+        ],
         "x": 1798,
         "y": 205
       },
       "ll1": {
-        "straight": {
-          "left": "p5",
-          "right": "ll2"
-        },
+        "exits": [
+          {
+            "bearing": {
+              "dx": -0.6884263100313337,
+              "dy": -0.7253062909258695
+            },
+            "neighbor": "p5"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "ll2"
+          }
+        ],
         "x": 556,
         "y": 264
       },
       "ll2": {
-        "straight": {
-          "left": "ll1",
-          "right": "p6"
-        },
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "ll1"
+          },
+          {
+            "bearing": {
+              "dx": 0.7010375280810152,
+              "dy": -0.7131243820134464
+            },
+            "neighbor": "p6"
+          }
+        ],
         "x": 730,
         "y": 264
       },
       "p1": {
-        "branch": {
-          "right": {
-            "farSw": 2,
-            "path": [
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "tlL"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "p3",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.6945945136995673,
+              "dy": 0.719401460617409
+            },
+            "branchPath": [
               "p2"
-            ]
+            ],
+            "farSw": 2,
+            "neighbor": "p2",
+            "viaSwitchPort": "reversed"
           }
-        },
-        "straight": {
-          "left": "tlL",
-          "right": "p3"
-        },
+        ],
         "sw": 1,
         "x": 326,
         "y": 89
       },
       "p2": {
-        "branch": {
-          "left": {
-            "farSw": 1,
-            "path": [
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "p5"
+          },
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "blL",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.6945945136995673,
+              "dy": -0.719401460617409
+            },
+            "branchPath": [
               "p1"
-            ]
+            ],
+            "farSw": 1,
+            "neighbor": "p1",
+            "viaSwitchPort": "reversed"
           }
-        },
-        "straight": {
-          "left": "blL",
-          "right": "p5"
-        },
+        ],
         "sw": 2,
         "x": 438,
         "y": 205
       },
       "p3": {
-        "branch": {
-          "right": {
-            "farSw": 4,
-            "path": [
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "p1"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "p4",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.6884263100313337,
+              "dy": 0.7253062909258695
+            },
+            "branchPath": [
               "ul1",
               "ul2",
               "p4"
-            ]
+            ],
+            "farSw": 4,
+            "neighbor": "ul1",
+            "viaSwitchPort": "reversed"
           }
-        },
-        "straight": {
-          "left": "p1",
-          "right": "p4"
-        },
+        ],
         "sw": 3,
         "x": 500,
         "y": 89
       },
       "p4": {
-        "branch": {
-          "left": {
-            "farSw": 3,
-            "path": [
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "p8"
+          },
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "p3",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.6884263100313337,
+              "dy": 0.7253062909258695
+            },
+            "branchPath": [
               "ul2",
               "ul1",
               "p3"
-            ]
+            ],
+            "farSw": 3,
+            "neighbor": "ul2",
+            "viaSwitchPort": "reversed"
           }
-        },
-        "straight": {
-          "left": "p3",
-          "right": "p8"
-        },
+        ],
         "sw": 4,
         "x": 786,
         "y": 89
       },
       "p5": {
-        "branch": {
-          "right": {
-            "farSw": 6,
-            "path": [
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "p2"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "p6",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.6884263100313337,
+              "dy": 0.7253062909258695
+            },
+            "branchPath": [
               "ll1",
               "ll2",
               "p6"
-            ]
+            ],
+            "farSw": 6,
+            "neighbor": "ll1",
+            "viaSwitchPort": "reversed"
           }
-        },
-        "straight": {
-          "left": "p2",
-          "right": "p6"
-        },
+        ],
         "sw": 5,
         "x": 500,
         "y": 205
       },
       "p6": {
-        "branch": {
-          "left": {
-            "farSw": 5,
-            "path": [
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "p7"
+          },
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "p5",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.7010375280810152,
+              "dy": 0.7131243820134464
+            },
+            "branchPath": [
               "ll2",
               "ll1",
               "p5"
-            ]
+            ],
+            "farSw": 5,
+            "neighbor": "ll2",
+            "viaSwitchPort": "reversed"
           }
-        },
-        "straight": {
-          "left": "p5",
-          "right": "p7"
-        },
+        ],
         "sw": 6,
         "x": 788,
         "y": 205
       },
       "p7": {
-        "branch": {
-          "right": {
-            "farSw": 8,
-            "path": [
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "p6"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "blR",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.7009315268217041,
+              "dy": -0.7132285711519095
+            },
+            "branchPath": [
               "p8"
-            ]
+            ],
+            "farSw": 8,
+            "neighbor": "p8",
+            "viaSwitchPort": "reversed"
           }
-        },
-        "straight": {
-          "left": "p6",
-          "right": "blR"
-        },
+        ],
         "sw": 7,
         "x": 846,
         "y": 205
       },
       "p8": {
-        "branch": {
-          "left": {
-            "farSw": 7,
-            "path": [
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "tlR"
+          },
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "p4",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.7009315268217041,
+              "dy": 0.7132285711519095
+            },
+            "branchPath": [
               "p7"
-            ]
+            ],
+            "farSw": 7,
+            "neighbor": "p7",
+            "viaSwitchPort": "reversed"
           }
-        },
-        "straight": {
-          "left": "p4",
-          "right": "tlR"
-        },
+        ],
         "sw": 8,
         "x": 960,
         "y": 89
       },
       "tlL": {
-        "straight": {
-          "left": null,
-          "right": "p1"
-        },
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "p1"
+          }
+        ],
         "x": -406,
         "y": 89
       },
       "tlR": {
-        "straight": {
-          "left": "p8",
-          "right": null
-        },
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "p8"
+          }
+        ],
         "x": 1798,
         "y": 89
       },
       "ul1": {
-        "straight": {
-          "left": "p3",
-          "right": "ul2"
-        },
+        "exits": [
+          {
+            "bearing": {
+              "dx": -0.6884263100313337,
+              "dy": -0.7253062909258695
+            },
+            "neighbor": "p3"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "ul2"
+          }
+        ],
         "x": 556,
         "y": 148
       },
       "ul2": {
-        "straight": {
-          "left": "ul1",
-          "right": "p4"
-        },
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "ul1"
+          },
+          {
+            "bearing": {
+              "dx": 0.6884263100313337,
+              "dy": -0.7253062909258695
+            },
+            "neighbor": "p4"
+          }
+        ],
         "x": 730,
         "y": 148
       }
@@ -400,6 +622,10 @@
       },
       "items": [
         {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "dir": "right",
           "edge": [
             "blL",
@@ -413,6 +639,10 @@
           "y": 205
         },
         {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "dir": "right",
           "edge": [
             "p5",
@@ -426,6 +656,10 @@
           "y": 205
         },
         {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "dir": "right",
           "edge": [
             "ll1",
@@ -439,6 +673,10 @@
           "y": 264
         },
         {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "dir": "left",
           "edge": [
             "tlR",
@@ -452,6 +690,10 @@
           "y": 89
         },
         {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "dir": "left",
           "edge": [
             "p4",
@@ -465,6 +707,10 @@
           "y": 89
         },
         {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "dir": "left",
           "edge": [
             "ul2",
@@ -478,6 +724,10 @@
           "y": 148
         },
         {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "dir": "left",
           "edge": [
             "ll2",
@@ -491,6 +741,10 @@
           "y": 264
         },
         {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "block": true,
           "dir": "right",
           "edge": [
@@ -505,6 +759,10 @@
           "y": 205
         },
         {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "block": true,
           "dir": "right",
           "edge": [
@@ -519,6 +777,10 @@
           "y": 205
         },
         {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "block": true,
           "dir": "right",
           "edge": [
@@ -533,6 +795,10 @@
           "y": 205
         },
         {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "block": true,
           "dir": "right",
           "edge": [
@@ -548,6 +814,10 @@
         },
         {
           "ai": true,
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "dir": "left",
           "edge": [
             "p1",
@@ -561,6 +831,10 @@
           "y": 89
         },
         {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "block": true,
           "dir": "left",
           "edge": [
@@ -575,6 +849,10 @@
           "y": 89
         },
         {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "block": true,
           "dir": "left",
           "edge": [
@@ -589,6 +867,10 @@
           "y": 89
         },
         {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "block": true,
           "dir": "left",
           "edge": [
@@ -603,6 +885,10 @@
           "y": 89
         },
         {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "block": true,
           "dir": "left",
           "edge": [
@@ -617,6 +903,10 @@
           "y": 89
         },
         {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "block": true,
           "code": "B201",
           "dir": "left",
@@ -632,6 +922,10 @@
           "y": 89
         },
         {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "block": true,
           "code": "B202",
           "dir": "left",
@@ -647,6 +941,10 @@
           "y": 89
         },
         {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "block": true,
           "code": "B203",
           "dir": "left",
@@ -662,6 +960,10 @@
           "y": 89
         },
         {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "block": true,
           "code": "B204",
           "dir": "left",
@@ -677,6 +979,10 @@
           "y": 89
         },
         {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "block": true,
           "dir": "right",
           "edge": [
@@ -691,6 +997,10 @@
           "y": 205
         },
         {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "block": true,
           "dir": "right",
           "edge": [
@@ -705,6 +1015,10 @@
           "y": 205
         },
         {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "block": true,
           "dir": "right",
           "edge": [
@@ -719,6 +1033,10 @@
           "y": 205
         },
         {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "block": true,
           "dir": "right",
           "edge": [
@@ -15354,210 +15672,414 @@
     "movement": {
       "nodes": {
         "blL": {
-          "straight": {
-            "left": null,
-            "right": "p2"
-          },
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "p2"
+            }
+          ],
           "x": -406,
           "y": 205
         },
         "blR": {
-          "straight": {
-            "left": "p7",
-            "right": null
-          },
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "p7"
+            }
+          ],
           "x": 1798,
           "y": 205
         },
         "ll1": {
-          "straight": {
-            "left": "p5",
-            "right": "ll2"
-          },
+          "exits": [
+            {
+              "bearing": {
+                "dx": -0.6884263100313337,
+                "dy": -0.7253062909258695
+              },
+              "neighbor": "p5"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "ll2"
+            }
+          ],
           "x": 556,
           "y": 264
         },
         "ll2": {
-          "straight": {
-            "left": "ll1",
-            "right": "p6"
-          },
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "ll1"
+            },
+            {
+              "bearing": {
+                "dx": 0.7010375280810152,
+                "dy": -0.7131243820134464
+              },
+              "neighbor": "p6"
+            }
+          ],
           "x": 730,
           "y": 264
         },
         "p1": {
-          "branch": {
-            "right": {
-              "farSw": 2,
-              "path": [
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "tlL"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "p3",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.6945945136995673,
+                "dy": 0.719401460617409
+              },
+              "branchPath": [
                 "p2"
-              ]
+              ],
+              "farSw": 2,
+              "neighbor": "p2",
+              "viaSwitchPort": "reversed"
             }
-          },
-          "straight": {
-            "left": "tlL",
-            "right": "p3"
-          },
+          ],
           "sw": 1,
           "x": 326,
           "y": 89
         },
         "p2": {
-          "branch": {
-            "left": {
-              "farSw": 1,
-              "path": [
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "p5"
+            },
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "blL",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.6945945136995673,
+                "dy": -0.719401460617409
+              },
+              "branchPath": [
                 "p1"
-              ]
+              ],
+              "farSw": 1,
+              "neighbor": "p1",
+              "viaSwitchPort": "reversed"
             }
-          },
-          "straight": {
-            "left": "blL",
-            "right": "p5"
-          },
+          ],
           "sw": 2,
           "x": 438,
           "y": 205
         },
         "p3": {
-          "branch": {
-            "right": {
-              "farSw": 4,
-              "path": [
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "p1"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "p4",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.6884263100313337,
+                "dy": 0.7253062909258695
+              },
+              "branchPath": [
                 "ul1",
                 "ul2",
                 "p4"
-              ]
+              ],
+              "farSw": 4,
+              "neighbor": "ul1",
+              "viaSwitchPort": "reversed"
             }
-          },
-          "straight": {
-            "left": "p1",
-            "right": "p4"
-          },
+          ],
           "sw": 3,
           "x": 500,
           "y": 89
         },
         "p4": {
-          "branch": {
-            "left": {
-              "farSw": 3,
-              "path": [
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "p8"
+            },
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "p3",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.6884263100313337,
+                "dy": 0.7253062909258695
+              },
+              "branchPath": [
                 "ul2",
                 "ul1",
                 "p3"
-              ]
+              ],
+              "farSw": 3,
+              "neighbor": "ul2",
+              "viaSwitchPort": "reversed"
             }
-          },
-          "straight": {
-            "left": "p3",
-            "right": "p8"
-          },
+          ],
           "sw": 4,
           "x": 786,
           "y": 89
         },
         "p5": {
-          "branch": {
-            "right": {
-              "farSw": 6,
-              "path": [
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "p2"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "p6",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.6884263100313337,
+                "dy": 0.7253062909258695
+              },
+              "branchPath": [
                 "ll1",
                 "ll2",
                 "p6"
-              ]
+              ],
+              "farSw": 6,
+              "neighbor": "ll1",
+              "viaSwitchPort": "reversed"
             }
-          },
-          "straight": {
-            "left": "p2",
-            "right": "p6"
-          },
+          ],
           "sw": 5,
           "x": 500,
           "y": 205
         },
         "p6": {
-          "branch": {
-            "left": {
-              "farSw": 5,
-              "path": [
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "p7"
+            },
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "p5",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.7010375280810152,
+                "dy": 0.7131243820134464
+              },
+              "branchPath": [
                 "ll2",
                 "ll1",
                 "p5"
-              ]
+              ],
+              "farSw": 5,
+              "neighbor": "ll2",
+              "viaSwitchPort": "reversed"
             }
-          },
-          "straight": {
-            "left": "p5",
-            "right": "p7"
-          },
+          ],
           "sw": 6,
           "x": 788,
           "y": 205
         },
         "p7": {
-          "branch": {
-            "right": {
-              "farSw": 8,
-              "path": [
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "p6"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "blR",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.7009315268217041,
+                "dy": -0.7132285711519095
+              },
+              "branchPath": [
                 "p8"
-              ]
+              ],
+              "farSw": 8,
+              "neighbor": "p8",
+              "viaSwitchPort": "reversed"
             }
-          },
-          "straight": {
-            "left": "p6",
-            "right": "blR"
-          },
+          ],
           "sw": 7,
           "x": 846,
           "y": 205
         },
         "p8": {
-          "branch": {
-            "left": {
-              "farSw": 7,
-              "path": [
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "tlR"
+            },
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "p4",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.7009315268217041,
+                "dy": 0.7132285711519095
+              },
+              "branchPath": [
                 "p7"
-              ]
+              ],
+              "farSw": 7,
+              "neighbor": "p7",
+              "viaSwitchPort": "reversed"
             }
-          },
-          "straight": {
-            "left": "p4",
-            "right": "tlR"
-          },
+          ],
           "sw": 8,
           "x": 960,
           "y": 89
         },
         "tlL": {
-          "straight": {
-            "left": null,
-            "right": "p1"
-          },
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "p1"
+            }
+          ],
           "x": -406,
           "y": 89
         },
         "tlR": {
-          "straight": {
-            "left": "p8",
-            "right": null
-          },
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "p8"
+            }
+          ],
           "x": 1798,
           "y": 89
         },
         "ul1": {
-          "straight": {
-            "left": "p3",
-            "right": "ul2"
-          },
+          "exits": [
+            {
+              "bearing": {
+                "dx": -0.6884263100313337,
+                "dy": -0.7253062909258695
+              },
+              "neighbor": "p3"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "ul2"
+            }
+          ],
           "x": 556,
           "y": 148
         },
         "ul2": {
-          "straight": {
-            "left": "ul1",
-            "right": "p4"
-          },
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "ul1"
+            },
+            {
+              "bearing": {
+                "dx": 0.6884263100313337,
+                "dy": -0.7253062909258695
+              },
+              "neighbor": "p4"
+            }
+          ],
           "x": 730,
           "y": 148
         }
@@ -15566,6 +16088,10 @@
         {
           "ai": {
             "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
           },
           "dir": "right",
           "id": "J1",
@@ -15576,6 +16102,10 @@
           "ai": {
             "$undefined": true
           },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "dir": "right",
           "id": "J2",
           "x": 730,
@@ -15584,6 +16114,10 @@
         {
           "ai": {
             "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
           },
           "dir": "right",
           "id": "J3",
@@ -15594,6 +16128,10 @@
           "ai": {
             "$undefined": true
           },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "dir": "left",
           "id": "J4",
           "x": 1076,
@@ -15602,6 +16140,10 @@
         {
           "ai": {
             "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
           },
           "dir": "left",
           "id": "J5",
@@ -15612,6 +16154,10 @@
           "ai": {
             "$undefined": true
           },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "dir": "left",
           "id": "J6",
           "x": 558,
@@ -15620,6 +16166,10 @@
         {
           "ai": {
             "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
           },
           "dir": "left",
           "id": "J7",
@@ -15630,6 +16180,10 @@
           "ai": {
             "$undefined": true
           },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "dir": "right",
           "id": "B101",
           "x": 145,
@@ -15638,6 +16192,10 @@
         {
           "ai": {
             "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
           },
           "dir": "right",
           "id": "B102",
@@ -15648,6 +16206,10 @@
           "ai": {
             "$undefined": true
           },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "dir": "right",
           "id": "B103",
           "x": -203,
@@ -15657,6 +16219,10 @@
           "ai": {
             "$undefined": true
           },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "dir": "right",
           "id": "B104",
           "x": -377,
@@ -15664,6 +16230,10 @@
         },
         {
           "ai": true,
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "dir": "left",
           "id": "A2",
           "x": -400,
@@ -15672,6 +16242,10 @@
         {
           "ai": {
             "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
           },
           "dir": "left",
           "id": "B201",
@@ -15682,6 +16256,10 @@
           "ai": {
             "$undefined": true
           },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "dir": "left",
           "id": "B202",
           "x": -203,
@@ -15690,6 +16268,10 @@
         {
           "ai": {
             "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
           },
           "dir": "left",
           "id": "B203",
@@ -15700,6 +16282,10 @@
           "ai": {
             "$undefined": true
           },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "dir": "left",
           "id": "B204",
           "x": 145,
@@ -15708,6 +16294,10 @@
         {
           "ai": {
             "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
           },
           "dir": "left",
           "id": "B9",
@@ -15718,6 +16308,10 @@
           "ai": {
             "$undefined": true
           },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "dir": "left",
           "id": "B10",
           "x": 1421,
@@ -15726,6 +16320,10 @@
         {
           "ai": {
             "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
           },
           "dir": "left",
           "id": "B11",
@@ -15736,6 +16334,10 @@
           "ai": {
             "$undefined": true
           },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
           "dir": "left",
           "id": "B12",
           "x": 1769,
@@ -15744,6 +16346,10 @@
         {
           "ai": {
             "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
           },
           "dir": "right",
           "id": "B109",
@@ -15754,6 +16360,10 @@
           "ai": {
             "$undefined": true
           },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "dir": "right",
           "id": "B108",
           "x": 1421,
@@ -15763,6 +16373,10 @@
           "ai": {
             "$undefined": true
           },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
           "dir": "right",
           "id": "B107",
           "x": 1595,
@@ -15771,6 +16385,10 @@
         {
           "ai": {
             "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
           },
           "dir": "right",
           "id": "B106",

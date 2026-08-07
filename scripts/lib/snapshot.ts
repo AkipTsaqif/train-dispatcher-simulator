@@ -46,6 +46,7 @@ const importLayoutRuntime = async (
 const projectRuntime = (runtime: DispatchRuntime) => ({
   map: {
     nodes: runtime.map.nodes,
+    lines: runtime.map.lines,
     trackPaths: runtime.map.trackPaths,
     signals: {
       items: runtime.map.signals.items,

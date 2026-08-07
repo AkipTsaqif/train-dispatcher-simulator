@@ -1,6 +1,36 @@
 export type SwitchState = "normal" | "reversed";
 export type Dir = "right" | "left";
 
+/**
+ * A unit travel bearing. The current horizontal layouts use exactly (±1, 0);
+ * the general case allows any (dx, dy) not both zero, so tracks no longer
+ * have to be horizontal.
+ */
+export type Bearing = { dx: number; dy: number };
+
+/** Unit bearing from one topology point to the next. */
+export const bearingOf = (from: TopologyPoint, to: TopologyPoint): Bearing => {
+  const dx = to[0] - from[0];
+  const dy = to[1] - from[1];
+  const len = Math.hypot(dx, dy);
+  if (len === 0) throw new Error("zero-length bearing");
+  return { dx: dx / len, dy: dy / len };
+};
+
+/** Dot product of two bearings; >0 same general direction, <0 opposite. */
+export const bearingDot = (a: Bearing, b: Bearing): number =>
+  a.dx * b.dx + a.dy * b.dy;
+
+/**
+ * Legacy horizontal view of a bearing — the sign of dx. Throws only when a
+ * horizontal answer is genuinely unavailable (pure vertical travel).
+ */
+export const bearingToDir = (b: Bearing): Dir => {
+  if (b.dx > 0) return "right";
+  if (b.dx < 0) return "left";
+  throw new Error("bearing has no horizontal component");
+};
+
 export type Sw = {
   id: number;
   x: number;
@@ -19,12 +49,19 @@ export type PointControl = {
   label: string;
 };
 
+export type GNodeExit = {
+  neighbor: string; // next node id along this exit
+  bearing: Bearing; // travel bearing leaving this node toward the neighbor
+  viaSwitchPort?: "normal" | "reversed"; // switch-selected exit (reversed = the branch)
+  branchPath?: string[]; // diverted exit: intermediate node ids toward the far switch
+  farSw?: number; // far switch of a diverted exit
+};
+
 export type GNode = {
   x: number;
   y: number;
-  straight: Record<Dir, string | null>;
-  branch?: Partial<Record<Dir, { path: string[]; farSw: number }>>;
   sw?: number;
+  exits: GNodeExit[]; // all physical ways out, each with its travel bearing
 };
 
 export type SignalDef = {
@@ -34,6 +71,7 @@ export type SignalDef = {
   y: number;
   lineY: number;
   dir: Dir;
+  bearing: Bearing; // facing bearing (derived from the edge segment)
   mount: "up" | "down";
   edge: [string, string];
   label: string;
@@ -53,6 +91,7 @@ export type CompiledMovementSignal = {
   x: number;
   y: number;
   dir: Dir;
+  bearing: Bearing;
   ai?: boolean;
 };
 
@@ -179,6 +218,8 @@ export type TopologyDefinition = {
 export type CompiledTopology = {
   lines: {
     normalDirectionByY: Record<number, Dir>;
+    normalBearingByGroupId: Record<string, Bearing>;
+    normalBearingByLineY: Record<number, Bearing>;
   };
   loops: {
     lineYs: Set<number>;
@@ -570,11 +611,11 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     }
     const geometryFrom = edge.geometry[signal.segmentIndex].point;
     const geometryTo = edge.geometry[signal.segmentIndex + 1].point;
-    const facingDelta =
+    const facingBearing =
       signal.facing === "toward-to"
-        ? geometryTo[0] - geometryFrom[0]
-        : geometryFrom[0] - geometryTo[0];
-    const dir = directionForDelta(facingDelta, `Signal ${signal.id}`);
+        ? bearingOf(geometryFrom, geometryTo)
+        : bearingOf(geometryTo, geometryFrom);
+    const dir = bearingToDir(facingBearing);
     const segment: [string, string] =
       signal.facing === "toward-to"
         ? [segmentFrom, segmentTo]
@@ -588,6 +629,7 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       y: point[1],
       lineY: point[1],
       dir,
+      bearing: facingBearing,
       mount: signal.mount,
       edge: segment,
       label: signal.label,
@@ -716,22 +758,26 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
 
   const mainGroups = definition.trackGroups.filter((group) => group.role === "main");
   const normalDirectionByY: Record<number, Dir> = {};
+  const normalBearingByGroupId: Record<string, Bearing> = {};
+  const normalBearingByLineY: Record<number, Bearing> = {};
   for (const group of mainGroups) {
     if (!group.normalDirection) {
       throw new Error(`Main track group ${group.id} needs a normal direction`);
     }
     const firstEdge = edgesById.get(group.edgeIds[0])!;
     const lineY = firstEdge.geometry[0].point[1];
-    if (
-      group.edgeIds.some((edgeId) =>
-        edgesById
-          .get(edgeId)!
-          .geometry.some((vertex) => vertex.point[1] !== lineY)
-      )
-    ) {
-      throw new Error(`Main track group ${group.id} is not horizontal`);
-    }
+    // Phase 1: mains are no longer required to be horizontal — the per-line
+    // derived views stay for the horizontal layouts (Bekasi), and diagonal
+    // mains keep a nominal line Y from their first vertex.
     normalDirectionByY[lineY] = group.normalDirection;
+    const fromPoint = firstEdge.geometry[0].point;
+    const toPoint = firstEdge.geometry[1].point;
+    const normalBearing =
+      group.normalDirection === "right"
+        ? bearingOf(fromPoint, toPoint)
+        : bearingOf(toPoint, fromPoint);
+    normalBearingByGroupId[group.id] = normalBearing;
+    normalBearingByLineY[lineY] = normalBearing;
   }
 
   const loopGroups = definition.trackGroups.filter((group) => group.role === "loop");
@@ -797,25 +843,21 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
   for (const nodeId of definition.legacyNodeOrder) {
     const point = graphNodePoint(nodeId);
     const topologySwitch = switchesByNode.get(nodeId);
-    const straight: Record<Dir, string | null> = { right: null, left: null };
-    let branch: GNode["branch"];
+    const exits: GNodeExit[] = [];
 
-    const assignStraight = (neighborId: string): void => {
-      const neighborPoint = graphNodePoint(neighborId);
-      const dir = directionForDelta(
-        neighborPoint[0] - point[0],
-        `Graph connection ${nodeId}-${neighborId}`
-      );
-      if (straight[dir] !== null) {
-        throw new Error(`Graph node ${nodeId} has multiple ${dir} straight neighbors`);
-      }
-      straight[dir] = neighborId;
+    const pushExit = (neighborId: string, extra: Partial<GNodeExit> = {}): void => {
+      exits.push({
+        neighbor: neighborId,
+        bearing: bearingOf(point, graphNodePoint(neighborId)),
+        ...extra,
+      });
     };
 
     if (topologySwitch) {
-      const commonNeighbor = endNeighbor(topologySwitch.common, nodeId);
-      assignStraight(commonNeighbor);
-      assignStraight(endNeighbor(topologySwitch.normal, nodeId));
+      // the common and normal ports are the through axis (always open); the
+      // reversed port is the switch-selected branch exit
+      pushExit(endNeighbor(topologySwitch.common, nodeId));
+      pushExit(endNeighbor(topologySwitch.normal, nodeId), { viaSwitchPort: "normal" });
 
       const reversedEdge = edgesById.get(topologySwitch.reversed.edgeId)!;
       const reversedPath = edgePaths.get(reversedEdge.id)!;
@@ -828,16 +870,16 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       if (!farSwitch) {
         throw new Error(`Switch ${topologySwitch.id} branch has no far switch`);
       }
-      const dir = directionForDelta(
-        point[0] - graphNodePoint(commonNeighbor)[0],
-        `Switch ${topologySwitch.id} branch approach`
-      );
-      branch = { [dir]: { path, farSw: farSwitch.id } };
+      pushExit(path[0], {
+        viaSwitchPort: "reversed",
+        branchPath: path,
+        farSw: farSwitch.id,
+      });
     } else if (compatibilityVertices.has(nodeId)) {
       const vertex = compatibilityVertices.get(nodeId)!;
       const path = edgePaths.get(vertex.edgeId)!;
-      assignStraight(path.ids[vertex.index - 1]);
-      assignStraight(path.ids[vertex.index + 1]);
+      pushExit(path.ids[vertex.index - 1]);
+      pushExit(path.ids[vertex.index + 1]);
     } else {
       const incident = definition.edges.filter(
         (edge) => edge.from === nodeId || edge.to === nodeId
@@ -847,18 +889,14 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       }
       const edge = incident[0];
       const path = edgePaths.get(edge.id)!;
-      assignStraight(edge.from === nodeId ? path.ids[1] : path.ids[path.ids.length - 2]);
+      pushExit(
+        edge.from === nodeId ? path.ids[1] : path.ids[path.ids.length - 2]
+      );
     }
 
     graphNodes[nodeId] = topologySwitch
-      ? {
-          x: point[0],
-          y: point[1],
-          sw: topologySwitch.id,
-          straight,
-          ...(branch ? { branch } : {}),
-        }
-      : { x: point[0], y: point[1], straight };
+      ? { x: point[0], y: point[1], sw: topologySwitch.id, exits }
+      : { x: point[0], y: point[1], exits };
   }
 
   const switchItems: Sw[] = definition.switches.map((topologySwitch) => {
@@ -934,11 +972,12 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     x: signal.x,
     y: signal.lineY,
     dir: signal.dir,
+    bearing: signal.bearing,
     ai: signal.ai,
   }));
 
   return {
-    lines: { normalDirectionByY },
+    lines: { normalDirectionByY, normalBearingByGroupId, normalBearingByLineY },
     loops: {
       lineYs: loopLineYs,
       minX: loopMinX,

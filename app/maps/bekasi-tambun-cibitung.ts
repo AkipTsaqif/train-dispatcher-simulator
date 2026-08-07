@@ -14,8 +14,10 @@ import { BEKASI_TAMBUN_CIBITUNG_TOPOLOGY } from "../topologies/bekasi-tambun-cib
 
 // Re-export the shared contracts so existing import sites keep working.
 export type {
+  Bearing,
   Dir,
   GNode,
+  GNodeExit,
   PointControl,
   SignalDef,
   Sw,
@@ -72,6 +74,7 @@ export const BEKASI_TAMBUN_CIBITUNG_MAP: DispatchMapDefinition = {
     topY: TOP_LINE_Y,
     bottomY: BOTTOM_LINE_Y,
     normalDirectionByY: COMPILED_TOPOLOGY.lines.normalDirectionByY,
+    normalBearingByLineY: COMPILED_TOPOLOGY.lines.normalBearingByLineY,
   },
   loops: COMPILED_TOPOLOGY.loops,
   switches: COMPILED_TOPOLOGY.switches,

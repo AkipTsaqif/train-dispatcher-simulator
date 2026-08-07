@@ -7,6 +7,7 @@
 
 import type {
   CompiledTopology,
+  Bearing,
   Dir,
   GNode,
   PointControl,
@@ -18,8 +19,10 @@ import type {
 // Re-export the topology types so existing import sites keep working during
 // the transition.
 export type {
+  Bearing,
   Dir,
   GNode,
+  GNodeExit,
   PointControl,
   SignalDef,
   Sw,
@@ -65,6 +68,7 @@ export type DispatchMapDefinition = {
     topY: number;
     bottomY: number;
     normalDirectionByY: Record<number, Dir>;
+    normalBearingByLineY: Record<number, Bearing>;
   };
   loops: {
     lineYs: Set<number>;
