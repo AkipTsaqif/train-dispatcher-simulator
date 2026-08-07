@@ -1,1 +1,104 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---- dark mode ---- */
+.dark body {
+  background-color: #0f172a;
+}
+
+/* Remap the slate/white chrome utilities for a dark background (the UI chrome
+   is built from these; signals/trains keep their own colours). */
+.dark .bg-white {
+  background-color: #1e293b;
+}
+.dark .bg-slate-50 {
+  background-color: #0f172a;
+}
+.dark .bg-slate-100 {
+  background-color: #1e293b;
+}
+.dark .bg-slate-200 {
+  background-color: #334155;
+}
+.dark .bg-slate-300 {
+  background-color: #475569;
+}
+.dark .text-slate-400 {
+  color: #94a3b8;
+}
+.dark .text-slate-500 {
+  color: #a3b0c4;
+}
+.dark .text-slate-600 {
+  color: #cbd5e1;
+}
+.dark .text-slate-700 {
+  color: #e2e8f0;
+}
+.dark .text-slate-800 {
+  color: #f1f5f9;
+}
+.dark .text-slate-300 {
+  color: #cbd5e1;
+}
+.dark .border-slate-100 {
+  border-color: #1e293b;
+}
+.dark .border-slate-200 {
+  border-color: #334155;
+}
+.dark .border-slate-300 {
+  border-color: #475569;
+}
+.dark .border-slate-400 {
+  border-color: #64748b;
+}
+.dark .hover\:bg-slate-100:hover {
+  background-color: #334155;
+}
+.dark .hover\:bg-slate-200:hover {
+  background-color: #475569;
+}
+.dark .hover\:bg-slate-300:hover {
+  background-color: #64748b;
+}
+.dark .hover\:text-slate-700:hover {
+  color: #f1f5f9;
+}
+.dark .hover\:text-slate-800:hover {
+  color: #f1f5f9;
+}
+
+/* The track diagram — recolor the hardcoded SVG values for a dark background.
+   Signal lamps, train markers and reservation highlights keep their colours. */
+.dark svg [stroke="#000"] {
+  stroke: #94a3b8;
+}
+.dark svg [fill="#000"] {
+  fill: #e2e8f0;
+}
+.dark svg g[stroke="#e7e7e7"] {
+  stroke: #1e293b;
+}
+.dark svg g[stroke="#cbd5e1"] {
+  stroke: #334155;
+}
+.dark svg g[fill="#64748b"] {
+  fill: #cbd5e1;
+}
+.dark svg [fill="#fef3c7"] {
+  fill: #1e293b;
+}
+.dark svg [fill="#94a3b8"] {
+  fill: #64748b;
+}
+.dark svg [fill="#ffffff"] {
+  fill: #e2e8f0;
+}
+.dark svg [stroke="#ffffff"] {
+  stroke: #94a3b8;
+}
+.dark svg [stroke="#334155"] {
+  stroke: #64748b;
+}

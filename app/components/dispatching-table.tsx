@@ -594,6 +594,25 @@ export default function DispatchingTable() {
   const logClick = (msg: string) =>
     setClickLog((l) => [...l, `[${fmtTime(simRef.current)}] ${msg}`]);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  // apply the saved/system dark preference once, and keep <html> in sync
+  useEffect(() => {
+    const saved =
+      typeof localStorage !== "undefined" ? localStorage.getItem("ppka-dark") : null;
+    const pref = saved
+      ? saved === "1"
+      : typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setDarkMode(pref);
+    document.documentElement.classList.toggle("dark", pref);
+  }, []);
+  const toggleDark = () => {
+    setDarkMode((v) => {
+      const next = !v;
+      document.documentElement.classList.toggle("dark", next);
+      localStorage.setItem("ppka-dark", next ? "1" : "0");
+      return next;
+    });
+  };
   const [timeScale, setTimeScale] = useState<TimeScale>(1);
   const [paused, setPaused] = useState(true); // frozen until a start time is chosen
   const [startModalOpen, setStartModalOpen] = useState(true);
@@ -640,6 +659,10 @@ export default function DispatchingTable() {
   const [notices, setNotices] = useState<Notice[]>([]);
   const nextNoticeIdRef = useRef(1);
   const [noticesFolded, setNoticesFolded] = useState(false); // collapse the board, keep its history
+  // a fresh notice auto-reopens the board even if the user folded it
+  useEffect(() => {
+    if (notices.length > 0) setNoticesFolded(false);
+  }, [notices.length]);
   // Simulation-time accumulator (trains will consume this) + direct DOM clock
   // updates so the display stays smooth without re-rendering the table 60×/s.
   const simRef = useRef(0);
@@ -1695,7 +1718,25 @@ export default function DispatchingTable() {
       </div>
 
       {/* Settings — fixed top-right; a gear opens a popover with toggles */}
-      <div className="fixed top-4 right-4 z-50">
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={toggleDark}
+          aria-label={darkMode ? "Mode terang" : "Mode gelap"}
+          title={darkMode ? "Light mode" : "Dark mode"}
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-600 shadow-sm transition-colors cursor-pointer hover:border-slate-400 hover:text-slate-800"
+        >
+          {darkMode ? (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+            </svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          )}
+        </button>
         <button
           type="button"
           onClick={() => setSettingsOpen((o) => !o)}
@@ -1731,7 +1772,7 @@ export default function DispatchingTable() {
               aria-hidden="true"
             />
             <div
-              className="absolute right-0 z-50 mt-2 w-64 rounded-lg border border-slate-200 bg-white p-4 shadow-lg"
+              className="absolute right-0 top-12 z-50 w-64 rounded-lg border border-slate-200 bg-white p-4 shadow-lg"
               role="dialog"
               aria-label="Pengaturan"
             >
@@ -2537,7 +2578,7 @@ export default function DispatchingTable() {
         {notices.length > 0 && (
           <div
             data-board="notifications"
-            className="fixed left-1/2 top-4 z-50 w-80 -translate-x-1/2 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg"
+            className="fixed left-1/2 top-4 z-50 w-80 -translate-x-1/2 overflow-hidden rounded-xl border border-slate-200 bg-white/90 shadow-lg backdrop-blur-sm dark:bg-slate-800/90"
           >
             <div className="flex items-center justify-between border-b border-slate-100 px-4 py-2">
               <p className="text-sm font-semibold text-slate-700">Notifikasi</p>
@@ -2565,15 +2606,15 @@ export default function DispatchingTable() {
                 </button>
               </div>
             </div>
-            {/* fixed height so the visual-test mask box stays deterministic */}
+            {/* compact height; the visual-test mask box stays deterministic */}
             {!noticesFolded && (
-            <div className="h-56 overflow-auto">
+            <div className="h-40 overflow-auto">
               {notices.map((n) => {
                 const dur = n.resolved ? (n.resolvedDuration ?? 0) : Math.max(0, Math.round(simRef.current - n.since));
                 return (
                   <div
                     key={n.id}
-                    className={`flex items-start gap-2 border-b border-slate-50 px-4 py-2 ${n.resolved ? "opacity-50" : ""}`}
+                    className={`flex items-start gap-2 border-b border-slate-50 px-4 py-1.5 ${n.resolved ? "opacity-50" : ""}`}
                   >
                     <span
                       className={`mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
