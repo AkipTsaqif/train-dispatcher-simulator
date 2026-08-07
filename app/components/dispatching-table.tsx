@@ -646,6 +646,8 @@ export default function DispatchingTable() {
   const clockRef = useRef<HTMLSpanElement>(null);
   const scaleRef = useRef<number>(1);
   scaleRef.current = paused ? 0 : timeScale; // keep the tick loop in sync with the selected scale
+  const startModalOpenRef = useRef(true); // the start modal hides all trains until "Mulai"
+  startModalOpenRef.current = startModalOpen;
   // Train movement state (mutated per tick) — markers move via direct DOM
   // updates; React re-renders only when a train's occupied section changes.
   const trainStatesRef = useRef<TrainState[]>(
@@ -920,6 +922,11 @@ export default function DispatchingTable() {
         const plan = j.plan;
         const g = trainGroupRefs.current[ti];
         const txt = trainTextRefs.current[ti];
+        // nothing is spawned until the player picks a start time
+        if (startModalOpenRef.current) {
+          g?.setAttribute("visibility", "hidden");
+          return "";
+        }
         // finished its journey — despawned off the map
         if (st.done) {
           g?.setAttribute("visibility", "hidden");
