@@ -4,11 +4,9 @@ import {
   buildJourney,
   createTrains,
   fmtHms,
-  signalSections,
   spawnPriority,
   type JourneyPlan,
   type ScheduleEntry,
-  type SignalLike,
   type Train,
 } from "./train-engine";
 
@@ -33,8 +31,6 @@ type JourneyPreparationScenario = Pick<
   "speed" | "dwell" | "priority" | "spawn"
 >;
 
-type SignalSectionMap = Pick<DispatchMapDefinition, "signals" | "loops">;
-
 type MeetPreparationMap = Pick<
   DispatchMapDefinition,
   "stations" | "lines" | "signals"
@@ -48,9 +44,7 @@ export type DispatchRuntime = {
   journeys: PlannedJourney[];
   signalSections: SignalSection[];
   meetsByTrain: Map<number, Map<string, MeetDependency[]>>;
-  movement: {
-    nodes: DispatchMapDefinition["nodes"];
-    signals: SignalLike[];
+  movement: DispatchMapDefinition["compatibility"]["movement"] & {
     trainHalfLen: number;
   };
 };
@@ -188,24 +182,6 @@ const prepareJourneys = (
   }));
 };
 
-const prepareSignalSections = (map: SignalSectionMap): SignalSection[] =>
-  signalSections(
-    map.signals.items.map((signal) => ({
-      id: signal.id,
-      x: signal.x,
-      y: signal.lineY,
-      dir: signal.dir,
-    }))
-  ).map((section) =>
-    map.loops.lineYs.has(section.lineY)
-      ? {
-          ...section,
-          lo: Math.min(section.lo, map.loops.minX),
-          hi: Math.max(section.hi, map.loops.maxX),
-        }
-      : section
-  );
-
 const prepareMeetDependencies = (
   journeys: PlannedJourney[],
   map: MeetPreparationMap,
@@ -289,21 +265,14 @@ export const createDispatchRuntime = (
     notificationPolicy: definition.scenario.notifications,
     trains,
     journeys,
-    signalSections: prepareSignalSections(definition.map),
+    signalSections: definition.map.compatibility.signalSections,
     meetsByTrain: prepareMeetDependencies(
       journeys,
       definition.map,
       definition.scenario.meet
     ),
     movement: {
-      nodes: definition.map.nodes,
-      signals: definition.map.signals.items.map((signal) => ({
-        id: signal.id,
-        x: signal.x,
-        y: signal.lineY,
-        dir: signal.dir,
-        ai: signal.ai,
-      })),
+      ...definition.map.compatibility.movement,
       trainHalfLen: definition.map.grid.cellSize,
     },
   };
