@@ -19,17 +19,59 @@ import {
   type MoveCtx,
   type LegPlan,
 } from "../lib/trains";
+import {
+  BEKASI_TAMBUN_CIBITUNG_MAP,
+  type Dir,
+  type GNode,
+  type SignalDef,
+  type Sw,
+  type SwitchState,
+} from "../maps/bekasi-tambun-cibitung";
 
-type SwitchState = "normal" | "reversed";
 type Aspect = "red" | "amber" | "green";
-type Dir = "right" | "left";
 
-const CELL = 58; // grid cell size in viewBox units
-
-const EXT = 10; // how many cells the running lines are extended at the right end
-const CUT_LEFT = 3; // columns (A–C) cut from the left side of the map
-const SHIFT = (EXT - CUT_LEFT) * CELL; // diagram translate — the left extension is now 7 cells (406)
-const RIGHT = (21 + EXT * 2 - CUT_LEFT) * CELL; // full width in cells: 21 + EXT + (EXT − CUT_LEFT) = 2204
+const {
+  diagramAriaLabel: DIAGRAM_ARIA_LABEL,
+  grid: {
+    cellSize: CELL,
+    shift: SHIFT,
+    width: RIGHT,
+    rowCount: GRID_ROW_COUNT,
+    gridBottomY: GRID_BOTTOM_Y,
+    viewBox: GRID_VIEWBOX,
+    ticks: GRID_TICKS,
+  },
+  lines: {
+    topY: TOP_LINE_Y,
+    bottomY: BOTTOM_LINE_Y,
+    normalDirectionByY: NORMAL_DIR,
+  },
+  loops: {
+    lineYs: LOOP_LINE_YS,
+    minX: LOOP_X_MIN,
+    maxX: LOOP_X_MAX,
+    rejoinByLineY: LOOP_REJOIN_BY_LINE_Y,
+  },
+  switches: {
+    items: SWITCHES,
+    coupled: COUPLED,
+    controls: POINT_CONTROLS,
+    initialState: INITIAL_SWITCHES,
+  },
+  nodes: NODES,
+  signals: {
+    items: SIGNALS,
+    initialState: INITIAL_SIGNALS,
+  },
+  trackPaths: ALL_TRACKS,
+  trafficArrowPoints: TRAFFIC_ARROW_POINTS,
+  stations: {
+    nameplates: STATIONS,
+    cells: STATION_CELLS,
+    namesByCode: STATION_NAMES,
+    platformCenterX: PLATFORM_CENTER_X,
+  },
+} = BEKASI_TAMBUN_CIBITUNG_MAP;
 
 /** Spreadsheet-style column letter for a 0-based index (0=A, 25=Z, 26=AA, ...). */
 const colsName = (i: number): string => {
@@ -58,180 +100,8 @@ const TRAIN_COLORS = {
 } as const;
 type TrainStopState = keyof typeof TRAIN_COLORS;
 
-// ---------------------------------------------------------------------------
-// Points (signal-box numbering P1..P8)
-// ---------------------------------------------------------------------------
-type Sw = {
-  id: number;
-  x: number; // junction point on the main line
-  y: number;
-  lineY: number; // y of the main line through this point
-  dashSide: "left" | "right"; // side the diverging branch leaves from; that side's straight is dashed when reversed
-  branch: string; // diverging track (full length; rendered only inside this point's cell)
-  label: string;
-};
-
-const SWITCHES: Sw[] = [
-  { id: 1, x: 326, y: 89, lineY: 89, dashSide: "right", branch: "M326 90 L438 205", label: "persilangan kiri, ujung atas" },
-  { id: 2, x: 438, y: 205, lineY: 205, dashSide: "left", branch: "M326 90 L438 205", label: "persilangan kiri, ujung bawah" },
-  { id: 3, x: 500, y: 89, lineY: 89, dashSide: "right", branch: "M500 89 L556 148", label: "lintas simpang atas, ujung barat" },
-  { id: 4, x: 786, y: 89, lineY: 89, dashSide: "left", branch: "M730 148 L786 89", label: "lintas simpang atas, ujung timur" },
-  { id: 5, x: 500, y: 205, lineY: 205, dashSide: "right", branch: "M500 205 L556 264", label: "lintas simpang bawah, ujung barat" },
-  { id: 6, x: 788, y: 205, lineY: 205, dashSide: "left", branch: "M730 264 L788 205", label: "lintas simpang bawah, ujung timur" },
-  { id: 7, x: 846, y: 205, lineY: 205, dashSide: "right", branch: "M846 205 L960 89", label: "persilangan kanan, ujung bawah" },
-  { id: 8, x: 960, y: 89, lineY: 89, dashSide: "left", branch: "M846 205 L960 89", label: "persilangan kanan, ujung atas" },
-];
-
-/**
- * Coupled crossover pairs: one mechanical unit — both ends always share a single
- * state, and a lock on either end locks the pair.
- */
-const COUPLED: number[][] = [
-  [1, 2], // left crossover
-  [7, 8], // right crossover
-];
-
-/**
- * One controllably distinct point control: a single button per coupled pair,
- * placed at the midpoint between the two physical ends (e.g. P1 F2 + P2 H4 → G3).
- */
-type PointControl = { ids: number[]; x: number; y: number; coupled: boolean; label: string };
-const POINT_CONTROLS: PointControl[] = (() => {
-  const coupledSet = new Set(COUPLED.flat());
-  const controls: PointControl[] = [];
-  for (const sw of SWITCHES) {
-    if (coupledSet.has(sw.id)) continue;
-    controls.push({ ids: [sw.id], x: sw.x, y: sw.y, coupled: false, label: sw.label });
-  }
-  for (const group of COUPLED) {
-    const [a, b] = [SWITCHES.find((s) => s.id === group[0])!, SWITCHES.find((s) => s.id === group[1])!];
-    controls.push({
-      ids: [...group],
-      x: (a.x + b.x) / 2,
-      y: (a.y + b.y) / 2,
-      coupled: true,
-      label: `${a.label.split(",")[0]}`,
-    });
-  }
-  return controls.sort((a, b) => a.x - b.x);
-})();
-
-// ---------------------------------------------------------------------------
-// Track graph — junctions & track ends. Each node: straight continuation per
-// direction, optional point, and an optional diverging branch (a path of nodes
-// ending at the far point that must be set to rejoin the other line).
-// ---------------------------------------------------------------------------
-type GNode = {
-  x: number;
-  y: number;
-  straight: Record<Dir, string | null>;
-  branch?: Partial<Record<Dir, { path: string[]; farSw: number }>>;
-  sw?: number;
-};
-
-const NODES: Record<string, GNode> = {
-  // top line (y=89) — traffic runs right → left
-  tlL: { x: -SHIFT, y: 89, straight: { right: "p1", left: null } },
-  p1: { x: 326, y: 89, sw: 1, straight: { right: "p3", left: "tlL" }, branch: { right: { path: ["p2"], farSw: 2 } } },
-  p3: { x: 500, y: 89, sw: 3, straight: { right: "p4", left: "p1" }, branch: { right: { path: ["ul1", "ul2", "p4"], farSw: 4 } } },
-  ul1: { x: 556, y: 148, straight: { right: "ul2", left: "p3" } },
-  ul2: { x: 730, y: 148, straight: { right: "p4", left: "ul1" } },
-  p4: { x: 786, y: 89, sw: 4, straight: { right: "p8", left: "p3" }, branch: { left: { path: ["ul2", "ul1", "p3"], farSw: 3 } } },
-  p8: { x: 960, y: 89, sw: 8, straight: { right: "tlR", left: "p4" }, branch: { left: { path: ["p7"], farSw: 7 } } },
-  tlR: { x: 1218 + EXT * CELL, y: 89, straight: { right: null, left: "p8" } },
-  // bottom line (y=205) — traffic runs left → right
-  blL: { x: -SHIFT, y: 205, straight: { right: "p2", left: null } },
-  p2: { x: 438, y: 205, sw: 2, straight: { right: "p5", left: "blL" }, branch: { left: { path: ["p1"], farSw: 1 } } },
-  p5: { x: 500, y: 205, sw: 5, straight: { right: "p6", left: "p2" }, branch: { right: { path: ["ll1", "ll2", "p6"], farSw: 6 } } },
-  ll1: { x: 556, y: 264, straight: { right: "ll2", left: "p5" } },
-  ll2: { x: 730, y: 264, straight: { right: "p6", left: "ll1" } },
-  p6: { x: 788, y: 205, sw: 6, straight: { right: "p7", left: "p5" }, branch: { left: { path: ["ll2", "ll1", "p5"], farSw: 5 } } },
-  p7: { x: 846, y: 205, sw: 7, straight: { right: "blR", left: "p6" }, branch: { right: { path: ["p8"], farSw: 8 } } },
-  blR: { x: 1218 + EXT * CELL, y: 205, straight: { right: null, left: "p7" } },
-};
-
-// ---------------------------------------------------------------------------
-// Signals — mount "up" = head above the track, "down" = below.
-// edge = [behind node, ahead node] in the signal's travel direction.
-// ---------------------------------------------------------------------------
-type SignalDef = {
-  id: string; // internal id — unique, used for routing logic, keys, lookups
-  code?: string; // display code shown on the diagram/buttons (defaults to id)
-  x: number;
-  y: number;
-  lineY: number;
-  dir: Dir;
-  mount: "up" | "down";
-  edge: [string, string];
-  label: string;
-  block?: boolean; // automatic block signal — always mirrors the next signal, not controllable
-  ai?: boolean; // AI-controlled entry signal — not player-controllable (red until the AI clears it)
-};
-
-const SIGNALS: SignalDef[] = [
-  { id: "J1", x: 322, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "jalur bawah, arah kanan" },
-  { id: "J2", x: 730, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p5", "p6"], label: "jalur bawah, kiri P6" },
-  { id: "J3", x: 730, y: 264, lineY: 264, dir: "right", mount: "down", edge: ["ll1", "ll2"], label: "lintas simpang bawah, arah kanan" },
-  { id: "J4", x: 1076, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "jalur atas, dua sel kanan P8" },
-  { id: "J5", x: 558, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p4", "p3"], label: "jalur atas, kanan P3" },
-  { id: "J6", x: 558, y: 148, lineY: 148, dir: "left", mount: "up", edge: ["ul2", "ul1"], label: "lintas simpang atas, arah kiri" },
-  { id: "J7", x: 558, y: 264, lineY: 264, dir: "left", mount: "down", edge: ["ll2", "ll1"], label: "lintas simpang bawah, arah kiri" },
-  // automatic block signals on the bottom-line approach (always mirror the next signal).
-  // B101 is the smallest number and lies closest to J1 (J4); higher numbers reach further
-  // left (G4, D4, A4).
-  { id: "B101", x: 145, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "sinyal blok, J4", block: true },
-  { id: "B102", x: -29, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "sinyal blok, G4", block: true },
-  { id: "B103", x: -203, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "sinyal blok, D4", block: true },
-  { id: "B104", x: -377, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["blL", "p2"], label: "sinyal blok, A4", block: true },
-  // top-line approach (right→left): blocks J2→G2→D2→A2. The A2 entry signal sits
-  // at the map's west edge, ahead of B201 (red until the AI clears it) — so B201
-  // mirrors it and defaults to amber.
-  { id: "A2", x: -400, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "sinyal masuk, A2 (dikendalikan AI)", ai: true },
-  { id: "B201", x: -377, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "sinyal blok, A2", block: true },
-  { id: "B202", x: -203, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "sinyal blok, D2", block: true },
-  { id: "B203", x: -29, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "sinyal blok, G2", block: true },
-  { id: "B204", x: 145, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["p1", "tlL"], label: "sinyal blok, J2", block: true },
-  // top-line right approach: blocks AC2..AL2 nearest to J4. Displayed as
-  // B201..B204 (internal ids stay unique — two sets share the same codes).
-  { id: "B9", code: "B201", x: 1247, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "sinyal blok, AC2", block: true },
-  { id: "B10", code: "B202", x: 1421, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "sinyal blok, AF2", block: true },
-  { id: "B11", code: "B203", x: 1595, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "sinyal blok, AI2", block: true },
-  { id: "B12", code: "B204", x: 1769, y: 89, lineY: 89, dir: "left", mount: "up", edge: ["tlR", "p8"], label: "sinyal blok, AL2", block: true },
-  // bottom-line right exit: blocks AC4..AL4 — entry root is beyond the map, so no next
-  // signal here and they all read green. Numbered away from the map (B109 = AC4 nearest).
-  { id: "B109", x: 1247, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "sinyal blok, AC4", block: true },
-  { id: "B108", x: 1421, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "sinyal blok, AF4", block: true },
-  { id: "B107", x: 1595, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "sinyal blok, AI4", block: true },
-  { id: "B106", x: 1769, y: 205, lineY: 205, dir: "right", mount: "down", edge: ["p7", "blR"], label: "sinyal blok, AL4", block: true },
-];
-
 /** Display code for a signal — internal ids may differ from what is shown on the page. */
 const codeOf = (id: string): string => SIGNALS.find((s) => s.id === id)?.code ?? id;
-
-// ---------------------------------------------------------------------------
-// All track geometry (always drawn solid black; per-cell styling is overlaid)
-// ---------------------------------------------------------------------------
-const ALL_TRACKS: string[] = [
-  // running-line extensions (EXT cells at the right end, EXT−CUT_LEFT at the left)
-  `M${-SHIFT} 89 H64`, `M1162 89 H${1218 + EXT * CELL}`,
-  `M${-SHIFT} 205 H62`, `M1162 205 H${1218 + EXT * CELL}`,
-  "M64 89 H326", "M326 89 H500", "M500 89 H786", "M786 89 H960", "M960 89 H1162",
-  "M62 205 H438", "M438 205 H500", "M500 205 H788", "M788 205 H846", "M846 205 H1162",
-  "M326 90 L438 205",
-  "M846 205 L960 89",
-  "M500 89 L556 148", "M556 148 H730", "M730 148 L786 89",
-  "M500 205 L556 264", "M556 264 H730", "M730 264 L788 205",
-];
-
-const INITIAL_SWITCHES: Record<number, SwitchState> = {
-  1: "normal", 2: "normal", 3: "normal", 4: "normal",
-  5: "normal", 6: "normal", 7: "normal", 8: "normal",
-};
-
-// Main-line normal traffic direction by line y (top runs right→left, bottom left→right).
-const NORMAL_DIR: Record<number, Dir> = { 89: "left", 205: "right" };
-const TOP_LINE_Y = 89;
-const BOTTOM_LINE_Y = 205;
 
 // Simulation speed scales (×1 real-time through ×100 fast-forward).
 const TIME_SCALES = [1, 2, 5, 10, 20, 50, 100] as const;
@@ -247,12 +117,6 @@ const fmtTime = (sec: number): string => {
   return [h, m, s].map((n) => String(n).padStart(2, "0")).join(":") + "." + String(cs).padStart(2, "0");
 };
 
-// ---------------------------------------------------------------------------
-// Stations — two layers: the full-name nameplates between the running lines,
-// and the platform cells that form each station's footprint (tagged with the
-// official station code). Cell refs are grid letters/rows; origins are computed
-// in pre-shift coordinates (rendered inside the shifted diagram).
-// ---------------------------------------------------------------------------
 // Column letter → 0-based index (A=0, Z=25, AA=26, ...).
 const colIdx = (letters: string): number => {
   let n = 0;
@@ -260,35 +124,8 @@ const colIdx = (letters: string): number => {
   return n - 1;
 };
 
-// Nameplates — merged-cell plates between the running lines.
-type Station = { name: string; x: number; y: number; w: number; h: number };
-const STATIONS: Station[] = [
-  { name: "Bekasi Timur", x: 58 - SHIFT, y: 116, w: 116, h: 58 }, // cells B3–C3, row 3
-  { name: "Tambun", x: 986 - SHIFT, y: 0, w: 116, h: 58 }, // cells R1–J1, row 1
-  { name: "Cibitung", x: 2030 - SHIFT, y: 116, w: 116, h: 58 }, // cells AJ3–AK3, row 3
-];
-
-type StationCell = { code: string; cells: { col: string; row: number }[] };
-const STATION_CELLS: StationCell[] = [
-  // B2–C2 and B4–C4 → BKST (Bekasi Timur)
-  { code: "BKST", cells: [{ col: "B", row: 2 }, { col: "C", row: 2 }, { col: "B", row: 4 }, { col: "C", row: 4 }] },
-  // R2–J2, R3–J3, R4–J4, R5–J5 → TB (Tambun)
-  { code: "TB", cells: [{ col: "R", row: 2 }, { col: "S", row: 2 }, { col: "R", row: 3 }, { col: "S", row: 3 }, { col: "R", row: 4 }, { col: "S", row: 4 }, { col: "R", row: 5 }, { col: "S", row: 5 }] },
-  // AJ2–AK2 and AJ4–AK4 → CIT (Cibitung)
-  { code: "CIT", cells: [{ col: "AJ", row: 2 }, { col: "AK", row: 2 }, { col: "AJ", row: 4 }, { col: "AK", row: 4 }] },
-];
-
 /** Station footprint cell → pre-shift origin inside the shifted diagram. */
 const cellOrigin = (c: { col: string; row: number }): [number, number] => [colIdx(c.col) * CELL - SHIFT, (c.row - 1) * CELL];
-
-// Top-line platform CENTER x per station code (row-2 cells of the footprint),
-// used by the train journey planner.
-const PLATFORM_CENTER_X: Record<string, number> = Object.fromEntries(
-  STATION_CELLS.map((st) => {
-    const cols = st.cells.filter((c) => c.row === 2).map((c) => colIdx(c.col));
-    return [st.code, ((Math.min(...cols) + Math.max(...cols) + 1) / 2) * CELL - SHIFT];
-  })
-);
 
 // Prototype trains: journey plans (schedule → per-leg speeds) + static sections.
 // Journey direction: the top-line platform order decides — a train whose final
@@ -379,9 +216,6 @@ const JOURNEYS: { train: Train; plan: JourneyPlan }[] = (() => {
 // leaves the loop's middle unprotected (J7 covers [-∞,558], J3 covers [730,∞]),
 // so a train in the middle reddened no loop signal. Widen every loop signal's
 // section to the whole loop — a train anywhere on it reddens all directions.
-const LOOP_LINE_YS = new Set([148, 264]);
-const LOOP_X_MIN = 500;
-const LOOP_X_MAX = 788;
 const SIGNAL_SECTIONS = signalSections(
   SIGNALS.map((s) => ({ id: s.id, x: s.x, y: s.lineY, dir: s.dir }))
 ).map((s) =>
@@ -584,7 +418,7 @@ const routesOverlap = (a: [number, number][], b: [number, number][]): boolean =>
 // ---------------------------------------------------------------------------
 export default function DispatchingTable() {
   const [switches, setSwitches] = useState<Record<number, SwitchState>>(INITIAL_SWITCHES);
-  const [signalOn, setSignalOn] = useState<Record<string, boolean>>({ J1: false, J2: false, J3: false, J4: false, J5: false, J6: false, J7: false });
+  const [signalOn, setSignalOn] = useState<Record<string, boolean>>(INITIAL_SIGNALS);
   const [conflictNote, setConflictNote] = useState<string | null>(null);
   const [showControls, setShowControls] = useState(false); // bottom point & signal buttons hidden by default
   const [clickLog, setClickLog] = useState<string[]>([]); // debug click history
@@ -1147,7 +981,8 @@ export default function DispatchingTable() {
           // protection: the loop sections now cover the whole track, so a train
           // anywhere on it reddens every loop signal (both directions). Release
           // the reservation as soon as the train is actually in the loop.
-          const onLoop = !!user && !user.done && (Math.abs(user.y - 148) < 1 || Math.abs(user.y - 264) < 1);
+          const onLoop =
+            !!user && !user.done && [...LOOP_LINE_YS].some((lineY) => Math.abs(user.y - lineY) < 1);
           // release once the train using the route finished (above), its front
           // passed the far end, it diverged away, or it is physically in the loop
           // — points unlock, signals clear
@@ -1352,10 +1187,11 @@ export default function DispatchingTable() {
       // train parked on the loop (dwelling for an overtake, e.g. at Tambun's
       // column while the express runs the main line) must not block the through
       // signals, or the express could never pass.
-      if (Math.abs(m.y - 148) < 1 || Math.abs(m.y - 264) < 1) {
-        const upper = Math.abs(m.y - 148) < 1;
-        const rejoinX = m.dir === "right" ? (upper ? 786 : 788) : 500;
-        const rejoinY = upper ? 89 : 205;
+      const loopLineY = [...LOOP_LINE_YS].find((lineY) => Math.abs(m.y - lineY) < 1);
+      if (loopLineY !== undefined) {
+        const rejoin = LOOP_REJOIN_BY_LINE_Y[loopLineY];
+        const rejoinX = m.dir === "right" ? rejoin.rightX : rejoin.leftX;
+        const rejoinY = rejoin.mainLineY;
         if (Math.abs(m.x - rejoinX) < 2 * CELL && distToPoly(rejoinX, rejoinY, prospective.pts) < CELL) {
           return true;
         }
@@ -1531,8 +1367,7 @@ export default function DispatchingTable() {
   aspectOfRef.current = (id: string, selfIdx?: number) => aspectOf(id, undefined, selfIdx); // keep the tick loop's aspect lookup current
 
   // ---- timetable awareness: per-train info for the card + roster (Indonesian) ----
-  const stationName = (code: string) =>
-    ({ BKST: "Bekasi Timur", TB: "Tambun", CIT: "Cibitung" } as Record<string, string>)[code] ?? code;
+  const stationName = (code: string) => STATION_NAMES[code] ?? code;
   const fmtDur = (sec: number) => {
     const a = Math.abs(sec);
     const m = Math.floor(a / 60);
@@ -1831,17 +1666,17 @@ export default function DispatchingTable() {
       </div>
 
       <svg
-        viewBox={`${-26} ${-22} ${RIGHT + 52} 401`}
+        viewBox={`${GRID_VIEWBOX.minX} ${GRID_VIEWBOX.minY} ${RIGHT + GRID_VIEWBOX.widthPadding} ${GRID_VIEWBOX.height}`}
         className="w-full h-auto"
         role="img"
-        aria-label="Meja pengatur perjalanan kereta: dua jalur utama dengan persilangan, lintas simpang, dan sinyal"
+        aria-label={DIAGRAM_ARIA_LABEL}
       >
         {/* Full-width graph-paper grid, 58px cells (incl. the EXT-cell extensions) */}
         <g stroke="#e7e7e7" strokeWidth={1}>
           {Array.from({ length: RIGHT / CELL + 1 }, (_, i) => (
-            <line key={`v${i}`} x1={i * CELL} y1={0} x2={i * CELL} y2={353} />
+            <line key={`v${i}`} x1={i * CELL} y1={0} x2={i * CELL} y2={GRID_BOTTOM_Y} />
           ))}
-          {Array.from({ length: 7 }, (_, i) => (
+          {Array.from({ length: GRID_ROW_COUNT + 1 }, (_, i) => (
             <line key={`h${i}`} x1={0} y1={i * CELL} x2={RIGHT} y2={i * CELL} />
           ))}
         </g>
@@ -1851,15 +1686,15 @@ export default function DispatchingTable() {
           {/* ticks at column boundaries */}
           {Array.from({ length: RIGHT / CELL + 1 }, (_, i) => (
             <g key={`ct${i}`} stroke="#cbd5e1" strokeWidth={1}>
-              <line x1={i * CELL} y1={-6} x2={i * CELL} y2={0} />
-              <line x1={i * CELL} y1={353} x2={i * CELL} y2={359} />
+              <line x1={i * CELL} y1={-GRID_TICKS.size} x2={i * CELL} y2={0} />
+              <line x1={i * CELL} y1={GRID_BOTTOM_Y} x2={i * CELL} y2={GRID_BOTTOM_Y + GRID_TICKS.size} />
             </g>
           ))}
           {/* ticks at row boundaries */}
-          {Array.from({ length: 7 }, (_, i) => (
+          {Array.from({ length: GRID_ROW_COUNT + 1 }, (_, i) => (
             <g key={`rt${i}`} stroke="#cbd5e1" strokeWidth={1}>
-              <line x1={-6} y1={i * CELL} x2={0} y2={i * CELL} />
-              <line x1={RIGHT} y1={i * CELL} x2={RIGHT + 6} y2={i * CELL} />
+              <line x1={-GRID_TICKS.size} y1={i * CELL} x2={0} y2={i * CELL} />
+              <line x1={RIGHT} y1={i * CELL} x2={RIGHT + GRID_TICKS.size} y2={i * CELL} />
             </g>
           ))}
           {/* column letters and row numbers */}
@@ -1869,23 +1704,23 @@ export default function DispatchingTable() {
               const letter = colsName(i);
               return (
                 <g key={`c${i}`}>
-                  <text x={x} y={-9}>
+                  <text x={x} y={GRID_TICKS.topColumnLabelY}>
                     {letter}
                   </text>
-                  <text x={x} y={370}>
+                  <text x={x} y={GRID_TICKS.bottomColumnLabelY}>
                     {letter}
                   </text>
                 </g>
               );
             })}
-            {Array.from({ length: 6 }, (_, i) => {
+            {Array.from({ length: GRID_ROW_COUNT }, (_, i) => {
               const y = i * CELL + CELL / 2 + 4;
               return (
                 <g key={`r${i}`}>
-                  <text x={-13} y={y}>
+                  <text x={GRID_TICKS.leftRowLabelX} y={y}>
                     {i + 1}
                   </text>
-                  <text x={RIGHT + 14} y={y}>
+                  <text x={RIGHT + GRID_TICKS.rightRowLabelOffsetX} y={y}>
                     {i + 1}
                   </text>
                 </g>
@@ -1960,18 +1795,17 @@ export default function DispatchingTable() {
 
         {/* Direction arrows (traffic flow: top runs right→left, bottom left→right) */}
         <g fill="#000">
-          <polygon points="-396,83 -396,95 -406,89" />
-          <polygon points="1788,199 1788,211 1798,205" />
+          {TRAFFIC_ARROW_POINTS.map((points) => (
+            <polygon key={points} points={points} />
+          ))}
         </g>
 
         {/* Stations — merged-cell name plates (e.g. Bekasi Timur at E3–F3) */}
         {STATIONS.map((st) => {
-          const code =
-            st.name === "Bekasi Timur" ? "BKST" : st.name === "Tambun" ? "TB" : st.name === "Cibitung" ? "CIT" : st.name;
           return (
             <g
-              key={st.name}
-              onClick={() => openStation(code)}
+              key={st.code}
+              onClick={() => openStation(st.code)}
               className="cursor-pointer"
               aria-label={`Jadwal stasiun ${st.name}`}
             >
@@ -1982,8 +1816,8 @@ export default function DispatchingTable() {
                 height={st.h}
                 rx={6}
                 fill="#94a3b8"
-                stroke={selectedStation === code ? "#f59e0b" : "#334155"}
-                strokeWidth={selectedStation === code ? 3 : 2.5}
+                stroke={selectedStation === st.code ? "#f59e0b" : "#334155"}
+                strokeWidth={selectedStation === st.code ? 3 : 2.5}
               />
               <text
                 x={st.x + st.w / 2}
@@ -2165,9 +1999,9 @@ export default function DispatchingTable() {
                 ref={(el) => {
                   trainRectRefs.current[ti] = el;
                 }}
-                x={-58}
+                x={-CELL}
                 y={-11}
-                width={116}
+                width={2 * CELL}
                 height={22}
                 rx={5}
                 fill="#bfdbfe"
