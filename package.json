@@ -10,7 +10,9 @@
     "test:e2e": "playwright test",
     "test:e2e:update": "playwright test --update-snapshots",
     "test:e2e:ui": "playwright test --ui",
-    "probe:meets": "bun probes/meets.probe.ts"
+    "probe:meets": "bun probes/meets.probe.ts",
+    "snapshot:bekasi": "bun scripts/snapshot-layout.ts",
+    "verify:bekasi": "bun scripts/verify-layout.ts bekasi-tambun-cibitung"
   },
   "dependencies": {
     "next": "16.3.0",
