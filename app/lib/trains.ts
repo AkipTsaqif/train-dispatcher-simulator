@@ -11,25 +11,22 @@
 // Prototype: 107B "Senja Utama Yogyakarta" — westbound CIT → TB → BKST.
 // ---------------------------------------------------------------------------
 
-// Fixed running speed between stations (real km/h) — faster than the schedule's
-// implied speed, so trains arrive early and recover the reserve at stations
-// (they still depart on the scheduled departure time).
-export const RUN_SPEED_KMH = 80;
-// Real distances between adjacent stations (km), used to convert RUN_SPEED_KMH
-// into map-units/second per leg (the map is schematic, so each leg converts
-// via its own real length). Unknown pairs fall back to the schedule speed.
-export const SEGMENT_KM: Record<string, number> = {
-  "BKST-TB": 4.4,
-  "TB-CIT": 3.3,
-};
-// Station stop policy: passing trains (schedule arr == dep) run through; a
-// station with switches can hold a train off the main line until its scheduled
-// departure (the early 80 km/h arrival becomes recovery time there); every
-// other station stops for a fixed dwell.
-const SWITCH_HOLD_STATIONS: Record<string, boolean> = { TB: true };
-const MIN_STOP_SECS = 30;
-
 import scheduleData from "../../data/schedule.json";
+import { BEKASI_TAMBUN_CIBITUNG_SCENARIO } from "../scenarios/bekasi-tambun-cibitung";
+
+const {
+  speed: { runKmh: RUN_SPEED_KMH, segmentKm: SEGMENT_KM },
+  dwell: {
+    holdUntilScheduledDepartureByStation: SWITCH_HOLD_STATIONS,
+    minimumStopSeconds: MIN_STOP_SECS,
+  },
+  priority: {
+    commuterServiceName: COMMUTER_SERVICE_NAME,
+    commuterPenalty: COMMUTER_PRIORITY_PENALTY,
+  },
+} = BEKASI_TAMBUN_CIBITUNG_SCENARIO;
+
+export { RUN_SPEED_KMH, SEGMENT_KM };
 
 export type TrainStop = {
   trackmark: string;
@@ -72,12 +69,13 @@ export const fmtHms = (sec: number): string => {
 
 /** Stopping commuters yield at platforms; everything else (long-distance,
  * seasonal, cargo) takes priority. */
-const isCommuter = (name: string) => name === "Commuter Line Cikarang";
+const isCommuter = (name: string) => name === COMMUTER_SERVICE_NAME;
 
 /** Origin-platform priority — lower sorts first: non-commuters ahead of
  * commuters, then the smaller train number. */
 export const spawnPriority = (t: { train_no: string; train_name?: string; name?: string }) =>
-  (isCommuter(t.train_name ?? t.name ?? "") ? 1e9 : 0) + (parseInt(t.train_no, 10) || 0);
+  (isCommuter(t.train_name ?? t.name ?? "") ? COMMUTER_PRIORITY_PENALTY : 0) +
+  (parseInt(t.train_no, 10) || 0);
 
 export const TRAINS: Train[] = (scheduleData as ScheduleEntry[])
   .filter((t) => !ENABLED_TRAINS || ENABLED_TRAINS.has(t.train_no))
@@ -237,7 +235,7 @@ export function buildJourney(
 
   // Exit leg: after the final stop keep going at the last-leg speed and leave
   // the map at the far edge (the train is hidden once it gets there). The final
-  // stop's dwell anchor applies here (e.g. 30 s at a non-switch terminus).
+  // stop's configured minimum dwell anchor applies here.
   const lastSpeed = legs[legs.length - 1].speed;
   const exitX = dir === "left" ? minX - MARGIN : maxX + MARGIN;
   legs.push({ waypointX: exitX, lineY, speed: lastSpeed, departAt: anchors[stops.length - 1], station: stops[stops.length - 1].trackmark });

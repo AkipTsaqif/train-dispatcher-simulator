@@ -11,8 +11,6 @@ import {
   signalSections,
   spawnPriority,
   fmtHms,
-  SEGMENT_KM,
-  RUN_SPEED_KMH,
   type JourneyPlan,
   type Train,
   type TrainState,
@@ -27,6 +25,7 @@ import {
   type Sw,
   type SwitchState,
 } from "../maps/bekasi-tambun-cibitung";
+import { BEKASI_TAMBUN_CIBITUNG_SCENARIO } from "../scenarios/bekasi-tambun-cibitung";
 
 type Aspect = "red" | "amber" | "green";
 
@@ -72,6 +71,30 @@ const {
     platformCenterX: PLATFORM_CENTER_X,
   },
 } = BEKASI_TAMBUN_CIBITUNG_MAP;
+
+const {
+  speed: { runKmh: RUN_SPEED_KMH, segmentKm: SEGMENT_KM },
+  spawn: {
+    coincidenceWindowSeconds: SPAWN_WINDOW_SECS,
+    clearanceSignalCount: SPAWN_CLEARANCE_SIGNAL_COUNT,
+    clearanceFallbackSeconds: SPAWN_CLEARANCE_FALLBACK_SECS,
+  },
+  meet: {
+    clearanceSignalCount: MEET_CLEARANCE_SIGNAL_COUNT,
+    clearanceFallbackSeconds: MEET_CLEARANCE_FALLBACK_SECS,
+  },
+  notifications: {
+    boardLimit: NOTICE_BOARD_LIMIT,
+    heldAtSignalThresholdSeconds: SIGNAL_HOLD_NOTICE_SECS,
+    susulMeetStation: SUSUL_MEET_STATION,
+    departureCountdown: {
+      station: DEPARTURE_COUNTDOWN_STATION,
+      stopIndex: DEPARTURE_COUNTDOWN_STOP_INDEX,
+      firstThresholdSeconds: DEPARTURE_COUNTDOWN_FIRST_SECS,
+      urgentThresholdSeconds: DEPARTURE_COUNTDOWN_URGENT_SECS,
+    },
+  },
+} = BEKASI_TAMBUN_CIBITUNG_SCENARIO;
 
 /** Spreadsheet-style column letter for a 0-based index (0=A, 25=Z, 26=AA, ...). */
 const colsName = (i: number): string => {
@@ -143,7 +166,7 @@ const JOURNEYS: { train: Train; plan: JourneyPlan }[] = (() => {
   // first (non-commuters ahead of stopping commuters, then smaller train
   // number — real dispatching holds the commuter at the previous station for
   // an additional/seasonal train). A later train may only spawn once the
-  // previous departure is TWO SIGNALS ahead — a position-based platform
+  // previous departure reaches the configured signal clearance — a position-based platform
   // clearing, not a fixed clock gap.
   const trains = TRAINS.map((t) => t);
   const firstLegSpeed = (stops: Train["stops"], dir: Dir): number => {
@@ -153,18 +176,17 @@ const JOURNEYS: { train: Train; plan: JourneyPlan }[] = (() => {
     const distUnits = Math.abs(to - from);
     return km ? (distUnits * RUN_SPEED_KMH) / (km * 3600) : distUnits / Math.max(1, stops[1].arr - stops[0].dep);
   };
-  // time for a departing train to be 2 signals ahead of the platform
+  // time for a departing train to reach the configured signal clearance
   const twoSignalGap = (station: string, stops: Train["stops"], dir: Dir): number => {
     const lineY = dir === "right" ? BOTTOM_LINE_Y : TOP_LINE_Y;
     const platformX = PLATFORM_CENTER_X[station];
     const ahead = SIGNALS.filter(
       (s) => s.lineY === lineY && s.dir === dir && (dir === "right" ? s.x > platformX : s.x < platformX)
     ).sort((a, b) => (dir === "right" ? a.x - b.x : b.x - a.x));
-    const second = ahead[1];
-    if (!second) return 30; // fewer than 2 signals ahead — fallback
-    return Math.abs(second.x - platformX) / Math.max(1, firstLegSpeed(stops, dir));
+    const clearanceSignal = ahead[SPAWN_CLEARANCE_SIGNAL_COUNT - 1];
+    if (!clearanceSignal) return SPAWN_CLEARANCE_FALLBACK_SECS;
+    return Math.abs(clearanceSignal.x - platformX) / Math.max(1, firstLegSpeed(stops, dir));
   };
-  const SPAWN_WINDOW_SECS = 60; // arrivals this close are a coincidence cluster
   const byStation: Record<string, Train[]> = {};
   for (const t of trains) {
     const st = t.stops[0].trackmark;
@@ -188,7 +210,7 @@ const JOURNEYS: { train: Train; plan: JourneyPlan }[] = (() => {
       i = j + 1;
     }
     // space the platform: the next train spawns only when the previous
-    // departure is 2 signals ahead
+    // departure has reached the configured signal clearance
     let clearAt = -Infinity;
     for (const t of list) {
       const o = t.stops[0];
@@ -227,7 +249,7 @@ const SIGNAL_SECTIONS = signalSections(
 // ---------------------------------------------------------------------------
 // Meets / susul: planned overtakes from the timetable. The held train may not
 // leave the meet station until EVERY partner's leading edge has crossed the
-// station platform AND is two signals clear — the same 2-signal principle used
+// station platform AND reaches the configured signal clearance used
 // for spawn spacing. Partners not loaded (e2e train filters) drop the
 // dependency. The release is expressed as an offset past the partner's recorded
 // crossing time, computed from the partner's post-meet leg speed.
@@ -254,12 +276,14 @@ const MEETS_BY_TRAIN: Map<number, Map<string, MeetDep[]>> = (() => {
             o.dir === pDir &&
             (pDir === "right" ? o.x > platformX : o.x < platformX)
         ).sort((a, b) => (pDir === "right" ? a.x - b.x : b.x - a.x));
-        const second = ahead[1];
+        const clearanceSignal = ahead[MEET_CLEARANCE_SIGNAL_COUNT - 1];
         const speed = p.plan.legs[Math.min(pStopIdx, p.plan.legs.length - 1)]?.speed ?? 1;
         deps.push({
           partnerIdx: pi,
           meetStopIdx: pStopIdx,
-          releaseOffset: second ? Math.abs(second.x - platformX) / Math.max(1, speed) : 30,
+          releaseOffset: clearanceSignal
+            ? Math.abs(clearanceSignal.x - platformX) / Math.max(1, speed)
+            : MEET_CLEARANCE_FALLBACK_SECS,
         });
       }
       if (deps.length) {
@@ -480,7 +504,7 @@ export default function DispatchingTable() {
   const frameCountRef = useRef(0);
   const selectedIdxRef = useRef<number | null>(null);
   selectedIdxRef.current = selectedTrain;
-  // held-at-signal notification board (>30 s holds) + susul warnings
+  // held-at-signal notification board (configured-duration holds) + susul warnings
   type Notice = {
     id: number;
     trainNo: string;
@@ -831,13 +855,13 @@ export default function DispatchingTable() {
             return changed ? out : r;
           });
         }
-        // Held-at-signal notifications: a train held at a signal for >30 s fires
+        // Held-at-signal notifications: a train held past the configured threshold fires
         // a board notice; it resolves when the train moves again.
         if (st.stopped && st.stopReason === "signal") {
           if (st.holdSince === null) {
             st.holdSince = simRef.current;
             st.holdNotified = false;
-          } else if (!st.holdNotified && simRef.current - st.holdSince > 30) {
+          } else if (!st.holdNotified && simRef.current - st.holdSince > SIGNAL_HOLD_NOTICE_SECS) {
             st.holdNotified = true;
             const id = nextNoticeIdRef.current++;
             st.notificationId = id;
@@ -851,7 +875,7 @@ export default function DispatchingTable() {
                   resolved: false,
                 },
                 ...ns,
-              ].slice(0, 40)
+              ].slice(0, NOTICE_BOARD_LIMIT)
             );
           }
         } else if (st.holdSince !== null) {
@@ -877,7 +901,9 @@ export default function DispatchingTable() {
           const departed = st.dir === "right" ? st.x > originX : st.x < originX;
           if (departed) {
             st.susulWarned = true;
-            const passers = (MEETS_BY_TRAIN.get(ti)?.get("TB") ?? []).map((d) => JOURNEYS[d.partnerIdx].train.train_no);
+            const passers = (MEETS_BY_TRAIN.get(ti)?.get(SUSUL_MEET_STATION) ?? []).map(
+              (d) => JOURNEYS[d.partnerIdx].train.train_no
+            );
             if (passers.length) {
               setNotices((ns) =>
                 [
@@ -890,23 +916,35 @@ export default function DispatchingTable() {
                     resolved: false,
                   })),
                   ...ns,
-                ].slice(0, 40)
+                ].slice(0, NOTICE_BOARD_LIMIT)
               );
             }
           }
         }
         // Departure countdown: any train dwelling at Tambun announces its
-        // scheduled departure ≤30 s ahead, then the SAME notice flips to the
-        // ≤15 s version (found by train no + kind — never a duplicate). It is
+        // scheduled departure within the configured first threshold, then the SAME
+        // notice flips at the urgent threshold (found by train no + kind — never a duplicate). It is
         // marked resolved once the train has left.
-        const tbStop = j.train.stops[1];
-        if (tbStop?.trackmark === "TB" && tbStop.arr < tbStop.dep) {
+        const countdownStop = j.train.stops[DEPARTURE_COUNTDOWN_STOP_INDEX];
+        if (
+          countdownStop?.trackmark === DEPARTURE_COUNTDOWN_STATION &&
+          countdownStop.arr < countdownStop.dep
+        ) {
           const leg = plan.legs[Math.min(st.leg, plan.legs.length - 1)];
-          const atTB = leg.station === "TB" && st.time < (leg.departAt ?? 0);
-          const remaining = tbStop.dep - simRef.current;
+          const atCountdownStation =
+            leg.station === DEPARTURE_COUNTDOWN_STATION && st.time < (leg.departAt ?? 0);
+          const remaining = countdownStop.dep - simRef.current;
           const key = `KA ${j.train.train_no}`;
-          if (atTB && remaining > 0 && remaining <= 30) {
-            const msg = `dijadwalkan berangkat ${remaining <= 15 ? "15 detik lagi" : "30 detik lagi"}`;
+          if (
+            atCountdownStation &&
+            remaining > 0 &&
+            remaining <= DEPARTURE_COUNTDOWN_FIRST_SECS
+          ) {
+            const countdownSeconds =
+              remaining <= DEPARTURE_COUNTDOWN_URGENT_SECS
+                ? DEPARTURE_COUNTDOWN_URGENT_SECS
+                : DEPARTURE_COUNTDOWN_FIRST_SECS;
+            const msg = `dijadwalkan berangkat ${countdownSeconds} detik lagi`;
             setNotices((ns) => {
               const existing = ns.find((x) => x.kind === "countdown" && x.trainNo === key);
               if (existing) {
@@ -916,7 +954,7 @@ export default function DispatchingTable() {
               return [
                 { id: nextNoticeIdRef.current++, kind: "countdown" as const, trainNo: key, message: msg, since: simRef.current, resolved: false },
                 ...ns,
-              ].slice(0, 40);
+              ].slice(0, NOTICE_BOARD_LIMIT);
             });
           } else if (remaining <= 0) {
             setNotices((ns) =>
