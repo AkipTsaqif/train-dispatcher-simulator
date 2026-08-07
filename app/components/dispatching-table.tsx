@@ -2247,6 +2247,9 @@ export default function DispatchingTable() {
           })}
         </div>
         )}
+        <p className="mt-8 pb-6 text-center text-xs text-slate-400">
+          Dibuat biar tau mana yg UX nya lebih enak oleh A Keep
+        </p>
         {conflictNote && (
           <div
             role="alert"
