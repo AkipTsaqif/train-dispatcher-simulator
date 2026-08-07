@@ -1,15 +1,18 @@
-import {
-  compileTopology,
-  type CompiledTopology,
-  type Dir,
-  type GNode,
-  type PointControl,
-  type SignalDef,
-  type Sw,
-  type SwitchState,
-} from "../lib/topology";
+import { compileTopology, type CompiledTopology } from "../lib/topology";
+import type {
+  Dir,
+  DispatchMapDefinition,
+  GNode,
+  PointControl,
+  SignalDef,
+  Sw,
+  SwitchState,
+  Station,
+  StationCell,
+} from "../lib/dispatch-map";
 import { BEKASI_TAMBUN_CIBITUNG_TOPOLOGY } from "../topologies/bekasi-tambun-cibitung";
 
+// Re-export the shared contracts so existing import sites keep working.
 export type {
   Dir,
   GNode,
@@ -17,75 +20,10 @@ export type {
   SignalDef,
   Sw,
   SwitchState,
-} from "../lib/topology";
-
-export type Station = {
-  code: string;
-  name: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-};
-
-export type StationCell = {
-  code: string;
-  cells: { col: string; row: number }[];
-};
-
-export type DispatchMapDefinition = {
-  id: string;
-  name: string;
-  diagramAriaLabel: string;
-  grid: {
-    cellSize: number;
-    extensionCells: number;
-    cutLeftColumns: number;
-    shift: number;
-    width: number;
-    rowCount: number;
-    gridBottomY: number;
-    viewBox: { minX: number; minY: number; widthPadding: number; height: number };
-    ticks: {
-      size: number;
-      topColumnLabelY: number;
-      bottomColumnLabelY: number;
-      leftRowLabelX: number;
-      rightRowLabelOffsetX: number;
-    };
-  };
-  lines: {
-    topY: number;
-    bottomY: number;
-    normalDirectionByY: Record<number, Dir>;
-  };
-  loops: {
-    lineYs: Set<number>;
-    minX: number;
-    maxX: number;
-    rejoinByLineY: Record<number, { leftX: number; rightX: number; mainLineY: number }>;
-  };
-  switches: {
-    items: Sw[];
-    coupled: number[][];
-    controls: PointControl[];
-    initialState: Record<number, SwitchState>;
-  };
-  nodes: Record<string, GNode>;
-  signals: {
-    items: SignalDef[];
-    initialState: Record<string, boolean>;
-  };
-  trackPaths: string[];
-  trafficArrowPoints: string[];
-  stations: {
-    nameplates: Station[];
-    cells: StationCell[];
-    namesByCode: Record<string, string>;
-    platformCenterX: Record<string, number>;
-  };
-  compatibility: CompiledTopology["compatibility"];
-};
+  Station,
+  StationCell,
+  DispatchMapDefinition,
+} from "../lib/dispatch-map";
 
 const CELL = 58;
 const EXT = 10;

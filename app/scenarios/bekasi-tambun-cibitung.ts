@@ -1,39 +1,7 @@
-export type DispatchScenarioDefinition = {
-  id: string;
-  name: string;
-  speed: {
-    runKmh: number;
-    segmentKm: Record<string, number>;
-  };
-  dwell: {
-    holdUntilScheduledDepartureByStation: Record<string, boolean>;
-    minimumStopSeconds: number;
-  };
-  priority: {
-    commuterServiceName: string;
-    commuterPenalty: number;
-  };
-  spawn: {
-    coincidenceWindowSeconds: number;
-    clearanceSignalCount: number;
-    clearanceFallbackSeconds: number;
-  };
-  meet: {
-    clearanceSignalCount: number;
-    clearanceFallbackSeconds: number;
-  };
-  notifications: {
-    boardLimit: number;
-    heldAtSignalThresholdSeconds: number;
-    susulMeetStation: string;
-    departureCountdown: {
-      station: string;
-      stopIndex: number;
-      firstThresholdSeconds: number;
-      urgentThresholdSeconds: number;
-    };
-  };
-};
+import type { DispatchScenarioDefinition } from "../lib/dispatch-scenario";
+
+// Re-export the shared contract so existing import sites keep working.
+export type { DispatchScenarioDefinition } from "../lib/dispatch-scenario";
 
 export const BEKASI_TAMBUN_CIBITUNG_SCENARIO: DispatchScenarioDefinition = {
   id: "bekasi-tambun-cibitung-default",

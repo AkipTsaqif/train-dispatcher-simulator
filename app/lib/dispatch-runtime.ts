@@ -1,5 +1,6 @@
-import type { Dir, DispatchMapDefinition } from "../maps/bekasi-tambun-cibitung";
-import type { DispatchScenarioDefinition } from "../scenarios/bekasi-tambun-cibitung";
+import type { Dir } from "./topology";
+import type { DispatchMapDefinition } from "./dispatch-map";
+import type { DispatchScenarioDefinition } from "./dispatch-scenario";
 import {
   buildJourney,
   createTrains,
