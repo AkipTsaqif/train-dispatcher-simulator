@@ -2,32 +2,34 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  TRAINS,
-  buildJourney,
   initTrain,
   advanceTrain,
   occupiedSections,
   reservationAhead,
-  signalSections,
-  spawnPriority,
-  fmtHms,
-  type JourneyPlan,
-  type Train,
   type TrainState,
   type MoveCtx,
   type LegPlan,
-} from "../lib/trains";
-import {
-  BEKASI_TAMBUN_CIBITUNG_MAP,
-  type Dir,
-  type GNode,
-  type SignalDef,
-  type Sw,
-  type SwitchState,
+} from "../lib/train-engine";
+import { BEKASI_TAMBUN_CIBITUNG_DISPATCH } from "../dispatching/bekasi-tambun-cibitung";
+import type {
+  Dir,
+  DispatchMapDefinition,
+  GNode,
+  SignalDef,
+  Sw,
+  SwitchState,
 } from "../maps/bekasi-tambun-cibitung";
-import { BEKASI_TAMBUN_CIBITUNG_SCENARIO } from "../scenarios/bekasi-tambun-cibitung";
 
 type Aspect = "red" | "amber" | "green";
+
+const {
+  map: DISPATCH_MAP,
+  notificationPolicy: NOTIFICATION_POLICY,
+  journeys: JOURNEYS,
+  signalSections: SIGNAL_SECTIONS,
+  meetsByTrain: MEETS_BY_TRAIN,
+  movement: MOVEMENT_DEFINITION,
+} = BEKASI_TAMBUN_CIBITUNG_DISPATCH;
 
 const {
   diagramAriaLabel: DIAGRAM_ARIA_LABEL,
@@ -40,15 +42,9 @@ const {
     viewBox: GRID_VIEWBOX,
     ticks: GRID_TICKS,
   },
-  lines: {
-    topY: TOP_LINE_Y,
-    bottomY: BOTTOM_LINE_Y,
-    normalDirectionByY: NORMAL_DIR,
-  },
+  lines: { normalDirectionByY: NORMAL_DIR },
   loops: {
     lineYs: LOOP_LINE_YS,
-    minX: LOOP_X_MIN,
-    maxX: LOOP_X_MAX,
     rejoinByLineY: LOOP_REJOIN_BY_LINE_Y,
   },
   switches: {
@@ -57,7 +53,6 @@ const {
     controls: POINT_CONTROLS,
     initialState: INITIAL_SWITCHES,
   },
-  nodes: NODES,
   signals: {
     items: SIGNALS,
     initialState: INITIAL_SIGNALS,
@@ -67,34 +62,9 @@ const {
   stations: {
     nameplates: STATIONS,
     cells: STATION_CELLS,
-    namesByCode: STATION_NAMES,
     platformCenterX: PLATFORM_CENTER_X,
   },
-} = BEKASI_TAMBUN_CIBITUNG_MAP;
-
-const {
-  speed: { runKmh: RUN_SPEED_KMH, segmentKm: SEGMENT_KM },
-  spawn: {
-    coincidenceWindowSeconds: SPAWN_WINDOW_SECS,
-    clearanceSignalCount: SPAWN_CLEARANCE_SIGNAL_COUNT,
-    clearanceFallbackSeconds: SPAWN_CLEARANCE_FALLBACK_SECS,
-  },
-  meet: {
-    clearanceSignalCount: MEET_CLEARANCE_SIGNAL_COUNT,
-    clearanceFallbackSeconds: MEET_CLEARANCE_FALLBACK_SECS,
-  },
-  notifications: {
-    boardLimit: NOTICE_BOARD_LIMIT,
-    heldAtSignalThresholdSeconds: SIGNAL_HOLD_NOTICE_SECS,
-    susulMeetStation: SUSUL_MEET_STATION,
-    departureCountdown: {
-      station: DEPARTURE_COUNTDOWN_STATION,
-      stopIndex: DEPARTURE_COUNTDOWN_STOP_INDEX,
-      firstThresholdSeconds: DEPARTURE_COUNTDOWN_FIRST_SECS,
-      urgentThresholdSeconds: DEPARTURE_COUNTDOWN_URGENT_SECS,
-    },
-  },
-} = BEKASI_TAMBUN_CIBITUNG_SCENARIO;
+} = DISPATCH_MAP;
 
 /** Spreadsheet-style column letter for a 0-based index (0=A, 25=Z, 26=AA, ...). */
 const colsName = (i: number): string => {
@@ -124,7 +94,9 @@ const TRAIN_COLORS = {
 type TrainStopState = keyof typeof TRAIN_COLORS;
 
 /** Display code for a signal — internal ids may differ from what is shown on the page. */
-const codeOf = (id: string): string => SIGNALS.find((s) => s.id === id)?.code ?? id;
+const createSignalCodeLookup = (signals: SignalDef[]) => (id: string): string =>
+  signals.find((signal) => signal.id === id)?.code ?? id;
+const codeOf = createSignalCodeLookup(DISPATCH_MAP.signals.items);
 
 // Simulation speed scales (×1 real-time through ×100 fast-forward).
 const TIME_SCALES = [1, 2, 5, 10, 20, 50, 100] as const;
@@ -148,153 +120,13 @@ const colIdx = (letters: string): number => {
 };
 
 /** Station footprint cell → pre-shift origin inside the shifted diagram. */
-const cellOrigin = (c: { col: string; row: number }): [number, number] => [colIdx(c.col) * CELL - SHIFT, (c.row - 1) * CELL];
-
-// Prototype trains: journey plans (schedule → per-leg speeds) + static sections.
-// Journey direction: the top-line platform order decides — a train whose final
-// stop is east of its first runs rightward, otherwise leftward.
-const journeyDir = (stops: Train["stops"], platformX: Record<string, number>): Dir =>
-  platformX[stops[stops.length - 1].trackmark] > platformX[stops[0].trackmark] ? "right" : "left";
-// Each direction runs on its own line: westbound on the top (row 2), eastbound
-// on the bottom (row 4).
-const journeyLineY = (stops: Train["stops"], platformX: Record<string, number>): number =>
-  journeyDir(stops, platformX) === "left" ? TOP_LINE_Y : BOTTOM_LINE_Y;
-
-const JOURNEYS: { train: Train; plan: JourneyPlan }[] = (() => {
-  // Spawn coincidence resolution: two trains due at the same origin platform
-  // close together form a cluster; within it the higher-priority one goes
-  // first (non-commuters ahead of stopping commuters, then smaller train
-  // number — real dispatching holds the commuter at the previous station for
-  // an additional/seasonal train). A later train may only spawn once the
-  // previous departure reaches the configured signal clearance — a position-based platform
-  // clearing, not a fixed clock gap.
-  const trains = TRAINS.map((t) => t);
-  const firstLegSpeed = (stops: Train["stops"], dir: Dir): number => {
-    const from = PLATFORM_CENTER_X[stops[0].trackmark];
-    const to = PLATFORM_CENTER_X[stops[1].trackmark];
-    const km = SEGMENT_KM[`${stops[0].trackmark}-${stops[1].trackmark}`] ?? SEGMENT_KM[`${stops[1].trackmark}-${stops[0].trackmark}`];
-    const distUnits = Math.abs(to - from);
-    return km ? (distUnits * RUN_SPEED_KMH) / (km * 3600) : distUnits / Math.max(1, stops[1].arr - stops[0].dep);
-  };
-  // time for a departing train to reach the configured signal clearance
-  const twoSignalGap = (station: string, stops: Train["stops"], dir: Dir): number => {
-    const lineY = dir === "right" ? BOTTOM_LINE_Y : TOP_LINE_Y;
-    const platformX = PLATFORM_CENTER_X[station];
-    const ahead = SIGNALS.filter(
-      (s) => s.lineY === lineY && s.dir === dir && (dir === "right" ? s.x > platformX : s.x < platformX)
-    ).sort((a, b) => (dir === "right" ? a.x - b.x : b.x - a.x));
-    const clearanceSignal = ahead[SPAWN_CLEARANCE_SIGNAL_COUNT - 1];
-    if (!clearanceSignal) return SPAWN_CLEARANCE_FALLBACK_SECS;
-    return Math.abs(clearanceSignal.x - platformX) / Math.max(1, firstLegSpeed(stops, dir));
-  };
-  const byStation: Record<string, Train[]> = {};
-  for (const t of trains) {
-    const st = t.stops[0].trackmark;
-    if (!byStation[st]) byStation[st] = [];
-    byStation[st].push(t);
-  }
-  for (const list of Object.values(byStation)) {
-    const dir = journeyDir(list[0].stops, PLATFORM_CENTER_X);
-    const gap = twoSignalGap(list[0].stops[0].trackmark, list[0].stops, dir);
-    list.sort((a, b) => a.stops[0].arr - b.stops[0].arr);
-    // re-order coincident clusters by priority (in place)
-    let i = 0;
-    while (i < list.length) {
-      const clusterStart = list[i].stops[0].arr;
-      let j = i;
-      while (j + 1 < list.length && list[j + 1].stops[0].arr <= clusterStart + SPAWN_WINDOW_SECS) j++;
-      if (j > i) {
-        const cluster = list.slice(i, j + 1).sort((a, b) => spawnPriority(a) - spawnPriority(b));
-        list.splice(i, j - i + 1, ...cluster);
-      }
-      i = j + 1;
-    }
-    // space the platform: the next train spawns only when the previous
-    // departure has reached the configured signal clearance
-    let clearAt = -Infinity;
-    for (const t of list) {
-      const o = t.stops[0];
-      if (o.arr < clearAt) {
-        o.arr = Math.round(clearAt);
-        o.arr_actual = fmtHms(o.arr);
-        o.dep = Math.max(o.dep, o.arr);
-        o.dep_actual = fmtHms(o.dep);
-      }
-      clearAt = Math.max(o.dep, o.arr) + gap;
-    }
-  }
-  return trains.map((tr) => ({
-    train: tr,
-    plan: buildJourney(
-      tr.stops,
-      PLATFORM_CENTER_X,
-      journeyLineY(tr.stops, PLATFORM_CENTER_X),
-      NODES,
-      journeyDir(tr.stops, PLATFORM_CENTER_X)
-    ),
-  }));
-})();
-// Bidirectional loop tracks (TB passing loops): the static next-signal span
-// leaves the loop's middle unprotected (J7 covers [-∞,558], J3 covers [730,∞]),
-// so a train in the middle reddened no loop signal. Widen every loop signal's
-// section to the whole loop — a train anywhere on it reddens all directions.
-const SIGNAL_SECTIONS = signalSections(
-  SIGNALS.map((s) => ({ id: s.id, x: s.x, y: s.lineY, dir: s.dir }))
-).map((s) =>
-  LOOP_LINE_YS.has(s.lineY)
-    ? { ...s, lo: Math.min(s.lo, LOOP_X_MIN), hi: Math.max(s.hi, LOOP_X_MAX) }
-    : s
-);
-
-// ---------------------------------------------------------------------------
-// Meets / susul: planned overtakes from the timetable. The held train may not
-// leave the meet station until EVERY partner's leading edge has crossed the
-// station platform AND reaches the configured signal clearance used
-// for spawn spacing. Partners not loaded (e2e train filters) drop the
-// dependency. The release is expressed as an offset past the partner's recorded
-// crossing time, computed from the partner's post-meet leg speed.
-// ---------------------------------------------------------------------------
-type MeetDep = { partnerIdx: number; meetStopIdx: number; releaseOffset: number };
-const MEETS_BY_TRAIN: Map<number, Map<string, MeetDep[]>> = (() => {
-  const out = new Map<number, Map<string, MeetDep[]>>();
-  JOURNEYS.forEach((j, ti) => {
-    j.train.stops.forEach((s, si) => {
-      if (!s.meets?.length) return;
-      const deps: MeetDep[] = [];
-      for (const m of s.meets) {
-        const pi = JOURNEYS.findIndex((o) => o.train.train_no === m.with);
-        if (pi < 0) continue; // partner not loaded (test filter)
-        const p = JOURNEYS[pi];
-        const pStopIdx = p.train.stops.findIndex((o) => o.trackmark === s.trackmark);
-        if (pStopIdx < 0) continue; // partner never calls at the meet station
-        const platformX = PLATFORM_CENTER_X[s.trackmark];
-        const pDir = journeyDir(p.train.stops, PLATFORM_CENTER_X);
-        const pLineY = journeyLineY(p.train.stops, PLATFORM_CENTER_X);
-        const ahead = SIGNALS.filter(
-          (o) =>
-            o.lineY === pLineY &&
-            o.dir === pDir &&
-            (pDir === "right" ? o.x > platformX : o.x < platformX)
-        ).sort((a, b) => (pDir === "right" ? a.x - b.x : b.x - a.x));
-        const clearanceSignal = ahead[MEET_CLEARANCE_SIGNAL_COUNT - 1];
-        const speed = p.plan.legs[Math.min(pStopIdx, p.plan.legs.length - 1)]?.speed ?? 1;
-        deps.push({
-          partnerIdx: pi,
-          meetStopIdx: pStopIdx,
-          releaseOffset: clearanceSignal
-            ? Math.abs(clearanceSignal.x - platformX) / Math.max(1, speed)
-            : MEET_CLEARANCE_FALLBACK_SECS,
-        });
-      }
-      if (deps.length) {
-        let byStation = out.get(ti);
-        if (!byStation) out.set(ti, (byStation = new Map()));
-        byStation.set(s.trackmark, deps);
-      }
-    });
-  });
-  return out;
-})();
+const cellOrigin = (
+  cell: { col: string; row: number },
+  grid: Pick<DispatchMapDefinition["grid"], "cellSize" | "shift">
+): [number, number] => [
+  colIdx(cell.col) * grid.cellSize - grid.shift,
+  (cell.row - 1) * grid.cellSize,
+];
 
 // ---------------------------------------------------------------------------
 // Route walker: from a signal, walk the graph in its direction, following
@@ -304,9 +136,12 @@ type Route = { d: string; note: string; nextSignalId?: string; pts: [number, num
 
 const walkRoute = (
   sig: SignalDef,
-  switches: Record<number, SwitchState>
+  switches: Record<number, SwitchState>,
+  map: Pick<DispatchMapDefinition, "nodes" | "signals">
 ): Route => {
   const dir = sig.dir;
+  const nodes = map.nodes;
+  const signals = map.signals.items;
   const pts: [number, number][] = [[sig.x, sig.y]];
   const toD = () => "M" + pts.map(([x, y]) => `${x},${y}`).join(" ");
 
@@ -322,7 +157,7 @@ const walkRoute = (
   const nextSignalOn = (fromX: number, node: GNode): SignalDef | undefined => {
     const lo = Math.min(fromX, node.x);
     const hi = Math.max(fromX, node.x);
-    const cands = SIGNALS.filter(
+    const cands = signals.filter(
       (s) =>
         s.dir === dir &&
         s.id !== sig.id &&
@@ -336,8 +171,8 @@ const walkRoute = (
 
   let cur: string | null = sig.edge[1];
   let incoming: string = sig.edge[0]; // node we're arriving from
-  while (cur && NODES[cur]) {
-    const node: GNode = NODES[cur];
+  while (cur && nodes[cur]) {
+    const node: GNode = nodes[cur];
     const fromX = pts[pts.length - 1][0];
 
     // stop at the next same-direction signal on this segment
@@ -364,7 +199,7 @@ const walkRoute = (
         pts.push([node.x, node.y]);
         for (let i = 0; i < branchAhead.path.length; i++) {
           const nid = branchAhead.path[i];
-          const n = NODES[nid];
+          const n = nodes[nid];
           const nx = pts[pts.length - 1][0];
           const hit2 = nextSignalOn(nx, n);
           if (hit2) {
@@ -374,7 +209,7 @@ const walkRoute = (
           pts.push([n.x, n.y]);
         }
         const last = branchAhead.path.length - 1;
-        const far = NODES[branchAhead.path[last]];
+        const far = nodes[branchAhead.path[last]];
         if (switches[branchAhead.farSw] === "reversed") {
           // rejoin the other line and keep going in the same direction
           incoming = last >= 1 ? branchAhead.path[last - 1] : cur;
@@ -435,6 +270,94 @@ const routesOverlap = (a: [number, number][], b: [number, number][]): boolean =>
     }
   }
   return false;
+};
+
+type SignalAspectDependencies = {
+  signals: SignalDef[];
+  normalDirectionByY: Record<number, Dir>;
+  signalSections: { sig: string; lineY: number; lo: number; hi: number }[];
+  signalOn: Record<string, boolean>;
+  trainStates: TrainState[];
+  trainHalfLen: number;
+  routeOf: (id: string) => Route;
+  forcedRed: (id: string) => boolean;
+};
+
+const trainOccupies = (
+  trainStates: TrainState[],
+  trainHalfLen: number,
+  lineY: number,
+  x1: number,
+  x2: number,
+  skip: number[] = []
+): boolean =>
+  trainStates.some((train) => {
+    if (
+      !train.spawned ||
+      train.done ||
+      train.y !== lineY ||
+      skip.includes(train.idx)
+    ) {
+      return false;
+    }
+    return train.x - trainHalfLen < x2 && train.x + trainHalfLen > x1;
+  });
+
+const calculateSignalAspect = (
+  id: string,
+  dependencies: SignalAspectDependencies,
+  visited: Set<string> = new Set(),
+  selfIdx?: number
+): Aspect => {
+  if (visited.has(id)) return "red";
+  visited.add(id);
+  const signal = dependencies.signals.find((candidate) => candidate.id === id)!;
+  const normalDir = dependencies.normalDirectionByY[signal.lineY];
+  if (normalDir && signal.dir === normalDir && dependencies.forcedRed(id)) {
+    return "red";
+  }
+  const nextId = dependencies.routeOf(id).nextSignalId;
+  const section = dependencies.signalSections.find((candidate) => candidate.sig === id);
+  if (section) {
+    const skip =
+      selfIdx !== undefined
+        ? [selfIdx]
+        : !signal.block
+          ? dependencies.trainStates
+              .filter(
+                (train) =>
+                  train.spawned && !train.done && train.dir === signal.dir
+              )
+              .map((train) => train.idx)
+          : [];
+    if (
+      trainOccupies(
+        dependencies.trainStates,
+        dependencies.trainHalfLen,
+        signal.lineY,
+        section.lo,
+        section.hi,
+        skip
+      )
+    ) {
+      return "red";
+    }
+  }
+  if (signal.block) {
+    return nextId
+      ? calculateSignalAspect(nextId, dependencies, visited, selfIdx) === "red"
+        ? "amber"
+        : "green"
+      : "green";
+  }
+  if (!dependencies.signalOn[id]) return "red";
+  const route = dependencies.routeOf(id);
+  if (route.blocked) return "red";
+  return nextId
+    ? calculateSignalAspect(nextId, dependencies, visited, selfIdx) === "red"
+      ? "amber"
+      : "green"
+    : "green";
 };
 
 // ---------------------------------------------------------------------------
@@ -533,7 +456,11 @@ export default function DispatchingTable() {
   // updates; React re-renders only when a train's occupied section changes.
   const trainStatesRef = useRef<TrainState[]>(
     JOURNEYS.map((j, ti) => {
-      const st = initTrain(j.plan, NODES, j.plan.legs[0]?.speed ?? 0);
+      const st = initTrain(
+        j.plan,
+        MOVEMENT_DEFINITION.nodes,
+        j.plan.legs[0]?.speed ?? 0
+      );
       st.idx = ti;
       st.actualArr = j.train.stops.map(() => null);
       return st;
@@ -636,11 +563,9 @@ export default function DispatchingTable() {
   const initializeSim = (sec: number) => {
     simRef.current = sec;
     const mkCtx = (): MoveCtx => ({
-      nodes: NODES,
-      signals: SIGNALS.map((s) => ({ id: s.id, x: s.x, y: s.lineY, dir: s.dir, ai: s.ai })),
+      ...MOVEMENT_DEFINITION,
       switches,
       aspectOf: aspectOfRef.current,
-      trainHalfLen: CELL,
       ignoreSignals: true,
     });
     const place = (ctx: MoveCtx) => {
@@ -664,7 +589,11 @@ export default function DispatchingTable() {
     place(mkCtx());
     const snapshot = trainStatesRef.current.map((st) => [...st.actualArr]);
     trainStatesRef.current = trainStatesRef.current.map((st, ti) => {
-      const n = initTrain(JOURNEYS[ti].plan, NODES, JOURNEYS[ti].plan.legs[0]?.speed ?? 0);
+      const n = initTrain(
+        JOURNEYS[ti].plan,
+        MOVEMENT_DEFINITION.nodes,
+        JOURNEYS[ti].plan.legs[0]?.speed ?? 0
+      );
       n.idx = ti;
       n.actualArr = JOURNEYS[ti].train.stops.map(() => null);
       return n;
@@ -723,11 +652,9 @@ export default function DispatchingTable() {
         }
       }
       const ctx: MoveCtx = {
-        nodes: NODES,
-        signals: SIGNALS.map((s) => ({ id: s.id, x: s.x, y: s.lineY, dir: s.dir, ai: s.ai })),
+        ...MOVEMENT_DEFINITION,
         switches: switchesRef.current,
         aspectOf: aspectOfRef.current,
-        trainHalfLen: CELL,
         meetsHold,
       };
       // partner crossings come from the live states each tick
@@ -861,7 +788,11 @@ export default function DispatchingTable() {
           if (st.holdSince === null) {
             st.holdSince = simRef.current;
             st.holdNotified = false;
-          } else if (!st.holdNotified && simRef.current - st.holdSince > SIGNAL_HOLD_NOTICE_SECS) {
+          } else if (
+            !st.holdNotified &&
+            simRef.current - st.holdSince >
+              NOTIFICATION_POLICY.heldAtSignalThresholdSeconds
+          ) {
             st.holdNotified = true;
             const id = nextNoticeIdRef.current++;
             st.notificationId = id;
@@ -875,7 +806,7 @@ export default function DispatchingTable() {
                   resolved: false,
                 },
                 ...ns,
-              ].slice(0, NOTICE_BOARD_LIMIT)
+              ].slice(0, NOTIFICATION_POLICY.boardLimit)
             );
           }
         } else if (st.holdSince !== null) {
@@ -901,7 +832,9 @@ export default function DispatchingTable() {
           const departed = st.dir === "right" ? st.x > originX : st.x < originX;
           if (departed) {
             st.susulWarned = true;
-            const passers = (MEETS_BY_TRAIN.get(ti)?.get(SUSUL_MEET_STATION) ?? []).map(
+            const passers = (
+              MEETS_BY_TRAIN.get(ti)?.get(NOTIFICATION_POLICY.susulMeetStation) ?? []
+            ).map(
               (d) => JOURNEYS[d.partnerIdx].train.train_no
             );
             if (passers.length) {
@@ -916,7 +849,7 @@ export default function DispatchingTable() {
                     resolved: false,
                   })),
                   ...ns,
-                ].slice(0, NOTICE_BOARD_LIMIT)
+                ].slice(0, NOTIFICATION_POLICY.boardLimit)
               );
             }
           }
@@ -925,25 +858,26 @@ export default function DispatchingTable() {
         // scheduled departure within the configured first threshold, then the SAME
         // notice flips at the urgent threshold (found by train no + kind — never a duplicate). It is
         // marked resolved once the train has left.
-        const countdownStop = j.train.stops[DEPARTURE_COUNTDOWN_STOP_INDEX];
+        const countdownPolicy = NOTIFICATION_POLICY.departureCountdown;
+        const countdownStop = j.train.stops[countdownPolicy.stopIndex];
         if (
-          countdownStop?.trackmark === DEPARTURE_COUNTDOWN_STATION &&
+          countdownStop?.trackmark === countdownPolicy.station &&
           countdownStop.arr < countdownStop.dep
         ) {
           const leg = plan.legs[Math.min(st.leg, plan.legs.length - 1)];
           const atCountdownStation =
-            leg.station === DEPARTURE_COUNTDOWN_STATION && st.time < (leg.departAt ?? 0);
+            leg.station === countdownPolicy.station && st.time < (leg.departAt ?? 0);
           const remaining = countdownStop.dep - simRef.current;
           const key = `KA ${j.train.train_no}`;
           if (
             atCountdownStation &&
             remaining > 0 &&
-            remaining <= DEPARTURE_COUNTDOWN_FIRST_SECS
+            remaining <= countdownPolicy.firstThresholdSeconds
           ) {
             const countdownSeconds =
-              remaining <= DEPARTURE_COUNTDOWN_URGENT_SECS
-                ? DEPARTURE_COUNTDOWN_URGENT_SECS
-                : DEPARTURE_COUNTDOWN_FIRST_SECS;
+              remaining <= countdownPolicy.urgentThresholdSeconds
+                ? countdownPolicy.urgentThresholdSeconds
+                : countdownPolicy.firstThresholdSeconds;
             const msg = `dijadwalkan berangkat ${countdownSeconds} detik lagi`;
             setNotices((ns) => {
               const existing = ns.find((x) => x.kind === "countdown" && x.trainNo === key);
@@ -954,7 +888,7 @@ export default function DispatchingTable() {
               return [
                 { id: nextNoticeIdRef.current++, kind: "countdown" as const, trainNo: key, message: msg, since: simRef.current, resolved: false },
                 ...ns,
-              ].slice(0, NOTICE_BOARD_LIMIT);
+              ].slice(0, NOTIFICATION_POLICY.boardLimit);
             });
           } else if (remaining <= 0) {
             setNotices((ns) =>
@@ -1199,7 +1133,7 @@ export default function DispatchingTable() {
       // fall through to the normal clear path
     }
     const sig = SIGNALS.find((s) => s.id === id)!;
-    const prospective = walkRoute(sig, switches);
+    const prospective = walkRoute(sig, switches, DISPATCH_MAP);
     if (prospective.blocked) {
       setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — wesel belum diatur (${prospective.note}).`);
       window.setTimeout(() => setConflictNote(null), 3000);
@@ -1281,7 +1215,8 @@ export default function DispatchingTable() {
    * is also green; amber (caution) when it is not. No next signal = open line = green.
    * Block signals are always active and simply mirror the next signal.
    */
-  const routeOf = (id: string) => walkRoute(SIGNALS.find((s) => s.id === id)!, switches);
+  const routeOf = (id: string) =>
+    walkRoute(SIGNALS.find((s) => s.id === id)!, switches, DISPATCH_MAP);
 
   /**
    * Wrong-direction operation: x-intervals on a main line that a cleared route
@@ -1341,71 +1276,31 @@ export default function DispatchingTable() {
     return merged.some(([a, b]) => a <= lo && b >= hi); // fully covered by a wrong-way span
   };
 
-  /**
-   * Occupancy: does a currently-shown train occupy any part of the x-range
-   * [x1, x2] on the given line? (Prototype trains run the top line.)
-   */
-  const trainOccupies = (lineY: number, x1: number, x2: number, skip: number[] = []): boolean =>
-    // body-based: a section is occupied while ANY part of the train overlaps it —
-    // it clears only after the rear leaves. A train stopped AT a signal (front
-    // touching the section edge) does not occupy the section beyond it. The
-    // callers can exclude specific trains (a train must never stop at a signal
-    // it reddens by its own presence).
-    trainStatesRef.current.some((m) => {
-      if (!m.spawned || m.done || m.y !== lineY || skip.includes(m.idx)) return false;
-      return m.x - CELL < x2 && m.x + CELL > x1;
-    });
-
-  const aspectOf = (id: string, visited: Set<string> = new Set(), selfIdx?: number): Aspect => {
-    if (visited.has(id)) return "red";
-    visited.add(id);
-    const sig = SIGNALS.find((s) => s.id === id)!;
-    // Wrong-way reservation on this line → the signals serving the reserved
-    // stretch (and the chain feeding them) are held red.
-    const normalDir = NORMAL_DIR[sig.lineY];
-    if (normalDir && sig.dir === normalDir && forcedRed(id)) {
-      return "red";
-    }
-    const nextId = routeOf(id).nextSignalId;
-    // Occupancy: a train in the protected section (the static block between this
-    // signal and the next same-direction signal on the line) holds it at red —
-    // overriding a player clear and driving the block cascade behind the train.
-    // The static section is used (not the route-derived next) so a diverted route
-    // can't turn the section infinite.
-    const section = SIGNAL_SECTIONS.find((s) => s.sig === id);
-    if (section) {
-      // The engine (selfIdx set) skips only the calling train — its own presence
-      // must not stop it. The display (no selfIdx) skips the signal's OWN
-      // direction trains (the ones it is cleared for / would proceed), so a loop
-      // exit signal shows its clear while its train is still in the loop — the
-      // opposing-direction signal still reads red from any train on the loop.
-      // Block signals keep the full reddening (the cascade behind a train).
-      const skip =
-        selfIdx !== undefined
-          ? [selfIdx]
-          : !sig.block
-          ? trainStatesRef.current.filter((m) => m.spawned && !m.done && m.dir === sig.dir).map((m) => m.idx)
-          : [];
-      if (trainOccupies(sig.lineY, section.lo, section.hi, skip)) {
-        return "red";
-      }
-    }
-    if (sig.block) {
-      // automatic block signal: always active — amber when the next signal is RED,
-      // green otherwise (amber or green next). Only the signal right before a red
-      // shows amber; the ones behind it stay green.
-      return nextId ? (aspectOf(nextId, visited, selfIdx) === "red" ? "amber" : "green") : "green";
-    }
-    if (!signalOn[id]) return "red";
-    const route = routeOf(id);
-    if (route.blocked) return "red"; // points not set for the route
-    // green unless the next signal is red (1-2 blocks clear); amber if the next is red
-    return nextId ? (aspectOf(nextId, visited, selfIdx) === "red" ? "amber" : "green") : "green";
-  };
+  const aspectOf = (
+    id: string,
+    visited: Set<string> = new Set(),
+    selfIdx?: number
+  ): Aspect =>
+    calculateSignalAspect(
+      id,
+      {
+        signals: SIGNALS,
+        normalDirectionByY: NORMAL_DIR,
+        signalSections: SIGNAL_SECTIONS,
+        signalOn,
+        trainStates: trainStatesRef.current,
+        trainHalfLen: MOVEMENT_DEFINITION.trainHalfLen,
+        routeOf,
+        forcedRed,
+      },
+      visited,
+      selfIdx
+    );
   aspectOfRef.current = (id: string, selfIdx?: number) => aspectOf(id, undefined, selfIdx); // keep the tick loop's aspect lookup current
 
   // ---- timetable awareness: per-train info for the card + roster (Indonesian) ----
-  const stationName = (code: string) => STATION_NAMES[code] ?? code;
+  const stationName = (code: string) =>
+    DISPATCH_MAP.stations.namesByCode[code] ?? code;
   const fmtDur = (sec: number) => {
     const a = Math.abs(sec);
     const m = Math.floor(a / 60);
@@ -1533,14 +1428,16 @@ export default function DispatchingTable() {
       .filter((r): r is NonNullable<typeof r> => r !== null)
       .sort((a, b) => a.arr - b.arr);
 
-  const cellX0 = (sw: Sw) => Math.floor(sw.x / CELL) * CELL;
-  const cellY0 = (sw: Sw) => Math.floor(sw.y / CELL) * CELL;
+  const cellX0 = (sw: Sw, cellSize: number) =>
+    Math.floor(sw.x / cellSize) * cellSize;
+  const cellY0 = (sw: Sw, cellSize: number) =>
+    Math.floor(sw.y / cellSize) * cellSize;
 
-  const inactivePath = (sw: Sw, reversed: boolean) =>
+  const inactivePath = (sw: Sw, reversed: boolean, cellSize: number) =>
     reversed
       ? sw.dashSide === "left"
-        ? `M${cellX0(sw)} ${sw.lineY} H${sw.x}`
-        : `M${sw.x} ${sw.lineY} H${cellX0(sw) + CELL}`
+        ? `M${cellX0(sw, cellSize)} ${sw.lineY} H${sw.x}`
+        : `M${sw.x} ${sw.lineY} H${cellX0(sw, cellSize) + cellSize}`
       : sw.branch;
 
   return (
@@ -1773,7 +1670,12 @@ export default function DispatchingTable() {
           <defs>
             {SWITCHES.map((sw) => (
               <clipPath key={sw.id} id={`cell-${sw.id}`}>
-                <rect x={cellX0(sw)} y={cellY0(sw)} width={CELL} height={CELL} />
+                <rect
+                  x={cellX0(sw, DISPATCH_MAP.grid.cellSize)}
+                  y={cellY0(sw, DISPATCH_MAP.grid.cellSize)}
+                  width={CELL}
+                  height={CELL}
+                />
               </clipPath>
             ))}
           </defs>
@@ -1782,7 +1684,7 @@ export default function DispatchingTable() {
           <g>
             {STATION_CELLS.map((st) =>
               st.cells.map((c) => {
-                const [x, y] = cellOrigin(c);
+                const [x, y] = cellOrigin(c, DISPATCH_MAP.grid);
                 return (
                   <rect
                     key={`${st.code}-${c.col}${c.row}`}
@@ -1875,7 +1777,7 @@ export default function DispatchingTable() {
         {/* Per-cell inactive routes: dashed, clipped to the point's own cell */}
         {SWITCHES.map((sw) => {
           const reversed = switches[sw.id] === "reversed";
-          const d = inactivePath(sw, reversed);
+          const d = inactivePath(sw, reversed, DISPATCH_MAP.grid.cellSize);
           return (
             <g key={sw.id} clipPath={`url(#cell-${sw.id})`}>
               <path d={d} stroke="#ffffff" strokeWidth={3.5} strokeLinecap="round" fill="none" />
