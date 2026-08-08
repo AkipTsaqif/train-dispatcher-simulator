@@ -39,6 +39,30 @@
       "topY": 89
     },
     "loops": {
+      "byGroupId": {
+        "lower-loop-group": {
+          "lineY": 264,
+          "maxX": 788,
+          "minX": 500,
+          "rejoin": {
+            "leftX": 500,
+            "mainLineY": 205,
+            "rightX": 788
+          },
+          "trackGroupId": "lower-loop-group"
+        },
+        "upper-loop-group": {
+          "lineY": 148,
+          "maxX": 786,
+          "minX": 500,
+          "rejoin": {
+            "leftX": 500,
+            "mainLineY": 89,
+            "rightX": 786
+          },
+          "trackGroupId": "upper-loop-group"
+        }
+      },
       "lineYs": {
         "$set": [
           148,
@@ -488,9 +512,7 @@
         "sig": "J2"
       },
       {
-        "hi": {
-          "$inf": 1
-        },
+        "hi": 788,
         "lineY": 264,
         "lo": 500,
         "sig": "J3"
@@ -508,19 +530,15 @@
         "sig": "J5"
       },
       {
-        "hi": 788,
+        "hi": 786,
         "lineY": 148,
-        "lo": {
-          "$inf": -1
-        },
+        "lo": 500,
         "sig": "J6"
       },
       {
         "hi": 788,
         "lineY": 264,
-        "lo": {
-          "$inf": -1
-        },
+        "lo": 500,
         "sig": "J7"
       },
       {
@@ -16443,9 +16461,7 @@
         "sig": "J2"
       },
       {
-        "hi": {
-          "$inf": 1
-        },
+        "hi": 788,
         "lineY": 264,
         "lo": 500,
         "sig": "J3"
@@ -16463,19 +16479,15 @@
         "sig": "J5"
       },
       {
-        "hi": 788,
+        "hi": 786,
         "lineY": 148,
-        "lo": {
-          "$inf": -1
-        },
+        "lo": 500,
         "sig": "J6"
       },
       {
         "hi": 788,
         "lineY": 264,
-        "lo": {
-          "$inf": -1
-        },
+        "lo": 500,
         "sig": "J7"
       },
       {

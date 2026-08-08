@@ -215,6 +215,14 @@ export type TopologyDefinition = {
   legacyNodeOrder: readonly string[];
 };
 
+export type CompiledLoop = {
+  trackGroupId: string;
+  lineY: number; // representative compatibility Y (may be shared across loops)
+  minX: number; // this loop's own envelope
+  maxX: number;
+  rejoin: { leftX: number; rightX: number; mainLineY: number };
+};
+
 export type CompiledTopology = {
   lines: {
     mains: { trackGroupId: string; lineY: number; normalBearing: Bearing }[];
@@ -223,6 +231,8 @@ export type CompiledTopology = {
     normalBearingByLineY: Record<number, Bearing>;
   };
   loops: {
+    byGroupId: Record<string, CompiledLoop>;
+    /** Deprecated global views — kept in sync for the current layout. */
     lineYs: Set<number>;
     minX: number;
     maxX: number;
@@ -557,16 +567,36 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     endNeighbor(topologySwitch.reversed, topologySwitch.nodeId);
 
     const reversedEdge = edgesById.get(topologySwitch.reversed.edgeId)!;
+    // the reversed edge belongs to a loop/crossover track group; the remote
+    // switch sits at the OTHER attachment of the whole chain (for a multi-edge
+    // loop the immediate far end is an intermediate node, not the switch)
+    const loopGroup = groupsById.get(reversedEdge.trackGroupId)!;
+    const groupEdges = loopGroup.edgeIds.map((edgeId) => edgesById.get(edgeId)!);
+    const firstGroupEdge = groupEdges[0];
+    const lastGroupEdge = groupEdges[groupEdges.length - 1];
     const remoteNodeId =
-      topologySwitch.reversed.end === "from" ? reversedEdge.to : reversedEdge.from;
+      edgeEndNodeId(firstGroupEdge, "from") === topologySwitch.nodeId
+        ? edgeEndNodeId(lastGroupEdge, "to")
+        : edgeEndNodeId(lastGroupEdge, "to") === topologySwitch.nodeId
+        ? edgeEndNodeId(firstGroupEdge, "from")
+        : null;
+    if (remoteNodeId === null) {
+      throw new Error(
+        `Switch ${topologySwitch.id} is not at an end of track group ${loopGroup.id}`
+      );
+    }
     const remoteSwitch = switchesByNode.get(remoteNodeId);
+    const remoteReversedEdge = remoteSwitch?.reversed
+      ? edgesById.get(remoteSwitch.reversed.edgeId)
+      : undefined;
     if (
       !remoteSwitch ||
-      remoteSwitch.reversed.edgeId !== reversedEdge.id ||
-      edgeEndNodeId(reversedEdge, remoteSwitch.reversed.end) !== remoteNodeId
+      !remoteReversedEdge ||
+      remoteReversedEdge.trackGroupId !== loopGroup.id ||
+      edgeEndNodeId(remoteReversedEdge, remoteSwitch.reversed.end) !== remoteNodeId
     ) {
       throw new Error(
-        `Switch ${topologySwitch.id} has no reciprocal remote switch on its reversed edge`
+        `Switch ${topologySwitch.id} has no reciprocal remote switch on its reversed track`
       );
     }
   }
@@ -713,6 +743,23 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       ) {
         throw new Error(`Block section ${section.id} does not cover its whole loop group`);
       }
+      // the whole-loop ranges must reach from one physical endpoint of the loop
+      // group to the other, across all its edges
+      const groupFrom = edgesById.get(sourceGroup.edgeIds[0])!.geometry[0].point;
+      const lastGroupEdge = edgesById.get(sourceGroup.edgeIds[sourceGroup.edgeIds.length - 1])!;
+      const groupTo = lastGroupEdge.geometry[lastGroupEdge.geometry.length - 1].point;
+      const firstRangeFrom = edgeRangePoint(section.edgeRanges[0], section.edgeRanges[0].from, section.id);
+      const lastRangeTo = edgeRangePoint(
+        section.edgeRanges[section.edgeRanges.length - 1],
+        section.edgeRanges[section.edgeRanges.length - 1].to,
+        section.id
+      );
+      const reachesEndpoints =
+        (pointEquals(firstRangeFrom, groupFrom) && pointEquals(lastRangeTo, groupTo)) ||
+        (pointEquals(firstRangeFrom, groupTo) && pointEquals(lastRangeTo, groupFrom));
+      if (!reachesEndpoints) {
+        throw new Error(`Block section ${section.id} does not reach the loop group's physical endpoints`);
+      }
     }
 
     if (section.legacyOpenEnd) {
@@ -784,6 +831,7 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
   }
 
   const loopGroups = definition.trackGroups.filter((group) => group.role === "loop");
+  const loopsByGroupId: Record<string, CompiledLoop> = {};
   const loopLineYs = new Set<number>();
   const rejoinByLineY: Record<
     number,
@@ -791,33 +839,66 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
   > = {};
   const loopPoints: TopologyPoint[] = [];
   for (const group of loopGroups) {
-    if (group.edgeIds.length !== 1) {
-      throw new Error(`Loop group ${group.id} must contain one logical edge`);
-    }
-    const edge = edgesById.get(group.edgeIds[0])!;
-    const horizontalSegments = edge.geometry
-      .slice(0, -1)
-      .map((vertex, index) => [vertex.point, edge.geometry[index + 1].point] as const)
+    const edges = group.edgeIds.map((edgeId) => edgesById.get(edgeId)!);
+    const groupPoints = edges.flatMap((edge) =>
+      edge.geometry.map((vertex) => vertex.point)
+    );
+    // representative compatibility Y: the longest horizontal segment across the
+    // group (a multi-edge loop may dip/curve through ramps)
+    const horizontalSegments = edges
+      .flatMap((edge) =>
+        edge.geometry
+          .slice(0, -1)
+          .map((vertex, index) =>
+            [vertex.point, edge.geometry[index + 1].point] as const
+          )
+      )
       .filter(([from, to]) => from[1] === to[1]);
-    const horizontalYs = new Set(horizontalSegments.map(([from]) => from[1]));
-    if (horizontalYs.size !== 1) {
-      throw new Error(`Loop group ${group.id} needs one compatibility line Y`);
+    if (!horizontalSegments.length) {
+      throw new Error(
+        `Loop group ${group.id} needs a horizontal running portion`
+      );
     }
-    const lineY = [...horizontalYs][0];
-    loopLineYs.add(lineY);
-    const fromPoint = nodesById.get(edge.from)!.point;
-    const toPoint = nodesById.get(edge.to)!.point;
+    let lineY = horizontalSegments[0][0][1];
+    let bestLength = -1;
+    for (const [from, to] of horizontalSegments) {
+      const length = Math.abs(to[0] - from[0]);
+      if (length > bestLength) {
+        bestLength = length;
+        lineY = from[1];
+      }
+    }
+    // per-loop envelope from THIS group's own geometry
+    const minX = Math.min(...groupPoints.map((point) => point[0]));
+    const maxX = Math.max(...groupPoints.map((point) => point[0]));
+    // the loop attaches at the first edge's `from` and the last edge's `to`,
+    // both on the same main line
+    const fromPoint = nodesById.get(edges[0].from)!.point;
+    const toPoint = nodesById.get(edges[edges.length - 1].to)!.point;
     const left = fromPoint[0] <= toPoint[0] ? fromPoint : toPoint;
     const right = fromPoint[0] <= toPoint[0] ? toPoint : fromPoint;
     if (left[1] !== right[1]) {
       throw new Error(`Loop group ${group.id} does not rejoin one main line`);
     }
+    loopsByGroupId[group.id] = {
+      trackGroupId: group.id,
+      lineY,
+      minX,
+      maxX,
+      rejoin: {
+        leftX: left[0],
+        rightX: right[0],
+        mainLineY: left[1],
+      },
+    };
+    loopLineYs.add(lineY);
+    // deprecated global view — last write wins for shared Ys
     rejoinByLineY[lineY] = {
       leftX: left[0],
       rightX: right[0],
       mainLineY: left[1],
     };
-    loopPoints.push(...edge.geometry.map((vertex) => vertex.point));
+    loopPoints.push(...groupPoints);
   }
   const loopMinX = Math.min(...loopPoints.map((point) => point[0]));
   const loopMaxX = Math.max(...loopPoints.map((point) => point[0]));
@@ -827,9 +908,16 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     const legacyEndX = blockLegacyEndX.get(signal.protectedBlockSectionId)!;
     let lo = Math.min(placement.point[0], legacyEndX);
     let hi = Math.max(placement.point[0], legacyEndX);
-    if (loopLineYs.has(placement.point[1])) {
-      lo = Math.min(lo, loopMinX);
-      hi = Math.max(hi, loopMaxX);
+    // a loop-line signal's section covers ITS OWN loop's envelope, not a global
+    // one — otherwise a train in one siding would falsely occupy another's.
+    // An open loop end (legacy ±Infinity) resolves to the loop's own boundary.
+    const signalEdge = edgesById.get(signal.edgeId);
+    const ownLoop = signalEdge ? loopsByGroupId[signalEdge.trackGroupId] : undefined;
+    if (ownLoop) {
+      lo = Math.min(lo, ownLoop.minX);
+      hi = Math.max(hi, ownLoop.maxX);
+      if (lo === Number.NEGATIVE_INFINITY) lo = ownLoop.minX;
+      if (hi === Number.POSITIVE_INFINITY) hi = ownLoop.maxX;
     }
     return { sig: signal.id, lineY: placement.point[1], lo, hi };
   });
@@ -864,10 +952,28 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
 
       const reversedEdge = edgesById.get(topologySwitch.reversed.edgeId)!;
       const reversedPath = edgePaths.get(reversedEdge.id)!;
-      const path =
-        topologySwitch.reversed.end === "from"
-          ? reversedPath.ids.slice(1)
-          : reversedPath.ids.slice(0, -1).reverse();
+      // the branch path runs through the WHOLE loop chain to the far switch —
+      // for a multi-edge loop the reversed edge alone ends at an intermediate
+      const loopGroup = groupsById.get(reversedEdge.trackGroupId)!;
+      const groupEdgeIds = loopGroup.edgeIds;
+      const edgeIndex = groupEdgeIds.indexOf(reversedEdge.id);
+      const atFrom = edgeEndNodeId(reversedEdge, "from") === topologySwitch.nodeId;
+      let path: string[];
+      if (edgeIndex === 0 && atFrom) {
+        path = reversedPath.ids.slice(1);
+        for (let i = 1; i < groupEdgeIds.length; i++) {
+          path = path.concat(edgePaths.get(groupEdgeIds[i])!.ids.slice(1));
+        }
+      } else if (edgeIndex === groupEdgeIds.length - 1 && !atFrom) {
+        path = reversedPath.ids.slice(0, -1).reverse();
+        for (let i = groupEdgeIds.length - 2; i >= 0; i--) {
+          path = path.concat(edgePaths.get(groupEdgeIds[i])!.ids.slice(0, -1).reverse());
+        }
+      } else {
+        throw new Error(
+          `Switch ${topologySwitch.id} is not at an end of loop group ${loopGroup.id}`
+        );
+      }
       const farNodeId = path[path.length - 1];
       const farSwitch = switchesByNode.get(farNodeId);
       if (!farSwitch) {
@@ -887,14 +993,26 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       const incident = definition.edges.filter(
         (edge) => edge.from === nodeId || edge.to === nodeId
       );
-      if (incident.length !== 1) {
-        throw new Error(`Boundary node ${nodeId} must have one incident edge`);
+      if (incident.length === 1) {
+        // a map-edge boundary node
+        const edge = incident[0];
+        const path = edgePaths.get(edge.id)!;
+        pushExit(
+          edge.from === nodeId ? path.ids[1] : path.ids[path.ids.length - 2]
+        );
+      } else if (incident.length === 2) {
+        // a through node where two edges meet (e.g. a multi-edge loop joint)
+        for (const edge of incident) {
+          const path = edgePaths.get(edge.id)!;
+          pushExit(
+            edge.from === nodeId ? path.ids[1] : path.ids[path.ids.length - 2]
+          );
+        }
+      } else {
+        throw new Error(
+          `Boundary node ${nodeId} must have one incident edge`
+        );
       }
-      const edge = incident[0];
-      const path = edgePaths.get(edge.id)!;
-      pushExit(
-        edge.from === nodeId ? path.ids[1] : path.ids[path.ids.length - 2]
-      );
     }
 
     graphNodes[nodeId] = topologySwitch
@@ -982,6 +1100,7 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
   return {
     lines: { mains, normalDirectionByY, normalBearingByGroupId, normalBearingByLineY },
     loops: {
+      byGroupId: loopsByGroupId,
       lineYs: loopLineYs,
       minX: loopMinX,
       maxX: loopMaxX,

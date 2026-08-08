@@ -6,10 +6,11 @@
 
 ## Current position
 
-- **Active phase:** 3 — Independent loop/siding bounds, multi-loop, multi-edge
-  loops.
-- **Current step:** Not started. Phase 2 (N mains) is complete.
-- **Next action:** Read `docs/PLAN-phase-3.md`, then create its branch and
+- **Active phase:** 4 — Graph-based route search (entry→exit) + flank
+  protection.
+- **Current step:** Not started. Phase 3 (independent/multi-edge loops) is
+  complete.
+- **Next action:** Read `docs/PLAN-phase-4.md`, then create its branch and
   start step 1.
 
 ## Phase state
@@ -19,8 +20,8 @@
 | 0 | Contract extraction + baseline harness | **DONE** |
 | 1 | Bearings (Dir → vectors) | **DONE** |
 | 2 | N parallel mains + line selection | **DONE** |
-| 3 | Independent/multi-edge loops | **IN PROGRESS (not started)** |
-| 4 | Route search + flank protection | blocked by 1 |
+| 3 | Independent/multi-edge loops | **DONE** |
+| 4 | Route search + flank protection | **IN PROGRESS (not started)** |
 | 5 | 2-D multi-segment occupancy | blocked by 1, 4 |
 | 6 | Flyovers / graded junctions | blocked by 3, 5 |
 | 7 | Arbitrary-schematic rendering | blocked by 6 |
@@ -36,22 +37,25 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   all gates green (see commit history for details).
 - 2026-08-07 — Phase 1 complete (branch continues):
   ... (see commit history)
-- 2026-08-07 — Phase 2 complete (same branch):
-  - `DispatchMapDefinition.lines.mains` holds every main group
-    (trackGroupId/lineY/normalBearing/name); `topY`/`bottomY` remain only as
-    deprecated derived views.
-  - `selectMainLine(stops, map, scenario)` is total + deterministic: explicit
-    timetable `line` on a stop, then scenario `routing.defaultLineByDirection`,
-    then the direction fallback (max dot with the main's normal bearing).
-    `journeyLineY`/`spawnClearanceGap`/`prepareMeetDependencies` are repointed.
-  - The compiled topology exposes `lines.mains`; `ScheduleStop`/`TrainStop`
-    gained an optional `line`; the scenario gained an optional `routing` hook.
-  - `three-main-fixture` composition (topology/map/scenario/dispatching) +
-    `scripts/verify-three-main.ts` proves three parallel mains: explicit line,
-    policy, and fallback all select the right lineY, and three trains land on
-    three distinct mains.
+- 2026-08-07 — Phase 3 complete (same branch):
+  - Loops are keyed by track-group id: `CompiledLoop` (trackGroupId, lineY,
+    per-loop minX/maxX, rejoin) in `loops.byGroupId`; the global
+    lineYs/minX/maxX/rejoinByLineY views remain only as deprecated syncs.
+  - A loop-line signal's section extends to ITS OWN loop's envelope, and an
+    open loop end (legacy ±Infinity) resolves to the loop's own boundary — the
+    false-occupancy bug (a train in one siding reddening another's signals) is
+    fixed.
+  - Two loops may share a compatibility Y without overwriting each other.
+  - Loop groups may contain multiple chained edges: the reciprocal-switch
+    check and the branch path walk the whole loop chain, a through joint node
+    (two incident edges) is supported, and whole-track-group blocks must reach
+    the group's physical endpoints.
+  - `loops-fixture` composition + `scripts/verify-loops.ts` prove: shared-Y
+    loops with independent envelopes, independent occupancy (S1 train → only
+    J1, S2 train → only J2), and a multi-edge loop traversed end-to-end.
   - Gates: tsc, build, e2e (47), probe:meets, probe:bearing, verify:three-main,
-    verify:bekasi (byte-identical after the `lines.mains` projection extension).
+    verify:loops, verify:bekasi (byte-identical after the per-loop section
+    resolution + loops.byGroupId projection).
 
 ## Decisions log (decision — why)
 
@@ -83,6 +87,13 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   may name just one direction.
 - (Phase 2) `selectMainLine` resolves timetable/scenario keys by trackGroupId
   or line name; unknown keys throw (fail fast at composition time).
+- (Phase 3) The baseline was re-captured for the per-loop section resolution:
+  the open-end infinities on J3/J6/J7 now resolve to each loop's own envelope
+  (J3 [500,∞]→[500,788], J6 [-∞,788]→[500,786], J7 [-∞,788]→[500,788]) plus
+  the added `loops.byGroupId` projection — the intended false-occupancy fix.
+- (Phase 3) The reciprocal-switch + branch-path logic walks the loop CHAIN
+  (not just the reversed edge) so multi-edge loops attach reciprocally at
+  their two ends.
 
 ## Notes for the next worker
 

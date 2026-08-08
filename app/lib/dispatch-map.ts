@@ -6,6 +6,7 @@
 // working during the transition.
 
 import type {
+  CompiledLoop,
   CompiledTopology,
   Bearing,
   Dir,
@@ -23,6 +24,7 @@ export type {
   Dir,
   GNode,
   GNodeExit,
+  CompiledLoop,
   PointControl,
   SignalDef,
   Sw,
@@ -80,6 +82,8 @@ export type DispatchMapDefinition = {
     normalBearingByLineY: Record<number, Bearing>;
   };
   loops: {
+    byGroupId: Record<string, CompiledLoop>;
+    /** Deprecated global views — kept in sync for the current layout. */
     lineYs: Set<number>;
     minX: number;
     maxX: number;

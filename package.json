@@ -13,6 +13,7 @@
     "probe:meets": "bun probes/meets.probe.ts",
     "probe:bearing": "bun probes/bearing.probe.ts",
     "verify:three-main": "bun scripts/verify-three-main.ts",
+    "verify:loops": "bun scripts/verify-loops.ts",
     "snapshot:bekasi": "bun scripts/snapshot-layout.ts",
     "verify:bekasi": "bun scripts/verify-layout.ts bekasi-tambun-cibitung"
   },

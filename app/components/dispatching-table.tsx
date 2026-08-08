@@ -49,6 +49,7 @@ const {
     normalBearingByLineY: NORMAL_BEARING,
   },
   loops: {
+    byGroupId: LOOPS_BY_GROUP_ID,
     lineYs: LOOP_LINE_YS,
     rejoinByLineY: LOOP_REJOIN_BY_LINE_Y,
   },
@@ -991,9 +992,18 @@ export default function DispatchingTable() {
           // A train physically ON a bidirectional loop has taken over the
           // protection: the loop sections now cover the whole track, so a train
           // anywhere on it reddens every loop signal (both directions). Release
-          // the reservation as soon as the train is actually in the loop.
+          // the reservation as soon as the train is actually in the loop. The
+          // loop is found by envelope (its own Y + x-range), not Y proximity —
+          // two loops may share a Y.
           const onLoop =
-            !!user && !user.done && [...LOOP_LINE_YS].some((lineY) => Math.abs(user.y - lineY) < 1);
+            !!user &&
+            !user.done &&
+            Object.values(LOOPS_BY_GROUP_ID).some(
+              (loop) =>
+                Math.abs(loop.lineY - user.y) < 1 &&
+                user.x >= loop.minX &&
+                user.x <= loop.maxX
+            );
           // release once the train using the route finished (above), its front
           // passed the far end, it diverged away, or it is physically in the loop
           // — points unlock, signals clear
@@ -1198,11 +1208,12 @@ export default function DispatchingTable() {
       // train parked on the loop (dwelling for an overtake, e.g. at Tambun's
       // column while the express runs the main line) must not block the through
       // signals, or the express could never pass.
-      const loopLineY = [...LOOP_LINE_YS].find((lineY) => Math.abs(m.y - lineY) < 1);
-      if (loopLineY !== undefined) {
-        const rejoin = LOOP_REJOIN_BY_LINE_Y[loopLineY];
-        const rejoinX = m.dir === "right" ? rejoin.rightX : rejoin.leftX;
-        const rejoinY = rejoin.mainLineY;
+      const loop = Object.values(LOOPS_BY_GROUP_ID).find(
+        (l) => Math.abs(l.lineY - m.y) < 1 && m.x >= l.minX && m.x <= l.maxX
+      );
+      if (loop) {
+        const rejoinX = m.dir === "right" ? loop.rejoin.rightX : loop.rejoin.leftX;
+        const rejoinY = loop.rejoin.mainLineY;
         if (Math.abs(m.x - rejoinX) < 2 * CELL && distToPoly(rejoinX, rejoinY, prospective.pts) < CELL) {
           return true;
         }
