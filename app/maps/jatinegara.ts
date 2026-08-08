@@ -76,6 +76,9 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
     kind: "schematic",
     viewBox: { minX: 0, minY: 240, width: 1160, height: 290 },
     continuousTrains: true,
+    // the 8 tracks sit 32 units apart (vs Bekasi's 59) — shrink the controls
+    // to the map's pitch so signals/points/markers fit the dense throat
+    controlScale: 0.55,
     stationShapes: [
       { code: "JNG", x: 850, y: 496, side: "down", length: 420 },
       { code: "JNG", x: 464, y: 464, side: "down", length: 192 },

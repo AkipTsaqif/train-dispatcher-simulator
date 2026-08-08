@@ -72,6 +72,9 @@ export type Presentation = {
   viewBox?: { minX: number; minY: number; width: number; height: number };
   /** schematic mode: train markers at true continuous position/bearing. */
   continuousTrains?: boolean;
+  /** Scale for the signal/point/train controls (default 1) — a dense map with
+   *  close track spacing shrinks the controls to match its pitch. */
+  controlScale?: number;
   /** schematic mode: authored platform shapes (grid mode uses cells). */
   stationShapes?: StationShape[];
 };

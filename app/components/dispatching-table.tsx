@@ -365,6 +365,7 @@ export default function DispatchingTable({
   const IS_SCHEMATIC = PRESENTATION.kind === "schematic";
   const SCHEMATIC_VIEWBOX = IS_SCHEMATIC ? PRESENTATION.viewBox : undefined;
   const STATION_SHAPES = PRESENTATION.stationShapes ?? [];
+  const CONTROL_SCALE = PRESENTATION.controlScale ?? 1;
 
   const {
     diagramAriaLabel: DIAGRAM_ARIA_LABEL,
@@ -1063,7 +1064,7 @@ export default function DispatchingTable({
           ang = (Math.atan2(ty - fy, tx - fx) * 180) / Math.PI;
         }
         if (g) {
-          g.setAttribute("transform", `translate(${rx}, ${ry}) rotate(${ang})`);
+          g.setAttribute("transform", `translate(${rx}, ${ry}) rotate(${ang}) scale(${CONTROL_SCALE})`);
           g.setAttribute("visibility", "visible");
           g.setAttribute("data-x", String(Math.round(rx)));
           g.setAttribute("data-y", String(Math.round(ry)));
@@ -2028,7 +2029,8 @@ export default function DispatchingTable({
           const id = ctl.ids[0];
           const reversed = switches[id] === "reversed";
           const locked = isLocked(id);
-          const r = ctl.coupled ? 12 : 10;
+          const cs = CONTROL_SCALE;
+          const r = (ctl.coupled ? 12 : 10) * cs;
           return (
             <g
               key={ctl.ids.join("-")}
@@ -2048,10 +2050,10 @@ export default function DispatchingTable({
               }}
             >
               <circle
-                r={ctl.coupled ? 16 : 14}
+                r={(ctl.coupled ? 16 : 14) * cs}
                 fill="none"
                 stroke={locked ? "#ef4444" : "#16a34a"}
-                strokeWidth={1.5}
+                strokeWidth={1.5 * cs}
                 strokeDasharray={locked ? "3 3" : undefined}
                 className="opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity"
               />
@@ -2059,17 +2061,17 @@ export default function DispatchingTable({
                 r={r}
                 fill={reversed ? "#16a34a" : "#ffffff"}
                 stroke={reversed ? "#15803d" : "#94a3b8"}
-                strokeWidth={2}
+                strokeWidth={2 * cs}
               />
               {locked && (
-                <text y={-r - 4} textAnchor="middle" fontSize={11} pointerEvents="none">
+                <text y={-r - 4 * cs} textAnchor="middle" fontSize={11 * cs} pointerEvents="none">
                   🔒
                 </text>
               )}
               <text
-                y={4}
+                y={4 * cs}
                 textAnchor="middle"
-                fontSize={ctl.coupled ? 9 : 11}
+                fontSize={(ctl.coupled ? 9 : 11) * cs}
                 fontWeight={700}
                 fill={reversed ? "#ffffff" : "#475569"}
                 pointerEvents="none"
@@ -2087,8 +2089,9 @@ export default function DispatchingTable({
           const aspect = aspectOf(sig.id);
           const passive = sig.block === true; // ai signals never render here
           const up = sig.mount === "up";
-          const headTop = up ? -50 : 6;
-          const lamps = [up ? -38 : 18, up ? -26 : 30, up ? -14 : 42]; // green, yellow, red
+          const cs = CONTROL_SCALE; // controls follow the map's scale
+          const headTop = up ? -50 * cs : 6 * cs;
+          const lamps = [up ? -38 * cs : 18 * cs, up ? -26 * cs : 30 * cs, up ? -14 * cs : 42 * cs];
           const lit = [aspect === "green", aspect === "amber", aspect === "red"];
           const colors = ["#22c55e", "#eab308", "#ef4444"];
           return (
@@ -2112,38 +2115,38 @@ export default function DispatchingTable({
               {/* invisible hit area + hover ring (only for controllable signals) */}
               {!passive && (
                 <>
-                  <rect x={-14} y={up ? -54 : -4} width={28} height={58} rx={8} fill="transparent" />
+                  <rect x={-14 * cs} y={up ? -54 * cs : -4 * cs} width={28 * cs} height={58 * cs} rx={8 * cs} fill="transparent" />
                   <rect
-                    x={-14}
-                    y={up ? -54 : -4}
-                    width={28}
-                    height={58}
-                    rx={8}
+                    x={-14 * cs}
+                    y={up ? -54 * cs : -4 * cs}
+                    width={28 * cs}
+                    height={58 * cs}
+                    rx={8 * cs}
                     fill="none"
                     stroke="#f59e0b"
-                    strokeWidth={1.5}
+                    strokeWidth={1.5 * cs}
                     className="opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity"
                   />
                 </>
               )}
               {/* post */}
-              <line x1={0} y1={0} x2={0} y2={up ? -6 : 6} stroke="#334155" strokeWidth={3} />
+              <line x1={0} y1={0} x2={0} y2={up ? -6 * cs : 6 * cs} stroke="#334155" strokeWidth={3 * cs} />
               {/* head */}
-              <rect x={-9} y={headTop} width={18} height={44} rx={5} fill="#ffffff" stroke="#334155" strokeWidth={1.5} />
+              <rect x={-9 * cs} y={headTop} width={18 * cs} height={44 * cs} rx={5 * cs} fill="#ffffff" stroke="#334155" strokeWidth={1.5 * cs} />
               {/* lit lamp glow */}
-              {lit[0] && <circle cx={0} cy={lamps[0]} r={9} fill={colors[0]} opacity={0.35} />}
-              {lit[1] && <circle cx={0} cy={lamps[1]} r={9} fill={colors[1]} opacity={0.35} />}
-              {lit[2] && <circle cx={0} cy={lamps[2]} r={9} fill={colors[2]} opacity={0.35} />}
+              {lit[0] && <circle cx={0} cy={lamps[0]} r={9 * cs} fill={colors[0]} opacity={0.35} />}
+              {lit[1] && <circle cx={0} cy={lamps[1]} r={9 * cs} fill={colors[1]} opacity={0.35} />}
+              {lit[2] && <circle cx={0} cy={lamps[2]} r={9 * cs} fill={colors[2]} opacity={0.35} />}
               {/* lamps */}
-              <circle cx={0} cy={lamps[0]} r={5} fill={lit[0] ? colors[0] : "#64748b"} />
-              <circle cx={0} cy={lamps[1]} r={5} fill={lit[1] ? colors[1] : "#64748b"} />
-              <circle cx={0} cy={lamps[2]} r={5} fill={lit[2] ? colors[2] : "#64748b"} />
+              <circle cx={0} cy={lamps[0]} r={5 * cs} fill={lit[0] ? colors[0] : "#64748b"} />
+              <circle cx={0} cy={lamps[1]} r={5 * cs} fill={lit[1] ? colors[1] : "#64748b"} />
+              <circle cx={0} cy={lamps[2]} r={5 * cs} fill={lit[2] ? colors[2] : "#64748b"} />
               {/* label */}
               <text
-                x={13}
-                y={headTop + 26}
+                x={13 * cs}
+                y={headTop + 26 * cs}
                 textAnchor="start"
-                fontSize={10}
+                fontSize={10 * cs}
                 fontWeight={600}
                 fill="#64748b"
                 pointerEvents="none"
@@ -2250,7 +2253,9 @@ export default function DispatchingTable({
                 onClick={() => toggleSwitch(id)}
                 aria-pressed={reversed}
                 aria-disabled={locked}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors ${
+                className={`${
+                  CONTROL_SCALE < 1 ? "px-1.5 py-0.5 text-[11px]" : "px-3 py-1.5 text-sm"
+                } rounded-full font-medium border transition-colors ${
                   locked
                     ? "bg-slate-100 border-slate-300 text-slate-400 cursor-not-allowed"
                     : reversed
@@ -2274,7 +2279,9 @@ export default function DispatchingTable({
                   type="button"
                   disabled
                   title={`${sig.label} — ${sig.block ? "otomatis, mengikuti sinyal berikutnya" : "dikendalikan AI"}`}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium border cursor-default ${
+                  className={`${
+                    CONTROL_SCALE < 1 ? "px-1.5 py-0.5 text-[11px]" : "px-3 py-1.5 text-sm"
+                  } rounded-full font-medium border cursor-default ${
                     aspect === "green"
                       ? "bg-green-50 border-green-200 text-green-700"
                       : aspect === "amber"
