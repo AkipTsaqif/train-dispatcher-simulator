@@ -193,7 +193,9 @@ const walkRoute = (
         }
         const last = branchPath.length - 1;
         const far = nodes[branchPath[last]];
-        if (switches[branchExit!.farSw!] === "reversed") {
+        if (branchExit!.farSw === undefined || switches[branchExit!.farSw] === "reversed") {
+          // the branch ends at a plain node (a fixed track turn) or its far
+          // switch is thrown — either way the divert continues
           // rejoin the other line and keep going in the same direction
           incoming = last >= 1 ? branchPath[last - 1] : cur;
           // the far node's exit continuing most nearly straight (non-reversing)

@@ -28,15 +28,26 @@ const map = runtime.map;
 // 1. structure (Phase 8: drawn extents — 13 mains incl. the 5 east-throat
 // fragments; the stubs end at junctions, 6 tracks per map boundary)
 check("compiles with 13 main lines", compiled.lines.mains.length === 13, `mains=${compiled.lines.mains.length}`);
-check("58 switches (the throat)", compiled.switches.items.length === 58, `switches=${compiled.switches.items.length}`);
+check("48 switches (the 10 stub ends are fixed track turns, not points)", compiled.switches.items.length === 48, `switches=${compiled.switches.items.length}`);
 check("23 signals (NW/NE/XW/XE)", compiled.signals.items.length === 23, `signals=${compiled.signals.items.length}`);
 check(
-  "10 terminating switches (stub ends: 336,368 / 528,368 / 656,368 / 752,368 / 1040,368 / 592,336 / 688,336 / 1008,336 / 688,304 / 528,272)",
+  "20 coupled point pairs (PC1..PC20) + 8 singles",
   (() => {
-    const terms = Object.values(compiled.nodes).filter((n) => n.sw !== undefined && !n.exits.some((e) => e.viaSwitchPort === "normal"));
-    return terms.length === 10;
+    const coupled = compiled.switches.controls.filter((c) => c.coupled);
+    const singles = compiled.switches.controls.filter((c) => !c.coupled);
+    const labelSet = new Set(coupled.map((c) => c.label));
+    return (
+      coupled.length === 20 && singles.length === 8 &&
+      labelSet.size === 20 &&
+      [...labelSet].every((l) => /^PC\d+$/.test(l))
+    );
   })(),
-  "terminating switch count"
+  `coupled=${compiled.switches.controls.filter((c) => c.coupled).length} singles=${compiled.switches.controls.filter((c) => !c.coupled).length}`
+);
+check(
+  "the stub ends are now plain joins (no switch at 528,368 / 592,336 / 528,272 / 688,304)",
+  compiled.nodes["s368x528"]?.sw === undefined && compiled.nodes["s336x592"]?.sw === undefined && compiled.nodes["s272x528"]?.sw === undefined && compiled.nodes["s304x688"]?.sw === undefined,
+  "stub-end node still has a switch"
 );
 check(
   "stub tracks end at their drawn extents (t5 336..528, t6 32..592, t8 224..528)",
@@ -143,25 +154,33 @@ check(
     segmentLevels: map.segmentLevels,
   });
   check(
-    "XE5 (t5 stub exit) routes THROUGH the throat to the east boundary (a dive, not a straight)",
+    "XE5 (t5 stub exit) routes THROUGH the throat to the east boundary (a dive via the fixed turns + P44/P29)",
     r3 !== null && r3.pts[r3.pts.length - 1][0] > 1000 && r3.pts.some((p) => p[1] !== 368),
     r3 ? `lastX=${r3.pts[r3.pts.length - 1][0]} moves=${JSON.stringify(r3.requiredSwitches)}` : "no route"
   );
-  // with the terminating branch locked closed, the stub signal has NO route
-  // (no boundary route at a dead junction)
+  check(
+    "the XE5 dive needs only the real switches (P44 at 560,336 + P29 at 656,400 — the stub ends are fixed turns)",
+    r3 !== null &&
+      Object.keys(r3.requiredSwitches).every((k) => ![39, 45].includes(Number(k))) &&
+      r3.requiredSwitches[44] === "reversed" && r3.requiredSwitches[29] === "reversed",
+    r3 ? JSON.stringify(r3.requiredSwitches) : "no route"
+  );
+  // with the real switches locked, the dive is impossible — the search can
+  // only end at the first blocked switch (a dead junction the signal cannot
+  // clear; its walkRoute stays blocked and the aspect stays red)
   const r4 = findRoute({
     entranceId: "XE5",
     entrance: xe5,
     signals,
     graph,
     switches: { ...map.switches.initialState },
-    isLocked: (sw) => true, // everything locked — the branch cannot be thrown
+    isLocked: (sw) => true, // everything locked — the branches cannot be thrown
     segmentLevels: map.segmentLevels,
   });
   check(
-    "XE5 with the terminating branch locked has NO route (dead junction, not an open line)",
-    r4 === null,
-    r4 ? `unexpected route ${r4.exitSignalId}` : "ok"
+    "XE5 with the throat switches locked cannot clear through the dive",
+    r4 === null || r4.pts[r4.pts.length - 1][0] < 1000,
+    r4 ? `lastX=${r4.pts[r4.pts.length - 1][0]}` : "no route"
   );
 }
 

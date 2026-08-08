@@ -831,7 +831,7 @@ test.describe("dispatching table", () => {
     await expect(page.getByRole("button", { name: /^XE8 ·/ })).toBeVisible();
     await expect(page.getByText("A", { exact: true })).toHaveCount(0);
     // the 58 point controls are present
-    await expect(page.locator('[role="button"][aria-label^="Wesel"]')).toHaveCount(58);
+    await expect(page.locator('[role="button"][aria-label^="Wesel"]')).toHaveCount(28);
     // auto route set: clearing NW1 lights it (amber — next signal still red)
     await page.getByRole("button", { name: /^NW1 · MERAH/ }).click();
     await expect(page.getByRole("button", { name: /^NW1 · KUNING/ })).toBeVisible();

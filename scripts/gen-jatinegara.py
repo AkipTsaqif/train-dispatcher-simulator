@@ -124,23 +124,22 @@ for (y, gid, _, _, xmin, xmax) in Y_LINES:
         west_in = next((e for (ly, xa, xb), e in line_edges.items() if ly == y and xb == xj), None)
         east_out = next((e for (ly, xa, xb), e in line_edges.items() if ly == y and xa == xj), None)
         (d, dend) = diag_edge_at[(y, xj)]
-        if west_in is not None and east_out is not None:
-            # interior junction — the through axis is the horizontal track
-            common, normal = west_in, east_out
-            cend, nend = "to", "from"
-        else:
-            # Phase 8 terminating switch: the track ENDS here (the line's
-            # xmin/xmax) and the only onward exit is the branch (reversed)
-            edge = west_in or east_out
-            eend = "to" if west_in is not None else "from"
-            common, normal = edge, edge
-            cend, nend = eend, eend
+        if west_in is None or east_out is None:
+            # Phase 8 fix: a stub-end junction is a FIXED track turn — no switch
+            continue
+        common, normal = west_in, east_out
+        cend, nend = "to", "from"
         switches.append({
             "id": sw, "nodeId": nid,
             "common": {"edgeId": common, "end": cend},
             "normal": {"edgeId": normal, "end": nend},
             "reversed": {"edgeId": d, "end": dend},
         })
+
+# demote junction nodes with no switch to plain joins (fixed track turns)
+for n in nodes:
+    if n["kind"] == "switch" and not any(sw["nodeId"] == n["id"] for sw in switches):
+        n["kind"] = "boundary"
 
 # main groups (stub tracks + east-throat fragments each their own group)
 for (y, gid, ndir, bidir, xmin, xmax) in Y_LINES:
@@ -235,6 +234,20 @@ for (sid, x, y, facing) in SIGS:
     else:
         sections.append({"id": f"section-{sid}", "signalId": sid, "ranges": ranges})
 
+# ---- Phase 8 fix: coupled point pairs (PC1..PC20) + terminating switches to
+# remove (they are fixed track turns, not controllable points) -----------------
+COUPLED_PAIRS = [
+    (1, 6), (7, 15), (16, 26), (25, 17), (46, 41),
+    (40, 47), (42, 27), (48, 52), (28, 38), (2, 9),
+    (8, 3), (10, 18), (20, 11), (30, 19), (32, 21),
+    (22, 13), (12, 4), (14, 5), (23, 33), (24, 35),
+]
+REMOVED_SWITCHES = {37, 39, 53, 45, 51, 56, 57, 58, 55, 54}
+COUPLED_BY_SW = {}
+for pc, (a, b) in enumerate(COUPLED_PAIRS, 1):
+    COUPLED_BY_SW[a] = f"PC{pc}"
+    COUPLED_BY_SW[b] = f"PC{pc}"
+
 # ---- stations --------------------------------------------------------------
 STOPS = [
     ("JNG", "t1", 850), ("JNG", "t2", 464), ("JNG", "t3", 464), ("JNG", "t4", 464),
@@ -295,10 +308,16 @@ for e in edges:
 out.append("  ],")
 out.append("  switches: [")
 for sw in switches:
-    out.append(f"    {{ id: {sw['id']}, nodeId: {ts_repr(sw['nodeId'])}, common: {ts_repr(sw['common'])}, normal: {ts_repr(sw['normal'])}, reversed: {ts_repr(sw['reversed'])}, initialState: \"normal\", controlGroupId: {ts_repr(f'g{sw['id']}')}, dashSide: \"left\", label: {ts_repr(f'sw {sw['id']}')} }},")
+    cgid = COUPLED_BY_SW.get(sw['id'], f"g{sw['id']}")
+    lbl = COUPLED_BY_SW.get(sw['id'], f"sw {sw['id']}")
+    out.append(f"    {{ id: {sw['id']}, nodeId: {ts_repr(sw['nodeId'])}, common: {ts_repr(sw['common'])}, normal: {ts_repr(sw['normal'])}, reversed: {ts_repr(sw['reversed'])}, initialState: \"normal\", controlGroupId: {ts_repr(cgid)}, dashSide: \"left\", label: {ts_repr(lbl)} }},")
 out.append("  ],")
 out.append("  controlGroups: [")
+for pc, (a, b) in enumerate(COUPLED_PAIRS, 1):
+    out.append(f"    {{ id: {ts_repr(f'PC{pc}')}, switchIds: [{a}, {b}], coupled: true }},")
 for sw in switches:
+    if sw['id'] in COUPLED_BY_SW:
+        continue
     out.append(f"    {{ id: {ts_repr(f'g{sw['id']}')}, switchIds: [{sw['id']}], coupled: false }},")
 out.append("  ],")
 out.append("  signals: [")

@@ -698,11 +698,14 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     const remoteReversedEdge = remoteSwitch?.reversed
       ? edgesById.get(remoteSwitch.reversed.edgeId)
       : undefined;
+    // Phase 8: a reversed edge may END at a plain node — a FIXED track turn
+    // (like Tambun's T3 curve), not a controllable point. Only a switch at the
+    // far end needs the reciprocal guarantee.
     if (
-      !remoteSwitch ||
-      !remoteReversedEdge ||
-      remoteReversedEdge.trackGroupId !== loopGroup.id ||
-      edgeEndNodeId(remoteReversedEdge, remoteSwitch.reversed.end) !== remoteNodeId
+      remoteSwitch &&
+      (!remoteReversedEdge ||
+        remoteReversedEdge.trackGroupId !== loopGroup.id ||
+        edgeEndNodeId(remoteReversedEdge, remoteSwitch.reversed.end) !== remoteNodeId)
     ) {
       throw new Error(
         `Switch ${topologySwitch.id} has no reciprocal remote switch on its reversed track`
@@ -1161,13 +1164,12 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       }
       const farNodeId = path[path.length - 1];
       const farSwitch = switchesByNode.get(farNodeId);
-      if (!farSwitch) {
-        throw new Error(`Switch ${topologySwitch.id} branch has no far switch`);
-      }
+      // Phase 8: the far end may be a plain node (a fixed track turn) — the
+      // branch is then always open; farSw is only set for a real far switch.
       pushExit(path[0], {
         viaSwitchPort: "reversed",
         branchPath: path,
-        farSw: farSwitch.id,
+        ...(farSwitch ? { farSw: farSwitch.id } : {}),
       });
     } else if (compatibilityVertices.has(nodeId)) {
       const vertex = compatibilityVertices.get(nodeId)!;
