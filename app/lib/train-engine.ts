@@ -192,13 +192,17 @@ export function buildJourney(
   lineY: number,
   nodes: Record<string, GraphNodeLike>,
   dir: LineDir,
-  rules: JourneyRules
+  rules: JourneyRules,
+  /** Per-track platform X resolver (multi-length platforms) — defaults to
+   *  platformX[station]. Resolves the stop X for the journey's own line. */
+  stopXFor?: (station: string) => number
 ): JourneyPlan {
+  const stopX = (code: string): number => (stopXFor ? stopXFor(code) : platformX[code]);
   const {
     speed: { runKmh, segmentKm },
     dwell: { holdUntilScheduledDepartureByStation, minimumStopSeconds },
   } = rules;
-  const originX = platformX[stops[0].trackmark];
+  const originX = stopX(stops[0].trackmark);
   const originArr = hmsToSeconds(stops[0].arr_actual);
   const edgeXs = Object.values(nodes).map((n) => n.x);
   const maxX = Math.max(...edgeXs); // map right edge (pre-shift coords)
@@ -213,8 +217,8 @@ export function buildJourney(
   for (let i = 0; i < stops.length - 1; i++) {
     const fromCode = stops[i].trackmark;
     const toCode = stops[i + 1].trackmark;
-    const from = platformX[fromCode];
-    const to = platformX[toCode];
+    const from = stopX(fromCode);
+    const to = stopX(toCode);
     const secs = stops[i + 1].arr - stops[i].dep; // scheduled travel time between stops
     const distUnits = Math.abs(to - from); // platform spacing in map units
     const km =
@@ -243,7 +247,7 @@ export function buildJourney(
   const legs: LegPlan = [];
   for (let i = 0; i < stops.length - 1; i++) {
     legs.push({
-      waypointX: platformX[stops[i + 1].trackmark],
+      waypointX: stopX(stops[i + 1].trackmark),
       lineY,
       speed: legInfo[i].speed,
       // the dwell at this leg's start station ends at the anchor (for a pass

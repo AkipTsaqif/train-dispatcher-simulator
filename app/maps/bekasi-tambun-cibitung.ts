@@ -81,7 +81,9 @@ export const BEKASI_TAMBUN_CIBITUNG_MAP: DispatchMapDefinition = {
     })),
     normalDirectionByY: COMPILED_TOPOLOGY.lines.normalDirectionByY,
     normalBearingByLineY: COMPILED_TOPOLOGY.lines.normalBearingByLineY,
+
   },
+  bidirectionalByY: COMPILED_TOPOLOGY.lines.bidirectionalByY,
   loops: COMPILED_TOPOLOGY.loops,
   switches: COMPILED_TOPOLOGY.switches,
   nodes: COMPILED_TOPOLOGY.nodes,
@@ -97,6 +99,7 @@ export const BEKASI_TAMBUN_CIBITUNG_MAP: DispatchMapDefinition = {
     cells: STATION_CELLS,
     namesByCode: Object.fromEntries(STATIONS.map((station) => [station.code, station.name])),
     platformCenterX: COMPILED_TOPOLOGY.stationPlatformCenterX,
+    stopXsByTrack: COMPILED_TOPOLOGY.stationStopXs,
   },
   compatibility: COMPILED_TOPOLOGY.compatibility,
 };

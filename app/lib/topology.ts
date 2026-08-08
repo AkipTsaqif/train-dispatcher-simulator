@@ -187,6 +187,9 @@ export type TrackGroup = {
   role: TrackRole;
   edgeIds: readonly string[];
   normalDirection?: Dir;
+  /** Bidirectional running: the line may be used (and signaled) both ways.
+   *  Only meaningful for `main` role. Disables the wrong-way protection. */
+  bidirectional?: boolean;
 };
 
 export type TopologyEdgeRangeEndpoint =
@@ -238,6 +241,8 @@ export type CompiledTopology = {
   lines: {
     mains: { trackGroupId: string; lineY: number; normalBearing: Bearing }[];
     normalDirectionByY: Record<number, Dir>;
+    /** Phase 6+ bidirectional-running mains (wrong-way protection exempt). */
+    bidirectionalByY: Record<number, boolean>;
     normalBearingByGroupId: Record<string, Bearing>;
     normalBearingByLineY: Record<number, Bearing>;
   };
@@ -273,7 +278,7 @@ export type CompiledTopology = {
    *  directions) — Phase 6 conflict/occupancy suppression. Derived from the
    *  topology edges; all-Bekasi edges are level 0 so nothing changes there. */
   segmentLevels: Record<string, number>;
-  /** Phase 7: map positions where two edges CROSS at different grade levels
+  /** Phase 7: map positions where edges cross at different grade levels
    *  (a flyover over a line) — the renderer draws a gap in the lower line and
    *  a bridge glyph on the upper one. */
   levelCrossings: {
@@ -282,6 +287,8 @@ export type CompiledTopology = {
     /** direction of the UPPER track at the crossing (for the bridge glyph). */
     direction: Bearing;
   }[];
+  /** Station platform X per (station, trackGroup) — multi-length platforms. */
+  stationStopXs: Record<string, Record<string, number>>;
   stationPlatformCenterX: Record<string, number>;
   compatibility: {
     signalSections: CompiledSignalSection[];
@@ -901,6 +908,7 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
   const mainGroups = definition.trackGroups.filter((group) => group.role === "main");
   const mains: { trackGroupId: string; lineY: number; normalBearing: Bearing }[] = [];
   const normalDirectionByY: Record<number, Dir> = {};
+  const bidirectionalByY: Record<number, boolean> = {};
   const normalBearingByGroupId: Record<string, Bearing> = {};
   const normalBearingByLineY: Record<number, Bearing> = {};
   for (const group of mainGroups) {
@@ -913,6 +921,7 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     // derived views stay for the horizontal layouts (Bekasi), and diagonal
     // mains keep a nominal line Y from their first vertex.
     normalDirectionByY[lineY] = group.normalDirection;
+    if (group.bidirectional) bidirectionalByY[lineY] = true;
     const fromPoint = firstEdge.geometry[0].point;
     const toPoint = firstEdge.geometry[1].point;
     const normalBearing =
@@ -1221,6 +1230,9 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     if (signal.initialState !== undefined) initialSignalState[signal.id] = signal.initialState;
   }
 
+  // Phase 7+: station platforms may have DIFFERENT X positions per track
+  // (multi-length platforms) — validated per (station, track group).
+  const stationStopXs: Record<string, Record<string, number>> = {};
   const stationPlatformCenterX: Record<string, number> = {};
   for (const stop of definition.stationStopPoints) {
     const edge = edgesById.get(stop.edgeId);
@@ -1231,11 +1243,18 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       stop.offset,
       `Station ${stop.stationCode}`
     );
-    const existing = stationPlatformCenterX[stop.stationCode];
+    const byGroup = (stationStopXs[stop.stationCode] ??= {});
+    const existing = byGroup[edge.trackGroupId];
     if (existing !== undefined && existing !== point[0]) {
-      throw new Error(`Station ${stop.stationCode} placements do not share one X`);
+      throw new Error(
+        `Station ${stop.stationCode} placements do not share one X on track ${edge.trackGroupId}`
+      );
     }
-    stationPlatformCenterX[stop.stationCode] = point[0];
+    byGroup[edge.trackGroupId] = point[0];
+    // the primary X stays the FIRST authored stop (legacy single-X behavior)
+    if (stationPlatformCenterX[stop.stationCode] === undefined) {
+      stationPlatformCenterX[stop.stationCode] = point[0];
+    }
   }
 
   const movementSignals: CompiledMovementSignal[] = compiledSignals.map((signal) => ({
@@ -1248,7 +1267,13 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
   }));
 
   return {
-    lines: { mains, normalDirectionByY, normalBearingByGroupId, normalBearingByLineY },
+    lines: {
+      mains,
+      normalDirectionByY,
+      bidirectionalByY,
+      normalBearingByGroupId,
+      normalBearingByLineY,
+    },
     loops: {
       byGroupId: loopsByGroupId,
       lineYs: loopLineYs,
@@ -1271,6 +1296,7 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     sectionPaths,
     segmentLevels,
     levelCrossings,
+    stationStopXs,
     stationPlatformCenterX,
     compatibility: {
       signalSections,

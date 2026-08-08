@@ -204,17 +204,25 @@ const prepareJourneys = (
     }
   }
 
-  return trains.map((train) => ({
-    train,
-    plan: buildJourney(
-      train.stops,
-      platformX,
-      selectMainLine(train.stops, map, scenario).lineY,
-      map.nodes,
-      journeyDir(train.stops, platformX),
-      { speed: scenario.speed, dwell: scenario.dwell }
-    ),
-  }));
+  return trains.map((train) => {
+    const line = selectMainLine(train.stops, map, scenario);
+    // multi-length platforms: resolve each stop's X on the journey's own line
+    const stopXFor = (code: string): number =>
+      map.stations.stopXsByTrack?.[code]?.[line.trackGroupId] ??
+      platformX[code];
+    return {
+      train,
+      plan: buildJourney(
+        train.stops,
+        platformX,
+        line.lineY,
+        map.nodes,
+        journeyDir(train.stops, platformX),
+        { speed: scenario.speed, dwell: scenario.dwell },
+        stopXFor
+      ),
+    };
+  });
 };
 
 const prepareMeetDependencies = (

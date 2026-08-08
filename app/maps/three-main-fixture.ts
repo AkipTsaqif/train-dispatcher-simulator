@@ -71,7 +71,9 @@ export const THREE_MAIN_FIXTURE_MAP: DispatchMapDefinition = {
     })),
     normalDirectionByY: COMPILED.lines.normalDirectionByY,
     normalBearingByLineY: COMPILED.lines.normalBearingByLineY,
+
   },
+  bidirectionalByY: COMPILED.lines.bidirectionalByY,
   loops: COMPILED.loops,
   switches: COMPILED.switches,
   nodes: COMPILED.nodes,
@@ -87,6 +89,7 @@ export const THREE_MAIN_FIXTURE_MAP: DispatchMapDefinition = {
     cells: STATION_CELLS,
     namesByCode: Object.fromEntries(STATIONS.map((station) => [station.code, station.name])),
     platformCenterX: COMPILED.stationPlatformCenterX,
+    stopXsByTrack: COMPILED.stationStopXs,
   },
   compatibility: COMPILED.compatibility,
 };

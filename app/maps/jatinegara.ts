@@ -1,4 +1,4 @@
-// Map assembly for the loops fixture (Phase 3). Not wired into the UI.
+// Map assembly for Jatinegara (schematic mode). Not wired into the main UI.
 
 import {
   compileTopology,
@@ -15,7 +15,7 @@ import type {
   Station,
   StationCell,
 } from "../lib/dispatch-map";
-import { LOOPS_FIXTURE_TOPOLOGY } from "../topologies/loops-fixture";
+import { JATINEGARA_TOPOLOGY } from "../topologies/jatinegara";
 
 export type {
   Bearing,
@@ -30,38 +30,30 @@ export type {
   DispatchMapDefinition,
 } from "../lib/dispatch-map";
 
-const CELL = 50;
-
-const COMPILED = compileTopology(LOOPS_FIXTURE_TOPOLOGY);
+const COMPILED = compileTopology(JATINEGARA_TOPOLOGY);
 
 const STATIONS: Station[] = [
-  { code: "A", name: "Alpha", x: 50, y: 160, w: 100, h: 40 },
-  { code: "B", name: "Beta", x: 950, y: 160, w: 100, h: 40 },
+  { code: "JNG", name: "Jatinegara", x: 330, y: 248, w: 130, h: 58 },
 ];
 
-const STATION_CELLS: StationCell[] = [
-  { code: "A", cells: [{ col: "B", row: 2 }] },
-  { code: "B", cells: [{ col: "T", row: 2 }] },
-];
-
-export const LOOPS_FIXTURE_MAP: DispatchMapDefinition = {
-  id: "loops-fixture",
-  name: "Two independent sidings, one multi-edge (fixture)",
-  diagramAriaLabel: "Fixture: two independent sidings, one multi-edge",
+export const JATINEGARA_MAP: DispatchMapDefinition = {
+  id: "jatinegara",
+  name: "Jatinegara",
+  diagramAriaLabel: "Meja pengatur Jatinegara: 8 jalur dengan lintas simpang",
   grid: {
-    cellSize: CELL,
+    cellSize: 58,
     extensionCells: 2,
     cutLeftColumns: 0,
     shift: 0,
-    width: 1000,
-    rowCount: 8,
-    gridBottomY: 400,
-    viewBox: { minX: -60, minY: -30, widthPadding: 120, height: 430 },
-    ticks: { size: 6, topColumnLabelY: -20, bottomColumnLabelY: 400, leftRowLabelX: -40, rightRowLabelOffsetX: 14 },
+    width: 1160,
+    rowCount: 10,
+    gridBottomY: 540,
+    viewBox: { minX: -20, minY: 230, widthPadding: 60, height: 300 },
+    ticks: { size: 6, topColumnLabelY: -20, bottomColumnLabelY: 540, leftRowLabelX: -40, rightRowLabelOffsetX: 14 },
   },
   lines: {
-    topY: 200,
-    bottomY: 200,
+    topY: 272,
+    bottomY: 496,
     mains: COMPILED.lines.mains.map((main) => ({
       trackGroupId: main.trackGroupId,
       lineY: main.lineY,
@@ -70,7 +62,6 @@ export const LOOPS_FIXTURE_MAP: DispatchMapDefinition = {
     })),
     normalDirectionByY: COMPILED.lines.normalDirectionByY,
     normalBearingByLineY: COMPILED.lines.normalBearingByLineY,
-
   },
   bidirectionalByY: COMPILED.lines.bidirectionalByY,
   loops: COMPILED.loops,
@@ -81,11 +72,25 @@ export const LOOPS_FIXTURE_MAP: DispatchMapDefinition = {
   sectionPaths: COMPILED.sectionPaths,
   segmentLevels: COMPILED.segmentLevels,
   levelCrossings: COMPILED.levelCrossings,
-  presentation: { kind: "grid" },
+  presentation: {
+    kind: "schematic",
+    viewBox: { minX: 0, minY: 240, width: 1160, height: 290 },
+    continuousTrains: true,
+    stationShapes: [
+      { code: "JNG", x: 850, y: 496, side: "down", length: 420 },
+      { code: "JNG", x: 464, y: 464, side: "down", length: 192 },
+      { code: "JNG", x: 464, y: 432, side: "down", length: 192 },
+      { code: "JNG", x: 464, y: 400, side: "down", length: 192 },
+      { code: "JNG", x: 416, y: 368, side: "down", length: 96 },
+      { code: "JNG", x: 430, y: 336, side: "up", length: 128 },
+      { code: "JNG", x: 400, y: 304, side: "up", length: 128 },
+      { code: "JNG", x: 400, y: 272, side: "up", length: 128 },
+    ],
+  },
   trafficArrowPoints: [],
   stations: {
     nameplates: STATIONS,
-    cells: STATION_CELLS,
+    cells: [],
     namesByCode: Object.fromEntries(STATIONS.map((station) => [station.code, station.name])),
     platformCenterX: COMPILED.stationPlatformCenterX,
     stopXsByTrack: COMPILED.stationStopXs,

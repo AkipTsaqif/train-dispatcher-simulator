@@ -167,6 +167,26 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
 - (Phase 7) The flyover fixture is the schematic smoke test: `app/schematic/`
   renders it with no grid chrome, platforms Alpha/Beta, the bridge glyph at
   (800,147), and continuous markers (e2e asserts all of it).
+- (Post-program, Jatinegara request) New capabilities:
+  - **Bidirectional mains** — a main track group may declare
+    `bidirectional: true`; the compiled `lines.bidirectionalByY` (a top-level
+    map key, kept OUT of the snapshot projection so the Bekasi baseline stayed
+    byte-identical) exempts the wrong-way forced-red protection. Wrong-way
+    trains still need an explicit `line` in the timetable (selectMainLine's
+    fallback picks by normal direction).
+  - **Multi-length platforms** — `stationStopXs` (per station, per track group)
+    replaces the single-X-per-station throw with a per-track validation; the
+    journey prep resolves each stop's X on the journey's own line via
+    `buildJourney`'s `stopXFor`. Bekasi unchanged (its stations share one X).
+  - **Jatinegara** (`app/topologies/jatinegara.ts`, generated from
+    `app/schematic/jng_grid.svg` via `scripts/gen-jatinegara.py`): 8 full-width
+    platform mains, 29 crossovers, 58 switches, 23 signals (NW/NE/XW/XE), 5
+    bidirectional mains, per-track platform Xs (850/464/416/430/400). Stub
+    timetable (J201/J102/J310). Schematic preview at `/jng`. verify-jatinegara
+    (11 checks) + e2e. Deviations from the drawing: stub tracks 5-8 extended
+    to the map boundaries so every junction keeps a through axis; each
+    signal's block opens at its line end (exact throat blocks + a real
+    timetable still to come).
 
 ## Notes for the next worker
 

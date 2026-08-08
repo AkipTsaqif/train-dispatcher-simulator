@@ -13,10 +13,12 @@
     "probe:meets": "bun probes/meets.probe.ts",
     "probe:bearing": "bun probes/bearing.probe.ts",
     "probe:occupancy": "bun probes/occupancy.probe.ts",
+    "probe:bidirectional": "bun probes/bidirectional.probe.ts",
     "verify:three-main": "bun scripts/verify-three-main.ts",
     "verify:loops": "bun scripts/verify-loops.ts",
     "verify:routes": "bun scripts/verify-routes.ts",
     "verify:flyover": "bun scripts/verify-flyover.ts",
+    "verify:jatinegara": "bun scripts/verify-jatinegara.ts",
     "snapshot:bekasi": "bun scripts/snapshot-layout.ts",
     "verify:bekasi": "bun scripts/verify-layout.ts bekasi-tambun-cibitung"
   },

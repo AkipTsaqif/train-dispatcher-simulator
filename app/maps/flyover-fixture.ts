@@ -66,7 +66,9 @@ export const FLYOVER_FIXTURE_MAP: DispatchMapDefinition = {
     })),
     normalDirectionByY: COMPILED.lines.normalDirectionByY,
     normalBearingByLineY: COMPILED.lines.normalBearingByLineY,
+
   },
+  bidirectionalByY: COMPILED.lines.bidirectionalByY,
   loops: COMPILED.loops,
   switches: COMPILED.switches,
   nodes: COMPILED.nodes,
@@ -90,6 +92,7 @@ export const FLYOVER_FIXTURE_MAP: DispatchMapDefinition = {
     cells: [],
     namesByCode: Object.fromEntries(STATIONS.map((station) => [station.code, station.name])),
     platformCenterX: COMPILED.stationPlatformCenterX,
+    stopXsByTrack: COMPILED.stationStopXs,
   },
   compatibility: COMPILED.compatibility,
 };

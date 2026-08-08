@@ -64,6 +64,7 @@ const {
     lineYs: LOOP_LINE_YS,
     rejoinByLineY: LOOP_REJOIN_BY_LINE_Y,
   },
+  bidirectionalByY: BIDIRECTIONAL_BY_Y,
   switches: {
     items: SWITCHES,
     coupled: COUPLED,
@@ -1414,6 +1415,9 @@ export default function DispatchingTable() {
     const sig = SIGNALS.find((s) => s.id === id)!;
     const normalDir = NORMAL_DIR[sig.lineY];
     if (!normalDir || sig.dir !== normalDir) return false;
+    // a bidirectional main may be used both ways — the wrong-way protection
+    // does not force its signals red
+    if (BIDIRECTIONAL_BY_Y[sig.lineY]) return false;
     const spans = wrongWaySpans(sig.lineY);
     if (!spans.length) return false;
     // merge adjacent/overlapping spans into a union of intervals

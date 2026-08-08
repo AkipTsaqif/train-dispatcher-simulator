@@ -103,6 +103,8 @@ export type DispatchMapDefinition = {
       trackGroupId: string;
       lineY: number;
       normalBearing: Bearing;
+      /** Bidirectional running — wrong-way protection exempt. */
+      bidirectional?: boolean;
       /** UI grouping / labeling, e.g. "up fast", "down slow". */
       name?: string;
     }[];
@@ -112,6 +114,9 @@ export type DispatchMapDefinition = {
     normalDirectionByY: Record<number, Dir>;
     normalBearingByLineY: Record<number, Bearing>;
   };
+  /** Mains that may be used (and signaled) both ways — wrong-way protection
+   *  exempt. Keyed by line Y (not projected into the baseline). */
+  bidirectionalByY: Record<number, boolean>;
   loops: {
     byGroupId: Record<string, CompiledLoop>;
     /** Deprecated global views — kept in sync for the current layout. */
@@ -151,6 +156,8 @@ export type DispatchMapDefinition = {
     cells: StationCell[];
     namesByCode: Record<string, string>;
     platformCenterX: Record<string, number>;
+    /** Multi-length platforms: platform X per (station, track group). */
+    stopXsByTrack: Record<string, Record<string, number>>;
   };
   compatibility: CompiledTopology["compatibility"];
 };

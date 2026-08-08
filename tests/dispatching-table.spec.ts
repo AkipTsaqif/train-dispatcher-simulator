@@ -823,3 +823,18 @@ test.describe("dispatching table", () => {
     await expect(page.getByLabel(/Train F2 at 820,141/)).toBeVisible();
     await expect(page.getByLabel(/Train F1 at 1300,89/)).toBeVisible();
   });
+
+  test("jatinegara schematic renders the throat with 23 signals and multi-length platforms", async ({ page }) => {
+    await page.goto("/jng");
+    await expect(page.getByText("Jatinegara", { exact: true })).toBeVisible();
+    // all 23 signals labelled
+    await expect(page.locator("svg circle")).toHaveCount(23);
+    await expect(page.getByText("NW1", { exact: true })).toBeVisible();
+    await expect(page.getByText("XE8", { exact: true })).toBeVisible();
+    // the three stub trains at their per-track platform positions
+    await expect(page.getByLabel(/Train J201 at 850,496/)).toBeVisible();
+    await expect(page.getByLabel(/Train J102 at 464,464/)).toBeVisible();
+    await expect(page.getByLabel(/Train J310 at 430,336/)).toBeVisible();
+    // no grid chrome
+    await expect(page.getByText("A", { exact: true })).toHaveCount(0);
+  });
