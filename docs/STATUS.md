@@ -113,6 +113,16 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   the 57 px track spacing and would flag adjacent parallel tracks as flanks.
 - (Phase 4) `verify-layout.ts` normalizes CRLF so a git checkout on Windows
   does not false-fail the byte-identical comparison.
+- (Phase 4 follow-up, at the user's report) Flank detection refined: a branch
+  that converges exactly ON a route junction node is no longer a flank — that
+  node's own locking already neutralises it (e.g. the upper loop's far switch
+  P4 is no longer locked by a main-line route through P3).
+- (Phase 4 follow-up) Explicit entry→exit route request: click a signal, then
+  SHIFT-click a target signal → the interlocking re-routes the entrance to
+  that exit, auto-setting + locking its points (findRoute honours the target
+  exit; the entrance's own reservation is released first; boundary routes are
+  not valid for an exit-constrained request). e2e: shift-click routes the last
+  signal to the clicked one.
 
 ## Notes for the next worker
 

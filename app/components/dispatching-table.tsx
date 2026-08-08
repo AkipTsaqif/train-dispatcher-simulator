@@ -416,6 +416,9 @@ export default function DispatchingTable() {
   const logClick = (msg: string) =>
     setClickLog((l) => [...l, `[${fmtTime(simRef.current)}] ${msg}`]);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  // entry→exit route request: shift-click a signal to route the last-clicked
+  // signal TO it (policy-a auto route set over a chosen path)
+  const routeFromRef = useRef<string | null>(null);
   const [darkMode, setDarkMode] = useState(false);
   // apply the saved/system dark preference once, and keep <html> in sync
   useEffect(() => {
@@ -1173,8 +1176,20 @@ export default function DispatchingTable() {
    * Clear a signal (on/off). Turning on is refused if the points are not set for
    * the route, or if the route would overlap an opposite-direction reservation.
    */
-  const toggleSignal = (id: string) => {
-    if (signalOn[id]) {
+  const toggleSignal = (id: string, exitId?: string) => {
+    if (exitId) {
+      // explicit route request: release the entrance's current route (if any)
+      // and (re)set it to the requested exit
+      setSignalOn((o) => (o[id] ? { ...o, [id]: false } : o));
+      setReservations((r) => {
+        if (!r[id]) return r;
+        const { [id]: _, ...rest } = r;
+        return rest;
+      });
+      delete reservedByRef.current[id];
+      logClick(`${codeOf(id)} → rute ke ${codeOf(exitId)}`);
+      // fall through to the normal route-set with the exit constraint
+    } else if (signalOn[id]) {
       setSignalOn((o) => ({ ...o, [id]: false }));
       setReservations((r) => {
         const { [id]: _, ...rest } = r;
@@ -1208,13 +1223,28 @@ export default function DispatchingTable() {
       signals: SIGNALS,
       graph: DISPATCH_MAP.nodes,
       switches,
-      isLocked: (sw) => isLocked(sw),
+      // a route request replaces the entrance's OWN reservation, so its locks
+      // must not constrain the search
+      isLocked: (sw) => {
+        const owner = lockedBy(sw);
+        return owner !== undefined && owner !== id;
+      },
+      ...(exitId ? { exitSignalId: exitId } : {}),
     });
     if (!found) {
-      setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — tidak ada rute.`);
+      const note = exitId
+        ? `${codeOf(sig.id)} tidak bisa dibuka — tidak ada rute ke ${codeOf(exitId)}.`
+        : `${codeOf(sig.id)} tidak bisa dibuka — tidak ada rute.`;
+      setConflictNote(note);
       window.setTimeout(() => setConflictNote(null), 3000);
-      logClick(`${codeOf(sig.id)} × tidak bisa dibuka (tidak ada rute)`);
+      logClick(`${codeOf(sig.id)} × tidak bisa dibuka (tidak ada rute${exitId ? ` ke ${codeOf(exitId)}` : ""})`);
       return; // stay red
+    }
+    if (exitId && found.exitSignalId !== exitId) {
+      setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — tidak ada rute ke ${codeOf(exitId)}.`);
+      window.setTimeout(() => setConflictNote(null), 3000);
+      logClick(`${codeOf(sig.id)} × tidak bisa dibuka (tidak ada rute ke ${codeOf(exitId)})`);
+      return;
     }
     // policy (a) — auto route set: throw the unlocked points the route needs,
     // then clear. Coupled pairs move together.
@@ -2178,8 +2208,18 @@ export default function DispatchingTable() {
               <button
                 key={sig.id}
                 type="button"
-                onClick={() => toggleSignal(sig.id)}
+                onClick={(e) => {
+                  const shift = (e as React.MouseEvent).shiftKey;
+                  if (shift && routeFromRef.current) {
+                    // shift-click: route the last-clicked signal TO this one
+                    toggleSignal(routeFromRef.current, sig.id);
+                  } else {
+                    toggleSignal(sig.id);
+                    routeFromRef.current = sig.id;
+                  }
+                }}
                 aria-pressed={aspect !== "red"}
+                title={routeFromRef.current ? `Shift-klik: rute dari ${codeOf(routeFromRef.current)} ke ${codeOf(sig.id)}` : undefined}
                 className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-colors cursor-pointer ${
                   aspect === "green"
                     ? "bg-green-100 border-green-300 text-green-800"

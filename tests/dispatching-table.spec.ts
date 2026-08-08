@@ -799,3 +799,12 @@ test.describe("dispatching table", () => {
     });
   });
 });
+
+  test("shift-click routes the last signal to the clicked one and auto-sets points", async ({ page }) => {
+    await page.goto("/?start=00:00&controls=1");
+    await page.getByRole("button", { name: /J4 ·/ }).click();
+    await page.getByRole("button", { name: /J7 ·/ }).click({ modifiers: ["Shift"] });
+    await expect(page.getByRole("button", { name: /J4 · KUNING/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /P6 · BELOK/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /P7\+P8 · BELOK/ })).toBeVisible();
+  });

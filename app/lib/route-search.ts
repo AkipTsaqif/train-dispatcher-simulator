@@ -37,6 +37,8 @@ export type FindRouteInput = {
   isLocked: (sw: number) => boolean;
   /** Optional occupancy predicate — prune a segment when it is not clear. */
   isClear?: (nodePath: string[], pts: [number, number][]) => boolean;
+  /** Optional target exit signal — only routes ending there are returned. */
+  exitSignalId?: string;
   maxDepth?: number;
 };
 
@@ -99,7 +101,7 @@ const exitSignalOn = (
 };
 
 export const findRoute = (input: FindRouteInput): FoundRoute | null => {
-  const { entranceId, entrance, signals, graph, switches, isLocked, isClear } = input;
+  const { entranceId, entrance, signals, graph, switches, isLocked, isClear, exitSignalId } = input;
   const dir = entrance.dir;
   const maxDepth = input.maxDepth ?? 32;
   const startNodeId = entrance.edge[1];
@@ -152,7 +154,7 @@ export const findRoute = (input: FindRouteInput): FoundRoute | null => {
     if (exitSig) {
       const exitPts = pts.concat([[exitSig.x, exitSig.y]]);
       const exitPath = nodeId ? path.concat([nodeId]) : path;
-      if (!isClear || isClear(exitPath, exitPts)) {
+      if ((!isClear || isClear(exitPath, exitPts)) && (!exitSignalId || exitSig.id === exitSignalId)) {
         candidates.push({
           pts: exitPts,
           nodePath: exitPath,
@@ -170,13 +172,16 @@ export const findRoute = (input: FindRouteInput): FoundRoute | null => {
     );
     if (!choices.length) {
       // the track runs out here (map edge or a dead end) — the route to this
-      // node is complete (the legacy "ke ujung" open-line route)
-      candidates.push({
-        pts: pts.concat([[node.x, node.y]]),
-        nodePath: path.concat([nodeId]),
-        requiredSwitches: required,
-        exitSignalId: "",
-      });
+      // node is complete (the legacy "ke ujung" open-line route). Not valid
+      // when a specific exit signal was requested.
+      if (!exitSignalId) {
+        candidates.push({
+          pts: pts.concat([[node.x, node.y]]),
+          nodePath: path.concat([nodeId]),
+          requiredSwitches: required,
+          exitSignalId: "",
+        });
+      }
       return;
     }
     for (const { exit, needMove } of choices) {
@@ -231,6 +236,10 @@ export const flankPoints = (
   foulingDistance: number
 ): number[] => {
   const onRoute = new Set(route.nodePath);
+  const routeNodePts = route.nodePath
+    .map((nodeId) => graph[nodeId])
+    .filter((node): node is GraphNodeLike => node !== undefined)
+    .map((node) => [node.x, node.y] as [number, number]);
   const flanks = new Set<number>();
   for (const nodeId of Object.keys(graph)) {
     const node = graph[nodeId];
@@ -242,7 +251,19 @@ export const flankPoints = (
     for (const nid of branchExit.branchPath) {
       const n = graph[nid];
       if (!n) break;
-      if (distToPolyline(prev, [n.x, n.y], route.pts) < foulingDistance) {
+      // the branch converges exactly ON a route junction node → that node's
+      // own locking already neutralises it (a loop rejoin at a route switch)
+      const touchesRouteNode = routeNodePts.some(
+        ([rx, ry]) => pointSegDist([rx, ry], prev, [n.x, n.y]) < 1e-6
+      );
+      if (touchesRouteNode) break;
+      // otherwise: does the branch segment come within fouling distance of the
+      // route away from its own structure?
+      let minDist = Infinity;
+      for (let i = 0; i + 1 < route.pts.length; i++) {
+        minDist = Math.min(minDist, segSegDist(prev, [n.x, n.y], route.pts[i], route.pts[i + 1]));
+      }
+      if (minDist < foulingDistance) {
         flanks.add(node.sw);
         break;
       }
@@ -252,29 +273,45 @@ export const flankPoints = (
   return [...flanks];
 };
 
-const distToPolyline = (
-  from: [number, number],
-  to: [number, number],
-  pts: [number, number][]
+/** Distance from point p to the segment a→b. */
+const pointSegDist = (
+  p: [number, number],
+  a: [number, number],
+  b: [number, number]
+): number => {
+  const dx = b[0] - a[0];
+  const dy = b[1] - a[1];
+  const len2 = dx * dx + dy * dy || 1;
+  const t = Math.max(0, Math.min(1, ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / len2));
+  return Math.hypot(p[0] - (a[0] + dx * t), p[1] - (a[1] + dy * t));
+};
+
+/** Minimum distance between two segments. */
+const segSegDist = (
+  a: [number, number],
+  b: [number, number],
+  c: [number, number],
+  d: [number, number]
 ): number => {
   let best = Infinity;
-  const dx = to[0] - from[0];
-  const dy = to[1] - from[1];
-  const len2 = dx * dx + dy * dy || 1;
-  for (let i = 0; i + 1 < pts.length; i++) {
-    const [x1, y1] = pts[i];
-    const [x2, y2] = pts[i + 1];
-    const ex = x2 - x1;
-    const ey = y2 - y1;
-    const elen2 = ex * ex + ey * ey || 1;
-    const t = Math.max(0, Math.min(1, ((from[0] - x1) * ex + (from[1] - y1) * ey) / elen2));
-    const px = x1 + ex * t;
-    const py = y1 + ey * t;
-    // distance from the segment (from→to) to the polyline point
-    const segT = Math.max(0, Math.min(1, ((px - from[0]) * dx + (py - from[1]) * dy) / len2));
-    const sx = from[0] + dx * segT;
-    const sy = from[1] + dy * segT;
-    best = Math.min(best, Math.hypot(px - sx, py - sy));
+  for (const p of [a, b]) best = Math.min(best, pointSegDist(p, c, d));
+  for (const p of [c, d]) best = Math.min(best, pointSegDist(p, a, b));
+  // segment-segment crossing (the endpoints are outside each other)
+  const cross = (o: [number, number], p: [number, number], q: [number, number]) =>
+    (p[0] - o[0]) * (q[1] - o[1]) - (p[1] - o[1]) * (q[0] - o[0]);
+  const onSeg = (o: [number, number], p: [number, number], q: [number, number]) =>
+    Math.min(o[0], p[0]) <= q[0] && q[0] <= Math.max(o[0], p[0]) &&
+    Math.min(o[1], p[1]) <= q[1] && q[1] <= Math.max(o[1], p[1]);
+  const d1 = cross(a, b, c);
+  const d2 = cross(a, b, d);
+  const d3 = cross(c, d, a);
+  const d4 = cross(c, d, b);
+  if (((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) {
+    return 0;
   }
+  if (d1 === 0 && onSeg(a, b, c)) return 0;
+  if (d2 === 0 && onSeg(a, b, d)) return 0;
+  if (d3 === 0 && onSeg(c, d, a)) return 0;
+  if (d4 === 0 && onSeg(c, d, b)) return 0;
   return best;
 };
