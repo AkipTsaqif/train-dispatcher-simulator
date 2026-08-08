@@ -837,4 +837,9 @@ test.describe("dispatching table", () => {
     await expect(page.getByRole("button", { name: /^NW1 · KUNING/ })).toBeVisible();
     // its route locks the track-1 switches it passes
     await expect(page.locator('[role="button"][aria-label*="terkunci"]').first()).toBeVisible();
+    // Phase 8: a stub exit (XE5 on platform 5, y=368) clears GREEN by throwing
+    // the terminating branches (V/W) and diving through the throat
+    await page.getByRole("button", { name: /^XE5 · MERAH/ }).click();
+    await expect(page.getByRole("button", { name: /^XE5 · HIJAU/ })).toBeVisible();
+    await expect(page.locator('[role="button"][aria-label*="belok, terkunci"]').first()).toBeVisible();
   });

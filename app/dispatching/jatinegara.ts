@@ -32,6 +32,16 @@ const SCHEDULE: ScheduleEntry[] = [
       { station: "JNG-E", arr_actual: "06:25:00", dep_actual: "06:25:00" },
     ],
   },
+  {
+    // a stub-track train: platform 5 (y=368) ends at a throat junction — the
+    // journey stays within t5's drawn extent (344..520)
+    train_no: "J410", train_name: "Rajawali 410",
+    stops: [
+      { station: "JNG-E", arr_actual: "06:02:00", dep_actual: "06:02:00" },
+      { station: "JNG", arr_actual: "06:10:00", dep_actual: "06:12:00", line: "t5" },
+      { station: "JNG-W", arr_actual: "06:20:00", dep_actual: "06:20:00" },
+    ],
+  },
 ];
 
 export const JATINEGARA_DEFINITION: DispatchDefinition = {

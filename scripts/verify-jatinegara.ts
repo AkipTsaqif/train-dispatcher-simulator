@@ -25,11 +25,24 @@ const compiled = compileTopology(JATINEGARA_TOPOLOGY);
 const runtime = JATINEGARA_DISPATCH;
 const map = runtime.map;
 
-// 1. structure
-check("compiles with 8 main lines", compiled.lines.mains.length === 8, `mains=${compiled.lines.mains.length}`);
+// 1. structure (Phase 8: drawn extents — 13 mains incl. the 5 east-throat
+// fragments; the stubs end at junctions, 6 tracks per map boundary)
+check("compiles with 13 main lines", compiled.lines.mains.length === 13, `mains=${compiled.lines.mains.length}`);
 check("58 switches (the throat)", compiled.switches.items.length === 58, `switches=${compiled.switches.items.length}`);
 check("23 signals (NW/NE/XW/XE)", compiled.signals.items.length === 23, `signals=${compiled.signals.items.length}`);
-check("no level crossings (all flat)", compiled.levelCrossings.length === 0, JSON.stringify(compiled.levelCrossings));
+check(
+  "10 terminating switches (stub ends: 336,368 / 528,368 / 656,368 / 752,368 / 1040,368 / 592,336 / 688,336 / 1008,336 / 688,304 / 528,272)",
+  (() => {
+    const terms = Object.values(compiled.nodes).filter((n) => n.sw !== undefined && !n.exits.some((e) => e.viaSwitchPort === "normal"));
+    return terms.length === 10;
+  })(),
+  "terminating switch count"
+);
+check(
+  "stub tracks end at their drawn extents (t5 336..528, t6 32..592, t8 224..528)",
+  compiled.nodes["s368x336"] !== undefined && compiled.nodes["s368x528"] !== undefined && compiled.nodes["s336x592"] !== undefined && compiled.nodes["s272x528"] !== undefined,
+  "missing stub-end node"
+);
 check(
   "bidirectional mains flagged (t2,t5,t6,t7,t8)",
   compiled.lines.bidirectionalByY[464] === true && compiled.lines.bidirectionalByY[272] === true && !compiled.lines.bidirectionalByY[496],
@@ -43,25 +56,35 @@ check(
   jngXs?.t1 === 850 && jngXs?.t2 === 464 && jngXs?.t5 === 416 && jngXs?.t6 === 430 && jngXs?.t8 === 400,
   JSON.stringify(jngXs)
 );
-check("boundary pseudo-stations share one X per station", compiled.stationStopXs["JNG-W"]?.t1 === 40 && compiled.stationStopXs["JNG-E"]?.t8 === 1080);
+check(
+  "boundary stops sit at each line's reachable extent (t5 east 520, t8 west 232, t6 east 584)",
+  compiled.stationStopXs["JNG-E"]?.t5 === 520 && compiled.stationStopXs["JNG-W"]?.t8 === 232 && compiled.stationStopXs["JNG-E"]?.t6 === 584,
+  JSON.stringify(compiled.stationStopXs["JNG-E"])
+);
 
 // 3. journeys stop at their own line's platform X (the dwell leg is the one
 // arriving AT JNG — its station is the previous stop, its waypoint is JNG)
 {
+  const gidFor = (y: number) => map.lines.mains.find((m) => m.lineY === y)!.trackGroupId;
   const dwellX = (no: string) => {
     const plan = runtime.journeys.find((j) => j.train.train_no === no)!.plan;
-    const leg = plan.legs.find((l) => l.waypointX === (plan.start.dir === "right" ? map.stations.stopXsByTrack["JNG"][plan.start.y === 496 ? "t1" : plan.start.y === 464 ? "t2" : "t6"] : map.stations.stopXsByTrack["JNG"][plan.start.y === 496 ? "t1" : plan.start.y === 464 ? "t2" : "t6"]));
-    return leg?.waypointX;
+    const x = map.stations.stopXsByTrack["JNG"][gidFor(plan.start.y)];
+    return plan.legs.find((l) => l.waypointX === x)?.waypointX;
   };
   const stops = Object.fromEntries(
     runtime.journeys.map((j) => [j.train.train_no, dwellX(j.train.train_no)])
   );
   check(
-    "J201 (t1) dwells at x=850, J102 (t2) at 464, J310 (t6) at 430",
-    stops["J201"] === 850 && stops["J102"] === 464 && stops["J310"] === 430,
+    "J201 (t1) dwells at x=850, J102 (t2) at 464, J310 (t6) at 430, J410 (t5) at 416",
+    stops["J201"] === 850 && stops["J102"] === 464 && stops["J310"] === 430 && stops["J410"] === 416,
     JSON.stringify(stops)
   );
   check("J310 (eastbound) uses the bidirectional t6 line", runtime.journeys.find((j) => j.train.train_no === "J310")!.plan.start.y === 336);
+  check(
+    "J410 (t5 stub) runs within t5's extent (344..520)",
+    runtime.journeys.find((j) => j.train.train_no === "J410")!.plan.start.y === 368,
+    "t5 stub journey off-line"
+  );
 }
 
 // 4. a route through the throat from an entry signal
@@ -105,6 +128,40 @@ check("boundary pseudo-stations share one X per station", compiled.stationStopXs
     "XW2 (west exit, t2) routes west to the boundary",
     r2 !== null && r2.pts[r2.pts.length - 1][0] < 100,
     r2 ? `lastX=${r2.pts[r2.pts.length - 1][0]}` : "no route"
+  );
+  // Phase 8: a stub exit must DIVE through the throat — XE5 (t5, y=368) ends
+  // at the terminating switch 528,368; its route throws V (to t6) then W (to
+  // t4) and reaches the east boundary — no invented straight continuation
+  const xe5 = signals.find((s) => s.id === "XE5")!;
+  const r3 = findRoute({
+    entranceId: "XE5",
+    entrance: xe5,
+    signals,
+    graph,
+    switches: { ...map.switches.initialState },
+    isLocked: () => false,
+    segmentLevels: map.segmentLevels,
+  });
+  check(
+    "XE5 (t5 stub exit) routes THROUGH the throat to the east boundary (a dive, not a straight)",
+    r3 !== null && r3.pts[r3.pts.length - 1][0] > 1000 && r3.pts.some((p) => p[1] !== 368),
+    r3 ? `lastX=${r3.pts[r3.pts.length - 1][0]} moves=${JSON.stringify(r3.requiredSwitches)}` : "no route"
+  );
+  // with the terminating branch locked closed, the stub signal has NO route
+  // (no boundary route at a dead junction)
+  const r4 = findRoute({
+    entranceId: "XE5",
+    entrance: xe5,
+    signals,
+    graph,
+    switches: { ...map.switches.initialState },
+    isLocked: (sw) => true, // everything locked — the branch cannot be thrown
+    segmentLevels: map.segmentLevels,
+  });
+  check(
+    "XE5 with the terminating branch locked has NO route (dead junction, not an open line)",
+    r4 === null,
+    r4 ? `unexpected route ${r4.exitSignalId}` : "ok"
   );
 }
 

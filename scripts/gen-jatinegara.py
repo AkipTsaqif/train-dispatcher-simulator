@@ -30,16 +30,24 @@ for (a, b) in diags:
     junc[a[1]].add(a[0])
     junc[b[1]].add(b[0])
 
-# line: (y, groupId, normalDirection, bidirectional)
+# line: (y, groupId, normalDirection, bidirectional, xmin, xmax)
+# the drawing has 6 tracks per map boundary + 8 through the platform area;
+# platforms 5-8 are stubs that end at throat junctions (Phase 8 drawn extents).
 Y_LINES = [
-    (496, "t1", "right", False),
-    (464, "t2", "left", True),
-    (432, "t3", "right", False),
-    (400, "t4", "left", False),
-    (368, "t5", "left", True),
-    (336, "t6", "right", True),
-    (304, "t7", "left", True),
-    (272, "t8", "left", True),
+    (496, "t1", "right", False, 32, 1120),
+    (464, "t2", "left", True, 32, 1120),
+    (432, "t3", "right", False, 32, 1120),
+    (400, "t4", "left", False, 32, 1120),
+    (368, "t5", "left", True, 336, 528),
+    (336, "t6", "right", True, 32, 592),
+    (304, "t7", "left", True, 32, 688),
+    (272, "t8", "left", True, 224, 528),
+    # east-throat fragments (short stub mains of their own)
+    (368, "t5ap", "right", False, 1040, 1120),
+    (336, "t6am", "right", False, 1008, 1120),
+    (368, "t5ac", "right", False, 752, 976),
+    (368, "t5y", "right", False, 624, 656),
+    (336, "t6ab", "right", False, 688, 720),
 ]
 BOUND = [32.0, 1120.0]
 
@@ -66,15 +74,24 @@ def jnode(y, x):
 
 # ---- horizontal lines ------------------------------------------------------
 line_edges = {}   # (y, xa, xb) -> eid
-group_edges = {gid: [] for (y, gid, _, _) in Y_LINES}
-for (y, gid, ndir, bidir) in Y_LINES:
-    xs = sorted(set(junc[y]) | set(BOUND))
-    west = node(32, y)
-    east = node(1120, y)
+group_edges = {gid: [] for (y, gid, _, _, _, _) in Y_LINES}
+for (y, gid, ndir, bidir, xmin, xmax) in Y_LINES:
+    xs = [x for x in sorted(set(junc[y]) | set(BOUND)) if xmin <= x <= xmax]
+    if xs[0] != xmin:
+        xs = [xmin] + xs
+    if xs[-1] != xmax:
+        xs = xs + [xmax]
+    # the line's end nodes: a junction node when a diagonal attaches there,
+    # else a plain boundary node
+    def end_node(x):
+        if x in junc[y]:
+            return jnode(y, x)
+        return node(x, y)
+    west = end_node(xmin)
     prev_n = west
-    prev_x = 32
+    prev_x = xmin
     for x in xs[1:]:
-        nxt_n = east if x == 1120 else jnode(y, x)
+        nxt_n = end_node(xmax) if x == xmax else jnode(y, x)
         eid = f"e-{gid}-{prev_x:.0f}-{x:.0f}"
         edges.append({"id": eid, "from": prev_n, "to": nxt_n,
                       "geom": [(prev_x, y), (x, y)], "role": "main", "group": gid})
@@ -98,23 +115,35 @@ for idx, ((a, b)) in enumerate(diags):
 
 # ---- switches --------------------------------------------------------------
 sw = 0
-for (y, gid, _, _) in Y_LINES:
+for (y, gid, _, _, xmin, xmax) in Y_LINES:
     for xj in sorted(junc[y]):
+        if not (xmin <= xj <= xmax):
+            continue
         sw += 1
         nid = jnode(y, xj)
-        # horizontal edges: west-in ends at xj, east-out starts at xj
-        west_in = next(e for (ly, xa, xb), e in line_edges.items() if ly == y and xb == xj)
-        east_out = next(e for (ly, xa, xb), e in line_edges.items() if ly == y and xa == xj)
+        west_in = next((e for (ly, xa, xb), e in line_edges.items() if ly == y and xb == xj), None)
+        east_out = next((e for (ly, xa, xb), e in line_edges.items() if ly == y and xa == xj), None)
         (d, dend) = diag_edge_at[(y, xj)]
+        if west_in is not None and east_out is not None:
+            # interior junction — the through axis is the horizontal track
+            common, normal = west_in, east_out
+            cend, nend = "to", "from"
+        else:
+            # Phase 8 terminating switch: the track ENDS here (the line's
+            # xmin/xmax) and the only onward exit is the branch (reversed)
+            edge = west_in or east_out
+            eend = "to" if west_in is not None else "from"
+            common, normal = edge, edge
+            cend, nend = eend, eend
         switches.append({
             "id": sw, "nodeId": nid,
-            "common": {"edgeId": west_in, "end": "to"},
-            "normal": {"edgeId": east_out, "end": "from"},
+            "common": {"edgeId": common, "end": cend},
+            "normal": {"edgeId": normal, "end": nend},
             "reversed": {"edgeId": d, "end": dend},
         })
 
-# main groups
-for (y, gid, ndir, bidir) in Y_LINES:
+# main groups (stub tracks + east-throat fragments each their own group)
+for (y, gid, ndir, bidir, xmin, xmax) in Y_LINES:
     g = {"id": gid, "role": "main", "edgeIds": group_edges[gid], "normalDirection": ndir}
     if bidir:
         g["bidirectional"] = True
@@ -153,8 +182,15 @@ for (sid, x, y, facing) in SIGS:
 # ---- block sections --------------------------------------------------------
 SIG_X = {sid: x for (sid, x, y, facing) in SIGS}
 
+SIG_GROUP = {}
+for (sid, x, y, facing) in SIGS:
+    eid, _, _ = edge_containing(y, x)
+    SIG_GROUP[sid] = next(g["id"] for g in groups if any(eid == e for e in g["edgeIds"]))
+
 def next_signal(sid, x, y, facing):
-    cands = [(SIG_X[s], s) for (s, sx, sy, sf) in [(i, SIG_X[i], yy, ff) for (i, xx, yy, ff) in SIGS] for s in [sid]]
+    gid = SIG_GROUP[sid]
+    cands = [(SIG_X[s], s) for (s, sx, sy, sf) in [(i, SIG_X[i], yy, ff) for (i, xx, yy, ff) in SIGS]
+             if SIG_GROUP[s] == gid and sf == facing and s != sid]
     if facing == "right":
         ahead = [(sx, s) for (sx, s) in cands if sx > x]
         return min(ahead)[1] if ahead else None
@@ -164,21 +200,24 @@ def next_signal(sid, x, y, facing):
 
 for (sid, x, y, facing) in SIGS:
     to_east = facing == "right"
+    sig_gid = SIG_GROUP[sid]
     sig_edge, sig_xa, sig_xb = edge_containing(y, x)
     nxt = next_signal(sid, x, y, facing)
     if nxt:
         nxa, nxb = edge_containing(y, SIG_X[nxt])[1:]
-    # ordered edges from the signal's edge toward the far end
+    # ordered edges of the signal's OWN track group (a stub track's section
+    # stays within the stub — it cannot span the throat gaps)
     edges_dir = []
-    for (ly, exa, exb), eid in line_edges.items():
-        if ly != y:
-            continue
-        if to_east:
-            if exa >= sig_xa and (nxt is None or exb <= nxb):
-                edges_dir.append((exa, exb, eid))
-        else:
-            if (nxt is None or exa >= nxa) and exb <= sig_xb:
-                edges_dir.append((exa, exb, eid))
+    for eid in group_edges[sig_gid]:
+        for (ly, exa, exb), le in line_edges.items():
+            if le != eid:
+                continue
+            if to_east:
+                if exa >= sig_xa and (nxt is None or exb <= nxb):
+                    edges_dir.append((exa, exb, eid))
+            else:
+                if (nxt is None or exa >= nxa) and exb <= sig_xb:
+                    edges_dir.append((exa, exb, eid))
     edges_dir.sort(key=lambda t: t[0], reverse=not to_east)
     ranges = []
     for k, (exa, exb, eid) in enumerate(edges_dir):
@@ -202,15 +241,18 @@ STOPS = [
     ("JNG", "t5", 416), ("JNG", "t6", 430), ("JNG", "t7", 400), ("JNG", "t8", 400),
 ]
 for (code, gid, x) in STOPS:
-    y = next(yy for (yy, gg, _, _) in Y_LINES if gg == gid)
+    y = next(yy for (yy, gg, _, _, _, _) in Y_LINES if gg == gid)
     eid, xa, xb = edge_containing(y, x)
     stops.append({"code": code, "edgeId": eid, "seg": 0, "offset": x - xa})
-# boundary pseudo-stations so the stub timetable can route across the map
-for (yy, gid, _, _) in Y_LINES:
-    eid, xa, xb = edge_containing(yy, 40)
-    stops.append({"code": "JNG-W", "edgeId": eid, "seg": 0, "offset": 40 - xa})
-    eid, xa, xb = edge_containing(yy, 1080)
-    stops.append({"code": "JNG-E", "edgeId": eid, "seg": 0, "offset": 1080 - xa})
+# boundary pseudo-stations at each line's REACHABLE extent (the stub tracks
+# end at their drawn extents — per-line X under one station code)
+for (yy, gid, _, _, xmin, xmax) in Y_LINES:
+    wx = xmin + 8
+    ex = xmax - 8
+    eid, xa, xb = edge_containing(yy, wx)
+    stops.append({"code": "JNG-W", "edgeId": eid, "seg": 0, "offset": wx - xa})
+    eid, xa, xb = edge_containing(yy, ex)
+    stops.append({"code": "JNG-E", "edgeId": eid, "seg": 0, "offset": ex - xa})
 
 # ---- emit ------------------------------------------------------------------
 def ts_repr(v):

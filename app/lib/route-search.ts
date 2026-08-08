@@ -181,6 +181,12 @@ export const findRoute = (input: FindRouteInput): FoundRoute | null => {
       continues(exit.bearing)
     );
     if (!choices.length) {
+      // Phase 8: a closed TERMINATING switch is a dead junction, not an open
+      // line end — no boundary route there (the signal cannot clear "to the
+      // stub end"; the branch must be thrown for a route to exist).
+      const terminating =
+        node.sw !== undefined && !node.exits.some((exit) => exit.viaSwitchPort === "normal");
+      if (terminating) return;
       // the track runs out here (map edge or a dead end) — the route to this
       // node is complete (the legacy "ke ujung" open-line route). Not valid
       // when a specific exit signal was requested.

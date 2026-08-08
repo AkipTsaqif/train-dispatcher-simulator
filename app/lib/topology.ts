@@ -660,7 +660,15 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       topologySwitch.normal,
       topologySwitch.reversed,
     ].map((end) => `${end.edgeId}:${end.end}`);
-    if (new Set(portKeys).size !== 3) {
+    // Phase 8: a TERMINATING switch may share the common/normal port — the
+    // track ends here and the only onward exit is the branch (reversed). The
+    // common+normal pair must still be distinct from the reversed port.
+    const distinctPorts = new Set(portKeys);
+    const terminating = distinctPorts.size === 2;
+    if (distinctPorts.size < 2) {
+      throw new Error(`Switch ${topologySwitch.id} has duplicate ports`);
+    }
+    if (!terminating && distinctPorts.size !== 3) {
       throw new Error(`Switch ${topologySwitch.id} has duplicate ports`);
     }
     endNeighbor(topologySwitch.common, topologySwitch.nodeId);
@@ -1015,12 +1023,24 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     // one — otherwise a train in one siding would falsely occupy another's.
     // An open loop end (legacy ±Infinity) resolves to the loop's own boundary.
     const signalEdge = edgesById.get(signal.edgeId);
+    const ownGroup = signalEdge ? groupsById.get(signalEdge.trackGroupId) : undefined;
     const ownLoop = signalEdge ? loopsByGroupId[signalEdge.trackGroupId] : undefined;
     if (ownLoop) {
       lo = Math.min(lo, ownLoop.minX);
       hi = Math.max(hi, ownLoop.maxX);
       if (lo === Number.NEGATIVE_INFINITY) lo = ownLoop.minX;
       if (hi === Number.POSITIVE_INFINITY) hi = ownLoop.maxX;
+    } else if (ownGroup) {
+      // Phase 8: a stub track's open end resolves to ITS OWN group boundary
+      // (the drawn extent) — not the map edge. Otherwise a stub signal's
+      // legacy section would extend to ±Infinity and flag distant trains.
+      const groupPoints = ownGroup.edgeIds.flatMap((edgeId) =>
+        edgesById.get(edgeId)!.geometry.map((vertex) => vertex.point)
+      );
+      const groupMin = Math.min(...groupPoints.map((p) => p[0]));
+      const groupMax = Math.max(...groupPoints.map((p) => p[0]));
+      if (lo === Number.NEGATIVE_INFINITY) lo = groupMin;
+      if (hi === Number.POSITIVE_INFINITY) hi = groupMax;
     }
     return { sig: signal.id, lineY: placement.point[1], lo, hi };
   });
@@ -1105,9 +1125,15 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
 
     if (topologySwitch) {
       // the common and normal ports are the through axis (always open); the
-      // reversed port is the switch-selected branch exit
+      // reversed port is the switch-selected branch exit. A terminating switch
+      // (common === normal, Phase 8) has no distinct normal port — the track
+      // ends here and only the branch continues.
       pushExit(endNeighbor(topologySwitch.common, nodeId));
-      pushExit(endNeighbor(topologySwitch.normal, nodeId), { viaSwitchPort: "normal" });
+      const commonKey = `${topologySwitch.common.edgeId}:${topologySwitch.common.end}`;
+      const normalKey = `${topologySwitch.normal.edgeId}:${topologySwitch.normal.end}`;
+      if (commonKey !== normalKey) {
+        pushExit(endNeighbor(topologySwitch.normal, nodeId), { viaSwitchPort: "normal" });
+      }
 
       const reversedEdge = edgesById.get(topologySwitch.reversed.edgeId)!;
       const reversedPath = edgePaths.get(reversedEdge.id)!;

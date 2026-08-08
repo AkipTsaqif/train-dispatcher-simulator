@@ -362,7 +362,14 @@ const resolveNode = (
       best = exit;
     }
   }
-  return best ? { next: best.neighbor } : { offmap: true };
+  if (best) return { next: best.neighbor };
+  // Phase 8: a TERMINATING switch has no straight-through (the track ends
+  // here and only the branch continues) — with the branch closed the train
+  // WAITS at the junction; `offmap` stays reserved for the genuine map edge.
+  if (node.sw !== undefined && !node.exits.some((exit) => exit.viaSwitchPort === "normal")) {
+    return { blocked: true };
+  }
+  return { offmap: true };
 };
 
 const segmentLevelOf = (ctx: MoveCtx, fromId: string | null, toId: string | null): number => {

@@ -67,8 +67,8 @@ check(
   `dir=${a1r.dir} y=${a1r.lineY}`
 );
 check(
-  "A1r's protected section extends EAST (its own direction)",
-  !!a1rSection && a1rSection.lo === 1400 && a1rSection.hi === Number.POSITIVE_INFINITY,
+  "A1r's protected section extends EAST to the track group's boundary (1400..1600)",
+  !!a1rSection && a1rSection.lo === 1400 && a1rSection.hi === 1600,
   JSON.stringify(a1rSection)
 );
 check(
