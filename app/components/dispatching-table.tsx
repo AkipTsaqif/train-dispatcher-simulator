@@ -12,6 +12,7 @@ import {
 } from "../lib/train-engine";
 import { BEKASI_TAMBUN_CIBITUNG_DISPATCH } from "../dispatching/bekasi-tambun-cibitung";
 import { bearingDot, bearingOf } from "../lib/topology";
+import { findRoute, flankPoints } from "../lib/route-search";
 import type { Bearing, GNodeExit } from "../lib/topology";
 import type {
   Dir,
@@ -538,7 +539,7 @@ export default function DispatchingTable() {
   const trainSectionKeyRef = useRef("");
   // Independent route reservations: created when the player clears a signal,
   // persist while a train uses them, and are consumed progressively by the train.
-  type Reservation = { pts: [number, number][]; nextSignalId?: string; lineY: number };
+  type Reservation = { pts: [number, number][]; nextSignalId?: string; lineY: number; nodePath?: string[] };
   const [reservations, setReservations] = useState<Record<string, Reservation>>({});
   const reservationsRef = useRef(reservations);
   reservationsRef.current = reservations;
@@ -1116,17 +1117,32 @@ export default function DispatchingTable() {
    */
   const lockedBy = (swId: number): string | undefined => {
     const sw = SWITCHES.find((s) => s.id === swId)!;
-    return SIGNALS.find((sig) => {
+    // a reservation locks its points even after the train passed the signal
+    // (the clear is consumed but the route stays reserved while the train uses
+    // it) — but only the UNPASSED portion locks: once the train's front has
+    // passed a junction, its points are free to re-throw
+    const onRoute = SIGNALS.find((sig) => {
       if (sig.block) return false;
-      // a reservation locks its points even after the train passed the signal
-      // (the clear is consumed but the route stays reserved while the train uses
-      // it) — but only the UNPASSED portion locks: once the train's front has
-      // passed a junction, its points are free to re-throw
       const res = reservations[sig.id];
       if (!res) return false;
       const ahead = unpassedOf(sig.id, res);
       return ahead ? ahead.some(([x, y]) => x === sw.x && y === sw.y) : false;
     })?.id;
+    if (onRoute) return onRoute;
+    // flank protection: a point not on the route whose branch would foul it is
+    // locked in the non-fouling position while an active route protects itself
+    for (const sig of SIGNALS) {
+      if (sig.block) continue;
+      const res = reservations[sig.id];
+      if (!res?.nodePath) continue;
+      const flanks = flankPoints(
+        { pts: res.pts, nodePath: res.nodePath, requiredSwitches: {}, exitSignalId: "" },
+        DISPATCH_MAP.nodes,
+        CELL / 3
+      );
+      if (flanks.includes(swId)) return sig.id;
+    }
+    return undefined;
   };
 
   const coupledWith = (id: number): number[] => COUPLED.find((g) => g.includes(id)) ?? [id];
@@ -1182,13 +1198,49 @@ export default function DispatchingTable() {
       // fall through to the normal clear path
     }
     const sig = SIGNALS.find((s) => s.id === id)!;
-    const prospective = walkRoute(sig, switches, DISPATCH_MAP);
-    if (prospective.blocked) {
-      setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — wesel belum diatur (${prospective.note}).`);
+    // route search (policy b — manual points): find a feasible path to a
+    // same-direction exit signal. A route that needs to move an UNLOCKED point
+    // is refused with the same "wesel belum diatur" message as before; a route
+    // needing a locked point is simply not found.
+    const found = findRoute({
+      entranceId: sig.id,
+      entrance: sig,
+      signals: SIGNALS,
+      graph: DISPATCH_MAP.nodes,
+      switches,
+      isLocked: (sw) => isLocked(sw),
+    });
+    if (!found) {
+      setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — tidak ada rute.`);
       window.setTimeout(() => setConflictNote(null), 3000);
-      logClick(`${codeOf(sig.id)} × tidak bisa dibuka (${prospective.note})`);
+      logClick(`${codeOf(sig.id)} × tidak bisa dibuka (tidak ada rute)`);
       return; // stay red
     }
+    const requiredSwitches = Object.keys(found.requiredSwitches);
+    if (requiredSwitches.length > 0) {
+      const swId = Number(requiredSwitches[0]);
+      setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — wesel belum diatur (berakhir di P${swId}).`);
+      window.setTimeout(() => setConflictNote(null), 3000);
+      logClick(`${codeOf(sig.id)} × tidak bisa dibuka (berakhir di P${swId})`);
+      return; // stay red
+    }
+    // flank protection: a point not on the route whose branch would foul it
+    // must sit in the non-fouling position — refuse if it is thrown against us
+    const flanks = flankPoints(found, DISPATCH_MAP.nodes, CELL / 3);
+    const fouledFlank = flanks.find((sw) => switches[sw] === "reversed");
+    if (fouledFlank !== undefined) {
+      setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — wesel P${fouledFlank} mengancam rute.`);
+      window.setTimeout(() => setConflictNote(null), 3000);
+      logClick(`${codeOf(sig.id)} × tidak bisa dibuka (flank P${fouledFlank})`);
+      return; // stay red
+    }
+    const prospective = {
+      d: "M" + found.pts.map(([x, y]) => `${x},${y}`).join(" "),
+      note: "",
+      nextSignalId: found.exitSignalId,
+      pts: found.pts,
+      blocked: false,
+    };
     // A route cannot be set into track a train PHYSICALLY occupies — a wrong-way
     // or opposing move into the occupied section would meet it head-on. The
     // train approaching/stopped at THIS signal (on its line, behind it, moving
@@ -1252,7 +1304,12 @@ export default function DispatchingTable() {
     delete reservedByRef.current[id]; // fresh reservation, no owner yet
     setReservations((r) => ({
       ...r,
-      [id]: { pts: prospective.pts, nextSignalId: prospective.nextSignalId, lineY: sig.lineY },
+      [id]: {
+        pts: prospective.pts,
+        nextSignalId: prospective.nextSignalId,
+        lineY: sig.lineY,
+        nodePath: found.nodePath,
+      },
     }));
     // log the aspect it will light with (green unless the next signal is red)
     const nextAsp = prospective.nextSignalId ? aspectOf(prospective.nextSignalId) : "green";

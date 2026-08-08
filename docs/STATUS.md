@@ -6,11 +6,10 @@
 
 ## Current position
 
-- **Active phase:** 4 — Graph-based route search (entry→exit) + flank
-  protection.
-- **Current step:** Not started. Phase 3 (independent/multi-edge loops) is
+- **Active phase:** 5 — Per-edge 2-D occupancy + multi-segment train bodies.
+- **Current step:** Not started. Phase 4 (route search + flank protection) is
   complete.
-- **Next action:** Read `docs/PLAN-phase-4.md`, then create its branch and
+- **Next action:** Read `docs/PLAN-phase-5.md`, then create its branch and
   start step 1.
 
 ## Phase state
@@ -21,8 +20,8 @@
 | 1 | Bearings (Dir → vectors) | **DONE** |
 | 2 | N parallel mains + line selection | **DONE** |
 | 3 | Independent/multi-edge loops | **DONE** |
-| 4 | Route search + flank protection | **IN PROGRESS (not started)** |
-| 5 | 2-D multi-segment occupancy | blocked by 1, 4 |
+| 4 | Route search + flank protection | **DONE** |
+| 5 | 2-D multi-segment occupancy | **IN PROGRESS (not started)** |
 | 6 | Flyovers / graded junctions | blocked by 3, 5 |
 | 7 | Arbitrary-schematic rendering | blocked by 6 |
 
@@ -37,25 +36,28 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   all gates green (see commit history for details).
 - 2026-08-07 — Phase 1 complete (branch continues):
   ... (see commit history)
-- 2026-08-07 — Phase 3 complete (same branch):
-  - Loops are keyed by track-group id: `CompiledLoop` (trackGroupId, lineY,
-    per-loop minX/maxX, rejoin) in `loops.byGroupId`; the global
-    lineYs/minX/maxX/rejoinByLineY views remain only as deprecated syncs.
-  - A loop-line signal's section extends to ITS OWN loop's envelope, and an
-    open loop end (legacy ±Infinity) resolves to the loop's own boundary — the
-    false-occupancy bug (a train in one siding reddening another's signals) is
-    fixed.
-  - Two loops may share a compatibility Y without overwriting each other.
-  - Loop groups may contain multiple chained edges: the reciprocal-switch
-    check and the branch path walk the whole loop chain, a through joint node
-    (two incident edges) is supported, and whole-track-group blocks must reach
-    the group's physical endpoints.
-  - `loops-fixture` composition + `scripts/verify-loops.ts` prove: shared-Y
-    loops with independent envelopes, independent occupancy (S1 train → only
-    J1, S2 train → only J2), and a multi-edge loop traversed end-to-end.
+- 2026-08-07 — Phase 4 complete (same branch):
+  - `app/lib/route-search.ts`: pure `findRoute` (entry→exit search over the
+    movement graph with a direction filter + candidate ranking: fewest point
+    moves, then shortest; boundary = a valid open-line route end) and
+    `flankPoints` (switches not on the route whose branch fouls it).
+  - `toggleSignal` now routes via `findRoute` (policy b — manual points): a
+    route needing an unlocked point move is refused with the same "wesel belum
+    diatur" message; a fouled flank (a flank point thrown against the route) is
+    refused; the found route's polyline feeds the reservation lifecycle. The
+    flank fouling distance is CELL/3 (CELL would false-flag adjacent parallel
+    tracks 57 px away).
+  - `lockedBy`/`isLocked` extend to flank points of active routes (locked in
+    the non-fouling position).
+  - Ladder fixture + `scripts/verify-routes.ts` prove multi-path choice (the
+    free path is chosen when one line is occupied) and flank detection.
+  - One intended behavior change: with a crossover thrown under a route, the
+    route now follows the SHORTEST feasible path rather than greedily
+    diverting through the thrown points (the phase's point). The conflict-toast
+    + interacted visual baselines were refreshed; all functional assertions
+    (including the exact refusal toasts) pass unchanged.
   - Gates: tsc, build, e2e (47), probe:meets, probe:bearing, verify:three-main,
-    verify:loops, verify:bekasi (byte-identical after the per-loop section
-    resolution + loops.byGroupId projection).
+    verify:loops, verify:routes, verify:bekasi (byte-identical).
 
 ## Decisions log (decision — why)
 
@@ -94,6 +96,15 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
 - (Phase 3) The reciprocal-switch + branch-path logic walks the loop CHAIN
   (not just the reversed edge) so multi-edge loops attach reciprocally at
   their two ends.
+- (Phase 4) Point-setting policy is (b) — manual points, search constrained to
+  current positions plus unlockable moves; auto-set (a) is a drop-in later
+  (findRoute already reports `requiredSwitches`).
+- (Phase 4) The route choice is now the search's shortest feasible path — a
+  thrown crossover no longer diverts a route that has a free straight path.
+  This is a deliberate behavior improvement (the phase's core); the two visual
+  baselines that showed route highlights were refreshed.
+- (Phase 4) Flank fouling distance is CELL/3, not CELL — CELL is wider than
+  the 57 px track spacing and would flag adjacent parallel tracks as flanks.
 
 ## Notes for the next worker
 
