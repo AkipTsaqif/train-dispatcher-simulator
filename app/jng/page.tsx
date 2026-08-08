@@ -8,5 +8,9 @@ import DispatchingTable from "../components/dispatching-table";
 import { JATINEGARA_DISPATCH } from "../dispatching/jatinegara";
 
 export default function JatinegaraPage() {
-  return <DispatchingTable dispatch={JATINEGARA_DISPATCH} />;
+  return (
+    <main className="min-h-screen flex flex-col items-center justify-center p-8">
+      <DispatchingTable dispatch={JATINEGARA_DISPATCH} />
+    </main>
+  );
 }
