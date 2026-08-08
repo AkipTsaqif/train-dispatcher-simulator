@@ -6,11 +6,13 @@
 
 ## Current position
 
-- **Active phase:** none — the program is COMPLETE (phases 0–7 all done).
-- **Current step:** —.
-- **Next action:** optional follow-ups (per-layout UI switching, pan/zoom,
-  per-train lengths); otherwise the toolchain now supports arbitrary complex
-  station layouts end-to-end.
+- **Active phase:** 8 — Drawn-extent track topology (terminating switches +
+  throat journeys). Planned, awaiting approval.
+- **Current step:** —. Phase 7 done; the Jatinegara first cut uses a documented
+  full-width approximation (8 lines to both edges) that this phase removes.
+- **Next action:** on approval, implement per `docs/PLAN-phase-8.md` (compiler
+  terminating switches → regenerate at drawn extents → re-author stub
+  journeys → verify).
 
 ## Phase state
 
@@ -24,6 +26,7 @@
 | 5 | 2-D multi-segment occupancy | **DONE** |
 | 6 | Flyovers / graded junctions | **DONE** |
 | 7 | Arbitrary-schematic rendering | **DONE** |
+| 8 | Drawn-extent tracks (terminating switches) | **PLANNED** |
 
 Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any order.
 
