@@ -824,17 +824,17 @@ test.describe("dispatching table", () => {
     await expect(page.getByLabel(/Train F1 at 1300,89/)).toBeVisible();
   });
 
-  test("jatinegara schematic renders the throat with 23 signals and multi-length platforms", async ({ page }) => {
-    await page.goto("/jng");
-    await expect(page.getByText("Jatinegara", { exact: true })).toBeVisible();
-    // all 23 signals labelled
-    await expect(page.locator("svg circle")).toHaveCount(23);
-    await expect(page.getByText("NW1", { exact: true })).toBeVisible();
-    await expect(page.getByText("XE8", { exact: true })).toBeVisible();
-    // the three stub trains at their per-track platform positions
-    await expect(page.getByLabel(/Train J201 at 850,496/)).toBeVisible();
-    await expect(page.getByLabel(/Train J102 at 464,464/)).toBeVisible();
-    await expect(page.getByLabel(/Train J310 at 430,336/)).toBeVisible();
-    // no grid chrome
+  test("jatinegara interactive table — 23 signal controls, auto route set works", async ({ page }) => {
+    await page.goto("/jng?start=06:00&controls=1");
+    // all 23 signals are clickable controls (schematic mode, no grid chrome)
+    await expect(page.getByRole("button", { name: /^NW1 · MERAH/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /^XE8 ·/ })).toBeVisible();
     await expect(page.getByText("A", { exact: true })).toHaveCount(0);
+    // the 58 point controls are present
+    await expect(page.locator('[role="button"][aria-label^="Wesel"]')).toHaveCount(58);
+    // auto route set: clearing NW1 lights it (amber — next signal still red)
+    await page.getByRole("button", { name: /^NW1 · MERAH/ }).click();
+    await expect(page.getByRole("button", { name: /^NW1 · KUNING/ })).toBeVisible();
+    // its route locks the track-1 switches it passes
+    await expect(page.locator('[role="button"][aria-label*="terkunci"]').first()).toBeVisible();
   });

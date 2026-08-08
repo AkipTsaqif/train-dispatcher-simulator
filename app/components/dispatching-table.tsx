@@ -14,6 +14,7 @@ import {
 } from "../lib/train-engine";
 import { polylinesOverlap, routesOverlap } from "../lib/geometry";
 import { BEKASI_TAMBUN_CIBITUNG_DISPATCH } from "../dispatching/bekasi-tambun-cibitung";
+import type { DispatchRuntime } from "../lib/dispatch-runtime";
 import { bearingDot, bearingOf } from "../lib/topology";
 import { findRoute, flankPoints } from "../lib/route-search";
 import type { Bearing, GNodeExit, LeveledPoint } from "../lib/topology";
@@ -27,71 +28,6 @@ import type {
 } from "../maps/bekasi-tambun-cibitung";
 
 type Aspect = "red" | "amber" | "green";
-
-const {
-  map: DISPATCH_MAP,
-  notificationPolicy: NOTIFICATION_POLICY,
-  journeys: JOURNEYS,
-  signalSections: SIGNAL_SECTIONS,
-  meetsByTrain: MEETS_BY_TRAIN,
-  movement: MOVEMENT_DEFINITION,
-} = BEKASI_TAMBUN_CIBITUNG_DISPATCH;
-
-// Phase 7 presentation mode: grid layouts keep the graph-paper chrome and
-// snapped train hops; schematic layouts render free-form from the geometry.
-const PRESENTATION = DISPATCH_MAP.presentation;
-const IS_SCHEMATIC = PRESENTATION.kind === "schematic";
-const SCHEMATIC_VIEWBOX = IS_SCHEMATIC ? PRESENTATION.viewBox : undefined;
-const STATION_SHAPES = PRESENTATION.stationShapes ?? [];
-
-const {
-  diagramAriaLabel: DIAGRAM_ARIA_LABEL,
-  grid: {
-    cellSize: CELL,
-    shift: SHIFT,
-    width: RIGHT,
-    rowCount: GRID_ROW_COUNT,
-    gridBottomY: GRID_BOTTOM_Y,
-    viewBox: GRID_VIEWBOX,
-    ticks: GRID_TICKS,
-  },
-  lines: {
-    normalDirectionByY: NORMAL_DIR,
-    normalBearingByLineY: NORMAL_BEARING,
-  },
-  loops: {
-    byGroupId: LOOPS_BY_GROUP_ID,
-    lineYs: LOOP_LINE_YS,
-    rejoinByLineY: LOOP_REJOIN_BY_LINE_Y,
-  },
-  bidirectionalByY: BIDIRECTIONAL_BY_Y,
-  switches: {
-    items: SWITCHES,
-    coupled: COUPLED,
-    controls: POINT_CONTROLS,
-    initialState: INITIAL_SWITCHES,
-  },
-  signals: {
-    items: SIGNALS,
-    initialState: INITIAL_SIGNALS,
-  },
-  trackPaths: ALL_TRACKS,
-  trafficArrowPoints: TRAFFIC_ARROW_POINTS,
-  stations: {
-    nameplates: STATIONS,
-    cells: STATION_CELLS,
-    platformCenterX: PLATFORM_CENTER_X,
-  },
-} = DISPATCH_MAP;
-
-// Phase 5: protected-block section of each signal as a track polyline — the
-// general 2-D occupancy path uses these; the horizontal fast path stays on the
-// x-intervals. Keyed by signal id, straight pieces for horizontal sections.
-const SECTION_PATHS = DISPATCH_MAP.sectionPaths as Record<string, LeveledPoint[]>;
-const SIGNAL_SECTIONS_PTS = SIGNAL_SECTIONS.map((section) => ({
-  ...section,
-  pts: SECTION_PATHS[section.sig],
-}));
 
 /** Spreadsheet-style column letter for a 0-based index (0=A, 25=Z, 26=AA, ...). */
 const colsName = (i: number): string => {
@@ -123,7 +59,7 @@ type TrainStopState = keyof typeof TRAIN_COLORS;
 /** Display code for a signal — internal ids may differ from what is shown on the page. */
 const createSignalCodeLookup = (signals: SignalDef[]) => (id: string): string =>
   signals.find((signal) => signal.id === id)?.code ?? id;
-const codeOf = createSignalCodeLookup(DISPATCH_MAP.signals.items);
+
 
 // Simulation speed scales (×1 real-time through ×100 fast-forward).
 const TIME_SCALES = [1, 2, 5, 10, 20, 50, 100] as const;
@@ -411,7 +347,73 @@ const calculateSignalAspect = (
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
-export default function DispatchingTable() {
+export default function DispatchingTable({
+  dispatch = BEKASI_TAMBUN_CIBITUNG_DISPATCH,
+}: { dispatch?: DispatchRuntime } = {}) {
+  const {
+    map: DISPATCH_MAP,
+    notificationPolicy: NOTIFICATION_POLICY,
+    journeys: JOURNEYS,
+    signalSections: SIGNAL_SECTIONS,
+    meetsByTrain: MEETS_BY_TRAIN,
+    movement: MOVEMENT_DEFINITION,
+  } = dispatch;
+
+  // Phase 7 presentation mode: grid layouts keep the graph-paper chrome and
+  // snapped train hops; schematic layouts render free-form from the geometry.
+  const PRESENTATION = DISPATCH_MAP.presentation;
+  const IS_SCHEMATIC = PRESENTATION.kind === "schematic";
+  const SCHEMATIC_VIEWBOX = IS_SCHEMATIC ? PRESENTATION.viewBox : undefined;
+  const STATION_SHAPES = PRESENTATION.stationShapes ?? [];
+
+  const {
+    diagramAriaLabel: DIAGRAM_ARIA_LABEL,
+    grid: {
+      cellSize: CELL,
+      shift: SHIFT,
+      width: RIGHT,
+      rowCount: GRID_ROW_COUNT,
+      gridBottomY: GRID_BOTTOM_Y,
+      viewBox: GRID_VIEWBOX,
+      ticks: GRID_TICKS,
+    },
+    lines: {
+      normalDirectionByY: NORMAL_DIR,
+      normalBearingByLineY: NORMAL_BEARING,
+    },
+    loops: {
+      byGroupId: LOOPS_BY_GROUP_ID,
+      lineYs: LOOP_LINE_YS,
+      rejoinByLineY: LOOP_REJOIN_BY_LINE_Y,
+    },
+    bidirectionalByY: BIDIRECTIONAL_BY_Y,
+    switches: {
+      items: SWITCHES,
+      coupled: COUPLED,
+      controls: POINT_CONTROLS,
+      initialState: INITIAL_SWITCHES,
+    },
+    signals: {
+      items: SIGNALS,
+      initialState: INITIAL_SIGNALS,
+    },
+    trackPaths: ALL_TRACKS,
+    trafficArrowPoints: TRAFFIC_ARROW_POINTS,
+    stations: {
+      nameplates: STATIONS,
+      cells: STATION_CELLS,
+      platformCenterX: PLATFORM_CENTER_X,
+    },
+  } = DISPATCH_MAP;
+
+  // Phase 5: protected-block section of each signal as a track polyline.
+  const SECTION_PATHS = DISPATCH_MAP.sectionPaths as Record<string, LeveledPoint[]>;
+  const SIGNAL_SECTIONS_PTS = SIGNAL_SECTIONS.map((section) => ({
+    ...section,
+    pts: SECTION_PATHS[section.sig],
+  }));
+  const codeOf = createSignalCodeLookup(DISPATCH_MAP.signals.items);
+
   const [switches, setSwitches] = useState<Record<number, SwitchState>>(INITIAL_SWITCHES);
   const [signalOn, setSignalOn] = useState<Record<string, boolean>>(INITIAL_SIGNALS);
   const [conflictNote, setConflictNote] = useState<string | null>(null);
