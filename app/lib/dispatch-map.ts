@@ -15,6 +15,7 @@ import type {
   SignalDef,
   Sw,
   SwitchState,
+  TopologyPoint,
 } from "./topology";
 
 // Re-export the topology types so existing import sites keep working during
@@ -101,6 +102,8 @@ export type DispatchMapDefinition = {
     initialState: Record<string, boolean>;
   };
   trackPaths: string[];
+  /** Protected-block section of each signal as a track polyline (Phase 5). */
+  sectionPaths: Record<string, TopologyPoint[]>;
   trafficArrowPoints: string[];
   stations: {
     nameplates: Station[];

@@ -50,7 +50,17 @@ check("J1's section covers only S1", j1Section.lo <= 300 && j1Section.hi >= 400 
 check("J2's section covers only S2", j2Section.lo <= 600 && j2Section.hi >= 800 && j2Section.lo > s1.maxX, `[${j2Section.lo},${j2Section.hi}]`);
 
 const sections = runtime.signalSections;
-const fakeTrain = (x: number, y: number): Pick<TrainState, "x" | "y" | "spawned" | "done"> => ({ x, y, spawned: true, done: false });
+// a horizontal body around the point so the footprint reduces to the old
+// x-interval test ([x-halfLen, x+halfLen] on the train's line)
+const fakeTrain = (x: number, y: number): Pick<TrainState, "x" | "y" | "segFrom" | "segTo" | "trail" | "spawned" | "done"> => ({
+  x,
+  y,
+  segFrom: [x - 58, y],
+  segTo: [x + 58, y],
+  trail: [],
+  spawned: true,
+  done: false,
+});
 const occupied = (x: number, y: number) => occupiedSections(fakeTrain(x, y) as TrainState, sections, 10);
 const occ1 = occupied(365, 300); // a train in S1
 const occ2 = occupied(675, 300); // a train in S2

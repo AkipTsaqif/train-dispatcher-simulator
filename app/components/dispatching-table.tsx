@@ -6,10 +6,13 @@ import {
   advanceTrain,
   occupiedSections,
   reservationAhead,
+  footprintOf,
+  bodiesOverlap,
   type TrainState,
   type MoveCtx,
   type LegPlan,
 } from "../lib/train-engine";
+import { polylinesOverlap, routesOverlap } from "../lib/geometry";
 import { BEKASI_TAMBUN_CIBITUNG_DISPATCH } from "../dispatching/bekasi-tambun-cibitung";
 import { bearingDot, bearingOf } from "../lib/topology";
 import { findRoute, flankPoints } from "../lib/route-search";
@@ -72,6 +75,15 @@ const {
     platformCenterX: PLATFORM_CENTER_X,
   },
 } = DISPATCH_MAP;
+
+// Phase 5: protected-block section of each signal as a track polyline — the
+// general 2-D occupancy path uses these; the horizontal fast path stays on the
+// x-intervals. Keyed by signal id, straight pieces for horizontal sections.
+const SECTION_PATHS = DISPATCH_MAP.sectionPaths as Record<string, [number, number][]>;
+const SIGNAL_SECTIONS_PTS = SIGNAL_SECTIONS.map((section) => ({
+  ...section,
+  pts: SECTION_PATHS[section.sig],
+}));
 
 /** Spreadsheet-style column letter for a 0-based index (0=A, 25=Z, 26=AA, ...). */
 const colsName = (i: number): string => {
@@ -279,44 +291,16 @@ const walkRoute = (
 };
 
 // ---------------------------------------------------------------------------
-// Geometric conflict detection: two routes conflict if any of their segments
-// share a positive-length portion (collinear overlap or a proper crossing).
-// Meeting at a single point (block boundary) is NOT a conflict.
+// Route conflict: two routes conflict if any of their segments share a
+// positive-length portion (collinear overlap or a proper crossing). Meeting at
+// a single point (block boundary) is NOT a conflict. Shared with the engine
+// via lib/geometry.
 // ---------------------------------------------------------------------------
-const segsOverlap = (a: [number, number][], b: [number, number][]): boolean => {
-  const [p1, p2] = a;
-  const [q1, q2] = b;
-  const cross = (o: [number, number], p: [number, number], q: [number, number]) =>
-    (p[0] - o[0]) * (q[1] - o[1]) - (p[1] - o[1]) * (q[0] - o[0]);
-  const c1 = cross(p1, p2, q1);
-  const c2 = cross(p1, p2, q2);
-  if (Math.abs(c1) > 0.5 || Math.abs(c2) > 0.5) {
-    // not collinear — proper crossing?
-    const c3 = cross(q1, q2, p1);
-    const c4 = cross(q1, q2, p2);
-    return c1 * c2 < 0 && c3 * c4 < 0;
-  }
-  // collinear — overlap along the dominant axis
-  const ax = Math.abs(p2[0] - p1[0]);
-  const proj = (pt: [number, number]) => (ax >= Math.abs(p2[1] - p1[1]) ? pt[0] : pt[1]);
-  const lo = Math.max(Math.min(proj(p1), proj(p2)), Math.min(proj(q1), proj(q2)));
-  const hi = Math.min(Math.max(proj(p1), proj(p2)), Math.max(proj(q1), proj(q2)));
-  return hi - lo > 0.5;
-};
-
-const routesOverlap = (a: [number, number][], b: [number, number][]): boolean => {
-  for (let i = 0; i + 1 < a.length; i++) {
-    for (let j = 0; j + 1 < b.length; j++) {
-      if (segsOverlap([a[i], a[i + 1]], [b[j], b[j + 1]])) return true;
-    }
-  }
-  return false;
-};
 
 type SignalAspectDependencies = {
   signals: SignalDef[];
   normalDirectionByY: Record<number, Dir>;
-  signalSections: { sig: string; lineY: number; lo: number; hi: number }[];
+  signalSections: { sig: string; lineY: number; lo: number; hi: number; pts?: [number, number][] }[];
   signalOn: Record<string, boolean>;
   trainStates: TrainState[];
   trainHalfLen: number;
@@ -330,18 +314,21 @@ const trainOccupies = (
   lineY: number,
   x1: number,
   x2: number,
-  skip: number[] = []
+  skip: number[] = [],
+  pts?: [number, number][]
 ): boolean =>
   trainStates.some((train) => {
-    if (
-      !train.spawned ||
-      train.done ||
-      train.y !== lineY ||
-      skip.includes(train.idx)
-    ) {
+    if (!train.spawned || train.done || skip.includes(train.idx)) {
       return false;
     }
-    return train.x - trainHalfLen < x2 && train.x + trainHalfLen > x1;
+    // horizontal fast path — identical to the pre-footprint interval test
+    if (train.y === lineY) {
+      return train.x - trainHalfLen < x2 && train.x + trainHalfLen > x1;
+    }
+    // general path: the train's body footprint vs the section's track polyline
+    // (a train mid-crossover straddles both lines and occupies each)
+    if (!pts || pts.length < 2) return false;
+    return polylinesOverlap(footprintOf(train, trainHalfLen), pts);
   });
 
 const calculateSignalAspect = (
@@ -378,7 +365,8 @@ const calculateSignalAspect = (
         signal.lineY,
         section.lo,
         section.hi,
-        skip
+        skip,
+        section.pts
       )
     ) {
       return "red";
@@ -721,20 +709,12 @@ export default function DispatchingTable() {
         const meets = meetsRelease(m.idx, leg.station ?? "");
         return base > 0 || meets > 0 ? m.time < Math.max(base, meets) : false; // dwelling
       };
-      // Two trains conflict only when their BODIES share a track: the same
-      // line, or the same segment (loop-entry diagonals). The old ±2-cell
-      // square was wider than the track spacing (59 px — the lines sit at
-      // y 89/148/205/264), so trains on different parallel tracks or their
-      // diagonal approaches (e.g. one entering the lower loop while another is
-      // held at the upper-loop signal) were falsely flagged as conflicting.
-      const sameTrack = (a: TrainState, b: TrainState) =>
-        (a.segFrom[0] === b.segFrom[0] &&
-          a.segFrom[1] === b.segFrom[1] &&
-          a.segTo[0] === b.segTo[0] &&
-          a.segTo[1] === b.segTo[1]) ||
-        Math.abs(a.y - b.y) < CELL / 2;
-      const overlaps = (a: TrainState, b: TrainState) =>
-        Math.abs(a.x - b.x) < 2 * CELL && sameTrack(a, b);
+      // Two trains conflict only when their BODIES genuinely share track —
+      // Phase 5: the footprint polylines overlap (horizontal fast path keeps
+      // the old interval test; diagonals/curves use true body-overlap). This
+      // removes the |Δy| < CELL/2 track-spacing fudge that was fragile at the
+      // 57–59 px spacing and flagged opposite loop diagonals that never meet.
+      const overlaps = (a: TrainState, b: TrainState) => bodiesOverlap(a, b, CELL);
       const conflictIdx = new Set<number>();
       let newConflict = false;
       let conflictPair: string | null = null;
@@ -1099,7 +1079,7 @@ export default function DispatchingTable() {
           exclam.setAttribute("visibility", conflictIdx.has(st.idx) ? "visible" : "hidden");
           exclam.setAttribute("transform", `translate(48, -12) rotate(${-ang})`);
         }
-        return occupiedSections(st, SIGNAL_SECTIONS, CELL);
+        return occupiedSections(st, SIGNAL_SECTIONS_PTS, CELL);
       });
       const key = sections.join(",");
       if (key !== trainSectionKeyRef.current) {
@@ -1441,7 +1421,7 @@ export default function DispatchingTable() {
       {
         signals: SIGNALS,
         normalDirectionByY: NORMAL_DIR,
-        signalSections: SIGNAL_SECTIONS,
+        signalSections: SIGNAL_SECTIONS_PTS,
         signalOn,
         trainStates: trainStatesRef.current,
         trainHalfLen: MOVEMENT_DEFINITION.trainHalfLen,

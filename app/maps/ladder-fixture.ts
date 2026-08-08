@@ -76,6 +76,7 @@ export const LADDER_FIXTURE_MAP: DispatchMapDefinition = {
   nodes: COMPILED.nodes,
   signals: COMPILED.signals,
   trackPaths: COMPILED.trackPaths,
+  sectionPaths: COMPILED.sectionPaths,
   trafficArrowPoints: [],
   stations: {
     nameplates: STATIONS,

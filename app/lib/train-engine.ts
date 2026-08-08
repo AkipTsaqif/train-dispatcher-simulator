@@ -107,6 +107,7 @@ export const spawnPriority = (
 // ---------------------------------------------------------------------------
 
 import { bearingDot, bearingOf, type Bearing, type GNodeExit } from "./topology";
+import { footprintsOverlap, polylinesOverlap } from "./geometry";
 
 export type LineDir = "right" | "left";
 export type Aspect = "red" | "amber" | "green";
@@ -145,6 +146,7 @@ export type TrainState = {
   segTo: [number, number];
   nxtNode: string | null; // node id at the end of the current segment
   incoming: string | null; // node the train arrived from (for branch logic)
+  trail: [number, number][]; // points the center passed (bounded to body length)
   speed: number;
   leg: number;
   stopped: boolean;
@@ -286,6 +288,7 @@ export function initTrain(journey: JourneyPlan, nodes: Record<string, GraphNodeL
     segTo: target ? [target.x, target.y] : [s.x, s.y],
     nxtNode: s.firstNode,
     incoming: null,
+    trail: [],
     speed,
     leg: 0,
     stopped: false,
@@ -359,6 +362,24 @@ const setSegment = (st: TrainState, res: { next: string }, ctx: MoveCtx): void =
   st.segTo = target ? [target.x, target.y] : [st.x, st.y];
   st.nxtNode = res.next;
   st.incoming = fromId;
+  // trail the passed point — the center's path, bounded to the body length
+  st.trail.push([st.segFrom[0], st.segFrom[1]]);
+  trimTrail(st, ctx.trainHalfLen * 3);
+};
+
+/** Drop the oldest trail points beyond the bounded history length. */
+const trimTrail = (st: TrainState, maxLen: number): void => {
+  while (st.trail.length > 1) {
+    let total = 0;
+    for (let i = 1; i < st.trail.length; i++) {
+      total += Math.hypot(
+        st.trail[i][0] - st.trail[i - 1][0],
+        st.trail[i][1] - st.trail[i - 1][1]
+      );
+    }
+    if (total <= maxLen) break;
+    st.trail.shift();
+  }
 };
 
 /**
@@ -579,11 +600,73 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
       st.segFrom = [st.x, st.y];
       st.segTo = [legs[st.leg].waypointX, st.y];
       st.nxtNode = null;
+      st.trail.push([st.segFrom[0], st.segFrom[1]]);
+      trimTrail(st, ctx.trainHalfLen * 3);
       continue;
     }
     setSegment(st, res, ctx);
   }
 }
+
+/**
+ * A train's body footprint: the track polyline pieces its full length
+ * (`2 * halfLen`) covers, from the FRONT (the leading edge on the current
+ * segment) back through the traversed segment trail. Each piece is a straight
+ * [start, end] polyline; the pieces are ordered front→rear. A body may span
+ * several segments (e.g. a long train mid-crossover sits on the diagonal AND
+ * the adjoining horizontals), so occupancy and conflict checks use these
+ * polylines rather than an x-interval on one line.
+ */
+export function footprintOf(st: TrainState, halfLen: number): [number, number][][] {
+  const bodyLen = 2 * halfLen;
+  const pieces: [number, number][][] = [];
+  const [fx, fy] = st.segFrom;
+  const [tx, ty] = st.segTo;
+  const dx = tx - fx;
+  const dy = ty - fy;
+  const segLen = Math.hypot(dx, dy) || 1;
+  const ux = dx / segLen;
+  const uy = dy / segLen;
+  const front: [number, number] = [st.x + ux * halfLen, st.y + uy * halfLen];
+  let remaining = bodyLen;
+  // current segment: from the front back to its start
+  const toStart = Math.hypot(st.x - fx, st.y - fy) + halfLen;
+  if (toStart > 0 && segLen > 0) {
+    if (remaining <= toStart) {
+      pieces.push([front, [front[0] - ux * remaining, front[1] - uy * remaining]]);
+      return pieces;
+    }
+    pieces.push([front, [fx, fy]]);
+    remaining -= toStart;
+  }
+  // the traversed trail, newest → oldest (the newest entry is the current
+  // segment's start; the pieces continue straight back from there)
+  for (let i = st.trail.length - 1; i >= 1 && remaining > 0; i--) {
+    const a = st.trail[i];
+    const b = st.trail[i - 1];
+    const d = Math.hypot(a[0] - b[0], a[1] - b[1]) || 1;
+    if (remaining <= d) {
+      pieces.push([
+        a,
+        [a[0] + ((b[0] - a[0]) / d) * remaining, a[1] + ((b[1] - a[1]) / d) * remaining],
+      ]);
+      remaining = 0;
+      break;
+    }
+    pieces.push([a, b]);
+    remaining -= d;
+  }
+  return pieces;
+}
+
+/**
+ * Whether two train bodies physically share track. Horizontal fast path (the
+ * pre-footprint interval test — identical results on straight lines), and the
+ * genuine polyline-overlap path for diagonals/curves.
+ */
+export function bodiesOverlap(a: TrainState, b: TrainState, halfLen: number): boolean {
+  if (a.y === b.y) return Math.abs(a.x - b.x) < 2 * halfLen;
+  return footprintsOverlap(footprintOf(a, halfLen), footprintOf(b, halfLen));}
 
 /**
  * The signals whose protected sections the train's BODY currently overlaps —
@@ -593,14 +676,39 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
  */
 export function occupiedSections(
   m: TrainState,
-  sections: { sig: string; lineY: number; lo: number; hi: number }[],
+  sections: {
+    sig: string;
+    lineY: number;
+    lo: number;
+    hi: number;
+    pts?: [number, number][];
+  }[],
   halfLen: number
 ): string {
   if (!m.spawned || m.done) return "";
-  const lo = m.x - halfLen;
-  const hi = m.x + halfLen;
+  const footprint = footprintOf(m, halfLen);
+  const allHorizontal = footprint.every(([a, b]) => a[1] === b[1]);
+  if (allHorizontal && footprint.length > 0) {
+    // horizontal fast path — identical to the pre-footprint x-interval test
+    const y = footprint[0][0][1];
+    const lo = Math.min(...footprint.map((p) => Math.min(p[0][0], p[1][0])));
+    const hi = Math.max(...footprint.map((p) => Math.max(p[0][0], p[1][0])));
+    return sections
+      .filter((s) => s.lineY === y && lo < s.hi && hi > s.lo)
+      .map((s) => s.sig)
+      .join(",");
+  }
   return sections
-    .filter((s) => s.lineY === m.y && lo < s.hi && hi > s.lo)
+    .filter((s) => {
+      const sectionPts =
+        s.pts && s.pts.length >= 2
+          ? s.pts
+          : ([
+              [s.lo, s.lineY],
+              [s.hi, s.lineY],
+            ] as [number, number][]);
+      return polylinesOverlap(footprint, sectionPts);
+    })
     .map((s) => s.sig)
     .join(",");
 }

@@ -253,6 +253,10 @@ export type CompiledTopology = {
     initialState: Record<string, boolean>;
   };
   trackPaths: string[];
+  /** Protected-block section of each signal as a track polyline (Phase 5
+   *  occupancy) — keyed by signal id; straight pieces for horizontal sections,
+   *  the whole loop chain for loop signals. */
+  sectionPaths: Record<string, TopologyPoint[]>;
   stationPlatformCenterX: Record<string, number>;
   compatibility: {
     signalSections: CompiledSignalSection[];
@@ -922,6 +926,61 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     return { sig: signal.id, lineY: placement.point[1], lo, hi };
   });
 
+  // Phase 5: the protected block of each signal as a track polyline — used for
+  // genuine 2-D occupancy instead of x-intervals on one line. Each section's
+  // canonical edge ranges give the physical track it protects: per range the
+  // edge path between its from/to endpoints; whole-track-group (loop) sections
+  // concatenate the whole chain (diagonals included).
+  const subpathBetween = (
+    points: TopologyPoint[],
+    from: TopologyPoint,
+    to: TopologyPoint
+  ): TopologyPoint[] => {
+    const tOf = (p: TopologyPoint): { i: number; t: number } => {
+      let best = { i: 0, t: 0, d: Infinity };
+      for (let i = 0; i + 1 < points.length; i++) {
+        const [x1, y1] = points[i];
+        const [x2, y2] = points[i + 1];
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const len2 = dx * dx + dy * dy || 1;
+        const t = Math.max(0, Math.min(1, ((p[0] - x1) * dx + (p[1] - y1) * dy) / len2));
+        const px = x1 + dx * t;
+        const py = y1 + dy * t;
+        const d = (p[0] - px) ** 2 + (p[1] - py) ** 2;
+        if (d < best.d) best = { i, t, d };
+      }
+      return best;
+    };
+    const a = tOf(from);
+    const b = tOf(to);
+    const [lo, hi] = a.i + a.t <= b.i + b.t ? [a, b] : [b, a];
+    const interp = (p: { i: number; t: number }): TopologyPoint => {
+      const [x1, y1] = points[p.i];
+      const [x2, y2] = points[p.i + 1];
+      return [x1 + (x2 - x1) * p.t, y1 + (y2 - y1) * p.t];
+    };
+    const out: TopologyPoint[] = [interp(lo)];
+    for (let i = lo.i + 1; i <= hi.i; i++) out.push(points[i]);
+    out.push(interp(hi));
+    return out;
+  };
+  const sectionPaths: Record<string, TopologyPoint[]> = {};
+  for (const section of definition.blockSections) {
+    const pts: TopologyPoint[] = [];
+    for (const range of section.edgeRanges) {
+      const path = edgePaths.get(range.edgeId);
+      if (!path) throw new Error(`Block section ${section.id} has unknown edge ${range.edgeId}`);
+      const from = edgeRangePoint(range, range.from, section.id);
+      const to = edgeRangePoint(range, range.to, section.id);
+      for (const p of subpathBetween(path.points, from, to)) {
+        const last = pts[pts.length - 1];
+        if (!last || last[0] !== p[0] || last[1] !== p[1]) pts.push(p);
+      }
+    }
+    sectionPaths[section.signalId] = pts;
+  }
+
   const graphNodePoint = (id: string): TopologyPoint => {
     const node = nodesById.get(id);
     if (node) return node.point;
@@ -1118,6 +1177,7 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       initialState: initialSignalState,
     },
     trackPaths: compileRenderPaths(definition.edges),
+    sectionPaths,
     stationPlatformCenterX,
     compatibility: {
       signalSections,

@@ -6,11 +6,12 @@
 
 ## Current position
 
-- **Active phase:** 5 — Per-edge 2-D occupancy + multi-segment train bodies.
-- **Current step:** Not started. Phase 4 (route search + flank protection) is
+- **Active phase:** 6 — Graded junctions / flyovers (blocked by 3, 5 — both
+  now done).
+- **Current step:** Not started. Phase 5 (2-D multi-segment occupancy) is
   complete.
-- **Next action:** Read `docs/PLAN-phase-5.md`, then create its branch and
-  start step 1.
+- **Next action:** Read `docs/PLAN-phase-6.md`, then start step 1 (Phase 5
+  unblocked it).
 
 ## Phase state
 
@@ -21,7 +22,7 @@
 | 2 | N parallel mains + line selection | **DONE** |
 | 3 | Independent/multi-edge loops | **DONE** |
 | 4 | Route search + flank protection | **DONE** |
-| 5 | 2-D multi-segment occupancy | **IN PROGRESS (not started)** |
+| 5 | 2-D multi-segment occupancy | **DONE** |
 | 6 | Flyovers / graded junctions | blocked by 3, 5 |
 | 7 | Arbitrary-schematic rendering | blocked by 6 |
 
@@ -123,6 +124,22 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   exit; the entrance's own reservation is released first; boundary routes are
   not valid for an exit-constrained request). e2e: shift-click routes the last
   signal to the clicked one.
+- (Phase 5) Train occupancy is now a 2-D polyline body (`footprintOf`): the
+  engine trails the segment points the center passes (bounded to the body
+  length) and the body is the front→rear polyline over those segments. The
+  compiler emits `sectionPaths` (each signal's protected block as a track
+  polyline — straight for horizontal sections, the whole loop chain for loop
+  signals); it is a NEW runtime key, deliberately NOT added to the snapshot
+  projection, so the Bekasi baseline stayed byte-identical.
+- (Phase 5) `occupiedSections`/`trainOccupies` use footprint-vs-section-polyline
+  overlap with the horizontal fast path kept (identical x-interval results);
+  the tick conflict check uses `bodiesOverlap` (fast path on equal y, genuine
+  polyline overlap otherwise) — the |Δy| < CELL/2 track-spacing fudge and the
+  segment-equality heuristic are gone. New probe: probe:occupancy (straddle,
+  loop-entry J4+J6, J5/J4 straddle, same-diagonal conflict, parallel-diagonal
+  non-conflict).
+- (Phase 5) verify-loops' fake train gained a horizontal segment so the
+  footprint reduces to the old interval test (its x/y occupancy assertions).
 
 ## Notes for the next worker
 
