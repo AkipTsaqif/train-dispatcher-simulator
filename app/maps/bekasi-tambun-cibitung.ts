@@ -73,6 +73,12 @@ export const BEKASI_TAMBUN_CIBITUNG_MAP: DispatchMapDefinition = {
   lines: {
     topY: TOP_LINE_Y,
     bottomY: BOTTOM_LINE_Y,
+    mains: COMPILED_TOPOLOGY.lines.mains.map((main) => ({
+      trackGroupId: main.trackGroupId,
+      lineY: main.lineY,
+      normalBearing: main.normalBearing,
+      name: main.lineY === TOP_LINE_Y ? "up" : main.lineY === BOTTOM_LINE_Y ? "down" : undefined,
+    })),
     normalDirectionByY: COMPILED_TOPOLOGY.lines.normalDirectionByY,
     normalBearingByLineY: COMPILED_TOPOLOGY.lines.normalBearingByLineY,
   },

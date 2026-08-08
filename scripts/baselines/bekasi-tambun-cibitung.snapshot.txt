@@ -2,6 +2,26 @@
   "map": {
     "lines": {
       "bottomY": 205,
+      "mains": [
+        {
+          "lineY": 89,
+          "name": "up",
+          "normalBearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "trackGroupId": "top-main"
+        },
+        {
+          "lineY": 205,
+          "name": "down",
+          "normalBearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "trackGroupId": "bottom-main"
+        }
+      ],
       "normalBearingByLineY": {
         "89": {
           "dx": -1,

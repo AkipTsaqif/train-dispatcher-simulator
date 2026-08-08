@@ -1,4 +1,4 @@
-import type { Dir } from "./topology";
+import { bearingDot, type Bearing, type Dir } from "./topology";
 import type { DispatchMapDefinition } from "./dispatch-map";
 import type { DispatchScenarioDefinition } from "./dispatch-scenario";
 import {
@@ -29,7 +29,7 @@ type JourneyPreparationMap = Pick<
 
 type JourneyPreparationScenario = Pick<
   DispatchScenarioDefinition,
-  "speed" | "dwell" | "priority" | "spawn"
+  "speed" | "dwell" | "priority" | "spawn" | "routing"
 >;
 
 type MeetPreparationMap = Pick<
@@ -58,13 +58,47 @@ const journeyDir = (
     ? "right"
     : "left";
 
-const journeyLineY = (
+/**
+ * Select the main line a journey runs on. Total and deterministic — every
+ * train gets a line. Precedence: explicit timetable `line` on a stop, then the
+ * scenario routing policy, then the direction fallback (the main whose normal
+ * bearing most matches the journey direction — with two mains this is exactly
+ * the historical top/bottom choice).
+ */
+const selectMainLine = (
   stops: Train["stops"],
-  map: Pick<JourneyPreparationMap, "stations" | "lines">
-): number =>
-  journeyDir(stops, map.stations.platformCenterX) === "left"
-    ? map.lines.topY
-    : map.lines.bottomY;
+  map: Pick<JourneyPreparationMap, "stations" | "lines">,
+  scenario: Pick<JourneyPreparationScenario, "routing">
+): { trackGroupId: string; lineY: number } => {
+  const resolve = (key: string): { trackGroupId: string; lineY: number } => {
+    const byId = map.lines.mains.find((main) => main.trackGroupId === key);
+    if (byId) return { trackGroupId: byId.trackGroupId, lineY: byId.lineY };
+    const byName = map.lines.mains.find((main) => main.name === key);
+    if (byName) return { trackGroupId: byName.trackGroupId, lineY: byName.lineY };
+    throw new Error(`Unknown main line "${key}"`);
+  };
+
+  const explicit = stops.find((stop) => stop.line !== undefined)?.line;
+  if (explicit) return resolve(explicit);
+
+  const dir = journeyDir(stops, map.stations.platformCenterX);
+  const policy = scenario.routing?.defaultLineByDirection?.[dir];
+  if (policy) return resolve(policy);
+
+  const directionBearing: Bearing =
+    dir === "right" ? { dx: 1, dy: 0 } : { dx: -1, dy: 0 };
+  let best: { trackGroupId: string; lineY: number } | undefined;
+  let bestDot = -Infinity;
+  for (const main of map.lines.mains) {
+    const dot = bearingDot(directionBearing, main.normalBearing);
+    if (dot > bestDot) {
+      bestDot = dot;
+      best = { trackGroupId: main.trackGroupId, lineY: main.lineY };
+    }
+  }
+  if (!best) throw new Error("No main line available");
+  return best;
+};
 
 const firstLegSpeed = (
   stops: Train["stops"],
@@ -88,9 +122,9 @@ const spawnClearanceGap = (
   stops: Train["stops"],
   dir: Dir,
   map: Pick<JourneyPreparationMap, "stations" | "lines" | "signals">,
-  scenario: Pick<JourneyPreparationScenario, "speed" | "spawn">
+  scenario: Pick<JourneyPreparationScenario, "speed" | "spawn" | "routing">
 ): number => {
-  const lineY = dir === "right" ? map.lines.bottomY : map.lines.topY;
+  const lineY = selectMainLine(stops, map, scenario).lineY;
   const platformX = map.stations.platformCenterX[station];
   const ahead = map.signals.items
     .filter(
@@ -175,7 +209,7 @@ const prepareJourneys = (
     plan: buildJourney(
       train.stops,
       platformX,
-      journeyLineY(train.stops, map),
+      selectMainLine(train.stops, map, scenario).lineY,
       map.nodes,
       journeyDir(train.stops, platformX),
       { speed: scenario.speed, dwell: scenario.dwell }
@@ -186,7 +220,7 @@ const prepareJourneys = (
 const prepareMeetDependencies = (
   journeys: PlannedJourney[],
   map: MeetPreparationMap,
-  meet: DispatchScenarioDefinition["meet"]
+  scenario: DispatchScenarioDefinition
 ): Map<number, Map<string, MeetDependency[]>> => {
   const out = new Map<number, Map<string, MeetDependency[]>>();
   const platformCenterX = map.stations.platformCenterX;
@@ -207,7 +241,7 @@ const prepareMeetDependencies = (
         if (partnerStopIdx < 0) continue;
         const platformX = platformCenterX[stop.trackmark];
         const partnerDir = journeyDir(partner.train.stops, platformCenterX);
-        const partnerLineY = journeyLineY(partner.train.stops, map);
+        const partnerLineY = selectMainLine(partner.train.stops, map, scenario).lineY;
         const ahead = map.signals.items
           .filter(
             (signal) =>
@@ -220,7 +254,7 @@ const prepareMeetDependencies = (
           .sort((a, b) =>
             partnerDir === "right" ? a.x - b.x : b.x - a.x
           );
-        const clearanceSignal = ahead[meet.clearanceSignalCount - 1];
+        const clearanceSignal = ahead[scenario.meet.clearanceSignalCount - 1];
         const speed =
           partner.plan.legs[
             Math.min(partnerStopIdx, partner.plan.legs.length - 1)
@@ -230,7 +264,7 @@ const prepareMeetDependencies = (
           meetStopIdx: partnerStopIdx,
           releaseOffset: clearanceSignal
             ? Math.abs(clearanceSignal.x - platformX) / Math.max(1, speed)
-            : meet.clearanceFallbackSeconds,
+            : scenario.meet.clearanceFallbackSeconds,
         });
       }
       if (dependencies.length) {
@@ -270,7 +304,7 @@ export const createDispatchRuntime = (
     meetsByTrain: prepareMeetDependencies(
       journeys,
       definition.map,
-      definition.scenario.meet
+      definition.scenario
     ),
     movement: {
       ...definition.map.compatibility.movement,

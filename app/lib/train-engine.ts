@@ -18,6 +18,7 @@ export type TrainStop = {
   dep: number;
   dep_actual: string;
   meets?: { type: string; with: string }[]; // planned overtake/crossing (susul)
+  line?: string; // optional main-line assignment (trackGroupId or line name)
 };
 
 export type Train = {
@@ -32,6 +33,8 @@ export type ScheduleStop = {
   arr_actual: string;
   dep_actual: string;
   meets?: { type: string; with: string }[];
+  /** Optional main-line assignment: a trackGroupId or line name. */
+  line?: string;
 };
 
 export type ScheduleEntry = {
@@ -79,6 +82,7 @@ export const createTrains = (
         dep: hmsToSeconds(stop.dep_actual),
         dep_actual: stop.dep_actual,
         meets: stop.meets,
+        ...(stop.line === undefined ? {} : { line: stop.line }),
       })),
     }));
 

@@ -6,9 +6,10 @@
 
 ## Current position
 
-- **Active phase:** 2 — N parallel main lines + runtime line selection.
-- **Current step:** Not started. Phase 1 (bearings) is complete.
-- **Next action:** Read `docs/PLAN-phase-2.md`, then create its branch and
+- **Active phase:** 3 — Independent loop/siding bounds, multi-loop, multi-edge
+  loops.
+- **Current step:** Not started. Phase 2 (N mains) is complete.
+- **Next action:** Read `docs/PLAN-phase-3.md`, then create its branch and
   start step 1.
 
 ## Phase state
@@ -17,8 +18,8 @@
 |---|---|---|
 | 0 | Contract extraction + baseline harness | **DONE** |
 | 1 | Bearings (Dir → vectors) | **DONE** |
-| 2 | N parallel mains + line selection | **IN PROGRESS (not started)** |
-| 3 | Independent/multi-edge loops | blocked by 1 |
+| 2 | N parallel mains + line selection | **DONE** |
+| 3 | Independent/multi-edge loops | **IN PROGRESS (not started)** |
 | 4 | Route search + flank protection | blocked by 1 |
 | 5 | 2-D multi-segment occupancy | blocked by 1, 4 |
 | 6 | Flyovers / graded junctions | blocked by 3, 5 |
@@ -34,25 +35,23 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   shared contracts in lib, equivalence harness + committed baseline,
   all gates green (see commit history for details).
 - 2026-08-07 — Phase 1 complete (branch continues):
-  - `Bearing` primitives (`bearingOf`/`bearingDot`/`bearingToDir`) in
-    `app/lib/topology.ts`; `GNode` is now exits-based (`exits: GNodeExit[]` with
-    `bearing`, `viaSwitchPort`, `branchPath`, `farSw`) instead of
-    `straight`/`branch`; signals carry a compiled `bearing`.
-  - `resolveNode` (engine) and `walkRoute` (component) select exits by switch
-    state + bearing continuity (max dot among open, non-reversing exits),
-    reproducing the old straight/branch behavior exactly for the horizontal case.
-  - Signal-ahead keeps the horizontal fast path and adds a segment-projection
-    path (parameter-t along the segment) for diagonal travel.
-  - Wrong-way protection re-expressed on bearings
-    (`normalBearingByLineY` derived from the compiled per-group normal bearing);
-    the Y-keyed `normalDirectionByY` derived view is kept.
-  - The main-group horizontal check is relaxed (diagonal mains now compile);
-    the per-line derived views stay nominal for them.
-  - `probes/bearing.probe.ts` proves a train traverses a diagonal edge and a
-    red signal on it stops/releases. Gates: tsc, build, e2e (47),
-    probe:meets, probe:bearing — all pass.
-  - Baseline re-captured for the new nodes/signals shape + added `lines`
-    projection (see decisions log); `verify:bekasi` byte-identical after.
+  ... (see commit history)
+- 2026-08-07 — Phase 2 complete (same branch):
+  - `DispatchMapDefinition.lines.mains` holds every main group
+    (trackGroupId/lineY/normalBearing/name); `topY`/`bottomY` remain only as
+    deprecated derived views.
+  - `selectMainLine(stops, map, scenario)` is total + deterministic: explicit
+    timetable `line` on a stop, then scenario `routing.defaultLineByDirection`,
+    then the direction fallback (max dot with the main's normal bearing).
+    `journeyLineY`/`spawnClearanceGap`/`prepareMeetDependencies` are repointed.
+  - The compiled topology exposes `lines.mains`; `ScheduleStop`/`TrainStop`
+    gained an optional `line`; the scenario gained an optional `routing` hook.
+  - `three-main-fixture` composition (topology/map/scenario/dispatching) +
+    `scripts/verify-three-main.ts` proves three parallel mains: explicit line,
+    policy, and fallback all select the right lineY, and three trains land on
+    three distinct mains.
+  - Gates: tsc, build, e2e (47), probe:meets, probe:bearing, verify:three-main,
+    verify:bekasi (byte-identical after the `lines.mains` projection extension).
 
 ## Decisions log (decision — why)
 
@@ -77,6 +76,13 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   from the old code (the plan's pure max-dot sketch does not reproduce the
   horizontal divert behavior) — bearings drive the exit selection, the incoming
   node id disambiguates branch arrivals.
+- (Phase 2) The baseline was re-captured again for the added `lines.mains`
+  projection — the only diff vs the Phase 1 baseline; everything else
+  byte-identical.
+- (Phase 2) `routing.defaultLineByDirection` is a partial Record so a policy
+  may name just one direction.
+- (Phase 2) `selectMainLine` resolves timetable/scenario keys by trackGroupId
+  or line name; unknown keys throw (fail fast at composition time).
 
 ## Notes for the next worker
 

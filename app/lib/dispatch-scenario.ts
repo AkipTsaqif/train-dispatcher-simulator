@@ -27,6 +27,10 @@ export type DispatchScenarioDefinition = {
     clearanceSignalCount: number;
     clearanceFallbackSeconds: number;
   };
+  /** Optional routing policy: which main line a direction defaults to. */
+  routing?: {
+    defaultLineByDirection?: Partial<Record<"left" | "right", string>>; // trackGroupId or line name
+  };
   notifications: {
     boardLimit: number;
     heldAtSignalThresholdSeconds: number;

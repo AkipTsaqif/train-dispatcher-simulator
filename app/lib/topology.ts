@@ -217,6 +217,7 @@ export type TopologyDefinition = {
 
 export type CompiledTopology = {
   lines: {
+    mains: { trackGroupId: string; lineY: number; normalBearing: Bearing }[];
     normalDirectionByY: Record<number, Dir>;
     normalBearingByGroupId: Record<string, Bearing>;
     normalBearingByLineY: Record<number, Bearing>;
@@ -757,6 +758,7 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
   }
 
   const mainGroups = definition.trackGroups.filter((group) => group.role === "main");
+  const mains: { trackGroupId: string; lineY: number; normalBearing: Bearing }[] = [];
   const normalDirectionByY: Record<number, Dir> = {};
   const normalBearingByGroupId: Record<string, Bearing> = {};
   const normalBearingByLineY: Record<number, Bearing> = {};
@@ -778,6 +780,7 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
         : bearingOf(toPoint, fromPoint);
     normalBearingByGroupId[group.id] = normalBearing;
     normalBearingByLineY[lineY] = normalBearing;
+    mains.push({ trackGroupId: group.id, lineY, normalBearing });
   }
 
   const loopGroups = definition.trackGroups.filter((group) => group.role === "loop");
@@ -977,7 +980,7 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
   }));
 
   return {
-    lines: { normalDirectionByY, normalBearingByGroupId, normalBearingByLineY },
+    lines: { mains, normalDirectionByY, normalBearingByGroupId, normalBearingByLineY },
     loops: {
       lineYs: loopLineYs,
       minX: loopMinX,

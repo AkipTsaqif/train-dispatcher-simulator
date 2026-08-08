@@ -65,6 +65,15 @@ export type DispatchMapDefinition = {
     };
   };
   lines: {
+    /** Every main running line, one entry per main track group. */
+    mains: {
+      trackGroupId: string;
+      lineY: number;
+      normalBearing: Bearing;
+      /** UI grouping / labeling, e.g. "up fast", "down slow". */
+      name?: string;
+    }[];
+    /** Deprecated two-main view — kept for the current layout only. */
     topY: number;
     bottomY: number;
     normalDirectionByY: Record<number, Dir>;
