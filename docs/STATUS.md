@@ -96,15 +96,23 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
 - (Phase 3) The reciprocal-switch + branch-path logic walks the loop CHAIN
   (not just the reversed edge) so multi-edge loops attach reciprocally at
   their two ends.
-- (Phase 4) Point-setting policy is (b) — manual points, search constrained to
-  current positions plus unlockable moves; auto-set (a) is a drop-in later
-  (findRoute already reports `requiredSwitches`).
+- (Phase 4, then switched at the user's request) Point-setting policy is now
+  **(a) — auto route set**: clearing a signal throws the unlocked points its
+  route needs (coupled pairs move together) and clears. A route into occupied
+  track or with a locked flank is still refused. The original policy-(b)
+  refusal tests were replaced by an auto-set test.
+- (Phase 4) The route-search direction filter uses a -0.8 dot threshold: it
+  rejects fully-opposite exits (a loop's far end) but allows crossover
+  diagonals whose x-component is only slightly against the flow (needed for
+  the wrong-way crossover routes).
 - (Phase 4) The route choice is now the search's shortest feasible path — a
   thrown crossover no longer diverts a route that has a free straight path.
   This is a deliberate behavior improvement (the phase's core); the two visual
   baselines that showed route highlights were refreshed.
 - (Phase 4) Flank fouling distance is CELL/3, not CELL — CELL is wider than
   the 57 px track spacing and would flag adjacent parallel tracks as flanks.
+- (Phase 4) `verify-layout.ts` normalizes CRLF so a git checkout on Windows
+  does not false-fail the byte-identical comparison.
 
 ## Notes for the next worker
 

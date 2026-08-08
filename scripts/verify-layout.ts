@@ -1,5 +1,6 @@
 // Verifies a layout against its committed baseline snapshot. Exits nonzero on
-// any difference and prints a short human-readable diff summary.
+// any difference and prints a short human-readable diff summary. Line endings
+// are normalized so git's CRLF checkout does not false-fail.
 //
 // Usage:
 //   bun scripts/verify-layout.ts <layoutId>
@@ -13,9 +14,11 @@ if (!layoutId || !LAYOUT_IDS.includes(layoutId as (typeof LAYOUT_IDS)[number])) 
   process.exit(2);
 }
 
+const normalize = (s: string): string => s.replaceAll("\r", "");
+
 const run = async (): Promise<void> => {
-  const actual = await buildSnapshot(layoutId);
-  const expected = readFileSync(baselinePath(layoutId), "utf8");
+  const actual = normalize(await buildSnapshot(layoutId));
+  const expected = normalize(readFileSync(baselinePath(layoutId), "utf8"));
 
   if (actual === expected) {
     console.log(`verify ${layoutId}: OK — byte-identical to the committed baseline`);

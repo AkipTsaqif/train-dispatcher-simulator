@@ -69,11 +69,12 @@ test.describe("dispatching table", () => {
     await expect(page.locator('path[stroke="#f59e0b"]')).toHaveCount(1);
   });
 
-  test("signal whose route needs a thrown point stays red", async ({ page }) => {
-    // J7 rejoins the main line at P5 only when P5 is reversed
-    await page.getByRole("button", { name: /J7 ·/ }).click();
-    await expect(page.locator("text=wesel belum diatur (berakhir di P5)")).toBeVisible();
-    await expect(page.getByRole("button", { name: /J7 · MERAH/ })).toBeVisible();
+  test("clearing a signal auto-sets the points its route needs", async ({ page }) => {
+    // J6 leaves the upper loop at P3 — policy (a): clearing J6 throws P3
+    // itself and lights the signal
+    await page.getByRole("button", { name: /J6 ·/ }).click();
+    await expect(page.getByRole("button", { name: /P3 · BELOK/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /J6 ·/ })).not.toHaveText(/J6 · MERAH/);
   });
 
   test("opposite-direction overlap is refused with a conflict note", async ({ page }) => {

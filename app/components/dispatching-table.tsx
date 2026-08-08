@@ -1216,23 +1216,35 @@ export default function DispatchingTable() {
       logClick(`${codeOf(sig.id)} × tidak bisa dibuka (tidak ada rute)`);
       return; // stay red
     }
+    // policy (a) — auto route set: throw the unlocked points the route needs,
+    // then clear. Coupled pairs move together.
     const requiredSwitches = Object.keys(found.requiredSwitches);
     if (requiredSwitches.length > 0) {
-      const swId = Number(requiredSwitches[0]);
-      setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — wesel belum diatur (berakhir di P${swId}).`);
-      window.setTimeout(() => setConflictNote(null), 3000);
-      logClick(`${codeOf(sig.id)} × tidak bisa dibuka (berakhir di P${swId})`);
-      return; // stay red
+      const moves: Record<number, SwitchState> = {};
+      for (const key of requiredSwitches) {
+        const swId = Number(key);
+        const position = found.requiredSwitches[swId];
+        for (const gid of coupledWith(swId)) moves[gid] = position;
+      }
+      const moveDesc = Object.entries(moves)
+        .map(([k, v]) => `P${k} ${v === "reversed" ? "BELOK" : "LURUS"}`)
+        .join(", ");
+      setSwitches((s) => ({ ...s, ...moves }));
+      logClick(`${codeOf(sig.id)} → wesel diatur otomatis: ${moveDesc}`);
     }
-    // flank protection: a point not on the route whose branch would foul it
-    // must sit in the non-fouling position — refuse if it is thrown against us
+    // flank protection — auto-set fouled flanks to the non-fouling position;
+    // a flank locked against the route is refused
     const flanks = flankPoints(found, DISPATCH_MAP.nodes, CELL / 3);
-    const fouledFlank = flanks.find((sw) => switches[sw] === "reversed");
-    if (fouledFlank !== undefined) {
-      setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — wesel P${fouledFlank} mengancam rute.`);
-      window.setTimeout(() => setConflictNote(null), 3000);
-      logClick(`${codeOf(sig.id)} × tidak bisa dibuka (flank P${fouledFlank})`);
-      return; // stay red
+    for (const flank of flanks) {
+      if (switches[flank] !== "reversed") continue;
+      if (isLocked(flank)) {
+        setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — wesel P${flank} terkunci di posisi berbahaya.`);
+        window.setTimeout(() => setConflictNote(null), 3000);
+        logClick(`${codeOf(sig.id)} × tidak bisa dibuka (flank P${flank} terkunci)`);
+        return; // stay red
+      }
+      setSwitches((s) => ({ ...s, [flank]: "normal" }));
+      logClick(`${codeOf(sig.id)} → flank P${flank} diatur LURUS`);
     }
     const prospective = {
       d: "M" + found.pts.map(([x, y]) => `${x},${y}`).join(" "),

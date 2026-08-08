@@ -110,8 +110,11 @@ export const findRoute = (input: FindRouteInput): FoundRoute | null => {
   // continuity) — otherwise a loop's far end or a crossover can produce
   // 'wrong-way' alternative paths
   const entranceBearing: Bearing = dir === "right" ? { dx: 1, dy: 0 } : { dx: -1, dy: 0 };
+  // the exit must continue the signal's general direction — but a crossover
+  // diagonal can have a small against-flow x-component, so only fully-opposite
+  // exits (a loop's far end, dot < -0.8) are rejected
   const continues = (bearing: Bearing): boolean =>
-    bearing.dx * entranceBearing.dx + bearing.dy * entranceBearing.dy > 0;
+    bearing.dx * entranceBearing.dx + bearing.dy * entranceBearing.dy > -0.8;
 
   // a same-direction signal sitting on the segment from→to (geometric check)
   const exitSignalOnSegment = (
