@@ -51,6 +51,31 @@ export const routesOverlap = (a: LeveledPoint[], b: LeveledPoint[]): boolean => 
   return false;
 };
 
+/**
+ * The proper-crossing point of two segments, or null when they do not cross
+ * with a strict interior intersection (endpoint touch / collinear = null).
+ */
+export const segmentCross = (
+  a: [number, number],
+  b: [number, number],
+  c: [number, number],
+  d: [number, number]
+): [number, number] | null => {
+  const [ax, ay] = a;
+  const [bx, by] = b;
+  const [cx, cy] = c;
+  const [dx, dy] = d;
+  const r = [bx - ax, by - ay];
+  const s = [dx - cx, dy - cy];
+  const denom = r[0] * s[1] - r[1] * s[0];
+  if (Math.abs(denom) < 1e-9) return null; // parallel / collinear
+  const t = ((cx - ax) * s[1] - (cy - ay) * s[0]) / denom;
+  const u = ((cx - ax) * r[1] - (cy - ay) * r[0]) / denom;
+  // strict interior crossing on both segments
+  if (t <= 1e-6 || t >= 1 - 1e-6 || u <= 1e-6 || u >= 1 - 1e-6) return null;
+  return [ax + r[0] * t, ay + r[1] * t];
+};
+
 /** Whether ANY piece of one footprint overlaps ANY piece of the other. */
 export const footprintsOverlap = (
   a: LeveledPoint[][],

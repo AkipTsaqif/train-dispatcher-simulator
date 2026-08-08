@@ -37,6 +37,13 @@ const {
   movement: MOVEMENT_DEFINITION,
 } = BEKASI_TAMBUN_CIBITUNG_DISPATCH;
 
+// Phase 7 presentation mode: grid layouts keep the graph-paper chrome and
+// snapped train hops; schematic layouts render free-form from the geometry.
+const PRESENTATION = DISPATCH_MAP.presentation;
+const IS_SCHEMATIC = PRESENTATION.kind === "schematic";
+const SCHEMATIC_VIEWBOX = IS_SCHEMATIC ? PRESENTATION.viewBox : undefined;
+const STATION_SHAPES = PRESENTATION.stationShapes ?? [];
+
 const {
   diagramAriaLabel: DIAGRAM_ARIA_LABEL,
   grid: {
@@ -1018,13 +1025,18 @@ export default function DispatchingTable() {
             if (el.getAttribute("d") !== d) el.setAttribute("d", d);
           }
         }
-        // render: straights snap to the nearest 2-cell span (grid-aligned hops);
-        // diagonals (crossovers) follow the track continuously, rotated
+        // render: grid mode snaps straights to the nearest 2-cell span and steps
+        // diagonals in CELL hops; schematic mode places markers at their true
+        // continuous position, rotated to the segment bearing.
         const horizontal = st.segFrom[1] === st.segTo[1];
         let rx = st.x;
         let ry = st.y;
         let ang = 0;
-        if (horizontal) {
+        if (IS_SCHEMATIC && PRESENTATION.continuousTrains) {
+          const [fx, fy] = st.segFrom;
+          const [tx, ty] = st.segTo;
+          ang = (Math.atan2(ty - fy, tx - fx) * 180) / Math.PI;
+        } else if (horizontal) {
           // stopped trains snap BEHIND their raw position (floor eastbound /
           // ceil westbound) so the 2-cell marker never protrudes past the
           // signal or junction it is held at — a moving train rounds to the
@@ -1748,12 +1760,18 @@ export default function DispatchingTable() {
       </div>
 
       <svg
-        viewBox={`${GRID_VIEWBOX.minX} ${GRID_VIEWBOX.minY} ${RIGHT + GRID_VIEWBOX.widthPadding} ${GRID_VIEWBOX.height}`}
+        viewBox={
+          SCHEMATIC_VIEWBOX
+            ? `${SCHEMATIC_VIEWBOX.minX} ${SCHEMATIC_VIEWBOX.minY} ${SCHEMATIC_VIEWBOX.width} ${SCHEMATIC_VIEWBOX.height}`
+            : `${GRID_VIEWBOX.minX} ${GRID_VIEWBOX.minY} ${RIGHT + GRID_VIEWBOX.widthPadding} ${GRID_VIEWBOX.height}`
+        }
         className="w-full h-auto"
         role="img"
         aria-label={DIAGRAM_ARIA_LABEL}
       >
-        {/* Full-width graph-paper grid, 58px cells (incl. the EXT-cell extensions) */}
+        {/* Full-width graph-paper grid, 58px cells (incl. the EXT-cell extensions)
+            — grid mode only; schematic layouts draw free-form */}
+        {!IS_SCHEMATIC && (
         <g stroke="#e7e7e7" strokeWidth={1}>
           {Array.from({ length: RIGHT / CELL + 1 }, (_, i) => (
             <line key={`v${i}`} x1={i * CELL} y1={0} x2={i * CELL} y2={GRID_BOTTOM_Y} />
@@ -1762,8 +1780,10 @@ export default function DispatchingTable() {
             <line key={`h${i}`} x1={0} y1={i * CELL} x2={RIGHT} y2={i * CELL} />
           ))}
         </g>
+        )}
 
         {/* Grid references — letters (columns A..AO) across the top/bottom, numbers 1–6 down the sides */}
+        {!IS_SCHEMATIC && (
         <g>
           {/* ticks at column boundaries */}
           {Array.from({ length: RIGHT / CELL + 1 }, (_, i) => (
@@ -1810,6 +1830,7 @@ export default function DispatchingTable() {
             })}
           </g>
         </g>
+        )}
 
         {/* Shifted original diagram — everything below uses the original coordinates
             and is moved right by SHIFT to leave room for the left extension */}
@@ -1827,7 +1848,8 @@ export default function DispatchingTable() {
             ))}
           </defs>
 
-          {/* Station platform cells — tinted footprint under the tracks */}
+          {/* Station platform cells — tinted footprint under the tracks (grid mode) */}
+          {!IS_SCHEMATIC && (
           <g>
             {STATION_CELLS.map((st) =>
               st.cells.map((c) => {
@@ -1849,6 +1871,7 @@ export default function DispatchingTable() {
               })
             )}
           </g>
+          )}
 
           {/* All tracks — always solid black outside of point cells */}
           <g stroke="#000" strokeWidth={2} strokeLinecap="round" fill="none">
@@ -1856,6 +1879,30 @@ export default function DispatchingTable() {
               <path key={i} d={d} />
             ))}
           </g>
+
+          {/* Flyover crossings — the lower line is gapped and the upper track
+              carries a bridge glyph (two piers). Level crossings only exist at
+              different grade levels, so grid layouts have none. */}
+          {DISPATCH_MAP.levelCrossings.map((crossing, i) => {
+            const [px, py] = crossing.point;
+            const { dx, dy } = crossing.direction;
+            // perpendicular (for the piers)
+            const nx = -dy;
+            const ny = dx;
+            // a small white pane erases both strokes at the crossing point
+            return (
+              <g key={`flyover-${i}`}>
+                <rect x={px - 8} y={py - 8} width={16} height={16} fill="#ffffff" />
+                {/* the upper track re-drawn through the gap */}
+                <line x1={px - dx * 12} y1={py - dy * 12} x2={px + dx * 12} y2={py + dy * 12} stroke="#000" strokeWidth={2} />
+                {/* bridge piers — two short ticks perpendicular to the track */}
+                <g stroke="#000" strokeWidth={2} strokeLinecap="round">
+                  <line x1={px - nx * 11 - dx * 4} y1={py - ny * 11 - dy * 4} x2={px - nx * 11 + dx * 4} y2={py - ny * 11 + dy * 4} />
+                  <line x1={px + nx * 11 - dx * 4} y1={py + ny * 11 - dy * 4} x2={px + nx * 11 + dx * 4} y2={py + ny * 11 + dy * 4} />
+                </g>
+              </g>
+            );
+          })}
 
         {/* Reserved routes (amber) — independent of the signal aspect; only the
             unpassed portion of each reservation stays highlighted (per-cell).
@@ -1887,8 +1934,45 @@ export default function DispatchingTable() {
           ))}
         </g>
 
-        {/* Stations — merged-cell name plates (e.g. Bekasi Timur at E3–F3) */}
+        {/* Stations — grid mode: merged-cell name plates (e.g. Bekasi Timur at
+            E3–F3); schematic mode: authored platform shapes at their coordinates */}
         {STATIONS.map((st) => {
+          const shape = STATION_SHAPES.find((s) => s.code === st.code);
+          if (IS_SCHEMATIC && shape) {
+            const w = shape.length;
+            const h = shape.width ?? 10;
+            const barY = shape.side === "down" ? shape.y + 8 : shape.y - 8 - h;
+            return (
+              <g
+                key={st.code}
+                onClick={() => openStation(st.code)}
+                className="cursor-pointer"
+                aria-label={`Jadwal stasiun ${st.name}`}
+              >
+                <rect
+                  x={shape.x - w / 2}
+                  y={barY}
+                  width={w}
+                  height={h}
+                  rx={h / 2}
+                  fill="#94a3b8"
+                  stroke={selectedStation === st.code ? "#f59e0b" : "#334155"}
+                  strokeWidth={selectedStation === st.code ? 3 : 2}
+                />
+                <text
+                  x={shape.x}
+                  y={barY + (shape.side === "down" ? h + 14 : -6)}
+                  textAnchor="middle"
+                  fontSize={13}
+                  fontWeight={700}
+                  fill="#334155"
+                  pointerEvents="none"
+                >
+                  {st.name}
+                </text>
+              </g>
+            );
+          }
           return (
             <g
               key={st.code}

@@ -79,6 +79,8 @@ export const THREE_MAIN_FIXTURE_MAP: DispatchMapDefinition = {
   trackPaths: COMPILED.trackPaths,
   sectionPaths: COMPILED.sectionPaths,
   segmentLevels: COMPILED.segmentLevels,
+  levelCrossings: COMPILED.levelCrossings,
+  presentation: { kind: "grid" },
   trafficArrowPoints: [],
   stations: {
     nameplates: STATIONS,

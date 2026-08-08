@@ -47,6 +47,35 @@ export type StationCell = {
   cells: { col: string; row: number }[];
 };
 
+/** A schematic-mode platform: authored coordinates, not grid cells. */
+export type StationShape = {
+  code: string;
+  /** platform anchor point. */
+  x: number;
+  y: number;
+  /** which side of the track the platform sits (perpendicular offset). */
+  side: "up" | "down";
+  /** platform length along the track axis. */
+  length: number;
+  /** platform thickness perpendicular to the track (default 10). */
+  width?: number;
+};
+
+/**
+ * Presentation mode — Phase 7. Grid layouts keep the graph-paper chrome
+ * (lines, column letters, row numbers, snapped train hops); schematic layouts
+ * render free-form from the edge geometry.
+ */
+export type Presentation = {
+  kind: "grid" | "schematic";
+  /** schematic mode: full viewBox (grid mode uses grid.viewBox + width). */
+  viewBox?: { minX: number; minY: number; width: number; height: number };
+  /** schematic mode: train markers at true continuous position/bearing. */
+  continuousTrains?: boolean;
+  /** schematic mode: authored platform shapes (grid mode uses cells). */
+  stationShapes?: StationShape[];
+};
+
 export type DispatchMapDefinition = {
   id: string;
   name: string;
@@ -108,6 +137,14 @@ export type DispatchMapDefinition = {
   sectionPaths: Record<string, LeveledPoint[]>;
   /** Grade level of every movement segment, keyed `${fromId}|${toId}`. */
   segmentLevels: Record<string, number>;
+  /** Phase 7: map positions where edges cross at different grade levels. */
+  levelCrossings: {
+    point: TopologyPoint;
+    upperLevel: number;
+    direction: Bearing;
+  }[];
+  /** Phase 7: presentation mode (grid chrome vs free-form schematic). */
+  presentation: Presentation;
   trafficArrowPoints: string[];
   stations: {
     nameplates: Station[];

@@ -6,11 +6,11 @@
 
 ## Current position
 
-- **Active phase:** 7 — Arbitrary-schematic rendering (blocked by 6, now done).
-- **Current step:** Not started. Phase 6 (graded junctions / flyovers) is
-  complete.
-- **Next action:** Read `docs/PLAN-phase-7.md`, then start step 1 (Phase 6
-  unblocked it). This is the LAST phase.
+- **Active phase:** none — the program is COMPLETE (phases 0–7 all done).
+- **Current step:** —.
+- **Next action:** optional follow-ups (per-layout UI switching, pan/zoom,
+  per-train lengths); otherwise the toolchain now supports arbitrary complex
+  station layouts end-to-end.
 
 ## Phase state
 
@@ -23,7 +23,7 @@
 | 4 | Route search + flank protection | **DONE** |
 | 5 | 2-D multi-segment occupancy | **DONE** |
 | 6 | Flyovers / graded junctions | **DONE** |
-| 7 | Arbitrary-schematic rendering | blocked by 6 |
+| 7 | Arbitrary-schematic rendering | **DONE** |
 
 Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any order.
 
@@ -157,6 +157,16 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   M1 no), ramp routing (A1→B2 via the ramp), route-clash suppression, and
   level-1 footprint pieces. `ADDING_LAYOUTS.md` documents the graded-edge
   shape.
+- (Phase 7) Maps declare `presentation: { kind: "grid" | "schematic" }`. The
+  component gates the grid chrome (lines/letters/ticks) and station cells on
+  grid mode, renders schematic `stationShapes` (authored platform bars) and
+  continuous train markers (true x/y rotated to the segment bearing), and the
+  compiler emits `levelCrossings` (positions where edges cross at different
+  grades) which render as a gap in the lower line + bridge piers on the upper.
+  Bekasi stays grid mode → its visual baselines pass unchanged.
+- (Phase 7) The flyover fixture is the schematic smoke test: `app/schematic/`
+  renders it with no grid chrome, platforms Alpha/Beta, the bridge glyph at
+  (800,147), and continuous markers (e2e asserts all of it).
 
 ## Notes for the next worker
 

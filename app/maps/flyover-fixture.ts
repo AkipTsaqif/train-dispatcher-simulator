@@ -34,6 +34,12 @@ const CELL = 50;
 
 const COMPILED = compileTopology(FLYOVER_FIXTURE_TOPOLOGY);
 
+// schematic-mode stations: authored platform shapes (not grid cells)
+const STATIONS: Station[] = [
+  { code: "A", name: "Alpha", x: 1400, y: 89, w: 116, h: 58 },
+  { code: "B", name: "Beta", x: 400, y: 205, w: 116, h: 58 },
+];
+
 export const FLYOVER_FIXTURE_MAP: DispatchMapDefinition = {
   id: "flyover-fixture",
   name: "Flying junction over the middle line (fixture)",
@@ -68,11 +74,21 @@ export const FLYOVER_FIXTURE_MAP: DispatchMapDefinition = {
   trackPaths: COMPILED.trackPaths,
   sectionPaths: COMPILED.sectionPaths,
   segmentLevels: COMPILED.segmentLevels,
+  levelCrossings: COMPILED.levelCrossings,
+  presentation: {
+    kind: "schematic",
+    viewBox: { minX: -60, minY: -40, width: 1820, height: 340 },
+    continuousTrains: true,
+    stationShapes: [
+      { code: "A", x: 1400, y: 89, side: "down", length: 200 },
+      { code: "B", x: 400, y: 205, side: "up", length: 200 },
+    ],
+  },
   trafficArrowPoints: [],
   stations: {
-    nameplates: [],
+    nameplates: STATIONS,
     cells: [],
-    namesByCode: {},
+    namesByCode: Object.fromEntries(STATIONS.map((station) => [station.code, station.name])),
     platformCenterX: COMPILED.stationPlatformCenterX,
   },
   compatibility: COMPILED.compatibility,

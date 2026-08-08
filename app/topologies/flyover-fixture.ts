@@ -67,6 +67,9 @@ export const FLYOVER_FIXTURE_TOPOLOGY: TopologyDefinition = {
     { id: section("B2"), signalId: "B2", coverage: "signal-to-boundary", edgeRanges: [{ edgeId: "lineB-west", from: { kind: "signal", signalId: "B2" }, to: { kind: "edge-end", end: "to" } }], legacyOpenEnd: "west" },
     { id: section("R1"), signalId: "R1", coverage: "signal-to-boundary", edgeRanges: [{ edgeId: "ramp", from: { kind: "signal", signalId: "R1" }, to: { kind: "edge-end", end: "to" } }], legacyOpenEnd: "west" },
   ],
-  stationStopPoints: [],
+  stationStopPoints: [
+    { stationCode: "A", edgeId: "lineA-east", segmentIndex: 0, offset: 200 },
+    { stationCode: "B", edgeId: "lineB-west", segmentIndex: 0, offset: 200 },
+  ],
   legacyNodeOrder: ["aL", "aR", "s1", "mL", "mR", "bL", "bR", "s2"],
 };

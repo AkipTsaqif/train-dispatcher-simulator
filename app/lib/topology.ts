@@ -1,6 +1,8 @@
 export type SwitchState = "normal" | "reversed";
 export type Dir = "right" | "left";
 
+import { segmentCross } from "./geometry";
+
 /**
  * A unit travel bearing. The current horizontal layouts use exactly (±1, 0);
  * the general case allows any (dx, dy) not both zero, so tracks no longer
@@ -271,6 +273,15 @@ export type CompiledTopology = {
    *  directions) — Phase 6 conflict/occupancy suppression. Derived from the
    *  topology edges; all-Bekasi edges are level 0 so nothing changes there. */
   segmentLevels: Record<string, number>;
+  /** Phase 7: map positions where two edges CROSS at different grade levels
+   *  (a flyover over a line) — the renderer draws a gap in the lower line and
+   *  a bridge glyph on the upper one. */
+  levelCrossings: {
+    point: TopologyPoint;
+    upperLevel: number;
+    /** direction of the UPPER track at the crossing (for the bridge glyph). */
+    direction: Bearing;
+  }[];
   stationPlatformCenterX: Record<string, number>;
   compatibility: {
     signalSections: CompiledSignalSection[];
@@ -531,6 +542,51 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       if (!a || !b) continue; // interior vertices without a compatibility node id
       segmentLevels[`${a}|${b}`] = level;
       segmentLevels[`${b}|${a}`] = level;
+    }
+  }
+
+  // Phase 7: level crossings — pairs of edges whose geometry crosses at
+  // DIFFERENT grade levels (a viaduct over a line). The renderer erases the
+  // lower line's stroke at the crossing and draws a bridge glyph on the upper.
+  const levelCrossings: {
+    point: TopologyPoint;
+    upperLevel: number;
+    direction: Bearing;
+  }[] = [];
+  {
+    const edgeList = definition.edges;
+    const seen = new Set<string>();
+    for (let i = 0; i < edgeList.length; i++) {
+      for (let j = i + 1; j < edgeList.length; j++) {
+        const a = edgeList[i];
+        const b = edgeList[j];
+        if ((a.level ?? 0) === (b.level ?? 0)) continue; // same grade — not a bridge
+        const pa = edgePaths.get(a.id)!.points;
+        const pb = edgePaths.get(b.id)!.points;
+        for (let k = 0; k + 1 < pa.length; k++) {
+          for (let l = 0; l + 1 < pb.length; l++) {
+            const p = segmentCross(
+              [pa[k][0], pa[k][1]],
+              [pa[k + 1][0], pa[k + 1][1]],
+              [pb[l][0], pb[l][1]],
+              [pb[l + 1][0], pb[l + 1][1]]
+            );
+            if (!p) continue;
+            const key = `${Math.round(p[0])},${Math.round(p[1])}`;
+            if (seen.has(key)) continue;
+            seen.add(key);
+            const upperSeg =
+              (a.level ?? 0) > (b.level ?? 0)
+                ? [pa[k], pa[k + 1]]
+                : [pb[l], pb[l + 1]];
+            levelCrossings.push({
+              point: p,
+              upperLevel: Math.max(a.level ?? 0, b.level ?? 0),
+              direction: bearingOf(upperSeg[0], upperSeg[1]),
+            });
+          }
+        }
+      }
     }
   }
 
@@ -1214,6 +1270,7 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     trackPaths: compileRenderPaths(definition.edges),
     sectionPaths,
     segmentLevels,
+    levelCrossings,
     stationPlatformCenterX,
     compatibility: {
       signalSections,

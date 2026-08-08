@@ -808,3 +808,18 @@ test.describe("dispatching table", () => {
     await expect(page.getByRole("button", { name: /P6 · BELOK/ })).toBeVisible();
     await expect(page.getByRole("button", { name: /P7\+P8 · BELOK/ })).toBeVisible();
   });
+
+  test("schematic mode renders without grid chrome, with platforms and the bridge glyph", async ({ page }) => {
+    await page.goto("/schematic");
+    // stations render from authored shapes (not grid cells)
+    await expect(page.getByText("Alpha")).toBeVisible();
+    await expect(page.getByText("Beta")).toBeVisible();
+    // no grid chrome — no lone column letter / row number
+    await expect(page.getByText("A", { exact: true })).toHaveCount(0);
+    await expect(page.getByText("8", { exact: true })).toHaveCount(0);
+    // the bridge glyph: gap pane + upper-track re-draw + two piers = 3 lines
+    await expect(page.locator("svg line")).toHaveCount(3);
+    // continuous train markers at their true schematic positions
+    await expect(page.getByLabel(/Train F2 at 820,141/)).toBeVisible();
+    await expect(page.getByLabel(/Train F1 at 1300,89/)).toBeVisible();
+  });
