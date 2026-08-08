@@ -9,7 +9,10 @@ export type Dir = "right" | "left";
 export type Bearing = { dx: number; dy: number };
 
 /** Unit bearing from one topology point to the next. */
-export const bearingOf = (from: TopologyPoint, to: TopologyPoint): Bearing => {
+export const bearingOf = (
+  from: TopologyPoint | LeveledPoint,
+  to: TopologyPoint | LeveledPoint
+): Bearing => {
   const dx = to[0] - from[0];
   const dy = to[1] - from[1];
   const len = Math.hypot(dx, dy);
@@ -96,6 +99,8 @@ export type CompiledMovementSignal = {
 };
 
 export type TopologyPoint = readonly [number, number];
+/** A geometry point that may carry a grade level (3rd element, default 0). */
+export type LeveledPoint = [number, number, number?];
 export type TopologyNodeKind = "boundary" | "switch";
 export type TrackRole = "main" | "loop" | "crossover";
 export type EdgeEndName = "from" | "to";
@@ -125,6 +130,10 @@ export type TrackEdge = {
   role: TrackRole;
   trackGroupId: string;
   normalDirection?: Dir;
+  /** Grade level (default 0). Two edges that geometrically cross at DIFFERENT
+   *  levels neither connect nor conflict — the flyover/viaduct rule. A ramp
+   *  edge that passes over another line carries level > 0. */
+  level?: number;
   physicalDistance?: number;
   renderBreakpoints?: readonly TopologyPoint[];
   renderSlots: readonly number[];
@@ -255,8 +264,13 @@ export type CompiledTopology = {
   trackPaths: string[];
   /** Protected-block section of each signal as a track polyline (Phase 5
    *  occupancy) — keyed by signal id; straight pieces for horizontal sections,
-   *  the whole loop chain for loop signals. */
-  sectionPaths: Record<string, TopologyPoint[]>;
+   *  the whole loop chain for loop signals. Phase 6: points carry an optional
+   *  grade level (3rd tuple element) so occupancy respects flyovers. */
+  sectionPaths: Record<string, LeveledPoint[]>;
+  /** Grade level of every movement segment, keyed `${fromId}|${toId}` (both
+   *  directions) — Phase 6 conflict/occupancy suppression. Derived from the
+   *  topology edges; all-Bekasi edges are level 0 so nothing changes there. */
+  segmentLevels: Record<string, number>;
   stationPlatformCenterX: Record<string, number>;
   compatibility: {
     signalSections: CompiledSignalSection[];
@@ -270,6 +284,7 @@ export type CompiledTopology = {
 type EdgePath = {
   ids: string[];
   points: TopologyPoint[];
+  level: number;
 };
 
 type CompiledSignalPlacement = {
@@ -497,7 +512,26 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       compatibilityVertices.set(id, { edgeId: edge.id, index, point: vertex.point });
       return id;
     });
-    edgePaths.set(edge.id, { ids, points: edge.geometry.map((vertex) => vertex.point) });
+    edgePaths.set(edge.id, {
+      ids,
+      points: edge.geometry.map((vertex) => vertex.point),
+      level: edge.level ?? 0,
+    });
+  }
+
+  // Phase 6: grade level of every movement segment — keyed both directions so
+  // a train traversing either way finds its edge's level.
+  const segmentLevels: Record<string, number> = {};
+  for (const edge of definition.edges) {
+    const path = edgePaths.get(edge.id)!;
+    const level = edge.level ?? 0;
+    for (let i = 0; i + 1 < path.ids.length; i++) {
+      const a = path.ids[i];
+      const b = path.ids[i + 1];
+      if (!a || !b) continue; // interior vertices without a compatibility node id
+      segmentLevels[`${a}|${b}`] = level;
+      segmentLevels[`${b}|${a}`] = level;
+    }
   }
 
   const allLegacyNodeIds = new Set([
@@ -965,17 +999,18 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     out.push(interp(hi));
     return out;
   };
-  const sectionPaths: Record<string, TopologyPoint[]> = {};
+  const sectionPaths: Record<string, LeveledPoint[]> = {};
   for (const section of definition.blockSections) {
-    const pts: TopologyPoint[] = [];
+    const pts: LeveledPoint[] = [];
     for (const range of section.edgeRanges) {
       const path = edgePaths.get(range.edgeId);
       if (!path) throw new Error(`Block section ${section.id} has unknown edge ${range.edgeId}`);
       const from = edgeRangePoint(range, range.from, section.id);
       const to = edgeRangePoint(range, range.to, section.id);
+      const level = path.level;
       for (const p of subpathBetween(path.points, from, to)) {
         const last = pts[pts.length - 1];
-        if (!last || last[0] !== p[0] || last[1] !== p[1]) pts.push(p);
+        if (!last || last[0] !== p[0] || last[1] !== p[1]) pts.push([p[0], p[1], level]);
       }
     }
     sectionPaths[section.signalId] = pts;
@@ -1178,6 +1213,7 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     },
     trackPaths: compileRenderPaths(definition.edges),
     sectionPaths,
+    segmentLevels,
     stationPlatformCenterX,
     compatibility: {
       signalSections,

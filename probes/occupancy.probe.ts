@@ -39,7 +39,8 @@ const train = (
   y: number,
   segFrom: [number, number],
   segTo: [number, number],
-  trail: [number, number][]
+  trail: [number, number][],
+  level = 0
 ): TrainState =>
   ({
     x,
@@ -49,7 +50,8 @@ const train = (
     segTo,
     nxtNode: null,
     incoming: null,
-    trail,
+    trail: trail.map((pt) => ({ pt, level })),
+    level,
     speed: 0,
     leg: 0,
     stopped: false,

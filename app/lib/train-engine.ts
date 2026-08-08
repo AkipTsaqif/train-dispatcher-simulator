@@ -107,6 +107,7 @@ export const spawnPriority = (
 // ---------------------------------------------------------------------------
 
 import { bearingDot, bearingOf, type Bearing, type GNodeExit } from "./topology";
+import type { LeveledPoint } from "./topology";
 import { footprintsOverlap, polylinesOverlap } from "./geometry";
 
 export type LineDir = "right" | "left";
@@ -136,6 +137,9 @@ export type MoveCtx = {
   trainHalfLen: number; // half the train marker length (for stops + occupancy)
   ignoreSignals?: boolean; // placement pass: position per schedule, no red-signal stops
   meetsHold?: (st: TrainState, legs: LegPlan) => number; // absolute sim time the train must wait until at its current station (0 = none)
+  /** Grade level of every movement segment, keyed `${fromId}|${toId}` (both
+   *  directions) — Phase 6 occupancy/conflict suppression. Absent → level 0. */
+  segmentLevels?: Record<string, number>;
 };
 
 export type TrainState = {
@@ -146,7 +150,8 @@ export type TrainState = {
   segTo: [number, number];
   nxtNode: string | null; // node id at the end of the current segment
   incoming: string | null; // node the train arrived from (for branch logic)
-  trail: [number, number][]; // points the center passed (bounded to body length)
+  trail: { pt: [number, number]; level: number }[]; // points the center passed (bounded to body length)
+  level: number; // grade level of the current segment (Phase 6)
   speed: number;
   leg: number;
   stopped: boolean;
@@ -289,6 +294,7 @@ export function initTrain(journey: JourneyPlan, nodes: Record<string, GraphNodeL
     nxtNode: s.firstNode,
     incoming: null,
     trail: [],
+    level: 0, // the approach leg is off-map (grade 0)
     speed,
     leg: 0,
     stopped: false,
@@ -355,6 +361,11 @@ const resolveNode = (
   return best ? { next: best.neighbor } : { offmap: true };
 };
 
+const segmentLevelOf = (ctx: MoveCtx, fromId: string | null, toId: string | null): number => {
+  if (!fromId || !toId || !ctx.segmentLevels) return 0;
+  return ctx.segmentLevels[`${fromId}|${toId}`] ?? ctx.segmentLevels[`${toId}|${fromId}`] ?? 0;
+};
+
 const setSegment = (st: TrainState, res: { next: string }, ctx: MoveCtx): void => {
   const fromId = st.nxtNode; // the node being left
   const target = ctx.nodes[res.next];
@@ -362,8 +373,9 @@ const setSegment = (st: TrainState, res: { next: string }, ctx: MoveCtx): void =
   st.segTo = target ? [target.x, target.y] : [st.x, st.y];
   st.nxtNode = res.next;
   st.incoming = fromId;
+  st.level = segmentLevelOf(ctx, fromId, res.next);
   // trail the passed point — the center's path, bounded to the body length
-  st.trail.push([st.segFrom[0], st.segFrom[1]]);
+  st.trail.push({ pt: [st.segFrom[0], st.segFrom[1]], level: st.level });
   trimTrail(st, ctx.trainHalfLen * 3);
 };
 
@@ -373,8 +385,8 @@ const trimTrail = (st: TrainState, maxLen: number): void => {
     let total = 0;
     for (let i = 1; i < st.trail.length; i++) {
       total += Math.hypot(
-        st.trail[i][0] - st.trail[i - 1][0],
-        st.trail[i][1] - st.trail[i - 1][1]
+        st.trail[i].pt[0] - st.trail[i - 1].pt[0],
+        st.trail[i].pt[1] - st.trail[i - 1].pt[1]
       );
     }
     if (total <= maxLen) break;
@@ -600,7 +612,8 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
       st.segFrom = [st.x, st.y];
       st.segTo = [legs[st.leg].waypointX, st.y];
       st.nxtNode = null;
-      st.trail.push([st.segFrom[0], st.segFrom[1]]);
+      st.level = 0; // off-map exit leg
+      st.trail.push({ pt: [st.segFrom[0], st.segFrom[1]], level: 0 });
       trimTrail(st, ctx.trainHalfLen * 3);
       continue;
     }
@@ -617,9 +630,9 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
  * the adjoining horizontals), so occupancy and conflict checks use these
  * polylines rather than an x-interval on one line.
  */
-export function footprintOf(st: TrainState, halfLen: number): [number, number][][] {
+export function footprintOf(st: TrainState, halfLen: number): LeveledPoint[][] {
   const bodyLen = 2 * halfLen;
-  const pieces: [number, number][][] = [];
+  const pieces: LeveledPoint[][] = [];
   const [fx, fy] = st.segFrom;
   const [tx, ty] = st.segTo;
   const dx = tx - fx;
@@ -628,32 +641,45 @@ export function footprintOf(st: TrainState, halfLen: number): [number, number][]
   const ux = dx / segLen;
   const uy = dy / segLen;
   const front: [number, number] = [st.x + ux * halfLen, st.y + uy * halfLen];
+  const currentLevel = st.level ?? 0;
   let remaining = bodyLen;
   // current segment: from the front back to its start
   const toStart = Math.hypot(st.x - fx, st.y - fy) + halfLen;
   if (toStart > 0 && segLen > 0) {
     if (remaining <= toStart) {
-      pieces.push([front, [front[0] - ux * remaining, front[1] - uy * remaining]]);
+      pieces.push([
+        [front[0], front[1], currentLevel],
+        [front[0] - ux * remaining, front[1] - uy * remaining, currentLevel],
+      ]);
       return pieces;
     }
-    pieces.push([front, [fx, fy]]);
+    pieces.push([[front[0], front[1], currentLevel], [fx, fy, currentLevel]]);
     remaining -= toStart;
   }
   // the traversed trail, newest → oldest (the newest entry is the current
-  // segment's start; the pieces continue straight back from there)
+  // segment's start; the pieces continue straight back from there). The piece
+  // between a (newer) and b (older) is the segment b→a — its level is b's
+  // (stored when the train left that node).
   for (let i = st.trail.length - 1; i >= 1 && remaining > 0; i--) {
     const a = st.trail[i];
     const b = st.trail[i - 1];
-    const d = Math.hypot(a[0] - b[0], a[1] - b[1]) || 1;
+    const d = Math.hypot(a.pt[0] - b.pt[0], a.pt[1] - b.pt[1]) || 1;
     if (remaining <= d) {
       pieces.push([
-        a,
-        [a[0] + ((b[0] - a[0]) / d) * remaining, a[1] + ((b[1] - a[1]) / d) * remaining],
+        [a.pt[0], a.pt[1], b.level],
+        [
+          a.pt[0] + ((b.pt[0] - a.pt[0]) / d) * remaining,
+          a.pt[1] + ((b.pt[1] - a.pt[1]) / d) * remaining,
+          b.level,
+        ],
       ]);
       remaining = 0;
       break;
     }
-    pieces.push([a, b]);
+    pieces.push([
+      [a.pt[0], a.pt[1], b.level],
+      [b.pt[0], b.pt[1], b.level],
+    ]);
     remaining -= d;
   }
   return pieces;
@@ -681,7 +707,7 @@ export function occupiedSections(
     lineY: number;
     lo: number;
     hi: number;
-    pts?: [number, number][];
+    pts?: LeveledPoint[];
   }[],
   halfLen: number
 ): string {
@@ -718,9 +744,9 @@ export function occupiedSections(
  * cells the train has passed return to normal, the unpassed ones stay lit.
  */
 export function reservationAhead(
-  pts: [number, number][],
+  pts: LeveledPoint[],
   fronts: { lineY: number; front: number }[]
-): [number, number][] | null {
+): LeveledPoint[] | null {
   const distTo = (p: [number, number]) => {
     let best = Infinity;
     for (let i = 0; i + 1 < pts.length; i++) {
@@ -767,7 +793,7 @@ export function reservationAhead(
   const { idx, t } = best;
   const [x1, y1] = pts[idx];
   const [x2, y2] = pts[idx + 1];
-  const out: [number, number][] = [[x1 + (x2 - x1) * t, y1 + (y2 - y1) * t]];
+  const out: LeveledPoint[] = [[x1 + (x2 - x1) * t, y1 + (y2 - y1) * t]];
   for (let i = idx + 1; i < pts.length; i++) out.push(pts[i]);
   return out;
 }

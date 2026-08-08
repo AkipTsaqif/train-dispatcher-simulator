@@ -10,7 +10,7 @@
 // message, or auto-set later).
 // ---------------------------------------------------------------------------
 
-import type { Bearing, SwitchState } from "./topology";
+import type { Bearing, LeveledPoint, SwitchState } from "./topology";
 import type { GraphNodeLike, LineDir } from "./train-engine";
 
 export type RouteSearchSignal = {
@@ -22,7 +22,7 @@ export type RouteSearchSignal = {
 };
 
 export type FoundRoute = {
-  pts: [number, number][]; // polyline from the entrance signal to the exit signal
+  pts: LeveledPoint[]; // polyline from the entrance signal to the exit signal
   nodePath: string[];
   requiredSwitches: Record<number, SwitchState>;
   exitSignalId: string;
@@ -36,9 +36,12 @@ export type FindRouteInput = {
   switches: Record<number, SwitchState>;
   isLocked: (sw: number) => boolean;
   /** Optional occupancy predicate — prune a segment when it is not clear. */
-  isClear?: (nodePath: string[], pts: [number, number][]) => boolean;
+  isClear?: (nodePath: string[], pts: LeveledPoint[]) => boolean;
   /** Optional target exit signal — only routes ending there are returned. */
   exitSignalId?: string;
+  /** Grade level of every movement segment, keyed `${fromId}|${toId}` —
+   *  Phase 6 stamps route polylines so clash checks respect flyovers. */
+  segmentLevels?: Record<string, number>;
   maxDepth?: number;
 };
 
@@ -101,7 +104,7 @@ const exitSignalOn = (
 };
 
 export const findRoute = (input: FindRouteInput): FoundRoute | null => {
-  const { entranceId, entrance, signals, graph, switches, isLocked, isClear, exitSignalId } = input;
+  const { entranceId, entrance, signals, graph, switches, isLocked, isClear, exitSignalId, segmentLevels } = input;
   const dir = entrance.dir;
   const maxDepth = input.maxDepth ?? 32;
   const startNodeId = entrance.edge[1];
@@ -120,8 +123,8 @@ export const findRoute = (input: FindRouteInput): FoundRoute | null => {
 
   // a same-direction signal sitting on the segment from→to (geometric check)
   const exitSignalOnSegment = (
-    from: [number, number],
-    to: [number, number]
+    from: LeveledPoint,
+    to: LeveledPoint
   ): RouteSearchSignal | undefined => {
     const lo = Math.min(from[0], to[0]);
     const hi = Math.max(from[0], to[0]);
@@ -135,24 +138,31 @@ export const findRoute = (input: FindRouteInput): FoundRoute | null => {
     );
   };
 
+  const lvlOf = (a: string | null, b: string | null): number =>
+    a && b && segmentLevels
+      ? (segmentLevels[`${a}|${b}`] ?? segmentLevels[`${b}|${a}`] ?? 0)
+      : 0;
+  const leveled = (x: number, y: number, level: number): [number, number, number] => [x, y, level];
+
   const candidates: FoundRoute[] = [];
 
   const dfs = (
     nodeId: string | null,
     incoming: string | null,
     path: string[],
-    pts: [number, number][],
+    pts: LeveledPoint[],
     required: Record<number, SwitchState>,
     depth: number
   ): void => {
     if (depth > maxDepth) return;
     const fromPoint = pts[pts.length - 1];
     const toPoint = nodeId ? [graph[nodeId]?.x ?? fromPoint[0], graph[nodeId]?.y ?? fromPoint[1]] as [number, number] : null;
+    const segLevel = lvlOf(incoming, nodeId);
 
     // exit signal ahead on the incoming segment?
     const exitSig = toPoint ? exitSignalOnSegment(fromPoint, toPoint) : undefined;
     if (exitSig) {
-      const exitPts = pts.concat([[exitSig.x, exitSig.y]]);
+      const exitPts = pts.concat([leveled(exitSig.x, exitSig.y, segLevel)]);
       const exitPath = nodeId ? path.concat([nodeId]) : path;
       if ((!isClear || isClear(exitPath, exitPts)) && (!exitSignalId || exitSig.id === exitSignalId)) {
         candidates.push({
@@ -176,7 +186,7 @@ export const findRoute = (input: FindRouteInput): FoundRoute | null => {
       // when a specific exit signal was requested.
       if (!exitSignalId) {
         candidates.push({
-          pts: pts.concat([[node.x, node.y]]),
+          pts: pts.concat([leveled(node.x, node.y, segLevel)]),
           nodePath: path.concat([nodeId]),
           requiredSwitches: required,
           exitSignalId: "",
@@ -191,7 +201,7 @@ export const findRoute = (input: FindRouteInput): FoundRoute | null => {
       const nextRequired = { ...required };
       if (needMove) nextRequired[node.sw!] = needMove;
       const nextPath = path.concat([nodeId]);
-      const nextPts = pts.concat([[node.x, node.y]]);
+      const nextPts = pts.concat([leveled(node.x, node.y, segLevel)]);
       if (isClear && !isClear(nextPath, nextPts)) continue;
       dfs(exit.neighbor, nodeId, nextPath, nextPts, nextRequired, depth + 1);
     }
@@ -216,7 +226,7 @@ export const findRoute = (input: FindRouteInput): FoundRoute | null => {
   return candidates[0];
 };
 
-const polylineLength = (pts: [number, number][]): number => {
+const polylineLength = (pts: LeveledPoint[]): number => {
   let total = 0;
   for (let i = 1; i < pts.length; i++) {
     total += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
@@ -275,9 +285,9 @@ export const flankPoints = (
 
 /** Distance from point p to the segment a→b. */
 const pointSegDist = (
-  p: [number, number],
-  a: [number, number],
-  b: [number, number]
+  p: LeveledPoint,
+  a: LeveledPoint,
+  b: LeveledPoint
 ): number => {
   const dx = b[0] - a[0];
   const dy = b[1] - a[1];
@@ -288,18 +298,18 @@ const pointSegDist = (
 
 /** Minimum distance between two segments. */
 const segSegDist = (
-  a: [number, number],
-  b: [number, number],
-  c: [number, number],
-  d: [number, number]
+  a: LeveledPoint,
+  b: LeveledPoint,
+  c: LeveledPoint,
+  d: LeveledPoint
 ): number => {
   let best = Infinity;
   for (const p of [a, b]) best = Math.min(best, pointSegDist(p, c, d));
   for (const p of [c, d]) best = Math.min(best, pointSegDist(p, a, b));
   // segment-segment crossing (the endpoints are outside each other)
-  const cross = (o: [number, number], p: [number, number], q: [number, number]) =>
+  const cross = (o: LeveledPoint, p: LeveledPoint, q: LeveledPoint) =>
     (p[0] - o[0]) * (q[1] - o[1]) - (p[1] - o[1]) * (q[0] - o[0]);
-  const onSeg = (o: [number, number], p: [number, number], q: [number, number]) =>
+  const onSeg = (o: LeveledPoint, p: LeveledPoint, q: LeveledPoint) =>
     Math.min(o[0], p[0]) <= q[0] && q[0] <= Math.max(o[0], p[0]) &&
     Math.min(o[1], p[1]) <= q[1] && q[1] <= Math.max(o[1], p[1]);
   const d1 = cross(a, b, c);

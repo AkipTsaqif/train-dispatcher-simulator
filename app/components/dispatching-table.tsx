@@ -16,7 +16,7 @@ import { polylinesOverlap, routesOverlap } from "../lib/geometry";
 import { BEKASI_TAMBUN_CIBITUNG_DISPATCH } from "../dispatching/bekasi-tambun-cibitung";
 import { bearingDot, bearingOf } from "../lib/topology";
 import { findRoute, flankPoints } from "../lib/route-search";
-import type { Bearing, GNodeExit } from "../lib/topology";
+import type { Bearing, GNodeExit, LeveledPoint } from "../lib/topology";
 import type {
   Dir,
   DispatchMapDefinition,
@@ -79,7 +79,7 @@ const {
 // Phase 5: protected-block section of each signal as a track polyline — the
 // general 2-D occupancy path uses these; the horizontal fast path stays on the
 // x-intervals. Keyed by signal id, straight pieces for horizontal sections.
-const SECTION_PATHS = DISPATCH_MAP.sectionPaths as Record<string, [number, number][]>;
+const SECTION_PATHS = DISPATCH_MAP.sectionPaths as Record<string, LeveledPoint[]>;
 const SIGNAL_SECTIONS_PTS = SIGNAL_SECTIONS.map((section) => ({
   ...section,
   pts: SECTION_PATHS[section.sig],
@@ -151,17 +151,24 @@ const cellOrigin = (
 // Route walker: from a signal, walk the graph in its direction, following
 // points (divert / block) until the next same-direction signal or the end.
 // ---------------------------------------------------------------------------
-type Route = { d: string; note: string; nextSignalId?: string; pts: [number, number][]; blocked?: boolean };
+type Route = { d: string; note: string; nextSignalId?: string; pts: LeveledPoint[]; blocked?: boolean };
 
 const walkRoute = (
   sig: SignalDef,
   switches: Record<number, SwitchState>,
-  map: Pick<DispatchMapDefinition, "nodes" | "signals">
+  map: Pick<DispatchMapDefinition, "nodes" | "signals" | "segmentLevels">
 ): Route => {
   const dir = sig.dir;
   const nodes = map.nodes;
   const signals = map.signals.items;
-  const pts: [number, number][] = [[sig.x, sig.y]];
+  const segLvl = (a: string | null, b: string | null) =>
+    a && b ? (map.segmentLevels[`${a}|${b}`] ?? map.segmentLevels[`${b}|${a}`] ?? 0) : 0;
+  const pts: LeveledPoint[] = [[sig.x, sig.y, segLvl(sig.edge[0], sig.edge[1])]];
+  let curLevel = pts[0][2] ?? 0;
+  const push = (x: number, y: number, level?: number): void => {
+    pts.push([x, y, level ?? curLevel]);
+    if (level !== undefined) curLevel = level;
+  };
   const toD = () => "M" + pts.map(([x, y]) => `${x},${y}`).join(" ");
 
   const done = (note: string, nextSignalId?: string, blocked = false): Route => ({
@@ -197,7 +204,7 @@ const walkRoute = (
     // stop at the next same-direction signal on this segment
     const hit = nextSignalOn(fromX, node);
     if (hit) {
-      pts.push([hit.x, hit.y]);
+      push(hit.x, hit.y);
       return done(`ke ${hit.id}`, hit.id);
     }
 
@@ -220,23 +227,25 @@ const walkRoute = (
       const cameFromBranch = branchExit !== undefined && incoming === branchExit.neighbor;
       if (cameFromBranch) {
         if (!reversed) {
-          pts.push([node.x, node.y]);
+          push(node.x, node.y);
           return done(`berakhir di P${node.sw}`, undefined, true);
         }
       } else if (branchAhead && reversed) {
         // divert: push this junction first (in path order), then the branch path
-        pts.push([node.x, node.y]);
+        push(node.x, node.y);
         const branchPath = branchExit!.branchPath ?? [];
+        let prevId: string | null = cur;
         for (let i = 0; i < branchPath.length; i++) {
           const nid = branchPath[i];
           const n = nodes[nid];
           const nx = pts[pts.length - 1][0];
           const hit2 = nextSignalOn(nx, n);
           if (hit2) {
-            pts.push([hit2.x, hit2.y]);
+            push(hit2.x, hit2.y);
             return done(`ke ${hit2.id}`, hit2.id);
           }
-          pts.push([n.x, n.y]);
+          push(n.x, n.y, segLvl(prevId, nid));
+          prevId = nid;
         }
         const last = branchPath.length - 1;
         const far = nodes[branchPath[last]];
@@ -257,18 +266,19 @@ const walkRoute = (
           }
           cur = bestExit ? bestExit.neighbor : null;
           if (!cur) return done(dir === "right" ? "ke ujung kanan" : "ke ujung kiri");
+          curLevel = segLvl(branchPath[last], cur);
           continue; // junction already pushed — skip the fall-through push
         }
         // exit not set — trapped at the far end
         return done(`berakhir di P${branchExit!.farSw} — belum diatur`, undefined, true);
       } else if (reversed) {
         // branch behind (or none) + reversed = straight blocked
-        pts.push([node.x, node.y]);
+        push(node.x, node.y);
         return done(`berakhir di P${node.sw}`, undefined, true);
       }
     }
 
-    pts.push([node.x, node.y]);
+    push(node.x, node.y);
     // the open, non-reversing exit continuing most nearly straight
     const reversed = node.sw !== undefined && switches[node.sw] === "reversed";
     let bestExit: GNodeExit | undefined;
@@ -286,6 +296,7 @@ const walkRoute = (
     if (!cur) {
       return done(dir === "right" ? "ke ujung kanan" : "ke ujung kiri");
     }
+    curLevel = segLvl(incoming, cur);
   }
   return done("tidak dikenal", undefined, true);
 };
@@ -300,7 +311,7 @@ const walkRoute = (
 type SignalAspectDependencies = {
   signals: SignalDef[];
   normalDirectionByY: Record<number, Dir>;
-  signalSections: { sig: string; lineY: number; lo: number; hi: number; pts?: [number, number][] }[];
+  signalSections: { sig: string; lineY: number; lo: number; hi: number; pts?: LeveledPoint[] }[];
   signalOn: Record<string, boolean>;
   trainStates: TrainState[];
   trainHalfLen: number;
@@ -315,7 +326,7 @@ const trainOccupies = (
   x1: number,
   x2: number,
   skip: number[] = [],
-  pts?: [number, number][]
+  pts?: LeveledPoint[]
 ): boolean =>
   trainStates.some((train) => {
     if (!train.spawned || train.done || skip.includes(train.idx)) {
@@ -530,7 +541,7 @@ export default function DispatchingTable() {
   const trainSectionKeyRef = useRef("");
   // Independent route reservations: created when the player clears a signal,
   // persist while a train uses them, and are consumed progressively by the train.
-  type Reservation = { pts: [number, number][]; nextSignalId?: string; lineY: number; nodePath?: string[] };
+  type Reservation = { pts: LeveledPoint[]; nextSignalId?: string; lineY: number; nodePath?: string[] };
   const [reservations, setReservations] = useState<Record<string, Reservation>>({});
   const reservationsRef = useRef(reservations);
   reservationsRef.current = reservations;
@@ -542,7 +553,7 @@ export default function DispatchingTable() {
   const reservedByRef = useRef<Record<string, number>>({});
   // distance from a point to the route polyline (the train's center vs the
   // reserved path — 0 while it is on the route)
-  const distToPoly = (px: number, py: number, pts: [number, number][]) => {
+  const distToPoly = (px: number, py: number, pts: LeveledPoint[]) => {
     let best = Infinity;
     for (let i = 0; i + 1 < pts.length; i++) {
       const [x1, y1] = pts[i];
@@ -558,7 +569,7 @@ export default function DispatchingTable() {
   // The unpassed (still-protected) portion of a reservation, trimmed at the
   // front of the train that owns it. null = the owner finished its journey,
   // so the reservation should be released.
-  const unpassedOf = (id: string, res: Reservation): [number, number][] | null => {
+  const unpassedOf = (id: string, res: Reservation): LeveledPoint[] | null => {
     const ownerIdx = reservedByRef.current[id];
     const owner = ownerIdx !== undefined ? trainStatesRef.current[ownerIdx] : undefined;
     if (owner && owner.done) return null;
@@ -685,6 +696,7 @@ export default function DispatchingTable() {
       }
       const ctx: MoveCtx = {
         ...MOVEMENT_DEFINITION,
+        segmentLevels: DISPATCH_MAP.segmentLevels,
         switches: switchesRef.current,
         aspectOf: aspectOfRef.current,
         meetsHold,
@@ -1308,7 +1320,7 @@ export default function DispatchingTable() {
       // using it has already left the passed cells), so a route can be set on
       // track a train has moved past. null (owner despawned) = stale — the tick
       // loop is about to release it, so don't block on it here.
-      let otherRoute: [number, number][] | null | undefined;
+      let otherRoute: LeveledPoint[] | null | undefined;
       if (otherRes) {
         otherRoute = unpassedOf(other.id, otherRes);
       } else if (signalOn[other.id]) {

@@ -15,6 +15,7 @@ import type {
   SignalDef,
   Sw,
   SwitchState,
+  LeveledPoint,
   TopologyPoint,
 } from "./topology";
 
@@ -102,8 +103,11 @@ export type DispatchMapDefinition = {
     initialState: Record<string, boolean>;
   };
   trackPaths: string[];
-  /** Protected-block section of each signal as a track polyline (Phase 5). */
-  sectionPaths: Record<string, TopologyPoint[]>;
+  /** Protected-block section of each signal as a track polyline (Phase 5).
+   *  Points may carry a grade level (3rd element) — Phase 6. */
+  sectionPaths: Record<string, LeveledPoint[]>;
+  /** Grade level of every movement segment, keyed `${fromId}|${toId}`. */
+  segmentLevels: Record<string, number>;
   trafficArrowPoints: string[];
   stations: {
     nameplates: Station[];

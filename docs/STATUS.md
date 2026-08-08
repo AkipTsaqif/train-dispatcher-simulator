@@ -6,12 +6,11 @@
 
 ## Current position
 
-- **Active phase:** 6 — Graded junctions / flyovers (blocked by 3, 5 — both
-  now done).
-- **Current step:** Not started. Phase 5 (2-D multi-segment occupancy) is
+- **Active phase:** 7 — Arbitrary-schematic rendering (blocked by 6, now done).
+- **Current step:** Not started. Phase 6 (graded junctions / flyovers) is
   complete.
-- **Next action:** Read `docs/PLAN-phase-6.md`, then start step 1 (Phase 5
-  unblocked it).
+- **Next action:** Read `docs/PLAN-phase-7.md`, then start step 1 (Phase 6
+  unblocked it). This is the LAST phase.
 
 ## Phase state
 
@@ -23,7 +22,7 @@
 | 3 | Independent/multi-edge loops | **DONE** |
 | 4 | Route search + flank protection | **DONE** |
 | 5 | 2-D multi-segment occupancy | **DONE** |
-| 6 | Flyovers / graded junctions | blocked by 3, 5 |
+| 6 | Flyovers / graded junctions | **DONE** |
 | 7 | Arbitrary-schematic rendering | blocked by 6 |
 
 Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any order.
@@ -140,6 +139,24 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   non-conflict).
 - (Phase 5) verify-loops' fake train gained a horizontal segment so the
   footprint reduces to the old interval test (its x/y occupancy assertions).
+- (Phase 6) Edges carry an optional `level` (default 0). The compiler emits
+  `segmentLevels` (every movement segment → its edge's level, both directions)
+  and the section polylines are stamped per-range with their edge's level.
+  `segsOverlap` suppresses crossing/overlap when the segments' levels differ
+  (each point is stamped with the level of the segment INTO it, so a segment's
+  level reads from its last point). All Bekasi edges are level 0 → the
+  baseline stayed byte-identical.
+- (Phase 6) The engine's train state carries its current segment level + per-
+  trail-entry levels, so `footprintOf` pieces are stamped and body conflict /
+  occupancy / route clash all respect grade automatically. `walkRoute` and
+  `findRoute` stamp route polylines from `segmentLevels`.
+- (Phase 6) New fixture + verifier: `flyover-fixture` (three westbound mains +
+  a level-1 ramp over the middle one, crossing it at (800,147) on the map) +
+  `verify-flyover` proves pass-under-no-conflict, the flat-diamond control
+  case (same geometry at level 0 DOES conflict), ramp-only occupancy (R1 yes,
+  M1 no), ramp routing (A1→B2 via the ramp), route-clash suppression, and
+  level-1 footprint pieces. `ADDING_LAYOUTS.md` documents the graded-edge
+  shape.
 
 ## Notes for the next worker
 

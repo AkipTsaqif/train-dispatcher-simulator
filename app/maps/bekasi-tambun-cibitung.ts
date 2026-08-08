@@ -88,6 +88,7 @@ export const BEKASI_TAMBUN_CIBITUNG_MAP: DispatchMapDefinition = {
   signals: COMPILED_TOPOLOGY.signals,
   trackPaths: COMPILED_TOPOLOGY.trackPaths,
   sectionPaths: COMPILED_TOPOLOGY.sectionPaths,
+  segmentLevels: COMPILED_TOPOLOGY.segmentLevels,
   trafficArrowPoints: ["-396,83 -396,95 -406,89", "1788,199 1788,211 1798,205"],
   stations: {
     nameplates: STATIONS,

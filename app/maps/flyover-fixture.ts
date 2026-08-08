@@ -1,5 +1,4 @@
-// Map assembly for the 3-main fixture — proves the map contract holds any
-// number of main lines (Phase 2). Not wired into the UI.
+// Map assembly for the flyover fixture (Phase 6). Not wired into the UI.
 
 import {
   compileTopology,
@@ -16,7 +15,7 @@ import type {
   Station,
   StationCell,
 } from "../lib/dispatch-map";
-import { THREE_MAIN_FIXTURE_TOPOLOGY } from "../topologies/three-main-fixture";
+import { FLYOVER_FIXTURE_TOPOLOGY } from "../topologies/flyover-fixture";
 
 export type {
   Bearing,
@@ -33,36 +32,26 @@ export type {
 
 const CELL = 50;
 
-const COMPILED = compileTopology(THREE_MAIN_FIXTURE_TOPOLOGY);
+const COMPILED = compileTopology(FLYOVER_FIXTURE_TOPOLOGY);
 
-const STATIONS: Station[] = [
-  { code: "A", name: "Alpha", x: 200, y: 60, w: 100, h: 40 },
-  { code: "B", name: "Beta", x: 800, y: 60, w: 100, h: 40 },
-];
-
-const STATION_CELLS: StationCell[] = [
-  { code: "A", cells: [{ col: "D", row: 2 }] },
-  { code: "B", cells: [{ col: "R", row: 2 }] },
-];
-
-export const THREE_MAIN_FIXTURE_MAP: DispatchMapDefinition = {
-  id: "three-main-fixture",
-  name: "Three main running lines (fixture)",
-  diagramAriaLabel: "Fixture: three parallel main running lines",
+export const FLYOVER_FIXTURE_MAP: DispatchMapDefinition = {
+  id: "flyover-fixture",
+  name: "Flying junction over the middle line (fixture)",
+  diagramAriaLabel: "Fixture: level-1 ramp over the middle main without a flat crossing",
   grid: {
     cellSize: CELL,
     extensionCells: 2,
     cutLeftColumns: 0,
     shift: 0,
-    width: 1000,
+    width: 1700,
     rowCount: 8,
-    gridBottomY: 400,
-    viewBox: { minX: -60, minY: -30, widthPadding: 120, height: 430 },
-    ticks: { size: 6, topColumnLabelY: -20, bottomColumnLabelY: 400, leftRowLabelX: -40, rightRowLabelOffsetX: 14 },
+    gridBottomY: 300,
+    viewBox: { minX: -60, minY: -30, widthPadding: 120, height: 330 },
+    ticks: { size: 6, topColumnLabelY: -20, bottomColumnLabelY: 300, leftRowLabelX: -40, rightRowLabelOffsetX: 14 },
   },
   lines: {
-    topY: 100,
-    bottomY: 200,
+    topY: 89,
+    bottomY: 205,
     mains: COMPILED.lines.mains.map((main) => ({
       trackGroupId: main.trackGroupId,
       lineY: main.lineY,
@@ -81,9 +70,9 @@ export const THREE_MAIN_FIXTURE_MAP: DispatchMapDefinition = {
   segmentLevels: COMPILED.segmentLevels,
   trafficArrowPoints: [],
   stations: {
-    nameplates: STATIONS,
-    cells: STATION_CELLS,
-    namesByCode: Object.fromEntries(STATIONS.map((station) => [station.code, station.name])),
+    nameplates: [],
+    cells: [],
+    namesByCode: {},
     platformCenterX: COMPILED.stationPlatformCenterX,
   },
   compatibility: COMPILED.compatibility,

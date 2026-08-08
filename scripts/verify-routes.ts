@@ -28,7 +28,7 @@ const signals: RouteSearchSignal[] = runtime.map.signals.items.map((s) => ({
 const entrance = signals.find((s) => s.id === "E1")!;
 const switches = { ...runtime.map.switches.initialState };
 
-const search = (isClear?: (nodePath: string[], pts: [number, number][]) => boolean) =>
+const search = (isClear?: (nodePath: string[], pts: import("../app/lib/topology").LeveledPoint[]) => boolean) =>
   findRoute({
     entranceId: "E1",
     entrance,
@@ -45,7 +45,7 @@ check("default route exits at J1 (line1)", r1?.exitSignalId === "J1", r1?.exitSi
 check("default route needs no point moves", r1 !== null && Object.keys(r1.requiredSwitches).length === 0);
 
 // 2. line1 occupied → the search must choose the free loop path (line2)
-const line1Occupied = (nodePath: string[], pts: [number, number][]) =>
+const line1Occupied = (nodePath: string[], pts: import("../app/lib/topology").LeveledPoint[]) =>
   !pts.some(([x, y]) => Math.abs(y - 200) < 1 && x > 300 && x < 700);
 const r2 = search(line1Occupied);
 check("with line1 occupied the route exits at J2 (line2)", r2?.exitSignalId === "J2", r2?.exitSignalId);
@@ -56,7 +56,7 @@ check(
 );
 
 // 3. line2 occupied → back to the free line1
-const line2Occupied = (nodePath: string[], pts: [number, number][]) =>
+const line2Occupied = (nodePath: string[], pts: import("../app/lib/topology").LeveledPoint[]) =>
   !pts.some(([x, y]) => Math.abs(y - 300) < 1 && x > 350 && x < 650);
 const r3 = search(line2Occupied);
 check("with line2 occupied the route exits at J1 again", r3?.exitSignalId === "J1", r3?.exitSignalId);

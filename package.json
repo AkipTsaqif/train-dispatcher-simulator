@@ -16,6 +16,7 @@
     "verify:three-main": "bun scripts/verify-three-main.ts",
     "verify:loops": "bun scripts/verify-loops.ts",
     "verify:routes": "bun scripts/verify-routes.ts",
+    "verify:flyover": "bun scripts/verify-flyover.ts",
     "snapshot:bekasi": "bun scripts/snapshot-layout.ts",
     "verify:bekasi": "bun scripts/verify-layout.ts bekasi-tambun-cibitung"
   },

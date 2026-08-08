@@ -77,6 +77,7 @@ export const LOOPS_FIXTURE_MAP: DispatchMapDefinition = {
   signals: COMPILED.signals,
   trackPaths: COMPILED.trackPaths,
   sectionPaths: COMPILED.sectionPaths,
+  segmentLevels: COMPILED.segmentLevels,
   trafficArrowPoints: [],
   stations: {
     nameplates: STATIONS,
