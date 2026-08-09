@@ -130,7 +130,7 @@ for (y, gid, _, _, xmin, xmax) in Y_LINES:
         common, normal = west_in, east_out
         cend, nend = "to", "from"
         switches.append({
-            "id": sw, "nodeId": nid,
+            "id": sw, "nodeId": nid, "group": gid,
             "common": {"edgeId": common, "end": cend},
             "normal": {"edgeId": normal, "end": nend},
             "reversed": {"edgeId": d, "end": dend},
@@ -310,7 +310,9 @@ out.append("  switches: [")
 for sw in switches:
     cgid = COUPLED_BY_SW.get(sw['id'], f"g{sw['id']}")
     lbl = COUPLED_BY_SW.get(sw['id'], f"sw {sw['id']}")
-    out.append(f"    {{ id: {sw['id']}, nodeId: {ts_repr(sw['nodeId'])}, common: {ts_repr(sw['common'])}, normal: {ts_repr(sw['normal'])}, reversed: {ts_repr(sw['reversed'])}, initialState: \"normal\", controlGroupId: {ts_repr(cgid)}, dashSide: \"left\", label: {ts_repr(lbl)} }},")
+    line_ndir = next(nd for (yy, gg, nd, _, _, _) in Y_LINES if gg == sw["group"])
+    side = "right" if line_ndir == "right" else "left"
+    out.append(f"    {{ id: {sw['id']}, nodeId: {ts_repr(sw['nodeId'])}, common: {ts_repr(sw['common'])}, normal: {ts_repr(sw['normal'])}, reversed: {ts_repr(sw['reversed'])}, initialState: \"normal\", controlGroupId: {ts_repr(cgid)}, dashSide: {ts_repr(side)}, label: {ts_repr(lbl)} }},")
 out.append("  ],")
 out.append("  controlGroups: [")
 for pc, (a, b) in enumerate(COUPLED_PAIRS, 1):
