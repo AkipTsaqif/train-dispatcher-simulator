@@ -82,6 +82,9 @@ export type Presentation = {
    *  size). A dense layout may want a finer grid that aligns with its own
    *  track pitch, without changing the simulation's CELL. */
   gridCellSize?: number;
+  /** Shift the graph-paper chrome by [dx, dy] (e.g. half a cell) so the
+   *  tracks run through the cell MIDDLES instead of on the lines. */
+  gridOffset?: [number, number];
   /** Label a column/row every N grid cells (default 1) — keeps the letters/
    *  numbers readable when the grid pitch is much finer than the cells. */
   gridLabelStep?: number;

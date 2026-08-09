@@ -375,6 +375,7 @@ export default function DispatchingTable({
   // its grid with its own track pitch); labels every GRID_LABEL_STEP-th cell
   const GRID_PITCH = PRESENTATION.gridCellSize ?? DISPATCH_MAP.grid.cellSize;
   const GRID_LABEL_STEP = PRESENTATION.gridLabelStep ?? 1;
+  const GRID_OFFSET = PRESENTATION.gridOffset ?? [0, 0];
 
   const {
     diagramAriaLabel: DIAGRAM_ARIA_LABEL,
@@ -1790,10 +1791,10 @@ export default function DispatchingTable({
         {SHOW_GRID && (
         <g stroke="#e7e7e7" strokeWidth={1}>
           {Array.from({ length: Math.round(RIGHT / GRID_PITCH) + 1 }, (_, i) => (
-            <line key={`v${i}`} x1={i * GRID_PITCH} y1={0} x2={i * GRID_PITCH} y2={GRID_BOTTOM_Y} />
+            <line key={`v${i}`} x1={GRID_OFFSET[0] + i * GRID_PITCH} y1={0} x2={GRID_OFFSET[0] + i * GRID_PITCH} y2={GRID_BOTTOM_Y} />
           ))}
           {Array.from({ length: Math.round(GRID_BOTTOM_Y / GRID_PITCH) + 1 }, (_, i) => (
-            <line key={`h${i}`} x1={0} y1={i * GRID_PITCH} x2={RIGHT} y2={i * GRID_PITCH} />
+            <line key={`h${i}`} x1={0} y1={GRID_OFFSET[1] + i * GRID_PITCH} x2={RIGHT} y2={GRID_OFFSET[1] + i * GRID_PITCH} />
           ))}
         </g>
         )}
@@ -1804,22 +1805,22 @@ export default function DispatchingTable({
           {/* ticks at column boundaries */}
           {Array.from({ length: Math.round(RIGHT / GRID_PITCH) + 1 }, (_, i) => (
             <g key={`ct${i}`} stroke="#cbd5e1" strokeWidth={1}>
-              <line x1={i * GRID_PITCH} y1={-GRID_TICKS.size} x2={i * GRID_PITCH} y2={0} />
-              <line x1={i * GRID_PITCH} y1={GRID_BOTTOM_Y} x2={i * GRID_PITCH} y2={GRID_BOTTOM_Y + GRID_TICKS.size} />
+              <line x1={GRID_OFFSET[0] + i * GRID_PITCH} y1={-GRID_TICKS.size} x2={GRID_OFFSET[0] + i * GRID_PITCH} y2={0} />
+              <line x1={GRID_OFFSET[0] + i * GRID_PITCH} y1={GRID_BOTTOM_Y} x2={GRID_OFFSET[0] + i * GRID_PITCH} y2={GRID_BOTTOM_Y + GRID_TICKS.size} />
             </g>
           ))}
           {/* ticks at row boundaries */}
           {Array.from({ length: Math.round(GRID_BOTTOM_Y / GRID_PITCH) + 1 }, (_, i) => (
             <g key={`rt${i}`} stroke="#cbd5e1" strokeWidth={1}>
-              <line x1={-GRID_TICKS.size} y1={i * GRID_PITCH} x2={0} y2={i * GRID_PITCH} />
-              <line x1={RIGHT} y1={i * GRID_PITCH} x2={RIGHT + GRID_TICKS.size} y2={i * GRID_PITCH} />
+              <line x1={-GRID_TICKS.size} y1={GRID_OFFSET[1] + i * GRID_PITCH} x2={0} y2={GRID_OFFSET[1] + i * GRID_PITCH} />
+              <line x1={RIGHT} y1={GRID_OFFSET[1] + i * GRID_PITCH} x2={RIGHT + GRID_TICKS.size} y2={GRID_OFFSET[1] + i * GRID_PITCH} />
             </g>
           ))}
           {/* column letters and row numbers (every GRID_LABEL_STEP-th cell) */}
           <g fontSize={11} fontWeight={500} fill="#64748b" textAnchor="middle">
             {Array.from({ length: Math.round(RIGHT / GRID_PITCH) }, (_, i) => {
               if (i % GRID_LABEL_STEP !== 0) return null;
-              const x = i * GRID_PITCH + GRID_PITCH / 2;
+              const x = GRID_OFFSET[0] + i * GRID_PITCH + GRID_PITCH / 2;
               const letter = colsName(i / GRID_LABEL_STEP);
               return (
                 <g key={`c${i}`}>
@@ -1834,7 +1835,7 @@ export default function DispatchingTable({
             })}
             {Array.from({ length: Math.round(GRID_BOTTOM_Y / GRID_PITCH) }, (_, i) => {
               if (i % GRID_LABEL_STEP !== 0) return null;
-              const y = i * GRID_PITCH + GRID_PITCH / 2 + 4;
+              const y = GRID_OFFSET[1] + i * GRID_PITCH + GRID_PITCH / 2 + 4;
               return (
                 <g key={`r${i}`}>
                   <text x={GRID_TICKS.leftRowLabelX} y={y}>
