@@ -49,7 +49,7 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
     rowCount: 10,
     gridBottomY: 540,
     viewBox: { minX: -20, minY: 230, widthPadding: 60, height: 300 },
-    ticks: { size: 6, topColumnLabelY: 234, bottomColumnLabelY: 532, leftRowLabelX: 4, rightRowLabelOffsetX: -16 },
+    ticks: { size: 6, topColumnLabelY: 232, bottomColumnLabelY: 542, leftRowLabelX: -26, rightRowLabelOffsetX: 36 },
   },
   lines: {
     topY: 272,
@@ -74,7 +74,9 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
   levelCrossings: COMPILED.levelCrossings,
   presentation: {
     kind: "schematic",
-    viewBox: { minX: 0, minY: 240, width: 1160, height: 290 },
+    // margins around the diagram for the grid reference (letters above/below,
+    // numbers left/right — outside the tracks, like the Tambun grid)
+    viewBox: { minX: -40, minY: 200, width: 1240, height: 370 },
     continuousTrains: true,
     // keep the graph-paper chrome as a backdrop behind the free-form throat.
     // The tracks sit at odd multiples of 16 (272..496) — a 16-unit grid pitch
