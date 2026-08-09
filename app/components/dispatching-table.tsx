@@ -2044,6 +2044,17 @@ export default function DispatchingTable({
           const locked = isLocked(id);
           const cs = CONTROL_SCALE;
           const r = (ctl.coupled ? 12 : 10) * cs;
+          // the circle label: the PCx name for the JNG-style coupled groups,
+          // else the concatenated ids (Bekasi's "78"); the font is fitted to
+          // the circle so it never spills (the small controlScale circles
+          // would otherwise overflow with 4-digit concatenated ids)
+          const labelText = ctl.coupled
+            ? ctl.label.startsWith("PC")
+              ? ctl.label
+              : `${ctl.ids[0]}${ctl.ids[1]}`
+            : String(ctl.ids[0]);
+          const baseFont = ctl.coupled ? 9 : 11;
+          const fitFont = Math.min(baseFont, ((r / cs) * 2 * 1.45) / Math.max(1, labelText.length));
           return (
             <g
               key={ctl.ids.join("-")}
@@ -2084,12 +2095,12 @@ export default function DispatchingTable({
               <text
                 y={4 * cs}
                 textAnchor="middle"
-                fontSize={(ctl.coupled ? 9 : 11) * cs}
+                fontSize={fitFont * cs}
                 fontWeight={700}
                 fill={reversed ? "#ffffff" : "#475569"}
                 pointerEvents="none"
               >
-                {ctl.coupled ? `${ctl.ids[0]}${ctl.ids[1]}` : ctl.ids[0]}
+                {labelText}
               </text>
             </g>
           );
