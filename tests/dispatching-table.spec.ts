@@ -829,8 +829,8 @@ test.describe("dispatching table", () => {
     // all 23 signals are clickable controls (schematic mode, no grid chrome)
     await expect(page.getByRole("button", { name: /^NW1 · MERAH/ })).toBeVisible();
     await expect(page.getByRole("button", { name: /^XE8 ·/ })).toBeVisible();
-    await expect(page.getByText("A", { exact: true })).toHaveCount(0);
-    // the 58 point controls are present
+    await expect(page.getByText("A", { exact: true })).toHaveCount(2); // the graph-paper grid chrome is shown (top + bottom letters)
+    // the point controls are present (28: 20 coupled pairs + 8 singles)
     await expect(page.locator('[role="button"][aria-label^="Wesel"]')).toHaveCount(28);
     // auto route set: clearing NW1 lights it (amber — next signal still red)
     await page.getByRole("button", { name: /^NW1 · MERAH/ }).click();

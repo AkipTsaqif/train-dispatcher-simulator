@@ -49,7 +49,7 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
     rowCount: 10,
     gridBottomY: 540,
     viewBox: { minX: -20, minY: 230, widthPadding: 60, height: 300 },
-    ticks: { size: 6, topColumnLabelY: -20, bottomColumnLabelY: 540, leftRowLabelX: -40, rightRowLabelOffsetX: 14 },
+    ticks: { size: 6, topColumnLabelY: 234, bottomColumnLabelY: 532, leftRowLabelX: 4, rightRowLabelOffsetX: -16 },
   },
   lines: {
     topY: 272,
@@ -76,6 +76,8 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
     kind: "schematic",
     viewBox: { minX: 0, minY: 240, width: 1160, height: 290 },
     continuousTrains: true,
+    // keep the graph-paper chrome as a backdrop behind the free-form throat
+    grid: true,
     // the 8 tracks sit 32 units apart (vs Bekasi's 59) — shrink the controls
     // to the map's pitch so signals/points/markers fit the dense throat
     controlScale: 0.55,

@@ -368,6 +368,9 @@ export default function DispatchingTable({
   const SCHEMATIC_VIEWBOX = IS_SCHEMATIC ? PRESENTATION.viewBox : undefined;
   const STATION_SHAPES = PRESENTATION.stationShapes ?? [];
   const CONTROL_SCALE = PRESENTATION.controlScale ?? 1;
+  // the graph-paper chrome draws in grid mode, and in schematic mode when the
+  // layout asks for it (presentation.grid)
+  const SHOW_GRID = !IS_SCHEMATIC || PRESENTATION.grid === true;
 
   const {
     diagramAriaLabel: DIAGRAM_ARIA_LABEL,
@@ -1779,8 +1782,8 @@ export default function DispatchingTable({
         aria-label={DIAGRAM_ARIA_LABEL}
       >
         {/* Full-width graph-paper grid, 58px cells (incl. the EXT-cell extensions)
-            — grid mode only; schematic layouts draw free-form */}
-        {!IS_SCHEMATIC && (
+            — grid mode, or schematic layouts that opt into the chrome */}
+        {SHOW_GRID && (
         <g stroke="#e7e7e7" strokeWidth={1}>
           {Array.from({ length: RIGHT / CELL + 1 }, (_, i) => (
             <line key={`v${i}`} x1={i * CELL} y1={0} x2={i * CELL} y2={GRID_BOTTOM_Y} />
@@ -1792,7 +1795,7 @@ export default function DispatchingTable({
         )}
 
         {/* Grid references — letters (columns A..AO) across the top/bottom, numbers 1–6 down the sides */}
-        {!IS_SCHEMATIC && (
+        {SHOW_GRID && (
         <g>
           {/* ticks at column boundaries */}
           {Array.from({ length: RIGHT / CELL + 1 }, (_, i) => (

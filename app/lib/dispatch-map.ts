@@ -75,6 +75,9 @@ export type Presentation = {
   /** Scale for the signal/point/train controls (default 1) — a dense map with
    *  close track spacing shrinks the controls to match its pitch. */
   controlScale?: number;
+  /** Schematic mode may still draw the graph-paper chrome (grid lines, column
+   *  letters, row numbers) behind the free-form geometry. */
+  grid?: boolean;
   /** schematic mode: authored platform shapes (grid mode uses cells). */
   stationShapes?: StationShape[];
 };
