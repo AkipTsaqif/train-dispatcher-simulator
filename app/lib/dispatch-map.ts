@@ -78,6 +78,13 @@ export type Presentation = {
   /** Schematic mode may still draw the graph-paper chrome (grid lines, column
    *  letters, row numbers) behind the free-form geometry. */
   grid?: boolean;
+  /** Visual grid pitch for the graph-paper chrome (default = the map's cell
+   *  size). A dense layout may want a finer grid that aligns with its own
+   *  track pitch, without changing the simulation's CELL. */
+  gridCellSize?: number;
+  /** Label a column/row every N grid cells (default 1) — keeps the letters/
+   *  numbers readable when the grid pitch is much finer than the cells. */
+  gridLabelStep?: number;
   /** schematic mode: authored platform shapes (grid mode uses cells). */
   stationShapes?: StationShape[];
 };

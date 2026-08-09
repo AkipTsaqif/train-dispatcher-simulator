@@ -76,8 +76,12 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
     kind: "schematic",
     viewBox: { minX: 0, minY: 240, width: 1160, height: 290 },
     continuousTrains: true,
-    // keep the graph-paper chrome as a backdrop behind the free-form throat
+    // keep the graph-paper chrome as a backdrop behind the free-form throat.
+    // The tracks sit at odd multiples of 16 (272..496) — a 16-unit grid pitch
+    // puts every track ON a grid line; labels every 4th cell (64 units).
     grid: true,
+    gridCellSize: 16,
+    gridLabelStep: 4,
     // the 8 tracks sit 32 units apart (vs Bekasi's 59) — shrink the controls
     // to the map's pitch so signals/points/markers fit the dense throat
     controlScale: 0.55,
