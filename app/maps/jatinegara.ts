@@ -49,7 +49,9 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
     rowCount: 10,
     gridBottomY: 540,
     viewBox: { minX: -20, minY: 230, widthPadding: 60, height: 300 },
-    ticks: { size: 6, topColumnLabelY: 232, bottomColumnLabelY: 542, leftRowLabelX: -26, rightRowLabelOffsetX: 36 },
+    // the column letters sit OUTSIDE the grid: above its top line (240) and
+    // below its bottom line (544); row numbers in the left/right gutters
+    ticks: { size: 6, topColumnLabelY: 240, bottomColumnLabelY: 544, leftRowLabelX: -26, rightRowLabelOffsetX: 36 },
   },
   lines: {
     topY: 272,
@@ -74,18 +76,18 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
   levelCrossings: COMPILED.levelCrossings,
   presentation: {
     kind: "schematic",
-    // margins around the diagram for the grid reference (letters above/below,
-    // numbers left/right — outside the tracks, like the Tambun grid)
-    viewBox: { minX: -40, minY: 200, width: 1240, height: 370 },
+    // margins around the diagram for the grid reference (letters above/below
+    // the grid, numbers left/right — outside, like the Tambun grid)
+    viewBox: { minX: -40, minY: 222, width: 1240, height: 330 },
     continuousTrains: true,
     // keep the graph-paper chrome as a backdrop behind the free-form throat.
     // The tracks sit at odd multiples of 16 (272..496) — a 16-unit grid pitch
-    // shifted half a cell (8) puts every track through the cell MIDDLE (like
-    // the Tambun grid); every cell is labelled A, B, C… / 1, 2, 3… like
-    // Tambun.
+    // whose y-offset is 8 mod 16 (248 here) puts every track through the cell
+    // MIDDLE; the grid starts just above the top track so the row numbers run
+    // 1..N from the top (like Tambun), with the letters outside the borders.
     grid: true,
     gridCellSize: 16,
-    gridOffset: [8, 8],
+    gridOffset: [8, 248],
     gridLabelSize: 7,
     // the 8 tracks sit 32 units apart (vs Bekasi's 59) — shrink the controls
     // to the map's pitch so signals/points/markers fit the dense throat
