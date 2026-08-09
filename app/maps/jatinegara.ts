@@ -79,10 +79,10 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
     // keep the graph-paper chrome as a backdrop behind the free-form throat.
     // The tracks sit at odd multiples of 16 (272..496) — a 16-unit grid pitch
     // shifted half a cell (8) puts every track through the cell MIDDLE (like
-    // the Tambun grid); labels every 4th cell (64 units).
+    // the Tambun grid); every cell is labelled A, B, C… / 1, 2, 3… like
+    // Tambun.
     grid: true,
     gridCellSize: 16,
-    gridLabelStep: 4,
     gridOffset: [8, 8],
     // the 8 tracks sit 32 units apart (vs Bekasi's 59) — shrink the controls
     // to the map's pitch so signals/points/markers fit the dense throat
