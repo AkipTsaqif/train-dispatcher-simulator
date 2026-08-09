@@ -376,6 +376,7 @@ export default function DispatchingTable({
   const GRID_PITCH = PRESENTATION.gridCellSize ?? DISPATCH_MAP.grid.cellSize;
   const GRID_LABEL_STEP = PRESENTATION.gridLabelStep ?? 1;
   const GRID_OFFSET = PRESENTATION.gridOffset ?? [0, 0];
+  const GRID_LABEL_SIZE = PRESENTATION.gridLabelSize ?? 11;
 
   const {
     diagramAriaLabel: DIAGRAM_ARIA_LABEL,
@@ -1817,7 +1818,7 @@ export default function DispatchingTable({
             </g>
           ))}
           {/* column letters and row numbers (every GRID_LABEL_STEP-th cell) */}
-          <g fontSize={11} fontWeight={500} fill="#64748b" textAnchor="middle">
+          <g fontSize={GRID_LABEL_SIZE} fontWeight={500} fill="#64748b" textAnchor="middle">
             {Array.from({ length: Math.round(RIGHT / GRID_PITCH) }, (_, i) => {
               if (i % GRID_LABEL_STEP !== 0) return null;
               const x = GRID_OFFSET[0] + i * GRID_PITCH + GRID_PITCH / 2;

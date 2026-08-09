@@ -85,6 +85,9 @@ export type Presentation = {
   /** Shift the graph-paper chrome by [dx, dy] (e.g. half a cell) so the
    *  tracks run through the cell MIDDLES instead of on the lines. */
   gridOffset?: [number, number];
+  /** Font size of the grid reference (column letters / row numbers) — a fine
+   *  grid needs smaller labels. Default 11 (the grid-mode size). */
+  gridLabelSize?: number;
   /** Label a column/row every N grid cells (default 1) — keeps the letters/
    *  numbers readable when the grid pitch is much finer than the cells. */
   gridLabelStep?: number;

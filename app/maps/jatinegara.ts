@@ -84,6 +84,7 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
     grid: true,
     gridCellSize: 16,
     gridOffset: [8, 8],
+    gridLabelSize: 7,
     // the 8 tracks sit 32 units apart (vs Bekasi's 59) — shrink the controls
     // to the map's pitch so signals/points/markers fit the dense throat
     controlScale: 0.55,
