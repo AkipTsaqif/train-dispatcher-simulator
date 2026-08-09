@@ -1606,9 +1606,9 @@ export default function DispatchingTable({
       .sort((a, b) => a.arr - b.arr);
 
   const cellX0 = (sw: Sw, cellSize: number) =>
-    Math.floor(sw.x / cellSize) * cellSize;
+    Math.floor((sw.x - GRID_OFFSET[0]) / cellSize) * cellSize + GRID_OFFSET[0];
   const cellY0 = (sw: Sw, cellSize: number) =>
-    Math.floor(sw.y / cellSize) * cellSize;
+    Math.floor((sw.y - GRID_OFFSET[1]) / cellSize) * cellSize + GRID_OFFSET[1];
 
   const inactivePath = (sw: Sw, reversed: boolean, cellSize: number) =>
     reversed
@@ -1859,10 +1859,10 @@ export default function DispatchingTable({
             {SWITCHES.map((sw) => (
               <clipPath key={sw.id} id={`cell-${sw.id}`}>
                 <rect
-                  x={cellX0(sw, DISPATCH_MAP.grid.cellSize)}
-                  y={cellY0(sw, DISPATCH_MAP.grid.cellSize)}
-                  width={CELL}
-                  height={CELL}
+                  x={cellX0(sw, GRID_PITCH)}
+                  y={cellY0(sw, GRID_PITCH)}
+                  width={GRID_PITCH}
+                  height={GRID_PITCH}
                 />
               </clipPath>
             ))}
@@ -2028,7 +2028,7 @@ export default function DispatchingTable({
         {/* Per-cell inactive routes: dashed, clipped to the point's own cell */}
         {SWITCHES.map((sw) => {
           const reversed = switches[sw.id] === "reversed";
-          const d = inactivePath(sw, reversed, DISPATCH_MAP.grid.cellSize);
+          const d = inactivePath(sw, reversed, GRID_PITCH);
           return (
             <g key={sw.id} clipPath={`url(#cell-${sw.id})`}>
               <path d={d} stroke="#ffffff" strokeWidth={3.5} strokeLinecap="round" fill="none" />
