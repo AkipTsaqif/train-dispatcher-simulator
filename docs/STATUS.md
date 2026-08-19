@@ -12,12 +12,11 @@
   `app/topologies/jatinegara.ts` are DELETED; `/jng` renders from
   `app/pieces/jatinegara.ts` (13 lines + 29 links), byte-identical to the
   baseline captured before the port.
-- **Next action:** remove JNG's now-proven-redundant legacy node-order table,
-  then add assembly preflight checks for stale operational edge references.
-  Point-control metadata now uses stable `linkId:end` keys and orphaned keys
-  fail loudly. The block-anchor work remains a design spike only; signals,
-  stops, and blocks remain explicit operational data by decision. The known-open
-  JNG throat boundaries and stub timetable remain separate work.
+- **Next action:** open to choose. `specs/REFACTOR_LATEST.md` is fully
+  implemented (stable `linkId:end` switch keys, orphan rejection, derived node
+  order, operational edge preflight, docs, block-anchor spike). The spike
+  recommends DEFER, so the natural candidates are again the known-open JNG
+  items: throat block boundaries and the stub timetable.
 
 ## Phase state
 
@@ -504,6 +503,12 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   ladder fixture, JNG's placement-derived node order is already exactly the
   historical 74-node order, proven before removal; the compiled/runtime
   baseline remains byte-identical.
+-  2026-08-19 — Block-section anchors spiked and DEFERRED
+  (`specs/archive/spikes/SPIKE-block-section-anchors.md`). ~69 of JNG's 92
+  `edgeRanges` entries are mechanical, so the idea is sound, but the new
+  preflight removed the silent-failure motivation and `legacyOpenEnd` (17 of
+  23 sections) needs the throat boundaries resolved first. Revisit on a real
+  mid-span split or a second pieces layout with real block sections.
 -  2026-08-19 — Piece assembly now preflights the explicit operational edge
   references (signals, station stops, and block ranges) against the assembled
   edge set. A geometry edit that re-cuts a line now fails at the authoring
