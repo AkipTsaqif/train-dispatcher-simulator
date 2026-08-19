@@ -476,6 +476,20 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
 - (Phase 9) e2e: 46 pass, 5 visual snapshots fail. PRE-EXISTING and unrelated
   — Windows-canonical PNGs vs Linux, all on `/` (Bekasi), which Phase 9 never
   touched (`verify:bekasi` stays byte-identical).
+- (Post-Phase-9) **`scripts/grid-ref.ts`** translates between authored
+  coordinates and on-screen grid references (`npm run grid -- AG6`, or
+  `npm run grid -- 528 336`; `-l bekasi` to switch layout). Grid geometry is
+  READ FROM THE MAP (`presentation.gridCellSize/gridOffset/gridLabelStep` and
+  `grid.shift`), never hardcoded, so it cannot drift from what the component
+  draws. Gated by `npm run verify:grid-ref`.
+- (Post-Phase-9) The two layouts differ in ways worth remembering: JNG is
+  pitch 16 / offset [8,248] / shift 0 and every piece endpoint lands EXACTLY
+  on a cell centre (84/84 round-trip). Bekasi is pitch 58 / offset [0,0] /
+  **shift 406** — its diagram is translated, so an authored x is not a screen
+  x — and its tracks sit at free-form Ys (89/148/205/264), so all 24 signals
+  are off-lattice. The tool reports off-lattice positions as `~M4 (col 12.05,
+  row 4.03)` rather than rounding, since a rounded ref would be confidently
+  wrong.
 
 ## Notes for the next worker
 
