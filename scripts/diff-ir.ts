@@ -4,9 +4,12 @@
 //   bun scripts/diff-ir.ts <before> <after>   # compare two layouts' IRs
 //   bun scripts/diff-ir.ts --self-check       # prove the differ detects change
 //
-// <before>/<after> are topology module names under app/topologies/ (e.g.
-// "jatinegara", "ladder-fixture"), or paths to a module exporting one
-// TopologyDefinition.
+// <before>/<after> name a module exporting one TopologyDefinition:
+//   "jatinegara"          -> app/topologies/jatinegara
+//   "pieces:ladder-fixture" -> app/pieces/ladder-fixture (assembled from pieces)
+//   "/abs/or/rel/path.ts" -> that module
+// The pieces: prefix is what makes Step 4-5 acceptance a one-liner:
+//   npm run diff:ir -- ladder-fixture pieces:ladder-fixture
 //
 // Exit codes:  0 = identical | 1 = differences found | 2 = usage/load error
 // `--allow-reorder` downgrades an ordering-only difference to success, per
@@ -33,7 +36,11 @@ if (positional.length !== 2) {
 
 /** Load the single TopologyDefinition exported by a topology module. */
 const loadIR = async (ref: string): Promise<TopologyDefinition> => {
-  const specifier = ref.includes("/") ? ref : `../app/topologies/${ref}`;
+  const specifier = ref.startsWith("pieces:")
+    ? `../app/pieces/${ref.slice("pieces:".length)}`
+    : ref.includes("/")
+      ? ref
+      : `../app/topologies/${ref}`;
   let module: Record<string, unknown>;
   try {
     module = (await import(specifier)) as Record<string, unknown>;

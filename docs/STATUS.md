@@ -8,12 +8,13 @@
 
 - **Active phase:** 9 — piece assembly (see `docs/PLAN-phase-9.md`). Phases 0–8
   are complete; Phase 9 was authored after the original 0–8 arc.
-- **Current step:** Steps 1-3 DONE (IR diffing, Step 2 verified as pre-landed,
-  port join kernel).
-- **Next action:** Step 4 — the `track` + `crossover` + `terminus` piece types,
-  enough vocabulary to express a throat. Acceptance: assemble `ladder-fixture`
-  and `three-main-fixture` from pieces and require an EMPTY structural IR diff
-  against their checked-in definitions (`npm run diff:ir -- <a> <b>`).
+- **Current step:** Steps 1-4 DONE (IR diffing; Step 2 verified pre-landed;
+  port join kernel; track/crossover/terminus vocabulary proven on two
+  fixtures).
+- **Next action:** Step 5 — `platform`, `signal`, `loop`, `flyover` pieces,
+  completing v1 and removing the `passthrough` escape hatch. Acceptance: add
+  `loops-fixture` and `flyover-fixture` to `npm run verify:pieces` with the
+  same empty-structural-diff + identical-compiled-output bar.
 
 ## Phase state
 
@@ -374,6 +375,38 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   through axis" case used bearings at +-61 degrees, which genuinely oppose
   (dot -0.53). Fixed to a true fan (all within 90 degrees). Worth remembering —
   "diverging" by eye is not the same as "not opposing" by dot product.
+- (Phase 9 Step 4) **Piece vocabulary v1a landed** — `app/lib/pieces.ts`
+  (`track` / `crossover` / `terminus` + `assemblePieces`), authored fixtures in
+  `app/pieces/`, gated by `npm run verify:pieces`. Both `three-main-fixture`
+  and `ladder-fixture` now assemble from pieces.
+- (Phase 9 Step 4) **Resolved the plan's "the author never types an edge id"
+  against Step 4's empty-IR-diff acceptance** — taken literally they conflict,
+  because auto-derived ids could never match the checked-in fixtures. Reading
+  it against the problem the plan actually names (a switch costs three
+  edge-end REFERENCES that must track edges declared hundreds of lines away),
+  the rule implemented is: **a piece names what it OWNS (declaration), never
+  what it POINTS AT (reference)**. A crossover does not reference the tracks it
+  joins — it is placed where they are and the join follows from geometry, so
+  the six common/normal/reversed references in the ladder are now derived.
+  Dangling references are impossible; ids stay reviewable in a diff.
+- (Phase 9 Step 4) Acceptance is STRONGER than the plan's empty IR diff: both
+  definitions are also COMPILED and their serialized output compared. The
+  ladder's IR differs in node ORDER only (`EN EX SWa SWb` hand vs placement
+  order), which the plan permits "with a recorded reason" — and the recorded
+  reason is proof, not assertion: the compiled output is byte-identical
+  (compiler ordering comes from `legacyNodeOrder`, which stays authored).
+  `verify-pieces.ts` accepts an ordering-only diff IF AND ONLY IF the compiled
+  output matches.
+- (Phase 9 Step 4) The `terminus` path (Step 2's capability, previously unused
+  by any layout) now has its first real user: a stub track ending at a
+  crossover point correctly derives `common === normal`. Assembler error paths
+  verified to actually fire — a crossover placed where no track runs, and two
+  pieces disagreeing about a shared node's name, are both rejected with the
+  offending coordinate named.
+- (Phase 9 Step 4) `passthrough` still carries signals, block sections, station
+  stops, control groups and `legacyNodeOrder` — these get vocabulary in Step 5.
+  `legacyNodeOrder` may have to STAY authored: the ladder interleaves loop
+  midpoints between main nodes, which no placement-derived order reproduces.
 
 ## Notes for the next worker
 
