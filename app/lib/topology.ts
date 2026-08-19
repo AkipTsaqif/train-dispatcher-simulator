@@ -455,6 +455,50 @@ const branchRenderPath = (edge: TrackEdge, end: EdgeEndName): string => {
   return serializePath(from, to);
 };
 
+/**
+ * Pull apart coupled point controls that landed on the same spot.
+ *
+ * A scissors crossover is two coupled pairs whose diagonals cross at a shared
+ * midpoint, so both controls compute the same mean position. Both circles are
+ * drawn, the later one wins every hit-test, and half the scissors becomes
+ * impossible to throw. Slide each colliding control back along its OWN
+ * diagonal (a quarter of its span, so it stays on its own track) instead of
+ * picking an arbitrary direction.
+ *
+ * Only genuine collisions move — a layout with no coincident controls is left
+ * byte-identical.
+ */
+const separateCoincidentControls = (
+  controls: PointControl[],
+  axes: Map<PointControl, { dx: number; dy: number; span: number }>
+): void => {
+  const key = (control: PointControl) =>
+    `${Math.round(control.x * 100)}|${Math.round(control.y * 100)}`;
+  const byPosition = new Map<string, PointControl[]>();
+  for (const control of controls) {
+    const bucket = byPosition.get(key(control));
+    if (bucket) bucket.push(control);
+    else byPosition.set(key(control), [control]);
+  }
+  for (const group of byPosition.values()) {
+    if (group.length < 2) continue;
+    // deterministic order so the same layout always resolves the same way
+    const ordered = [...group].sort(
+      (left, right) => left.ids[0] - right.ids[0] || left.ids.length - right.ids.length
+    );
+    ordered.forEach((control, index) => {
+      const axis = axes.get(control);
+      if (!axis) return; // a single (non-coupled) point sits on its own node
+      // centre the group about the shared point: -1, +1 for a pair
+      const rank = index - (ordered.length - 1) / 2;
+      if (rank === 0) return;
+      const offset = (axis.span / 4) * rank * 2;
+      control.x += axis.dx * offset;
+      control.y += axis.dy * offset;
+    });
+  }
+};
+
 const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopology => {
   const nodesById = indexUnique(definition.nodes, (node) => node.id, "node ID");
   const edgesById = indexUnique(definition.edges, (edge) => edge.id, "edge ID");
@@ -1233,20 +1277,34 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       coupled: false,
       label: item.label,
     }));
+  /** The two crossing diagonals of a scissors share one midpoint, so the mean
+   *  position puts both coupled controls on the SAME pixel and the one drawn
+   *  last swallows every click meant for the other. Remember each coupled
+   *  control's own axis so a collision can be resolved along it. */
+  const coupledAxes = new Map<PointControl, { dx: number; dy: number; span: number }>();
   for (const group of definition.controlGroups.filter((item) => item.coupled)) {
     const groupSwitches = group.switchIds.map((id) => {
       const item = switchItems.find((candidate) => candidate.id === id);
       if (!item) throw new Error(`Control group ${group.id} has unknown switch ${id}`);
       return item;
     });
-    controls.push({
+    const control: PointControl = {
       ids: [...group.switchIds],
       x: groupSwitches.reduce((sum, item) => sum + item.x, 0) / groupSwitches.length,
       y: groupSwitches.reduce((sum, item) => sum + item.y, 0) / groupSwitches.length,
       coupled: true,
       label: groupSwitches[0].label.split(",")[0],
-    });
+    };
+    // the group's own axis: first switch node -> last switch node
+    const first = groupSwitches[0];
+    const last = groupSwitches[groupSwitches.length - 1];
+    const dx = last.x - first.x;
+    const dy = last.y - first.y;
+    const span = Math.hypot(dx, dy);
+    if (span > 0) coupledAxes.set(control, { dx: dx / span, dy: dy / span, span });
+    controls.push(control);
   }
+  separateCoincidentControls(controls, coupledAxes);
   controls.sort((left, right) => left.x - right.x);
 
   const initialSwitchState: Record<number, SwitchState> = {};

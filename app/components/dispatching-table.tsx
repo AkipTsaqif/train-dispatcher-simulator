@@ -29,6 +29,10 @@ import type {
 
 type Aspect = "red" | "amber" | "green";
 
+/** Stroke width of a solid running track. The point-cell eraser must be at
+ *  least this wide to actually hide the track underneath it. */
+const TRACK_STROKE = 2;
+
 /** Spreadsheet-style column letter for a 0-based index (0=A, 25=Z, 26=AA, ...). */
 const colsName = (i: number): string => {
   let n = i;
@@ -42,8 +46,25 @@ const colsName = (i: number): string => {
 
 // Train direction arrows (local +x is the travel direction once the marker is
 // rotated onto a diagonal segment, so the right-pointing shape is used there).
-const ARROW_RIGHT = "M32,0 H41 M36,-4 L41,0 L36,4";
-const ARROW_LEFT = "M-32,0 H-41 M-36,-4 L-41,0 L-36,4";
+// Authored as a fraction of the marker's own half-length so a dense layout
+// (small controlScale) gets an arrow that matches its shrunken body — fixed
+// offsets would float outside a scaled-down marker. The fractions reproduce
+// the original hand-tuned Bekasi geometry exactly at halfLen = CELL = 58
+// (32/58 and 41/58), keeping the arrow INSIDE the box.
+const ARROW_TAIL_FRAC = 32 / 58;
+const ARROW_TIP_FRAC = 41 / 58;
+const ARROW_BARB_FRAC = 36 / 58;
+const ARROW_BARB_HALF_FRAC = 4 / 58;
+const arrowPath = (halfLen: number, sign: 1 | -1) => {
+  const round = (v: number) => Number(v.toFixed(4));
+  const tail = round(sign * halfLen * ARROW_TAIL_FRAC);
+  const tip = round(sign * halfLen * ARROW_TIP_FRAC);
+  const barb = round(sign * halfLen * ARROW_BARB_FRAC);
+  const half = round(halfLen * ARROW_BARB_HALF_FRAC);
+  return `M${tail},0 H${tip} M${barb},-${half} L${tip},0 L${barb},${half}`;
+};
+const arrowRight = (halfLen: number) => arrowPath(halfLen, 1);
+const arrowLeft = (halfLen: number) => arrowPath(halfLen, -1);
 
 // Train marker color by state: blue = running, green = stopped at a station per
 // the schedule (dwell), red = held at a red signal, amber = waiting at a junction.
@@ -368,6 +389,18 @@ export default function DispatchingTable({
   const SCHEMATIC_VIEWBOX = IS_SCHEMATIC ? PRESENTATION.viewBox : undefined;
   const STATION_SHAPES = PRESENTATION.stationShapes ?? [];
   const CONTROL_SCALE = PRESENTATION.controlScale ?? 1;
+  // Train marker geometry follows the same scale as the signal/point controls.
+  // The body is authored in CELL units (the sim's footprint unit), but a dense
+  // layout draws its tracks far closer together than CELL, so an unscaled
+  // marker spans several tracks and swallows the controls underneath it.
+  // Purely visual — the engine's own footprint still uses CELL.
+  const TRAIN_HALF_LEN = DISPATCH_MAP.grid.cellSize * CONTROL_SCALE;
+  const TRAIN_HALF_HEIGHT = 11 * CONTROL_SCALE;
+  // conflict "!" badge sits just past the marker's leading corner
+  const EXCLAM_OFFSET: [number, number] = [
+    TRAIN_HALF_LEN - 10 * CONTROL_SCALE,
+    -TRAIN_HALF_HEIGHT - CONTROL_SCALE,
+  ];
   // the graph-paper chrome draws in grid mode, and in schematic mode when the
   // layout asks for it (presentation.grid)
   const SHOW_GRID = !IS_SCHEMATIC || PRESENTATION.grid === true;
@@ -377,6 +410,31 @@ export default function DispatchingTable({
   const GRID_LABEL_STEP = PRESENTATION.gridLabelStep ?? 1;
   const GRID_OFFSET = PRESENTATION.gridOffset ?? [0, 0];
   const GRID_LABEL_SIZE = PRESENTATION.gridLabelSize ?? 11;
+  // The point-cell dash/eraser strokes are authored against the sim CELL.
+  // A layout whose visual grid is finer than CELL needs them scaled down, but
+  // NOT by the same factor:
+  //   - the white ERASER must shrink hard. It is drawn diagonally across the
+  //     cell, so its width bites sideways into the solid straight it crosses
+  //     (a 3.5-wide band cuts ~31% of a 16-unit cell vs ~8% of a 58-unit one)
+  //     — that is the visible notch in the straight route.
+  //   - the DASHED GHOST must stay legible. Shrinking it by the same ratio
+  //     leaves a 0.55-wide hairline next to a 2-wide track, which stops
+  //     reading as a dashed line at all.
+  // Both are capped at 1 so a coarse grid keeps the authored Bekasi look.
+  const CELL_RATIO = Math.min(1, GRID_PITCH / DISPATCH_MAP.grid.cellSize);
+  // ...but the eraser has a HARD FLOOR: the solid track it must hide is drawn
+  // at a fixed strokeWidth of 2 (TRACK_STROKE, not scaled), so an eraser
+  // narrower than that leaves black slivers down both sides of the dashed
+  // ghost instead of erasing the leg. Floor it at the track width (plus a
+  // hairline for the round cap) — that is the narrowest stroke that still
+  // does its job.
+  const ERASER_SCALE = Math.max(
+    TRACK_STROKE + 0.25,
+    3.5 * CELL_RATIO
+  ) / 3.5;
+  // the ghost tracks the pitch far more gently (square root), so a 3.6x finer
+  // grid thins the dash ~1.9x instead of ~3.6x
+  const DASH_SCALE = Math.sqrt(CELL_RATIO);
 
   const {
     diagramAriaLabel: DIAGRAM_ARIA_LABEL,
@@ -1110,13 +1168,21 @@ export default function DispatchingTable({
         // right-pointing shape there so it never points against the movement.
         const arrow = trainArrowRefs.current[ti];
         if (arrow) {
-          arrow.setAttribute("d", horizontal && st.dir === "left" ? ARROW_LEFT : ARROW_RIGHT);
+          arrow.setAttribute(
+            "d",
+            horizontal && st.dir === "left"
+              ? arrowLeft(TRAIN_HALF_LEN)
+              : arrowRight(TRAIN_HALF_LEN)
+          );
         }
         // Conflict badge: "!" on every train involved in a live conflict
         const exclam = trainExclamRefs.current[ti];
         if (exclam) {
           exclam.setAttribute("visibility", conflictIdx.has(st.idx) ? "visible" : "hidden");
-          exclam.setAttribute("transform", `translate(48, -12) rotate(${-ang})`);
+          exclam.setAttribute(
+            "transform",
+            `translate(${EXCLAM_OFFSET[0]}, ${EXCLAM_OFFSET[1]}) rotate(${-ang})`
+          );
         }
         return occupiedSections(st, SIGNAL_SECTIONS_PTS, CELL);
       });
@@ -1894,7 +1960,7 @@ export default function DispatchingTable({
           )}
 
           {/* All tracks — always solid black outside of point cells */}
-          <g stroke="#000" strokeWidth={2} strokeLinecap="round" fill="none">
+          <g stroke="#000" strokeWidth={TRACK_STROKE} strokeLinecap="round" fill="none">
             {ALL_TRACKS.map((d, i) => (
               <path key={i} d={d} />
             ))}
@@ -1923,6 +1989,70 @@ export default function DispatchingTable({
               </g>
             );
           })}
+
+        {/* Per-cell inactive routes: dashed, clipped to the point's own cell.
+            The white pass is an ERASER: it hides the solid track under the
+            inactive leg so only the dashed ghost shows. Its width is authored
+            against the sim CELL, so on a dense layout (a much finer GRID_PITCH)
+            an unscaled eraser chews a visible notch out of the straight it
+            crosses — a 3.5-wide diagonal band cuts ~31% of a 16-unit cell but
+            only ~8% of a 58-unit one. Scale it with the pitch so the nick stays
+            proportionally the same as on the grid layouts.
+
+            PAINT ORDER MATTERS: this layer must sit ABOVE the solid black
+            tracks (it erases them) but BELOW the amber reservation that
+            follows. Drawn after the reservation, each point's white eraser +
+            dashed ghost cut a notch through the highlighted active route — the
+            inactive leg is the lower-priority information and must never
+            obstruct the route the player just set.
+
+            The eraser is a fat white stroke that STARTS at the switch node,
+            which sits ON the through track — so its round cap always spills
+            sideways onto the straight, nicking it. Erasing cannot be made
+            surgical enough by tuning the width alone, so when the straight is
+            the ACTIVE leg (point normal) it is simply re-drawn in black on top
+            of the eraser. The through route then stays unbroken by
+            construction, whatever the eraser geometry does. */}
+        {SWITCHES.map((sw) => {
+          const reversed = switches[sw.id] === "reversed";
+          const d = inactivePath(sw, reversed, GRID_PITCH);
+          // the straight through this cell, at the switch's own line
+          const cellLeft = cellX0(sw, GRID_PITCH);
+          const throughD = `M${cellLeft} ${sw.lineY} H${cellLeft + GRID_PITCH}`;
+          // The inactive leg's white eraser starts right on the junction, so
+          // it necessarily crosses the ACTIVE leg. Restore that active leg
+          // after the ghost: normal = through straight, reversed = branch.
+          // The amber reservation renders in the following layer, so it still
+          // stays above both this repair and the inactive ghost.
+          const activeD = reversed ? sw.branch : throughD;
+          return (
+            <g key={sw.id} clipPath={`url(#cell-${sw.id})`}>
+              <path
+                d={d}
+                stroke="#ffffff"
+                strokeWidth={3.5 * ERASER_SCALE}
+                strokeLinecap="round"
+                fill="none"
+              />
+              <path
+                d={d}
+                stroke="#cbd5e1"
+                strokeWidth={2 * DASH_SCALE}
+                strokeDasharray={`${5 * DASH_SCALE} ${4 * DASH_SCALE}`}
+                strokeLinecap="round"
+                fill="none"
+              />
+              {/* Restore the active physical leg over the inactive ghost. */}
+              <path
+                d={activeD}
+                stroke="#000"
+                strokeWidth={TRACK_STROKE}
+                strokeLinecap="round"
+                fill="none"
+              />
+            </g>
+          );
+        })}
 
         {/* Reserved routes (amber) — independent of the signal aspect; only the
             unpassed portion of each reservation stays highlighted (per-cell).
@@ -2025,14 +2155,91 @@ export default function DispatchingTable({
           );
         })}
 
-        {/* Per-cell inactive routes: dashed, clipped to the point's own cell */}
-        {SWITCHES.map((sw) => {
-          const reversed = switches[sw.id] === "reversed";
-          const d = inactivePath(sw, reversed, GRID_PITCH);
+        {/* Trains — block markers on the track with their train number and a
+            direction arrow on the side they travel toward. The tick loop moves
+            them via direct transform updates for smooth motion. */}
+        {JOURNEYS.map(({ train, plan }, ti) => {
+          const right = plan.start.dir === "right";
           return (
-            <g key={sw.id} clipPath={`url(#cell-${sw.id})`}>
-              <path d={d} stroke="#ffffff" strokeWidth={3.5} strokeLinecap="round" fill="none" />
-              <path d={d} stroke="#cbd5e1" strokeWidth={2} strokeDasharray="5 4" strokeLinecap="round" fill="none" />
+            <g
+              key={train.train_no}
+              data-train={train.train_no}
+              aria-label={`Train ${train.train_no} ${train.name}, ${right ? "eastbound" : "westbound"}`}
+              onClick={() => openTrain(ti)}
+              className="cursor-pointer"
+              ref={(el) => {
+                trainGroupRefs.current[ti] = el;
+              }}
+              transform="translate(-1000, -1000)"
+              visibility="hidden"
+            >
+              <rect
+                ref={(el) => {
+                  trainRectRefs.current[ti] = el;
+                }}
+                x={-TRAIN_HALF_LEN}
+                y={-TRAIN_HALF_HEIGHT}
+                width={2 * TRAIN_HALF_LEN}
+                height={2 * TRAIN_HALF_HEIGHT}
+                rx={5 * CONTROL_SCALE}
+                fill="#bfdbfe"
+                stroke="#2563eb"
+                strokeWidth={1.5 * CONTROL_SCALE}
+              />
+              {/* direction arrow — rotates with the box on diagonals so it always
+                  points along the track in the travel direction (updated per segment) */}
+              <path
+                ref={(el) => {
+                  trainArrowRefs.current[ti] = el;
+                }}
+                d={right ? arrowRight(TRAIN_HALF_LEN) : arrowLeft(TRAIN_HALF_LEN)}
+                stroke="#1e3a8a"
+                strokeWidth={2 * CONTROL_SCALE}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                fill="none"
+                pointerEvents="none"
+              />
+              {/* conflict warning badge — red circle with "!" on every train
+                  involved in a live conflict (counter-rotates to stay upright) */}
+              <g
+                ref={(el) => {
+                  trainExclamRefs.current[ti] = el;
+                }}
+                transform={`translate(${EXCLAM_OFFSET[0]}, ${EXCLAM_OFFSET[1]})`}
+                visibility="hidden"
+                pointerEvents="none"
+              >
+                <circle
+                  r={8 * CONTROL_SCALE}
+                  fill="#dc2626"
+                  stroke="#ffffff"
+                  strokeWidth={1.5 * CONTROL_SCALE}
+                />
+                <text
+                  y={4.5 * CONTROL_SCALE}
+                  textAnchor="middle"
+                  fontSize={13 * CONTROL_SCALE}
+                  fontWeight={900}
+                  fill="#ffffff"
+                >
+                  !
+                </text>
+              </g>
+              <text
+                ref={(el) => {
+                  trainTextRefs.current[ti] = el;
+                }}
+                x={0}
+                y={4 * CONTROL_SCALE}
+                textAnchor="middle"
+                fontSize={12 * CONTROL_SCALE}
+                fontWeight={800}
+                fill="#1e3a8a"
+                pointerEvents="none"
+              >
+                {train.train_no}
+              </text>
             </g>
           );
         })}
@@ -2181,83 +2388,6 @@ export default function DispatchingTable({
           );
         })}
 
-        {/* Trains — block markers on the track with their train number and a
-            direction arrow on the side they travel toward. The tick loop moves
-            them via direct transform updates for smooth motion. */}
-        {JOURNEYS.map(({ train, plan }, ti) => {
-          const right = plan.start.dir === "right";
-          return (
-            <g
-              key={train.train_no}
-              data-train={train.train_no}
-              aria-label={`Train ${train.train_no} ${train.name}, ${right ? "eastbound" : "westbound"}`}
-              onClick={() => openTrain(ti)}
-              className="cursor-pointer"
-              ref={(el) => {
-                trainGroupRefs.current[ti] = el;
-              }}
-              transform="translate(-1000, -1000)"
-              visibility="hidden"
-            >
-              <rect
-                ref={(el) => {
-                  trainRectRefs.current[ti] = el;
-                }}
-                x={-CELL}
-                y={-11}
-                width={2 * CELL}
-                height={22}
-                rx={5}
-                fill="#bfdbfe"
-                stroke="#2563eb"
-                strokeWidth={1.5}
-              />
-              {/* direction arrow — rotates with the box on diagonals so it always
-                  points along the track in the travel direction (updated per segment) */}
-              <path
-                ref={(el) => {
-                  trainArrowRefs.current[ti] = el;
-                }}
-                d={right ? ARROW_RIGHT : ARROW_LEFT}
-                stroke="#1e3a8a"
-                strokeWidth={2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                fill="none"
-                pointerEvents="none"
-              />
-              {/* conflict warning badge — red circle with "!" on every train
-                  involved in a live conflict (counter-rotates to stay upright) */}
-              <g
-                ref={(el) => {
-                  trainExclamRefs.current[ti] = el;
-                }}
-                transform="translate(48, -12)"
-                visibility="hidden"
-                pointerEvents="none"
-              >
-                <circle r={8} fill="#dc2626" stroke="#ffffff" strokeWidth={1.5} />
-                <text y={4.5} textAnchor="middle" fontSize={13} fontWeight={900} fill="#ffffff">
-                  !
-                </text>
-              </g>
-              <text
-                ref={(el) => {
-                  trainTextRefs.current[ti] = el;
-                }}
-                x={0}
-                y={4}
-                textAnchor="middle"
-                fontSize={12}
-                fontWeight={800}
-                fill="#1e3a8a"
-                pointerEvents="none"
-              >
-                {train.train_no}
-              </text>
-            </g>
-          );
-        })}
         </g>
       </svg>
 

@@ -184,5 +184,62 @@ check(
   );
 }
 
+// --- render/control annotations -------------------------------------------
+// These are not topology, but they decide what the user can SEE and CLICK, so
+// a passing topology with broken annotations still ships a broken table.
+{
+  // dashSide must follow the BRANCH's own geometry: it picks the side the
+  // dashed inactive straight is drawn on when the point is thrown. Deriving it
+  // from the line's normal direction inverted it on every switch whose branch
+  // runs against the flow (24 of 48).
+  const wrong = map.switches.items.filter((sw) => {
+    const nums = sw.branch.match(/-?\d+(\.\d+)?/g)!.map(Number);
+    const [x1, y1, x2, y2] = nums;
+    const far =
+      Math.hypot(x1 - sw.x, y1 - sw.y) > Math.hypot(x2 - sw.x, y2 - sw.y)
+        ? [x1, y1]
+        : [x2, y2];
+    return (far[0] > sw.x ? "right" : "left") !== sw.dashSide;
+  });
+  check(
+    "every switch's dashSide matches its branch geometry",
+    wrong.length === 0,
+    `${wrong.length} wrong: ${wrong.slice(0, 6).map((s) => `P${s.id}`).join(", ")}`
+  );
+
+  // A scissors crossover is two coupled pairs sharing a midpoint. If both
+  // controls compute the same mean position they stack, and the one drawn last
+  // takes every click — half the scissors becomes unthrowable.
+  const controls = map.switches.controls;
+  const seen = new Map<string, number>();
+  for (const control of controls) {
+    const key = `${Math.round(control.x)},${Math.round(control.y)}`;
+    seen.set(key, (seen.get(key) ?? 0) + 1);
+  }
+  const stacked = [...seen.entries()].filter(([, count]) => count > 1);
+  check(
+    "no two point controls share a position (scissors stay clickable)",
+    stacked.length === 0,
+    `${stacked.length} stacked at ${stacked.map(([k]) => k).join(" ")}`
+  );
+
+  // ...and they must be far enough apart that each centre is actually hittable
+  // (the control halo is r=16*controlScale, so centres need > that diameter).
+  const scale = map.presentation.controlScale ?? 1;
+  const minGap = 2 * 8 * scale; // halo radius 8*scale each
+  let tooClose = 0;
+  for (let i = 0; i < controls.length; i++) {
+    for (let j = i + 1; j < controls.length; j++) {
+      const d = Math.hypot(controls[i].x - controls[j].x, controls[i].y - controls[j].y);
+      if (d < minGap) tooClose++;
+    }
+  }
+  check(
+    `point control centres are at least ${minGap.toFixed(1)} apart`,
+    tooClose === 0,
+    `${tooClose} pair(s) closer than ${minGap.toFixed(1)}`
+  );
+}
+
 console.log(failures === 0 ? "\nALL VERIFIER CHECKS PASSED" : `\n${failures} CHECK(S) FAILED`);
 process.exit(failures === 0 ? 0 : 1);

@@ -6,13 +6,13 @@
 
 ## Current position
 
-- **Active phase:** 8 — Drawn-extent track topology (terminating switches +
-  throat journeys). Planned, awaiting approval.
-- **Current step:** —. Phase 7 done; the Jatinegara first cut uses a documented
-  full-width approximation (8 lines to both edges) that this phase removes.
-- **Next action:** on approval, implement per `docs/PLAN-phase-8.md` (compiler
-  terminating switches → regenerate at drawn extents → re-author stub
-  journeys → verify).
+- **Active phase:** none — Phase 8 landed; the program's planned arc (0–8) is
+  complete. Work is now interactive polish on the Jatinegara schematic.
+- **Current step:** —. Latest work: the JNG grid/interaction defect sweep
+  (train marker scale, scissors point controls, generated `dashSide`).
+- **Next action:** none queued. Open follow-ups are the Phase 8 documented
+  approximations (throat block boundaries still open at each track's end; no
+  real JNG timetable; no journey-through-junction routing).
 
 ## Phase state
 
@@ -26,7 +26,7 @@
 | 5 | 2-D multi-segment occupancy | **DONE** |
 | 6 | Flyovers / graded junctions | **DONE** |
 | 7 | Arbitrary-schematic rendering | **DONE** |
-| 8 | Drawn-extent tracks (terminating switches) | **PLANNED** |
+| 8 | Drawn-extent tracks (terminating switches) | **DONE** |
 
 Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any order.
 
@@ -191,7 +191,99 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
     signal's block opens at its line end (exact throat blocks + a real
     timetable still to come).
 
+- (Phase 8) Landed in `b08a98e` — terminating switches (common === normal), the
+  generator regenerated at the drawn extents (13 mains, 10 terminating
+  switches), non-loop open ends resolving to the track-group boundary instead
+  of ±Infinity, and stub journeys within their tracks. Followed by ~11 JNG
+  grid-rendering commits (graph-paper chrome, grid pitch/offset/labels, coupled
+  PC naming, point-cell overlay, thrown-switch dashing).
+- (Post-Phase-8 defect sweep) Three interaction bugs found by driving `/jng` in
+  a real browser — the topology verifier passed throughout, because it only
+  checked topology and never the render/control annotations:
+  - **Train markers ignored `controlScale`.** The marker was hard-coded to
+    `CELL` (116×22 units) while JNG's track pitch is 32, so each train covered
+    ~3 tracks and physically blocked P44/P29 from being clicked. Markers now
+    scale with `CONTROL_SCALE` like the signal/point controls. The direction
+    arrow is authored as a FRACTION of the marker half-length (32/58, 41/58…)
+    so Bekasi's hand-tuned geometry is reproduced exactly at `halfLen = CELL`
+    and the visual baselines stayed unchanged.
+  - **Trains painted over the controls.** The train group was the last child of
+    the diagram, so any train parked on a point stole its clicks. The train
+    block now renders BEFORE the point/signal controls (SVG paint order = DOM
+    order); interactive chrome is always on top.
+  - **Scissors point controls stacked.** A coupled control is placed at the
+    mean of its two switches, and a scissors' two diagonals share a midpoint —
+    so both controls landed on the same pixel and the one drawn last took every
+    click (3 pairs, half of each scissors unthrowable). `compileTopology` now
+    calls `separateCoincidentControls`, sliding each colliding control along
+    its OWN diagonal (¼ of its span). Only genuine collisions move, so Bekasi
+    (no scissors) stayed byte-identical.
+  - **Generated `dashSide` was inverted on 24 of 48 switches** — the generator
+    derived it from the line's normal direction instead of the branch's real
+    geometry, so every switch whose branch runs against the flow drew its
+    dashed stub on the wrong side. Now derived from the reversed edge's far
+    endpoint. Regenerating touched ONLY those 24 `dashSide` values.
+  - **Point-cell dash/eraser were unscaled too** (same bug class as the train
+    marker). The inactive leg paints a white ERASER then a gray dashed ghost,
+    clipped to the point's grid cell. The 3.5-wide eraser is authored against
+    CELL=58; drawn diagonally it bites sideways into the solid straight it
+    crosses — ~31% of a 16-unit JNG cell vs ~8% of a 58-unit Bekasi cell,
+    which is the "gap in the straight route" the user saw. Fixed with TWO
+    scales, not one: `ERASER_SCALE = min(1, GRID_PITCH / CELL)` shrinks the
+    eraser hard (bite is now 9% on both layouts), while
+    `DASH_SCALE = sqrt(CELL_RATIO)` thins the ghost only ~1.9x instead of
+    ~3.6x — scaling the dash by the full ratio left a 0.55-wide hairline
+    beside a 2-wide track that no longer read as a dashed line. Both capped at
+    1, so Bekasi stays exactly as authored.
+    The eraser also needs a HARD FLOOR at the track width: the solid track is
+    drawn at a fixed `TRACK_STROKE = 2` (never scaled), so a sub-2 eraser left
+    black slivers down both sides of the ghost instead of erasing the leg.
+    `ERASER_SCALE = max(TRACK_STROKE + 0.25, 3.5 * CELL_RATIO) / 3.5` — at
+    pitch 58 that is exactly the authored 3.5; below pitch ~40 it floors at
+    2.25. Verified across pitches 4–80 that the eraser always covers the track
+    and always stays wider than its own ghost.
+  - **Paint order: the inactive ghost sat ABOVE the active route.** The
+    per-point dashed leg rendered after the amber reservation, so each point's
+    white eraser + ghost cut a notch through the highlighted route the player
+    had just set — lower-priority information obstructing higher-priority.
+    The layer now renders between the solid tracks and the reservation:
+    tracks -> inactive ghost -> amber route -> trains -> controls. Two Bekasi
+    visual baselines were refreshed (23 px and 21 px changed, 0.0025%); a
+    pixel-transition audit confirmed the change is only `ghost/white -> amber`
+    (route restored) and never the reverse.
+    That reorder was necessary but NOT sufficient — the user still saw the
+    ghost cutting the route. The eraser is a fat white stroke that STARTS at
+    the switch node, and the node sits ON the through track, so its round cap
+    always spills onto whichever leg is live; no width tuning fixes that.
+    The cell now RE-DRAWS the active leg in black after the ghost
+    (`activeD = reversed ? sw.branch : throughD`), so the set route is
+    unbroken by construction in both states. Measured with a 4x pixel scan of
+    every running line: zero interior breaks; the only remaining interruptions
+    are the point-control circles and signal boxes that legitimately sit on
+    the line. All 5 Bekasi visual baselines refreshed (≤ 0.035% of pixels,
+    all track-repair greys).
+  - Regression cover added: three `verify-jatinegara` checks (dashSide matches
+    branch geometry, no two controls share a position, centres ≥ halo apart)
+    and an e2e test that clicks all 28 controls at `?start=08:00` (trains sit
+    over P44/P29 then, so it covers the paint-order bug too).
+- (Post-Phase-8) `scripts/gen-jatinegara.py` read its cell dump from a
+  hand-made `/tmp/jng_cells.json` that no longer existed — the generator was
+  un-runnable. `scripts/extract-jng-cells.py` now rebuilds it from the draw.io
+  XML embedded in the committed `app/schematic/jng_grid.svg`, and the generator
+  invokes it automatically. Verified: regenerating with the OLD generator code
+  reproduced the committed topology byte-for-byte.
+
 ## Notes for the next worker
+
+- **Recurring bug class — check this first on any dense/schematic layout.**
+  Several constants in `dispatching-table.tsx` are authored against the sim
+  `CELL` (58) and silently break when a layout's visual pitch is much finer
+  (JNG: `gridCellSize` 16, `controlScale` 0.55). Found so far: the train marker
+  body/arrow/badge, and the point-cell dash + white eraser. When adding a
+  layout with a small pitch, grep for bare numeric literals in the SVG render
+  and ask whether each should scale by `CONTROL_SCALE` (chrome the user clicks)
+  or by the grid ratio (marks tied to a cell). Verify by SCREENSHOT — the
+  topology verifiers and the Bekasi baseline cannot catch any of it.
 
 - Verification commands: `npx tsc --noEmit`, `npm run build`, `npm run test:e2e`,
   `npm run probe:meets`, `npm run probe:bearing`, and per-phase

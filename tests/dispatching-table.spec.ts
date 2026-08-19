@@ -824,6 +824,28 @@ test.describe("dispatching table", () => {
     await expect(page.getByLabel(/Train F1 at 1300,89/)).toBeVisible();
   });
 
+  test("jatinegara point controls remain individually clickable", async ({ page }) => {
+    // At 08:00 the two stub timetable trains are parked directly over P44/P29.
+    // The test therefore proves both protections: scissors controls do not
+    // overlap each other and train markers never paint over a point control.
+    await page.goto("/jng?start=08:00");
+    const controls = page.locator('[role="button"][aria-label^="Wesel"]');
+    await expect(controls).toHaveCount(28);
+
+    // A native Playwright click fails if another SVG element owns the centre —
+    // exactly how stacked scissors controls and train rectangles regressed.
+    // Each successful click must change only that element's own pressed state.
+    for (let i = 0; i < 28; i++) {
+      const control = controls.nth(i);
+      const before = await control.getAttribute("aria-pressed");
+      expect(before).not.toBeNull();
+      await control.click();
+      await expect(control).toHaveAttribute("aria-pressed", before === "true" ? "false" : "true");
+      await control.click(); // restore the initial, all-normal table for the next control
+      await expect(control).toHaveAttribute("aria-pressed", before!);
+    }
+  });
+
   test("jatinegara interactive table — 23 signal controls, auto route set works", async ({ page }) => {
     await page.goto("/jng?start=06:00&controls=1");
     // all 23 signals are clickable controls (schematic mode, no grid chrome)
