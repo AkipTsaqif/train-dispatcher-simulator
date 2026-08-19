@@ -239,6 +239,41 @@ check(
     tooClose === 0,
     `${tooClose} pair(s) closer than ${minGap.toFixed(1)}`
   );
+
+  // A signal and a point control are BOTH clickable, so the same halo rule
+  // applies BETWEEN the two kinds - not just within each. A signal is drawn at
+  // its cell centre and a switch sits on that same lattice, so a switch moved
+  // into a signal's cell would put two hit targets on one spot and swallow the
+  // signal's clicks. Geometry cannot decide which should yield: move the
+  // switch back, or move the signal to a free cell.
+  const edgeById = new Map(JATINEGARA_TOPOLOGY.edges.map((e) => [e.id, e] as const));
+  const nodeById = new Map(JATINEGARA_TOPOLOGY.nodes.map((n) => [n.id, n] as const));
+  const signalX = (s: (typeof JATINEGARA_TOPOLOGY.signals)[number]): number => {
+    const edge = edgeById.get(s.edgeId)!;
+    const a = edge.geometry[s.segmentIndex].point;
+    const b = edge.geometry[s.segmentIndex + 1].point;
+    return a[0] + (b[0] > a[0] ? s.offset : -s.offset);
+  };
+  const collisions: string[] = [];
+  for (const signal of JATINEGARA_TOPOLOGY.signals) {
+    const edge = edgeById.get(signal.edgeId)!;
+    const sx = signalX(signal);
+    const sy = edge.geometry[0].point[1];
+    for (const sw of JATINEGARA_TOPOLOGY.switches) {
+      const node = nodeById.get(sw.nodeId)!;
+      const gap = Math.hypot(node.point[0] - sx, node.point[1] - sy);
+      if (gap < minGap) {
+        collisions.push(
+          `${signal.id}(${sx},${sy}) vs P${sw.id}(${node.point[0]},${node.point[1]}) gap ${gap.toFixed(1)}`
+        );
+      }
+    }
+  }
+  check(
+    `no signal sits within ${minGap.toFixed(1)} of a point control (both stay clickable)`,
+    collisions.length === 0,
+    `${collisions.length}: ${collisions.slice(0, 4).join(" | ")}`
+  );
 }
 
 console.log(failures === 0 ? "\nALL VERIFIER CHECKS PASSED" : `\n${failures} CHECK(S) FAILED`);
