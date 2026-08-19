@@ -8,11 +8,12 @@
 
 - **Active phase:** 9 — piece assembly (see `docs/PLAN-phase-9.md`). Phases 0–8
   are complete; Phase 9 was authored after the original 0–8 arc.
-- **Current step:** Steps 1-2 DONE. Step 2 needed no new code (Phase 8 landed
-  it in `b08a98e`) but was VERIFIED rather than assumed — see the decisions log.
-- **Next action:** Step 3 — the port join kernel (`app/lib/piece-assembly.ts`):
-  `Port`, coincidence join, switch inference, level separation. Pure function,
-  no piece types yet, unit-tested including the ambiguity error paths.
+- **Current step:** Steps 1-3 DONE (IR diffing, Step 2 verified as pre-landed,
+  port join kernel).
+- **Next action:** Step 4 — the `track` + `crossover` + `terminus` piece types,
+  enough vocabulary to express a throat. Acceptance: assemble `ladder-fixture`
+  and `three-main-fixture` from pieces and require an EMPTY structural IR diff
+  against their checked-in definitions (`npm run diff:ir -- <a> <b>`).
 
 ## Phase state
 
@@ -344,6 +345,35 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   into fixed track turns instead. So the terminating-switch path is supported
   but UNEXERCISED by any committed layout; Step 6's `terminus` pieces will be
   its first real user, and should not assume it is battle-tested.
+- (Phase 9 Step 3) **Port join kernel landed** — `app/lib/piece-assembly.ts`
+  (`Port`, `joinPorts`, `overCrowdedJunctions`), gated by
+  `npm run verify:piece-assembly` (23 checks). Pure and piece-agnostic: it
+  classifies junctions (`free` / `through` / `switch`) but mints no ids and
+  emits no IR — that is Step 4. Coincidence is EXACT (1 unit apart does not
+  join); different levels never join (flyover rule, no new machinery); the
+  through axis is the most-opposing pair and is chosen by geometry, not input
+  order.
+- (Phase 9 Step 3) Ambiguity handling, the plan's "never guess" rule: a
+  symmetric crossing (two equally-collinear candidate axes) throws naming the
+  point and BOTH candidates; ports meeting without opposing throw; a fan with
+  no opposing pair throws "No through axis". `COLLINEARITY_TIE_EPSILON` = 1e-9
+  is used ONLY to detect a tie between candidate axes, never for coincidence —
+  it sits far above float noise (~1e-16) and far below any real distinction
+  (two axes must agree to ~0.0026 degrees to count as tied).
+- (Phase 9 Step 3) A junction with 2+ diverging legs is REPORTED
+  (`overCrowdedJunctions`), not silently split: `TopologySwitch` has exactly
+  one reversed port, so a real ladder must separate those switches along the
+  track. Step 4 decides the policy.
+- (Phase 9 Step 3) **Validated against the real Jatinegara throat, not just
+  fixtures:** feeding the 180 ports derived from JNG's committed edges, the
+  kernel independently produced 74 junctions — exactly matching the IR's 74
+  nodes — and classified all 48 switch nodes correctly, with zero ambiguity
+  errors and zero over-crowded junctions. Good evidence the coincidence model
+  can express JNG's 29 crossovers before Step 6 commits to it.
+- (Phase 9 Step 3) One test was WRONG and the kernel was right: an early "no
+  through axis" case used bearings at +-61 degrees, which genuinely oppose
+  (dot -0.53). Fixed to a true fan (all within 90 degrees). Worth remembering —
+  "diverging" by eye is not the same as "not opposing" by dot product.
 
 ## Notes for the next worker
 

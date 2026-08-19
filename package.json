@@ -20,6 +20,7 @@
     "verify:flyover": "bun scripts/verify-flyover.ts",
     "verify:jatinegara": "bun scripts/verify-jatinegara.ts",
     "verify:diff-ir": "bun scripts/diff-ir.ts --self-check",
+    "verify:piece-assembly": "bun scripts/verify-piece-assembly.ts",
     "diff:ir": "bun scripts/diff-ir.ts",
     "snapshot:bekasi": "bun scripts/snapshot-layout.ts",
     "snapshot:jatinegara": "bun scripts/snapshot-layout.ts jatinegara",
