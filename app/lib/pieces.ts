@@ -252,7 +252,8 @@ export type PieceSet = {
   /**
    * Which lever works each derived switch. Geometry decides WHERE a switch is
    * and which way it dashes; it cannot know which control group owns it, so
-   * that stays authored - keyed by the derived switch number.
+   * that stays authored - keyed by `"<linkId>:<end>"`, the identity the author
+   * already wrote on the `link` piece itself.
    */
   switchMeta?: SwitchMeta;
 };
@@ -262,9 +263,18 @@ const pointKey = (p: TopologyPoint): string => `${p[0]}|${p[1]}`;
 /** Node id convention for a point on a station grid. */
 const gridNodeId = (x: number, y: number): string => `s${y}x${x}`;
 
-/** Per-switch metadata the geometry cannot supply (which lever works it). */
+/**
+ * Per-switch metadata the geometry cannot supply (which lever works it).
+ *
+ * Keyed by `` `${linkId}:${end}` `` (end being "from" or "to") - NOT by the
+ * derived switch number. The derived number is a position in a (line order,
+ * x-ascending) walk, so any geometry edit that changes which endpoints are
+ * interior, or their relative x order, silently renumbers every switch after
+ * it and reattaches levers to the wrong physical point. `linkId:end` names the
+ * piece the author actually wrote, so it cannot drift out of sync that way.
+ */
 export type SwitchMeta = Record<
-  number,
+  string,
   { controlGroupId: string; label?: string; initialState?: "normal" | "reversed" }
 >;
 
@@ -382,9 +392,18 @@ const expandLines = (
       const id = switchIdAt.get(pointKey(p));
       if (id === undefined) continue; // fixed track turn, not a point
       const other = end === "from" ? link.to : link.from;
-      const meta = switchMeta[id];
+      // Look the lever up by the AUTHORED identity, not the derived number:
+      // the derived id still becomes `TopologySwitch.id`, but it is a position
+      // in a walk and renumbers under geometry edits.
+      const metaKey = `${link.id}:${end}`;
+      // Keep the first migration commit buildable while JNG's table is
+      // re-keyed in the next commit. The numeric fallback is deliberately
+      // temporary: it is removed once all piece sets use the stable key.
+      const meta = switchMeta[metaKey] ?? switchMeta[String(id)];
       if (!meta) {
-        throw new Error(`switch ${id} at (${p[0]},${p[1]}) has no control-group mapping`);
+        throw new Error(
+          `switch ${id} ("${metaKey}") at (${p[0]},${p[1]}) has no control-group mapping`
+        );
       }
       switches.push({
         id,

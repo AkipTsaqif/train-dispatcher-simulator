@@ -12,10 +12,12 @@
   `app/topologies/jatinegara.ts` are DELETED; `/jng` renders from
   `app/pieces/jatinegara.ts` (13 lines + 29 links), byte-identical to the
   baseline captured before the port.
-- **Next action:** open to choose. The known-open JNG items are unchanged by
-  Phase 9 and are the natural candidates: throat block boundaries still open
-  at each track's end, and no real JNG timetable (still a stub). Both are
-  listed under "Known approximations" below.
+- **Next action:** review `specs/REFACTOR_LATEST.md`: make point-control
+  ownership stable by link endpoint (not derived switch number), derive the
+  now-redundant JNG compatibility node order, and spike semantic block anchors
+  before deciding whether to modernize block data. Signals/stops remain
+  explicit operational data by decision. The known-open JNG throat boundaries
+  and stub timetable remain separate work.
 
 ## Phase state
 
