@@ -181,6 +181,9 @@ Verify with an IR diff against a reference, if you have one:
 npm run diff:ir -- <reference> pieces:<layout-id>
 ```
 
+To move a switch on an existing pieces layout, see
+[`MOVING_A_SWITCH.md`](MOVING_A_SWITCH.md).
+
 `app/pieces/jatinegara.ts` is the worked example: a 74-node, 90-edge, 48-switch
 station written as 13 lines and 29 links.
 
