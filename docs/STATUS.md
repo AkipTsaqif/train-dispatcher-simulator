@@ -8,9 +8,8 @@
 
 - **Active phase:** 9 — piece assembly (see `docs/PLAN-phase-9.md`). Phases 0–8
   are complete; Phase 9 was authored after the original 0–8 arc.
-- **Current step:** Step 1 DONE (IR diffing). Step 2 was already landed by
-  Phase 8 in `b08a98e` (`topology.ts` has `distinctPorts.size === 2`), so the
-  next real work is Step 3.
+- **Current step:** Steps 1-2 DONE. Step 2 needed no new code (Phase 8 landed
+  it in `b08a98e`) but was VERIFIED rather than assumed — see the decisions log.
 - **Next action:** Step 3 — the port join kernel (`app/lib/piece-assembly.ts`):
   `Port`, coincidence join, switch inference, level separation. Pure function,
   no piece types yet, unit-tested including the ambiguity error paths.
@@ -335,6 +334,16 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   sweep found by hand on 24 switches. The self-check deliberately asserts the
   differ REPORTS change (a stub returning "identical" would make the Step 4-5
   acceptance gates pass vacuously) and that a duplicate id throws.
+- (Phase 9 Step 2) **No code written — verified as already landed, not assumed.**
+  `topology.ts` accepts a terminating switch (`common === normal`, so
+  `distinctPorts.size === 2`) and still rejects a genuinely duplicated port set.
+  Proven by mutating a ladder-fixture switch to be terminating (compiles) and
+  to have all three ports identical (throws "duplicate ports").
+  **Caveat for Step 6:** NO layout currently uses this capability — all 48 JNG
+  switches have 3 distinct ports, because the generator turned the 10 stub ends
+  into fixed track turns instead. So the terminating-switch path is supported
+  but UNEXERCISED by any committed layout; Step 6's `terminus` pieces will be
+  its first real user, and should not assume it is battle-tested.
 
 ## Notes for the next worker
 
