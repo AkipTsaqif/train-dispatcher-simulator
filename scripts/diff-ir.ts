@@ -5,7 +5,7 @@
 //   bun scripts/diff-ir.ts --self-check       # prove the differ detects change
 //
 // <before>/<after> name a module exporting one TopologyDefinition:
-//   "jatinegara"          -> app/topologies/jatinegara
+//   "ladder-fixture"      -> app/topologies/ladder-fixture
 //   "pieces:ladder-fixture" -> app/pieces/ladder-fixture (assembled from pieces)
 //   "/abs/or/rel/path.ts" -> that module
 // The pieces: prefix is what makes Step 4-5 acceptance a one-liner:

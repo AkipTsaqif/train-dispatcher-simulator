@@ -1,9 +1,18 @@
-"""Rebuild the generator's input (jng_cells.json) from the committed drawing.
+"""Dump the drawn geometry (jng_cells.json) from the committed drawing.
 
-`gen-jatinegara.py` reads a JSON dump of the draw.io cells. That dump used to
-live in /tmp and is not reproducible after a reboot, which made the generator
-un-runnable. The draw.io source is embedded in the SVG export's `content`
-attribute, so the dump can be rebuilt from the file we actually commit.
+RETAINED after Phase 9 Step 7 deleted `gen-jatinegara.py`. Jatinegara is now
+authored as pieces in `app/pieces/jatinegara.ts`, so nothing generates code
+from this dump any more. It is kept because it is the only way to recover what
+the draw.io source ACTUALLY says: the drawing is the provenance for the
+layout's coordinates, and this is how you check the pieces against it.
+
+That check is not hypothetical - it is what established that the committed
+extents match the drawing exactly, including the fragmented tracks 5 and 6,
+and so that Step 6's premise (stub tracks wrongly extended to the map
+boundary) had already been fixed in Phase 8.
+
+The draw.io source is embedded in the SVG export's `content` attribute, so the
+dump can be rebuilt from the file we actually commit.
 
 Usage:
     py -3 scripts/extract-jng-cells.py            # -> /tmp/jng_cells.json

@@ -6,16 +6,16 @@
 
 ## Current position
 
-- **Active phase:** 9 — piece assembly (see `docs/PLAN-phase-9.md`). Phases 0–8
-  are complete; Phase 9 was authored after the original 0–8 arc.
-- **Current step:** Steps 1-5 DONE. Piece vocabulary v1 complete; ALL FOUR
-  fixtures assemble from pieces and compile byte-identically.
-- **Next action:** Step 6 — author `app/pieces/jatinegara.ts`. Unlike Steps
-  4-5 its IR need NOT match the generated file: the point is to fix the taste
-  problems (stub tracks 5-8 at their true drawn extents via `terminus`, rather
-  than extended to the map boundary). Acceptance becomes `verify-jatinegara`'s
-  checks, updated for the new extents — re-read PLAN-phase-9 Step 6 first.
-  Expect to re-capture the JNG baseline and record the diff here.
+- **Active phase:** 9 — piece assembly — **COMPLETE (all 7 steps)**. Phases 0–8
+  were complete already; Phase 9 was authored after the original 0–8 arc.
+- **Current step:** none. `scripts/gen-jatinegara.py` and the generated
+  `app/topologies/jatinegara.ts` are DELETED; `/jng` renders from
+  `app/pieces/jatinegara.ts` (13 lines + 29 links), byte-identical to the
+  baseline captured before the port.
+- **Next action:** open to choose. The known-open JNG items are unchanged by
+  Phase 9 and are the natural candidates: throat block boundaries still open
+  at each track's end, and no real JNG timetable (still a stub). Both are
+  listed under "Known approximations" below.
 
 ## Phase state
 
@@ -30,7 +30,7 @@
 | 6 | Flyovers / graded junctions | **DONE** |
 | 7 | Arbitrary-schematic rendering | **DONE** |
 | 8 | Drawn-extent tracks (terminating switches) | **DONE** |
-| 9 | Piece assembly (pieces → topology IR) | **ACTIVE** (Step 2 pre-landed in Phase 8) |
+| 9 | Piece assembly (pieces → topology IR) | **DONE** (Step 2 pre-landed in Phase 8) |
 
 Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any order.
 
@@ -185,15 +185,16 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
     replaces the single-X-per-station throw with a per-track validation; the
     journey prep resolves each stop's X on the journey's own line via
     `buildJourney`'s `stopXFor`. Bekasi unchanged (its stations share one X).
-  - **Jatinegara** (`app/topologies/jatinegara.ts`, generated from
-    `app/schematic/jng_grid.svg` via `scripts/gen-jatinegara.py`): 8 full-width
-    platform mains, 29 crossovers, 58 switches, 23 signals (NW/NE/XW/XE), 5
-    bidirectional mains, per-track platform Xs (850/464/416/430/400). Stub
-    timetable (J201/J102/J310). Schematic preview at `/jng`. verify-jatinegara
-    (11 checks) + e2e. Deviations from the drawing: stub tracks 5-8 extended
-    to the map boundaries so every junction keeps a through axis; each
-    signal's block opens at its line end (exact throat blocks + a real
-    timetable still to come).
+  - **Jatinegara** (`app/pieces/jatinegara.ts`, authored as pieces since
+    Phase 9; the generated topology was deleted in Step 7): 8 full-width
+    platform mains (13 line pieces, since tracks 5-6 are drawn fragmented),
+    29 crossovers, 48 switches + 10 fixed track turns, 23 signals
+    (NW/NE/XW/XE), 5 bidirectional mains, per-track platform Xs
+    (850/464/416/430/400). Stub timetable (J201/J102/J310). Schematic preview
+    at `/jng`. verify-jatinegara (11 checks) + baseline + e2e. Extents match
+    the drawing exactly (verified against the draw.io cell dump). Remaining
+    approximation: each signal's block opens at its line end (exact throat
+    blocks + a real timetable still to come).
 
 - (Phase 8) Landed in `b08a98e` — terminating switches (common === normal), the
   generator regenerated at the drawn extents (13 mains, 10 terminating
@@ -437,6 +438,44 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   the plan: sections are graph-global, and piece-local authoring was an
   explicitly rejected alternative. `legacyNodeOrder` and `controlGroups` also
   stay authored.
+- (Phase 9 Step 6) **Jatinegara is now authored as pieces.** 13 `line` + 29
+  `link` pieces produce all 74 nodes, 90 edges, 48 switches, 42 track groups.
+  Compiled output is byte-identical to the pre-port baseline, so the
+  switchover changed nothing observable.
+- (Phase 9 Step 6) **The plan's Step 6 premise was STALE.** It said to fix
+  stub tracks 5-8 being "extended to the map boundaries". Phase 8 (`b08a98e`)
+  had already fixed that. Verified against the draw.io cell dump
+  (`scripts/extract-jng-cells.py`): all 8 tracks match the drawing exactly,
+  including the fragmented tracks 5 and 6 (`t5ac`/`t5y`/`t6ab`/`t5ap`/`t6am`
+  are the real drawn segments). So the port was a pure authoring-surface
+  change and took the Step 4/5 acceptance bar instead. **Lesson: re-derive a
+  plan's premise from the artefact before acting on it.**
+- (Phase 9 Step 6) Two rules had to be reverse-engineered; the assembler
+  failing loudly is what surfaced them. (a) Switch ids are assigned to ALL 58
+  diagonal ends and the 10 fixed turns are dropped AFTER, which is why the
+  sequence has gaps (no switch 37/39/45/51). Renumbering densely would
+  silently repoint every lever, since switch ids appear in control-group
+  tables and scenarios. (b) `dashSide` is the diagonal's direction — east
+  dashes right, else left.
+- (Phase 9 Step 6) `line`/`link` are sugar lowered into `track`/`crossover`
+  before assembly, so there is exactly ONE join/switch/grouping path. A
+  `link` end INTERIOR to a line is a switch; an end at a line's extremity is a
+  fixed track turn — that one rule is what turns 29 diagonals (58 ends) into
+  exactly 48 switches.
+- (Phase 9 Step 7) **Generator retired.** `scripts/gen-jatinegara.py` and
+  `app/topologies/jatinegara.ts` deleted. `scripts/extract-jng-cells.py` is
+  RETAINED deliberately: it is the only way to recover what the draw.io source
+  actually says, and it is what proved the Step 6 premise stale.
+  `app/ADDING_LAYOUTS.md` Phase 2 now documents pieces as Path A (preferred)
+  and hand-authored IR as Path B (legacy, Bekasi).
+- (Phase 9 Step 7) JNG's acceptance is no longer a hand-vs-pieces IR diff
+  (there is no hand file left) — it is `verify:jatinegara:baseline`, which
+  compares the compiled runtime byte-for-byte against a baseline captured
+  BEFORE the port. That baseline is now load-bearing: do not re-capture it
+  without recording why.
+- (Phase 9) e2e: 46 pass, 5 visual snapshots fail. PRE-EXISTING and unrelated
+  — Windows-canonical PNGs vs Linux, all on `/` (Bekasi), which Phase 9 never
+  touched (`verify:bekasi` stays byte-identical).
 
 ## Notes for the next worker
 

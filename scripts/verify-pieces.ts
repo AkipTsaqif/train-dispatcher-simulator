@@ -12,6 +12,11 @@
 // it — so an ordering-only diff is accepted here if and only if the compiled
 // output is identical.
 //
+// Jatinegara is NOT listed here. Its hand-authored IR was deleted in Step 7,
+// so there is nothing to diff against; its equivalent proof is
+// `npm run verify:jatinegara:baseline`, which compares the compiled runtime
+// byte-for-byte against a baseline captured BEFORE the port.
+//
 // Run: bun scripts/verify-pieces.ts
 
 import { diffIR, formatIRDiff } from "./lib/ir-diff";
@@ -41,11 +46,6 @@ const FIXTURES = [
     name: "loops-fixture",
     hand: async () => (await import("../app/topologies/loops-fixture")).LOOPS_FIXTURE_TOPOLOGY,
     pieces: async () => (await import("../app/pieces/loops-fixture")).LOOPS_FIXTURE_ASSEMBLED,
-  },
-  {
-    name: "jatinegara",
-    hand: async () => (await import("../app/topologies/jatinegara")).JATINEGARA_TOPOLOGY,
-    pieces: async () => (await import("../app/pieces/jatinegara")).JATINEGARA_ASSEMBLED,
   },
   {
     name: "flyover-fixture",
