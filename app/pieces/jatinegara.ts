@@ -24,7 +24,6 @@ import {
   JATINEGARA_CONTROL_GROUPS,
   JATINEGARA_SIGNALS,
   JATINEGARA_STOP_POINTS,
-  JATINEGARA_LEGACY_NODE_ORDER,
 } from "./jatinegara-data";
 
 export const JATINEGARA_PIECES: PieceSet = {
@@ -136,7 +135,6 @@ export const JATINEGARA_PIECES: PieceSet = {
     signals: JATINEGARA_SIGNALS,
     blockSections: JATINEGARA_BLOCK_SECTIONS,
     stationStopPoints: JATINEGARA_STOP_POINTS,
-    legacyNodeOrder: JATINEGARA_LEGACY_NODE_ORDER,
   },
 };
 

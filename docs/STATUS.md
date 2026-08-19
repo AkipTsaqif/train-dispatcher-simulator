@@ -500,6 +500,10 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   position. The numeric `TopologySwitch.id` remains unchanged for runtime
   compatibility. Orphaned or mistyped keys now fail at assembly with the key
   named in the error. JNG's compiled and runtime baselines remain byte-identical.
+-  2026-08-19 — Removed JNG's hand-authored `legacyNodeOrder`. Unlike the
+  ladder fixture, JNG's placement-derived node order is already exactly the
+  historical 74-node order, proven before removal; the compiled/runtime
+  baseline remains byte-identical.
 
 ## Notes for the next worker
 
