@@ -324,6 +324,7 @@ const expandLines = (
   // and control-group tables, so renumbering them densely would silently
   // repoint every lever.
   const ends: { line: LinePiece; x: number; interior: boolean }[] = [];
+  const validSwitchMetaKeys = new Set<string>();
   for (const link of links) {
     for (const end of ["from", "to"] as const) {
       const p = link[end];
@@ -335,8 +336,19 @@ const expandLines = (
         );
       }
       // Interior => a real switch. At the line's extremity => a fixed turn.
-      ends.push({ line, x: p[0], interior: p[0] > lo(line) && p[0] < hi(line) });
+      const interior = p[0] > lo(line) && p[0] < hi(line);
+      if (interior) validSwitchMetaKeys.add(`${link.id}:${end}`);
+      ends.push({ line, x: p[0], interior });
     }
+  }
+  const orphanedSwitchMetaKeys = Object.keys(switchMeta).filter(
+    (key) => !validSwitchMetaKeys.has(key)
+  );
+  if (orphanedSwitchMetaKeys.length > 0) {
+    throw new Error(
+      `switchMeta contains orphaned key(s): ${orphanedSwitchMetaKeys.join(", ")}. ` +
+        `Each key must name a real interior link endpoint as "<linkId>:<end>".`
+    );
   }
   ends.sort((a, b) => lineOrder.get(a.line.id)! - lineOrder.get(b.line.id)! || a.x - b.x);
   const switchIdAt = new Map<string, number>();

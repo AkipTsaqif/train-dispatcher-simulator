@@ -12,12 +12,12 @@
   `app/topologies/jatinegara.ts` are DELETED; `/jng` renders from
   `app/pieces/jatinegara.ts` (13 lines + 29 links), byte-identical to the
   baseline captured before the port.
-- **Next action:** review `specs/REFACTOR_LATEST.md`: make point-control
-  ownership stable by link endpoint (not derived switch number), derive the
-  now-redundant JNG compatibility node order, and spike semantic block anchors
-  before deciding whether to modernize block data. Signals/stops remain
-  explicit operational data by decision. The known-open JNG throat boundaries
-  and stub timetable remain separate work.
+- **Next action:** remove JNG's now-proven-redundant legacy node-order table,
+  then add assembly preflight checks for stale operational edge references.
+  Point-control metadata now uses stable `linkId:end` keys and orphaned keys
+  fail loudly. The block-anchor work remains a design spike only; signals,
+  stops, and blocks remain explicit operational data by decision. The known-open
+  JNG throat boundaries and stub timetable remain separate work.
 
 ## Phase state
 
@@ -492,6 +492,14 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   are off-lattice. The tool reports off-lattice positions as `~M4 (col 12.05,
   row 4.03)` rather than rounding, since a rounded ref would be confidently
   wrong.
+
+## Refactor progress
+
+- 2026-08-19 — Stable switch-control identity: `switchMeta` is now keyed by
+  the authored link endpoint (`xov15:to`), not the derived numeric switch
+  position. The numeric `TopologySwitch.id` remains unchanged for runtime
+  compatibility. Orphaned or mistyped keys now fail at assembly with the key
+  named in the error. JNG's compiled and runtime baselines remain byte-identical.
 
 ## Notes for the next worker
 
