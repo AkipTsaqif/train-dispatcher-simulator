@@ -8,11 +8,12 @@
 
 - **Active phase:** 9 — piece assembly (see `docs/PLAN-phase-9.md`). Phases 0–8
   are complete; Phase 9 was authored after the original 0–8 arc.
-- **Current step:** pre-Step-1. A Jatinegara baseline snapshot was captured so
-  Phase 9's rebuild of the JNG topology has a "before camera" to diff against.
-- **Next action:** Step 1 — `scripts/diff-ir.ts` (structural IR diffing).
-  Note Step 2 (terminating switches in the compiler) ALREADY LANDED with
-  Phase 8 in `b08a98e` — `topology.ts` has `distinctPorts.size === 2`.
+- **Current step:** Step 1 DONE (IR diffing). Step 2 was already landed by
+  Phase 8 in `b08a98e` (`topology.ts` has `distinctPorts.size === 2`), so the
+  next real work is Step 3.
+- **Next action:** Step 3 — the port join kernel (`app/lib/piece-assembly.ts`):
+  `Port`, coincidence join, switch inference, level separation. Pure function,
+  no piece types yet, unit-tested including the ambiguity error paths.
 
 ## Phase state
 
@@ -314,6 +315,26 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   (byte-identical again), `verify:jatinegara:baseline`, `verify:jatinegara`,
   verify three-main/loops/routes/flyover, and all four probes. NOT yet run:
   `npm run build` and `npm run test:e2e`.
+
+- (Phase 9 Step 1) **IR diffing landed.** `scripts/lib/ir-diff.ts` +
+  `scripts/diff-ir.ts` + `scripts/lib/ir-diff-selfcheck.ts`; gates
+  `npm run verify:diff-ir` (26 self-checks), CLI `npm run diff:ir -- <a> <b>`.
+  No production code touched. Diffs by IDENTITY per collection (not position),
+  reporting added / removed / changed(with per-field before→after) and
+  **reordered as a SEPARATE class** — that separation is what lets Steps 4-5
+  demand an empty structural diff without being blocked by incidental
+  ordering (PLAN-phase-9 allows ordering-only diffs "with a recorded reason";
+  `--allow-reorder` exits 0 for that case). Content comparison reuses
+  `serialize.ts`, so it inherits the float rounding and is toolchain-
+  independent. Exit codes: 0 identical / 1 differences / 2 usage.
+- (Phase 9 Step 1) Proven on real data, not just fixtures: re-running
+  `gen-jatinegara.py` yields an IR-IDENTICAL result (so the differ is a valid
+  Step 6 before/after camera), while a single flipped `dashSide` character in
+  the 465-line generated file is pinpointed to `switches / changed / id 3 /
+  dashSide "left" -> "right"` — exactly the defect class that the Post-Phase-8
+  sweep found by hand on 24 switches. The self-check deliberately asserts the
+  differ REPORTS change (a stub returning "identical" would make the Step 4-5
+  acceptance gates pass vacuously) and that a duplicate id throws.
 
 ## Notes for the next worker
 

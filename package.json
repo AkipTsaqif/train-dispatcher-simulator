@@ -19,6 +19,8 @@
     "verify:routes": "bun scripts/verify-routes.ts",
     "verify:flyover": "bun scripts/verify-flyover.ts",
     "verify:jatinegara": "bun scripts/verify-jatinegara.ts",
+    "verify:diff-ir": "bun scripts/diff-ir.ts --self-check",
+    "diff:ir": "bun scripts/diff-ir.ts",
     "snapshot:bekasi": "bun scripts/snapshot-layout.ts",
     "snapshot:jatinegara": "bun scripts/snapshot-layout.ts jatinegara",
     "verify:jatinegara:baseline": "bun scripts/verify-layout.ts jatinegara",
