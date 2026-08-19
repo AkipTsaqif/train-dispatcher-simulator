@@ -1,5 +1,13 @@
 # Phase 8 — Drawn-extent track topology (terminating switches + throat journeys)
 
+> **SUPERSEDED by [PLAN-phase-9.md](PLAN-phase-9.md).** This phase was split.
+> Its compiler half — terminating-switch support in `compileTopology` — survives
+> as **Phase 9 Step 2** and is needed regardless of authoring surface. Its
+> authoring half — editing `scripts/gen-jatinegara.py` to emit drawn extents —
+> is dropped as throwaway work, because Phase 9 retires that generator in favour
+> of authored pieces. The technical design below remains the reference for the
+> terminating-switch work; read it with Phase 9 Step 2.
+
 ## Goal
 
 Make the generated Jatinegara layout match the drawing's true track counts —
