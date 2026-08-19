@@ -8,13 +8,14 @@
 
 - **Active phase:** 9 — piece assembly (see `docs/PLAN-phase-9.md`). Phases 0–8
   are complete; Phase 9 was authored after the original 0–8 arc.
-- **Current step:** Steps 1-4 DONE (IR diffing; Step 2 verified pre-landed;
-  port join kernel; track/crossover/terminus vocabulary proven on two
-  fixtures).
-- **Next action:** Step 5 — `platform`, `signal`, `loop`, `flyover` pieces,
-  completing v1 and removing the `passthrough` escape hatch. Acceptance: add
-  `loops-fixture` and `flyover-fixture` to `npm run verify:pieces` with the
-  same empty-structural-diff + identical-compiled-output bar.
+- **Current step:** Steps 1-5 DONE. Piece vocabulary v1 complete; ALL FOUR
+  fixtures assemble from pieces and compile byte-identically.
+- **Next action:** Step 6 — author `app/pieces/jatinegara.ts`. Unlike Steps
+  4-5 its IR need NOT match the generated file: the point is to fix the taste
+  problems (stub tracks 5-8 at their true drawn extents via `terminus`, rather
+  than extended to the map boundary). Acceptance becomes `verify-jatinegara`'s
+  checks, updated for the new extents — re-read PLAN-phase-9 Step 6 first.
+  Expect to re-capture the JNG baseline and record the diff here.
 
 ## Phase state
 
@@ -407,6 +408,35 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   stops, control groups and `legacyNodeOrder` — these get vocabulary in Step 5.
   `legacyNodeOrder` may have to STAY authored: the ladder interleaves loop
   midpoints between main nodes, which no placement-derived order reproduces.
+- (Phase 9 Step 5) **Piece vocabulary v1 complete** — added `loop` (a chain of
+  segments attaching through switches at both OUTER ends only, intermediate
+  joints named by the loop that owns them), `platform`, `signal`, and `level`
+  on a link (the flyover ramp). All four fixtures now assemble from pieces and
+  pass `npm run verify:pieces`: no entity added/removed/changed AND
+  byte-identical compiled output, on three-main, ladder, loops, and flyover.
+- (Phase 9 Step 5) Signals and platforms are placed by GROUP + x; the
+  assembler resolves which edge and segment contains the point. That was the
+  last edge-id reference an author wrote by hand. A diagonal run (the flyover
+  ramp, whose signal sits at offset 164.46) cannot be identified by x alone, so
+  a positional `at: {edgeIndex, segmentIndex, offset}` escape exists — still
+  group-relative, still not an edge-id reference.
+- (Phase 9 Step 5) The multi-edge loop (S2, two chained edges via S2h) proves
+  the chain model: switches attach only at the outer ends, and an intermediate
+  joint stays a plain node. Switch-point derivation was corrected accordingly —
+  a node is a switch iff a link DECLARES a switch there, not merely because a
+  link ends there (the earlier rule would have made S2h a switch).
+- (Phase 9 Step 5) The graded link needed no new machinery, exactly as the plan
+  predicted: the ramp carries `level: 1`, its ports never join lineM's, and no
+  other piece mentions the (800,147) crossing at all.
+- (Phase 9 Step 5) All four fixtures show the SAME ordering-only node
+  difference (placement order vs authored order) and all four compile
+  byte-identically — so node order in the IR is confirmed behavior-neutral,
+  because the compiler takes its ordering from `legacyNodeOrder`, which stays
+  authored in `passthrough`.
+- (Phase 9 Step 5) `blockSections` deliberately REMAIN in `passthrough`, per
+  the plan: sections are graph-global, and piece-local authoring was an
+  explicitly rejected alternative. `legacyNodeOrder` and `controlGroups` also
+  stay authored.
 
 ## Notes for the next worker
 

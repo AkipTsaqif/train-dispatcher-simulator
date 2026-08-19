@@ -37,6 +37,16 @@ const FIXTURES = [
     hand: async () => (await import("../app/topologies/ladder-fixture")).LADDER_FIXTURE_TOPOLOGY,
     pieces: async () => (await import("../app/pieces/ladder-fixture")).LADDER_FIXTURE_ASSEMBLED,
   },
+  {
+    name: "loops-fixture",
+    hand: async () => (await import("../app/topologies/loops-fixture")).LOOPS_FIXTURE_TOPOLOGY,
+    pieces: async () => (await import("../app/pieces/loops-fixture")).LOOPS_FIXTURE_ASSEMBLED,
+  },
+  {
+    name: "flyover-fixture",
+    hand: async () => (await import("../app/topologies/flyover-fixture")).FLYOVER_FIXTURE_TOPOLOGY,
+    pieces: async () => (await import("../app/pieces/flyover-fixture")).FLYOVER_FIXTURE_ASSEMBLED,
+  },
 ];
 
 for (const fixture of FIXTURES) {
