@@ -807,6 +807,43 @@ export const assemblePieces = ({
     }),
   ];
 
+  // --- 8. preflight: every authored edge reference names a real edge --------
+  // Signals, stop points and block sections stay author-maintained (they are
+  // operations, not geometry), so they are the one place a hand-written edge
+  // id survives. A mid-span geometry edit re-cuts a line and renames its
+  // edges, which silently orphans those references — caught here, at the
+  // assembly boundary, naming the table and the stale id, rather than as a
+  // cryptic failure deep inside compileTopology (or not at all).
+  const requireEdge = (edgeId: string, context: string) => {
+    if (!edgeById.has(edgeId)) {
+      throw new Error(
+        `${context} references unknown edge "${edgeId}". ` +
+          `No assembled edge has that id — a geometry edit may have re-cut the ` +
+          `line and renamed it.`
+      );
+    }
+  };
+
+  (passthrough.signals ?? []).forEach((signal, i) => {
+    requireEdge(signal.edgeId, `passthrough.signals[${i}] (signal "${signal.id}")`);
+  });
+
+  (passthrough.stationStopPoints ?? []).forEach((stop, i) => {
+    requireEdge(
+      stop.edgeId,
+      `passthrough.stationStopPoints[${i}] (station "${stop.stationCode}")`
+    );
+  });
+
+  (passthrough.blockSections ?? []).forEach((section, i) => {
+    section.edgeRanges.forEach((range, j) => {
+      requireEdge(
+        range.edgeId,
+        `passthrough.blockSections[${i}].edgeRanges[${j}] (block section "${section.id}")`
+      );
+    });
+  });
+
   return {
     nodes,
     edges,

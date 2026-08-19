@@ -504,6 +504,11 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   ladder fixture, JNG's placement-derived node order is already exactly the
   historical 74-node order, proven before removal; the compiled/runtime
   baseline remains byte-identical.
+-  2026-08-19 — Piece assembly now preflights the explicit operational edge
+  references (signals, station stops, and block ranges) against the assembled
+  edge set. A geometry edit that re-cuts a line now fails at the authoring
+  boundary with the stale table/id/context named, instead of a cryptic later
+  compiler failure. The operational tables remain explicit by decision.
 
 ## Notes for the next worker
 
