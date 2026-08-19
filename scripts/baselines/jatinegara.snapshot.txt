@@ -1,0 +1,6351 @@
+{
+  "map": {
+    "lines": {
+      "bottomY": 496,
+      "mains": [
+        {
+          "lineY": 496,
+          "name": "t1",
+          "normalBearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "trackGroupId": "t1"
+        },
+        {
+          "lineY": 464,
+          "name": "t2",
+          "normalBearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "trackGroupId": "t2"
+        },
+        {
+          "lineY": 432,
+          "name": "t3",
+          "normalBearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "trackGroupId": "t3"
+        },
+        {
+          "lineY": 400,
+          "name": "t4",
+          "normalBearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "trackGroupId": "t4"
+        },
+        {
+          "lineY": 368,
+          "name": "t5",
+          "normalBearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "trackGroupId": "t5"
+        },
+        {
+          "lineY": 336,
+          "name": "t6",
+          "normalBearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "trackGroupId": "t6"
+        },
+        {
+          "lineY": 304,
+          "name": "t7",
+          "normalBearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "trackGroupId": "t7"
+        },
+        {
+          "lineY": 272,
+          "name": "t8",
+          "normalBearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "trackGroupId": "t8"
+        },
+        {
+          "lineY": 368,
+          "name": "t5ap",
+          "normalBearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "trackGroupId": "t5ap"
+        },
+        {
+          "lineY": 336,
+          "name": "t6am",
+          "normalBearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "trackGroupId": "t6am"
+        },
+        {
+          "lineY": 368,
+          "name": "t5ac",
+          "normalBearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "trackGroupId": "t5ac"
+        },
+        {
+          "lineY": 368,
+          "name": "t5y",
+          "normalBearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "trackGroupId": "t5y"
+        },
+        {
+          "lineY": 336,
+          "name": "t6ab",
+          "normalBearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "trackGroupId": "t6ab"
+        }
+      ],
+      "normalBearingByLineY": {
+        "272": {
+          "dx": -1,
+          "dy": 0
+        },
+        "304": {
+          "dx": -1,
+          "dy": 0
+        },
+        "336": {
+          "dx": 1,
+          "dy": 0
+        },
+        "368": {
+          "dx": 1,
+          "dy": 0
+        },
+        "400": {
+          "dx": -1,
+          "dy": 0
+        },
+        "432": {
+          "dx": 1,
+          "dy": 0
+        },
+        "464": {
+          "dx": -1,
+          "dy": 0
+        },
+        "496": {
+          "dx": 1,
+          "dy": 0
+        }
+      },
+      "normalDirectionByY": {
+        "272": "left",
+        "304": "left",
+        "336": "right",
+        "368": "right",
+        "400": "left",
+        "432": "right",
+        "464": "left",
+        "496": "right"
+      },
+      "topY": 272
+    },
+    "loops": {
+      "byGroupId": {},
+      "lineYs": {
+        "$set": []
+      },
+      "maxX": {
+        "$inf": -1
+      },
+      "minX": {
+        "$inf": 1
+      },
+      "rejoinByLineY": {}
+    },
+    "nodes": {
+      "n1": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s496x112"
+          }
+        ],
+        "x": 32,
+        "y": 496
+      },
+      "n10": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s304x176"
+          }
+        ],
+        "x": 32,
+        "y": 304
+      },
+      "n11": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s272x336"
+          }
+        ],
+        "x": 224,
+        "y": 272
+      },
+      "n12": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s368x1040"
+          }
+        ],
+        "x": 1120,
+        "y": 368
+      },
+      "n13": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s336x1008"
+          }
+        ],
+        "x": 1120,
+        "y": 336
+      },
+      "n14": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s368x752"
+          }
+        ],
+        "x": 976,
+        "y": 368
+      },
+      "n15": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s368x656"
+          }
+        ],
+        "x": 624,
+        "y": 368
+      },
+      "n16": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s336x688"
+          }
+        ],
+        "x": 720,
+        "y": 336
+      },
+      "n2": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s496x912"
+          }
+        ],
+        "x": 1120,
+        "y": 496
+      },
+      "n3": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s464x144"
+          }
+        ],
+        "x": 32,
+        "y": 464
+      },
+      "n4": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s464x880"
+          }
+        ],
+        "x": 1120,
+        "y": 464
+      },
+      "n5": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s432x208"
+          }
+        ],
+        "x": 32,
+        "y": 432
+      },
+      "n6": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s432x944"
+          }
+        ],
+        "x": 1120,
+        "y": 432
+      },
+      "n7": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s400x240"
+          }
+        ],
+        "x": 32,
+        "y": 400
+      },
+      "n8": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s400x1008"
+          }
+        ],
+        "x": 1120,
+        "y": 400
+      },
+      "n9": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s336x176"
+          }
+        ],
+        "x": 32,
+        "y": 336
+      },
+      "s272x336": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "n11"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s272x528",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s304x304"
+            ],
+            "farSw": 48,
+            "neighbor": "s304x304",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 52,
+        "x": 336,
+        "y": 272
+      },
+      "s272x528": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s272x336"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "neighbor": "s304x560"
+          }
+        ],
+        "x": 528,
+        "y": 272
+      },
+      "s304x176": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "n10"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s304x208",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s336x208"
+            ],
+            "farSw": 41,
+            "neighbor": "s336x208",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 46,
+        "x": 176,
+        "y": 304
+      },
+      "s304x208": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s304x176"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s304x304",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s336x176"
+            ],
+            "farSw": 40,
+            "neighbor": "s336x176",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 47,
+        "x": 208,
+        "y": 304
+      },
+      "s304x304": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s304x208"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s304x560",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s272x336"
+            ],
+            "farSw": 52,
+            "neighbor": "s272x336",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 48,
+        "x": 304,
+        "y": 304
+      },
+      "s304x560": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s304x304"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s304x624",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s272x528"
+            ],
+            "neighbor": "s272x528",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 49,
+        "x": 560,
+        "y": 304
+      },
+      "s304x624": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s304x560"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s304x688",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s400x720"
+            ],
+            "farSw": 31,
+            "neighbor": "s400x720",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 50,
+        "x": 624,
+        "y": 304
+      },
+      "s304x688": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s304x624"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "neighbor": "s368x752"
+          }
+        ],
+        "x": 688,
+        "y": 304
+      },
+      "s336x1008": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "n13"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "neighbor": "s400x944"
+          }
+        ],
+        "x": 1008,
+        "y": 336
+      },
+      "s336x176": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "n9"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s336x208",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s304x208"
+            ],
+            "farSw": 47,
+            "neighbor": "s304x208",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 40,
+        "x": 176,
+        "y": 336
+      },
+      "s336x208": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s336x176"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s336x240",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s304x176"
+            ],
+            "farSw": 46,
+            "neighbor": "s304x176",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 41,
+        "x": 208,
+        "y": 336
+      },
+      "s336x240": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s336x208"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s336x304",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s400x304"
+            ],
+            "farSw": 27,
+            "neighbor": "s400x304",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 42,
+        "x": 240,
+        "y": 336
+      },
+      "s336x304": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s336x240"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s336x560",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s368x336"
+            ],
+            "neighbor": "s368x336",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 43,
+        "x": 304,
+        "y": 336
+      },
+      "s336x560": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s336x304"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s336x592",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s368x528"
+            ],
+            "neighbor": "s368x528",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 44,
+        "x": 560,
+        "y": 336
+      },
+      "s336x592": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s336x560"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "neighbor": "s400x656"
+          }
+        ],
+        "x": 592,
+        "y": 336
+      },
+      "s336x688": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "n16"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "neighbor": "s368x656"
+          }
+        ],
+        "x": 688,
+        "y": 336
+      },
+      "s368x1040": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "n12"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "neighbor": "s400x1008"
+          }
+        ],
+        "x": 1040,
+        "y": 368
+      },
+      "s368x336": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s368x368"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "neighbor": "s336x304"
+          }
+        ],
+        "x": 336,
+        "y": 368
+      },
+      "s368x368": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s368x336"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s368x528",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s400x336"
+            ],
+            "farSw": 28,
+            "neighbor": "s400x336",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 38,
+        "x": 368,
+        "y": 368
+      },
+      "s368x528": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s368x368"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "neighbor": "s336x560"
+          }
+        ],
+        "x": 528,
+        "y": 368
+      },
+      "s368x656": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "n15"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "neighbor": "s336x688"
+          }
+        ],
+        "x": 656,
+        "y": 368
+      },
+      "s368x752": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "n14"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "neighbor": "s304x688"
+          }
+        ],
+        "x": 752,
+        "y": 368
+      },
+      "s400x1008": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s400x976"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "n8",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s368x1040"
+            ],
+            "neighbor": "s368x1040",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 36,
+        "x": 1008,
+        "y": 400
+      },
+      "s400x240": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "n7"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s400x272",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s432x272"
+            ],
+            "farSw": 17,
+            "neighbor": "s432x272",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 25,
+        "x": 240,
+        "y": 400
+      },
+      "s400x272": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s400x240"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s400x304",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s432x240"
+            ],
+            "farSw": 16,
+            "neighbor": "s432x240",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 26,
+        "x": 272,
+        "y": 400
+      },
+      "s400x304": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s400x272"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s400x336",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s336x240"
+            ],
+            "farSw": 42,
+            "neighbor": "s336x240",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 27,
+        "x": 304,
+        "y": 400
+      },
+      "s400x336": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s400x304"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s400x656",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s368x368"
+            ],
+            "farSw": 38,
+            "neighbor": "s368x368",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 28,
+        "x": 336,
+        "y": 400
+      },
+      "s400x656": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s400x336"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s400x688",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s336x592"
+            ],
+            "neighbor": "s336x592",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 29,
+        "x": 656,
+        "y": 400
+      },
+      "s400x688": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s400x656"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s400x720",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s432x720"
+            ],
+            "farSw": 19,
+            "neighbor": "s432x720",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 30,
+        "x": 688,
+        "y": 400
+      },
+      "s400x720": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s400x688"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s400x752",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s304x624"
+            ],
+            "farSw": 50,
+            "neighbor": "s304x624",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 31,
+        "x": 720,
+        "y": 400
+      },
+      "s400x752": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s400x720"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s400x912",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s432x784"
+            ],
+            "farSw": 21,
+            "neighbor": "s432x784",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 32,
+        "x": 752,
+        "y": 400
+      },
+      "s400x912": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s400x752"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s400x944",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s432x880"
+            ],
+            "farSw": 23,
+            "neighbor": "s432x880",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 33,
+        "x": 912,
+        "y": 400
+      },
+      "s400x944": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s400x912"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s400x976",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s336x1008"
+            ],
+            "neighbor": "s336x1008",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 34,
+        "x": 944,
+        "y": 400
+      },
+      "s400x976": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s400x944"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s400x1008",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s432x944"
+            ],
+            "farSw": 24,
+            "neighbor": "s432x944",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 35,
+        "x": 976,
+        "y": 400
+      },
+      "s432x208": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "n5"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s432x240",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s464x176"
+            ],
+            "farSw": 7,
+            "neighbor": "s464x176",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 15,
+        "x": 208,
+        "y": 432
+      },
+      "s432x240": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s432x208"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s432x272",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s400x272"
+            ],
+            "farSw": 26,
+            "neighbor": "s400x272",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 16,
+        "x": 240,
+        "y": 432
+      },
+      "s432x272": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s432x240"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s432x656",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s400x240"
+            ],
+            "farSw": 25,
+            "neighbor": "s400x240",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 17,
+        "x": 272,
+        "y": 432
+      },
+      "s432x656": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s432x272"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s432x720",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s464x624"
+            ],
+            "farSw": 10,
+            "neighbor": "s464x624",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 18,
+        "x": 656,
+        "y": 432
+      },
+      "s432x720": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s432x656"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s432x752",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s400x688"
+            ],
+            "farSw": 30,
+            "neighbor": "s400x688",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 19,
+        "x": 720,
+        "y": 432
+      },
+      "s432x752": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s432x720"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s432x784",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s464x784"
+            ],
+            "farSw": 11,
+            "neighbor": "s464x784",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 20,
+        "x": 752,
+        "y": 432
+      },
+      "s432x784": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s432x752"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s432x816",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s400x752"
+            ],
+            "farSw": 32,
+            "neighbor": "s400x752",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 21,
+        "x": 784,
+        "y": 432
+      },
+      "s432x816": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s432x784"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s432x880",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s464x848"
+            ],
+            "farSw": 13,
+            "neighbor": "s464x848",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 22,
+        "x": 816,
+        "y": 432
+      },
+      "s432x880": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s432x816"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s432x944",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s400x912"
+            ],
+            "farSw": 33,
+            "neighbor": "s400x912",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 23,
+        "x": 880,
+        "y": 432
+      },
+      "s432x944": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s432x880"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "n6",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s400x976"
+            ],
+            "farSw": 35,
+            "neighbor": "s400x976",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 24,
+        "x": 944,
+        "y": 432
+      },
+      "s464x144": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "n3"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s464x176",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s496x112"
+            ],
+            "farSw": 1,
+            "neighbor": "s496x112",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 6,
+        "x": 144,
+        "y": 464
+      },
+      "s464x176": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s464x144"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s464x336",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s432x208"
+            ],
+            "farSw": 15,
+            "neighbor": "s432x208",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 7,
+        "x": 176,
+        "y": 464
+      },
+      "s464x336": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s464x176"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s464x368",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s496x368"
+            ],
+            "farSw": 3,
+            "neighbor": "s496x368",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 8,
+        "x": 336,
+        "y": 464
+      },
+      "s464x368": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s464x336"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s464x624",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s496x336"
+            ],
+            "farSw": 2,
+            "neighbor": "s496x336",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 9,
+        "x": 368,
+        "y": 464
+      },
+      "s464x624": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s464x368"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s464x784",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s432x656"
+            ],
+            "farSw": 18,
+            "neighbor": "s432x656",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 10,
+        "x": 624,
+        "y": 464
+      },
+      "s464x784": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s464x624"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s464x816",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s432x752"
+            ],
+            "farSw": 20,
+            "neighbor": "s432x752",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 11,
+        "x": 784,
+        "y": 464
+      },
+      "s464x816": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s464x784"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s464x848",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s496x848"
+            ],
+            "farSw": 4,
+            "neighbor": "s496x848",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 12,
+        "x": 816,
+        "y": 464
+      },
+      "s464x848": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s464x816"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s464x880",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s432x816"
+            ],
+            "farSw": 22,
+            "neighbor": "s432x816",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 13,
+        "x": 848,
+        "y": 464
+      },
+      "s464x880": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s464x848"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "n4",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "branchPath": [
+              "s496x912"
+            ],
+            "farSw": 5,
+            "neighbor": "s496x912",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 14,
+        "x": 880,
+        "y": 464
+      },
+      "s496x112": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "n1"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s496x336",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s464x144"
+            ],
+            "farSw": 6,
+            "neighbor": "s464x144",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 1,
+        "x": 112,
+        "y": 496
+      },
+      "s496x336": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s496x112"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s496x368",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s464x368"
+            ],
+            "farSw": 9,
+            "neighbor": "s464x368",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 2,
+        "x": 336,
+        "y": 496
+      },
+      "s496x368": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s496x336"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s496x848",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s464x336"
+            ],
+            "farSw": 8,
+            "neighbor": "s464x336",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 3,
+        "x": 368,
+        "y": 496
+      },
+      "s496x848": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s496x368"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "s496x912",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s464x816"
+            ],
+            "farSw": 12,
+            "neighbor": "s464x816",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 4,
+        "x": 848,
+        "y": 496
+      },
+      "s496x912": {
+        "exits": [
+          {
+            "bearing": {
+              "dx": -1,
+              "dy": 0
+            },
+            "neighbor": "s496x848"
+          },
+          {
+            "bearing": {
+              "dx": 1,
+              "dy": 0
+            },
+            "neighbor": "n2",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "branchPath": [
+              "s464x880"
+            ],
+            "farSw": 14,
+            "neighbor": "s464x880",
+            "viaSwitchPort": "reversed"
+          }
+        ],
+        "sw": 5,
+        "x": 912,
+        "y": 496
+      }
+    },
+    "signalSections": [
+      {
+        "hi": 590,
+        "lineY": 496,
+        "lo": 78,
+        "sig": "NW1"
+      },
+      {
+        "hi": 590,
+        "lineY": 432,
+        "lo": 110,
+        "sig": "NW3"
+      },
+      {
+        "hi": 494,
+        "lineY": 336,
+        "lo": 110,
+        "sig": "NW5"
+      },
+      {
+        "hi": 494,
+        "lineY": 272,
+        "lo": 270,
+        "sig": "NW7"
+      },
+      {
+        "hi": 1070,
+        "lineY": 464,
+        "lo": 398,
+        "sig": "NE2"
+      },
+      {
+        "hi": 1070,
+        "lineY": 400,
+        "lo": 398,
+        "sig": "NE4"
+      },
+      {
+        "hi": 1070,
+        "lineY": 368,
+        "lo": 1040,
+        "sig": "NE5"
+      },
+      {
+        "hi": 1070,
+        "lineY": 336,
+        "lo": 1008,
+        "sig": "NE6"
+      },
+      {
+        "hi": 398,
+        "lineY": 464,
+        "lo": 32,
+        "sig": "XW2"
+      },
+      {
+        "hi": 398,
+        "lineY": 432,
+        "lo": 32,
+        "sig": "XW3"
+      },
+      {
+        "hi": 398,
+        "lineY": 400,
+        "lo": 32,
+        "sig": "XW4"
+      },
+      {
+        "hi": 398,
+        "lineY": 368,
+        "lo": 336,
+        "sig": "XW5"
+      },
+      {
+        "hi": 366,
+        "lineY": 336,
+        "lo": 32,
+        "sig": "XW6"
+      },
+      {
+        "hi": 366,
+        "lineY": 304,
+        "lo": 32,
+        "sig": "XW7"
+      },
+      {
+        "hi": 366,
+        "lineY": 272,
+        "lo": 224,
+        "sig": "XW8"
+      },
+      {
+        "hi": 1120,
+        "lineY": 496,
+        "lo": 590,
+        "sig": "XE1"
+      },
+      {
+        "hi": 1120,
+        "lineY": 464,
+        "lo": 590,
+        "sig": "XE2"
+      },
+      {
+        "hi": 1120,
+        "lineY": 432,
+        "lo": 590,
+        "sig": "XE3"
+      },
+      {
+        "hi": 1120,
+        "lineY": 400,
+        "lo": 590,
+        "sig": "XE4"
+      },
+      {
+        "hi": 528,
+        "lineY": 368,
+        "lo": 494,
+        "sig": "XE5"
+      },
+      {
+        "hi": 592,
+        "lineY": 336,
+        "lo": 494,
+        "sig": "XE6"
+      },
+      {
+        "hi": 688,
+        "lineY": 304,
+        "lo": 494,
+        "sig": "XE7"
+      },
+      {
+        "hi": 528,
+        "lineY": 272,
+        "lo": 494,
+        "sig": "XE8"
+      }
+    ],
+    "signals": {
+      "initialState": {},
+      "items": [
+        {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "edge": [
+            "n1",
+            "s496x112"
+          ],
+          "id": "NW1",
+          "label": "NW1",
+          "lineY": 496,
+          "mount": "up",
+          "x": 78,
+          "y": 496
+        },
+        {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "edge": [
+            "n5",
+            "s432x208"
+          ],
+          "id": "NW3",
+          "label": "NW3",
+          "lineY": 432,
+          "mount": "up",
+          "x": 110,
+          "y": 432
+        },
+        {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "edge": [
+            "n9",
+            "s336x176"
+          ],
+          "id": "NW5",
+          "label": "NW5",
+          "lineY": 336,
+          "mount": "up",
+          "x": 110,
+          "y": 336
+        },
+        {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "edge": [
+            "n11",
+            "s272x336"
+          ],
+          "id": "NW7",
+          "label": "NW7",
+          "lineY": 272,
+          "mount": "up",
+          "x": 270,
+          "y": 272
+        },
+        {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "edge": [
+            "n4",
+            "s464x880"
+          ],
+          "id": "NE2",
+          "label": "NE2",
+          "lineY": 464,
+          "mount": "up",
+          "x": 1070,
+          "y": 464
+        },
+        {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "edge": [
+            "n8",
+            "s400x1008"
+          ],
+          "id": "NE4",
+          "label": "NE4",
+          "lineY": 400,
+          "mount": "up",
+          "x": 1070,
+          "y": 400
+        },
+        {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "edge": [
+            "n12",
+            "s368x1040"
+          ],
+          "id": "NE5",
+          "label": "NE5",
+          "lineY": 368,
+          "mount": "up",
+          "x": 1070,
+          "y": 368
+        },
+        {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "edge": [
+            "n13",
+            "s336x1008"
+          ],
+          "id": "NE6",
+          "label": "NE6",
+          "lineY": 336,
+          "mount": "up",
+          "x": 1070,
+          "y": 336
+        },
+        {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "edge": [
+            "s464x624",
+            "s464x368"
+          ],
+          "id": "XW2",
+          "label": "XW2",
+          "lineY": 464,
+          "mount": "up",
+          "x": 398,
+          "y": 464
+        },
+        {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "edge": [
+            "s432x656",
+            "s432x272"
+          ],
+          "id": "XW3",
+          "label": "XW3",
+          "lineY": 432,
+          "mount": "up",
+          "x": 398,
+          "y": 432
+        },
+        {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "edge": [
+            "s400x656",
+            "s400x336"
+          ],
+          "id": "XW4",
+          "label": "XW4",
+          "lineY": 400,
+          "mount": "up",
+          "x": 398,
+          "y": 400
+        },
+        {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "edge": [
+            "s368x528",
+            "s368x368"
+          ],
+          "id": "XW5",
+          "label": "XW5",
+          "lineY": 368,
+          "mount": "up",
+          "x": 398,
+          "y": 368
+        },
+        {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "edge": [
+            "s336x560",
+            "s336x304"
+          ],
+          "id": "XW6",
+          "label": "XW6",
+          "lineY": 336,
+          "mount": "up",
+          "x": 366,
+          "y": 336
+        },
+        {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "edge": [
+            "s304x560",
+            "s304x304"
+          ],
+          "id": "XW7",
+          "label": "XW7",
+          "lineY": 304,
+          "mount": "up",
+          "x": 366,
+          "y": 304
+        },
+        {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "edge": [
+            "s272x528",
+            "s272x336"
+          ],
+          "id": "XW8",
+          "label": "XW8",
+          "lineY": 272,
+          "mount": "up",
+          "x": 366,
+          "y": 272
+        },
+        {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "edge": [
+            "s496x368",
+            "s496x848"
+          ],
+          "id": "XE1",
+          "label": "XE1",
+          "lineY": 496,
+          "mount": "up",
+          "x": 590,
+          "y": 496
+        },
+        {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "edge": [
+            "s464x368",
+            "s464x624"
+          ],
+          "id": "XE2",
+          "label": "XE2",
+          "lineY": 464,
+          "mount": "up",
+          "x": 590,
+          "y": 464
+        },
+        {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "edge": [
+            "s432x272",
+            "s432x656"
+          ],
+          "id": "XE3",
+          "label": "XE3",
+          "lineY": 432,
+          "mount": "up",
+          "x": 590,
+          "y": 432
+        },
+        {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "edge": [
+            "s400x336",
+            "s400x656"
+          ],
+          "id": "XE4",
+          "label": "XE4",
+          "lineY": 400,
+          "mount": "up",
+          "x": 590,
+          "y": 400
+        },
+        {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "edge": [
+            "s368x368",
+            "s368x528"
+          ],
+          "id": "XE5",
+          "label": "XE5",
+          "lineY": 368,
+          "mount": "up",
+          "x": 494,
+          "y": 368
+        },
+        {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "edge": [
+            "s336x304",
+            "s336x560"
+          ],
+          "id": "XE6",
+          "label": "XE6",
+          "lineY": 336,
+          "mount": "up",
+          "x": 494,
+          "y": 336
+        },
+        {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "edge": [
+            "s304x304",
+            "s304x560"
+          ],
+          "id": "XE7",
+          "label": "XE7",
+          "lineY": 304,
+          "mount": "up",
+          "x": 494,
+          "y": 304
+        },
+        {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "edge": [
+            "s272x336",
+            "s272x528"
+          ],
+          "id": "XE8",
+          "label": "XE8",
+          "lineY": 272,
+          "mount": "up",
+          "x": 494,
+          "y": 272
+        }
+      ]
+    },
+    "stationPlatformCenterX": {
+      "JNG": 850,
+      "JNG-E": 1112,
+      "JNG-W": 40
+    },
+    "switches": {
+      "controls": [
+        {
+          "coupled": true,
+          "ids": [
+            1,
+            6
+          ],
+          "label": "PC1",
+          "x": 128,
+          "y": 480
+        },
+        {
+          "coupled": true,
+          "ids": [
+            40,
+            47
+          ],
+          "label": "PC6",
+          "x": 184,
+          "y": 328
+        },
+        {
+          "coupled": true,
+          "ids": [
+            7,
+            15
+          ],
+          "label": "PC2",
+          "x": 192,
+          "y": 448
+        },
+        {
+          "coupled": true,
+          "ids": [
+            46,
+            41
+          ],
+          "label": "PC5",
+          "x": 200,
+          "y": 328
+        },
+        {
+          "coupled": true,
+          "ids": [
+            16,
+            26
+          ],
+          "label": "PC3",
+          "x": 248,
+          "y": 424
+        },
+        {
+          "coupled": true,
+          "ids": [
+            25,
+            17
+          ],
+          "label": "PC4",
+          "x": 264,
+          "y": 424
+        },
+        {
+          "coupled": true,
+          "ids": [
+            42,
+            27
+          ],
+          "label": "PC7",
+          "x": 272,
+          "y": 368
+        },
+        {
+          "coupled": false,
+          "ids": [
+            43
+          ],
+          "label": "sw 43",
+          "x": 304,
+          "y": 336
+        },
+        {
+          "coupled": true,
+          "ids": [
+            48,
+            52
+          ],
+          "label": "PC8",
+          "x": 320,
+          "y": 288
+        },
+        {
+          "coupled": true,
+          "ids": [
+            2,
+            9
+          ],
+          "label": "PC10",
+          "x": 344,
+          "y": 488
+        },
+        {
+          "coupled": true,
+          "ids": [
+            28,
+            38
+          ],
+          "label": "PC9",
+          "x": 352,
+          "y": 384
+        },
+        {
+          "coupled": true,
+          "ids": [
+            8,
+            3
+          ],
+          "label": "PC11",
+          "x": 360,
+          "y": 488
+        },
+        {
+          "coupled": false,
+          "ids": [
+            44
+          ],
+          "label": "sw 44",
+          "x": 560,
+          "y": 336
+        },
+        {
+          "coupled": false,
+          "ids": [
+            49
+          ],
+          "label": "sw 49",
+          "x": 560,
+          "y": 304
+        },
+        {
+          "coupled": false,
+          "ids": [
+            50
+          ],
+          "label": "sw 50",
+          "x": 624,
+          "y": 304
+        },
+        {
+          "coupled": true,
+          "ids": [
+            10,
+            18
+          ],
+          "label": "PC12",
+          "x": 640,
+          "y": 448
+        },
+        {
+          "coupled": false,
+          "ids": [
+            29
+          ],
+          "label": "sw 29",
+          "x": 656,
+          "y": 400
+        },
+        {
+          "coupled": true,
+          "ids": [
+            30,
+            19
+          ],
+          "label": "PC14",
+          "x": 704,
+          "y": 416
+        },
+        {
+          "coupled": false,
+          "ids": [
+            31
+          ],
+          "label": "sw 31",
+          "x": 720,
+          "y": 400
+        },
+        {
+          "coupled": true,
+          "ids": [
+            20,
+            11
+          ],
+          "label": "PC13",
+          "x": 768,
+          "y": 448
+        },
+        {
+          "coupled": true,
+          "ids": [
+            32,
+            21
+          ],
+          "label": "PC15",
+          "x": 768,
+          "y": 416
+        },
+        {
+          "coupled": true,
+          "ids": [
+            22,
+            13
+          ],
+          "label": "PC16",
+          "x": 832,
+          "y": 448
+        },
+        {
+          "coupled": true,
+          "ids": [
+            12,
+            4
+          ],
+          "label": "PC17",
+          "x": 832,
+          "y": 480
+        },
+        {
+          "coupled": true,
+          "ids": [
+            14,
+            5
+          ],
+          "label": "PC18",
+          "x": 896,
+          "y": 480
+        },
+        {
+          "coupled": true,
+          "ids": [
+            23,
+            33
+          ],
+          "label": "PC19",
+          "x": 896,
+          "y": 416
+        },
+        {
+          "coupled": false,
+          "ids": [
+            34
+          ],
+          "label": "sw 34",
+          "x": 944,
+          "y": 400
+        },
+        {
+          "coupled": true,
+          "ids": [
+            24,
+            35
+          ],
+          "label": "PC20",
+          "x": 960,
+          "y": 416
+        },
+        {
+          "coupled": false,
+          "ids": [
+            36
+          ],
+          "label": "sw 36",
+          "x": 1008,
+          "y": 400
+        }
+      ],
+      "coupled": [
+        [
+          1,
+          6
+        ],
+        [
+          7,
+          15
+        ],
+        [
+          16,
+          26
+        ],
+        [
+          25,
+          17
+        ],
+        [
+          46,
+          41
+        ],
+        [
+          40,
+          47
+        ],
+        [
+          42,
+          27
+        ],
+        [
+          48,
+          52
+        ],
+        [
+          28,
+          38
+        ],
+        [
+          2,
+          9
+        ],
+        [
+          8,
+          3
+        ],
+        [
+          10,
+          18
+        ],
+        [
+          20,
+          11
+        ],
+        [
+          30,
+          19
+        ],
+        [
+          32,
+          21
+        ],
+        [
+          22,
+          13
+        ],
+        [
+          12,
+          4
+        ],
+        [
+          14,
+          5
+        ],
+        [
+          23,
+          33
+        ],
+        [
+          24,
+          35
+        ]
+      ],
+      "initialState": {
+        "1": "normal",
+        "2": "normal",
+        "3": "normal",
+        "4": "normal",
+        "5": "normal",
+        "6": "normal",
+        "7": "normal",
+        "8": "normal",
+        "9": "normal",
+        "10": "normal",
+        "11": "normal",
+        "12": "normal",
+        "13": "normal",
+        "14": "normal",
+        "15": "normal",
+        "16": "normal",
+        "17": "normal",
+        "18": "normal",
+        "19": "normal",
+        "20": "normal",
+        "21": "normal",
+        "22": "normal",
+        "23": "normal",
+        "24": "normal",
+        "25": "normal",
+        "26": "normal",
+        "27": "normal",
+        "28": "normal",
+        "29": "normal",
+        "30": "normal",
+        "31": "normal",
+        "32": "normal",
+        "33": "normal",
+        "34": "normal",
+        "35": "normal",
+        "36": "normal",
+        "38": "normal",
+        "40": "normal",
+        "41": "normal",
+        "42": "normal",
+        "43": "normal",
+        "44": "normal",
+        "46": "normal",
+        "47": "normal",
+        "48": "normal",
+        "49": "normal",
+        "50": "normal",
+        "52": "normal"
+      },
+      "items": [
+        {
+          "branch": "M112 496 L144 464",
+          "dashSide": "right",
+          "id": 1,
+          "label": "PC1",
+          "lineY": 496,
+          "x": 112,
+          "y": 496
+        },
+        {
+          "branch": "M336 496 L368 464",
+          "dashSide": "right",
+          "id": 2,
+          "label": "PC10",
+          "lineY": 496,
+          "x": 336,
+          "y": 496
+        },
+        {
+          "branch": "M336 464 L368 496",
+          "dashSide": "left",
+          "id": 3,
+          "label": "PC11",
+          "lineY": 496,
+          "x": 368,
+          "y": 496
+        },
+        {
+          "branch": "M816 464 L848 496",
+          "dashSide": "left",
+          "id": 4,
+          "label": "PC17",
+          "lineY": 496,
+          "x": 848,
+          "y": 496
+        },
+        {
+          "branch": "M880 464 L912 496",
+          "dashSide": "left",
+          "id": 5,
+          "label": "PC18",
+          "lineY": 496,
+          "x": 912,
+          "y": 496
+        },
+        {
+          "branch": "M112 496 L144 464",
+          "dashSide": "left",
+          "id": 6,
+          "label": "PC1",
+          "lineY": 464,
+          "x": 144,
+          "y": 464
+        },
+        {
+          "branch": "M176 464 L208 432",
+          "dashSide": "right",
+          "id": 7,
+          "label": "PC2",
+          "lineY": 464,
+          "x": 176,
+          "y": 464
+        },
+        {
+          "branch": "M336 464 L368 496",
+          "dashSide": "right",
+          "id": 8,
+          "label": "PC11",
+          "lineY": 464,
+          "x": 336,
+          "y": 464
+        },
+        {
+          "branch": "M336 496 L368 464",
+          "dashSide": "left",
+          "id": 9,
+          "label": "PC10",
+          "lineY": 464,
+          "x": 368,
+          "y": 464
+        },
+        {
+          "branch": "M624 464 L656 432",
+          "dashSide": "right",
+          "id": 10,
+          "label": "PC12",
+          "lineY": 464,
+          "x": 624,
+          "y": 464
+        },
+        {
+          "branch": "M752 432 L784 464",
+          "dashSide": "left",
+          "id": 11,
+          "label": "PC13",
+          "lineY": 464,
+          "x": 784,
+          "y": 464
+        },
+        {
+          "branch": "M816 464 L848 496",
+          "dashSide": "right",
+          "id": 12,
+          "label": "PC17",
+          "lineY": 464,
+          "x": 816,
+          "y": 464
+        },
+        {
+          "branch": "M816 432 L848 464",
+          "dashSide": "left",
+          "id": 13,
+          "label": "PC16",
+          "lineY": 464,
+          "x": 848,
+          "y": 464
+        },
+        {
+          "branch": "M880 464 L912 496",
+          "dashSide": "right",
+          "id": 14,
+          "label": "PC18",
+          "lineY": 464,
+          "x": 880,
+          "y": 464
+        },
+        {
+          "branch": "M176 464 L208 432",
+          "dashSide": "left",
+          "id": 15,
+          "label": "PC2",
+          "lineY": 432,
+          "x": 208,
+          "y": 432
+        },
+        {
+          "branch": "M240 432 L272 400",
+          "dashSide": "right",
+          "id": 16,
+          "label": "PC3",
+          "lineY": 432,
+          "x": 240,
+          "y": 432
+        },
+        {
+          "branch": "M240 400 L272 432",
+          "dashSide": "left",
+          "id": 17,
+          "label": "PC4",
+          "lineY": 432,
+          "x": 272,
+          "y": 432
+        },
+        {
+          "branch": "M624 464 L656 432",
+          "dashSide": "left",
+          "id": 18,
+          "label": "PC12",
+          "lineY": 432,
+          "x": 656,
+          "y": 432
+        },
+        {
+          "branch": "M688 400 L720 432",
+          "dashSide": "left",
+          "id": 19,
+          "label": "PC14",
+          "lineY": 432,
+          "x": 720,
+          "y": 432
+        },
+        {
+          "branch": "M752 432 L784 464",
+          "dashSide": "right",
+          "id": 20,
+          "label": "PC13",
+          "lineY": 432,
+          "x": 752,
+          "y": 432
+        },
+        {
+          "branch": "M752 400 L784 432",
+          "dashSide": "left",
+          "id": 21,
+          "label": "PC15",
+          "lineY": 432,
+          "x": 784,
+          "y": 432
+        },
+        {
+          "branch": "M816 432 L848 464",
+          "dashSide": "right",
+          "id": 22,
+          "label": "PC16",
+          "lineY": 432,
+          "x": 816,
+          "y": 432
+        },
+        {
+          "branch": "M880 432 L912 400",
+          "dashSide": "right",
+          "id": 23,
+          "label": "PC19",
+          "lineY": 432,
+          "x": 880,
+          "y": 432
+        },
+        {
+          "branch": "M944 432 L976 400",
+          "dashSide": "right",
+          "id": 24,
+          "label": "PC20",
+          "lineY": 432,
+          "x": 944,
+          "y": 432
+        },
+        {
+          "branch": "M240 400 L272 432",
+          "dashSide": "right",
+          "id": 25,
+          "label": "PC4",
+          "lineY": 400,
+          "x": 240,
+          "y": 400
+        },
+        {
+          "branch": "M240 432 L272 400",
+          "dashSide": "left",
+          "id": 26,
+          "label": "PC3",
+          "lineY": 400,
+          "x": 272,
+          "y": 400
+        },
+        {
+          "branch": "M240 336 L304 400",
+          "dashSide": "left",
+          "id": 27,
+          "label": "PC7",
+          "lineY": 400,
+          "x": 304,
+          "y": 400
+        },
+        {
+          "branch": "M336 400 L368 368",
+          "dashSide": "right",
+          "id": 28,
+          "label": "PC9",
+          "lineY": 400,
+          "x": 336,
+          "y": 400
+        },
+        {
+          "branch": "M592 336 L656 400",
+          "dashSide": "left",
+          "id": 29,
+          "label": "sw 29",
+          "lineY": 400,
+          "x": 656,
+          "y": 400
+        },
+        {
+          "branch": "M688 400 L720 432",
+          "dashSide": "right",
+          "id": 30,
+          "label": "PC14",
+          "lineY": 400,
+          "x": 688,
+          "y": 400
+        },
+        {
+          "branch": "M624 304 L720 400",
+          "dashSide": "left",
+          "id": 31,
+          "label": "sw 31",
+          "lineY": 400,
+          "x": 720,
+          "y": 400
+        },
+        {
+          "branch": "M752 400 L784 432",
+          "dashSide": "right",
+          "id": 32,
+          "label": "PC15",
+          "lineY": 400,
+          "x": 752,
+          "y": 400
+        },
+        {
+          "branch": "M880 432 L912 400",
+          "dashSide": "left",
+          "id": 33,
+          "label": "PC19",
+          "lineY": 400,
+          "x": 912,
+          "y": 400
+        },
+        {
+          "branch": "M944 400 L1008 336",
+          "dashSide": "right",
+          "id": 34,
+          "label": "sw 34",
+          "lineY": 400,
+          "x": 944,
+          "y": 400
+        },
+        {
+          "branch": "M944 432 L976 400",
+          "dashSide": "left",
+          "id": 35,
+          "label": "PC20",
+          "lineY": 400,
+          "x": 976,
+          "y": 400
+        },
+        {
+          "branch": "M1008 400 L1040 368",
+          "dashSide": "right",
+          "id": 36,
+          "label": "sw 36",
+          "lineY": 400,
+          "x": 1008,
+          "y": 400
+        },
+        {
+          "branch": "M336 400 L368 368",
+          "dashSide": "left",
+          "id": 38,
+          "label": "PC9",
+          "lineY": 368,
+          "x": 368,
+          "y": 368
+        },
+        {
+          "branch": "M176 336 L208 304",
+          "dashSide": "right",
+          "id": 40,
+          "label": "PC6",
+          "lineY": 336,
+          "x": 176,
+          "y": 336
+        },
+        {
+          "branch": "M176 304 L208 336",
+          "dashSide": "left",
+          "id": 41,
+          "label": "PC5",
+          "lineY": 336,
+          "x": 208,
+          "y": 336
+        },
+        {
+          "branch": "M240 336 L304 400",
+          "dashSide": "right",
+          "id": 42,
+          "label": "PC7",
+          "lineY": 336,
+          "x": 240,
+          "y": 336
+        },
+        {
+          "branch": "M304 336 L336 368",
+          "dashSide": "right",
+          "id": 43,
+          "label": "sw 43",
+          "lineY": 336,
+          "x": 304,
+          "y": 336
+        },
+        {
+          "branch": "M528 368 L560 336",
+          "dashSide": "left",
+          "id": 44,
+          "label": "sw 44",
+          "lineY": 336,
+          "x": 560,
+          "y": 336
+        },
+        {
+          "branch": "M176 304 L208 336",
+          "dashSide": "right",
+          "id": 46,
+          "label": "PC5",
+          "lineY": 304,
+          "x": 176,
+          "y": 304
+        },
+        {
+          "branch": "M176 336 L208 304",
+          "dashSide": "left",
+          "id": 47,
+          "label": "PC6",
+          "lineY": 304,
+          "x": 208,
+          "y": 304
+        },
+        {
+          "branch": "M304 304 L336 272",
+          "dashSide": "right",
+          "id": 48,
+          "label": "PC8",
+          "lineY": 304,
+          "x": 304,
+          "y": 304
+        },
+        {
+          "branch": "M528 272 L560 304",
+          "dashSide": "left",
+          "id": 49,
+          "label": "sw 49",
+          "lineY": 304,
+          "x": 560,
+          "y": 304
+        },
+        {
+          "branch": "M624 304 L720 400",
+          "dashSide": "right",
+          "id": 50,
+          "label": "sw 50",
+          "lineY": 304,
+          "x": 624,
+          "y": 304
+        },
+        {
+          "branch": "M304 304 L336 272",
+          "dashSide": "left",
+          "id": 52,
+          "label": "PC8",
+          "lineY": 272,
+          "x": 336,
+          "y": 272
+        }
+      ]
+    },
+    "trackPaths": [
+      "M32 496 H112",
+      "M112 496 H336",
+      "M336 496 H368",
+      "M368 496 H848",
+      "M848 496 H912",
+      "M912 496 H1120",
+      "M32 464 H144",
+      "M144 464 H176",
+      "M176 464 H336",
+      "M336 464 H368",
+      "M368 464 H624",
+      "M624 464 H784",
+      "M784 464 H816",
+      "M816 464 H848",
+      "M848 464 H880",
+      "M880 464 H1120",
+      "M32 432 H208",
+      "M208 432 H240",
+      "M240 432 H272",
+      "M272 432 H656",
+      "M656 432 H720",
+      "M720 432 H752",
+      "M752 432 H784",
+      "M784 432 H816",
+      "M816 432 H880",
+      "M880 432 H944",
+      "M944 432 H1120",
+      "M32 400 H240",
+      "M240 400 H272",
+      "M272 400 H304",
+      "M304 400 H336",
+      "M336 400 H656",
+      "M656 400 H688",
+      "M688 400 H720",
+      "M720 400 H752",
+      "M752 400 H912",
+      "M912 400 H944",
+      "M944 400 H976",
+      "M976 400 H1008",
+      "M1008 400 H1120",
+      "M336 368 H368",
+      "M368 368 H528",
+      "M32 336 H176",
+      "M176 336 H208",
+      "M208 336 H240",
+      "M240 336 H304",
+      "M304 336 H560",
+      "M560 336 H592",
+      "M32 304 H176",
+      "M176 304 H208",
+      "M208 304 H304",
+      "M304 304 H560",
+      "M560 304 H624",
+      "M624 304 H688",
+      "M224 272 H336",
+      "M336 272 H528",
+      "M1040 368 H1120",
+      "M1008 336 H1120",
+      "M752 368 H976",
+      "M624 368 H656",
+      "M688 336 H720",
+      "M112 496 L144 464",
+      "M176 464 L208 432",
+      "M240 432 L272 400",
+      "M240 400 L272 432",
+      "M336 496 L368 464",
+      "M336 464 L368 496",
+      "M240 336 L304 400",
+      "M176 336 L208 304",
+      "M176 304 L208 336",
+      "M304 336 L336 368",
+      "M336 400 L368 368",
+      "M304 304 L336 272",
+      "M528 272 L560 304",
+      "M528 368 L560 336",
+      "M592 336 L656 400",
+      "M624 304 L720 400",
+      "M656 368 L688 336",
+      "M688 304 L752 368",
+      "M688 400 L720 432",
+      "M752 400 L784 432",
+      "M752 432 L784 464",
+      "M816 432 L848 464",
+      "M816 464 L848 496",
+      "M880 432 L912 400",
+      "M880 464 L912 496",
+      "M624 464 L656 432",
+      "M944 400 L1008 336",
+      "M944 432 L976 400",
+      "M1008 400 L1040 368"
+    ]
+  },
+  "runtime": {
+    "journeys": [
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 1.6875,
+            "station": "JNG-W",
+            "waypointX": 40
+          },
+          {
+            "departAt": 21600,
+            "lineY": 496,
+            "speed": 1.6875,
+            "station": "JNG-W",
+            "waypointX": 850
+          },
+          {
+            "departAt": 22200,
+            "lineY": 496,
+            "speed": 0.436666666667,
+            "station": "JNG",
+            "waypointX": 1112
+          },
+          {
+            "departAt": 22800,
+            "lineY": 496,
+            "speed": 0.436666666667,
+            "station": "JNG-E",
+            "waypointX": 1236
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "firstNode": "n1",
+          "x": -36410,
+          "y": 496
+        },
+        "trainNo": "J201"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 1.35,
+            "station": "JNG-E",
+            "waypointX": 1112
+          },
+          {
+            "departAt": 21600,
+            "lineY": 464,
+            "speed": 1.35,
+            "station": "JNG-E",
+            "waypointX": 464
+          },
+          {
+            "departAt": 22200,
+            "lineY": 464,
+            "speed": 0.706666666667,
+            "station": "JNG",
+            "waypointX": 40
+          },
+          {
+            "departAt": 22800,
+            "lineY": 464,
+            "speed": 0.706666666667,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "firstNode": "n4",
+          "x": 30272,
+          "y": 464
+        },
+        "trainNo": "J102"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 336,
+            "speed": 0.8125,
+            "station": "JNG-W",
+            "waypointX": 40
+          },
+          {
+            "departAt": 21900,
+            "lineY": 336,
+            "speed": 0.8125,
+            "station": "JNG-W",
+            "waypointX": 430
+          },
+          {
+            "departAt": 22500,
+            "lineY": 336,
+            "speed": 0.256666666667,
+            "station": "JNG",
+            "waypointX": 584
+          },
+          {
+            "departAt": 23100,
+            "lineY": 336,
+            "speed": 0.256666666667,
+            "station": "JNG-E",
+            "waypointX": 1236
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "firstNode": "n9",
+          "x": -17753.75,
+          "y": 336
+        },
+        "trainNo": "J310"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 368,
+            "speed": 0.15,
+            "station": "JNG-W",
+            "waypointX": 344
+          },
+          {
+            "departAt": 21720,
+            "lineY": 368,
+            "speed": 0.15,
+            "station": "JNG-W",
+            "waypointX": 416
+          },
+          {
+            "departAt": 22320,
+            "lineY": 368,
+            "speed": 0.216666666667,
+            "station": "JNG",
+            "waypointX": 520
+          },
+          {
+            "departAt": 22800,
+            "lineY": 368,
+            "speed": 0.216666666667,
+            "station": "JNG-E",
+            "waypointX": 1236
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "firstNode": "s368x336",
+          "x": -2914,
+          "y": 368
+        },
+        "trainNo": "J410"
+      }
+    ],
+    "meetsByTrain": [],
+    "movement": {
+      "nodes": {
+        "n1": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s496x112"
+            }
+          ],
+          "x": 32,
+          "y": 496
+        },
+        "n10": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s304x176"
+            }
+          ],
+          "x": 32,
+          "y": 304
+        },
+        "n11": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s272x336"
+            }
+          ],
+          "x": 224,
+          "y": 272
+        },
+        "n12": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s368x1040"
+            }
+          ],
+          "x": 1120,
+          "y": 368
+        },
+        "n13": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s336x1008"
+            }
+          ],
+          "x": 1120,
+          "y": 336
+        },
+        "n14": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s368x752"
+            }
+          ],
+          "x": 976,
+          "y": 368
+        },
+        "n15": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s368x656"
+            }
+          ],
+          "x": 624,
+          "y": 368
+        },
+        "n16": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s336x688"
+            }
+          ],
+          "x": 720,
+          "y": 336
+        },
+        "n2": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s496x912"
+            }
+          ],
+          "x": 1120,
+          "y": 496
+        },
+        "n3": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s464x144"
+            }
+          ],
+          "x": 32,
+          "y": 464
+        },
+        "n4": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s464x880"
+            }
+          ],
+          "x": 1120,
+          "y": 464
+        },
+        "n5": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s432x208"
+            }
+          ],
+          "x": 32,
+          "y": 432
+        },
+        "n6": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s432x944"
+            }
+          ],
+          "x": 1120,
+          "y": 432
+        },
+        "n7": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s400x240"
+            }
+          ],
+          "x": 32,
+          "y": 400
+        },
+        "n8": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s400x1008"
+            }
+          ],
+          "x": 1120,
+          "y": 400
+        },
+        "n9": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s336x176"
+            }
+          ],
+          "x": 32,
+          "y": 336
+        },
+        "s272x336": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "n11"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s272x528",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s304x304"
+              ],
+              "farSw": 48,
+              "neighbor": "s304x304",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 52,
+          "x": 336,
+          "y": 272
+        },
+        "s272x528": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s272x336"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "neighbor": "s304x560"
+            }
+          ],
+          "x": 528,
+          "y": 272
+        },
+        "s304x176": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "n10"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s304x208",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s336x208"
+              ],
+              "farSw": 41,
+              "neighbor": "s336x208",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 46,
+          "x": 176,
+          "y": 304
+        },
+        "s304x208": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s304x176"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s304x304",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s336x176"
+              ],
+              "farSw": 40,
+              "neighbor": "s336x176",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 47,
+          "x": 208,
+          "y": 304
+        },
+        "s304x304": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s304x208"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s304x560",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s272x336"
+              ],
+              "farSw": 52,
+              "neighbor": "s272x336",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 48,
+          "x": 304,
+          "y": 304
+        },
+        "s304x560": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s304x304"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s304x624",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s272x528"
+              ],
+              "neighbor": "s272x528",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 49,
+          "x": 560,
+          "y": 304
+        },
+        "s304x624": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s304x560"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s304x688",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s400x720"
+              ],
+              "farSw": 31,
+              "neighbor": "s400x720",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 50,
+          "x": 624,
+          "y": 304
+        },
+        "s304x688": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s304x624"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "neighbor": "s368x752"
+            }
+          ],
+          "x": 688,
+          "y": 304
+        },
+        "s336x1008": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "n13"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "neighbor": "s400x944"
+            }
+          ],
+          "x": 1008,
+          "y": 336
+        },
+        "s336x176": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "n9"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s336x208",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s304x208"
+              ],
+              "farSw": 47,
+              "neighbor": "s304x208",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 40,
+          "x": 176,
+          "y": 336
+        },
+        "s336x208": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s336x176"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s336x240",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s304x176"
+              ],
+              "farSw": 46,
+              "neighbor": "s304x176",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 41,
+          "x": 208,
+          "y": 336
+        },
+        "s336x240": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s336x208"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s336x304",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s400x304"
+              ],
+              "farSw": 27,
+              "neighbor": "s400x304",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 42,
+          "x": 240,
+          "y": 336
+        },
+        "s336x304": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s336x240"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s336x560",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s368x336"
+              ],
+              "neighbor": "s368x336",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 43,
+          "x": 304,
+          "y": 336
+        },
+        "s336x560": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s336x304"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s336x592",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s368x528"
+              ],
+              "neighbor": "s368x528",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 44,
+          "x": 560,
+          "y": 336
+        },
+        "s336x592": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s336x560"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "neighbor": "s400x656"
+            }
+          ],
+          "x": 592,
+          "y": 336
+        },
+        "s336x688": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "n16"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "neighbor": "s368x656"
+            }
+          ],
+          "x": 688,
+          "y": 336
+        },
+        "s368x1040": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "n12"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "neighbor": "s400x1008"
+            }
+          ],
+          "x": 1040,
+          "y": 368
+        },
+        "s368x336": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s368x368"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "neighbor": "s336x304"
+            }
+          ],
+          "x": 336,
+          "y": 368
+        },
+        "s368x368": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s368x336"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s368x528",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s400x336"
+              ],
+              "farSw": 28,
+              "neighbor": "s400x336",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 38,
+          "x": 368,
+          "y": 368
+        },
+        "s368x528": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s368x368"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "neighbor": "s336x560"
+            }
+          ],
+          "x": 528,
+          "y": 368
+        },
+        "s368x656": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "n15"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "neighbor": "s336x688"
+            }
+          ],
+          "x": 656,
+          "y": 368
+        },
+        "s368x752": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "n14"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "neighbor": "s304x688"
+            }
+          ],
+          "x": 752,
+          "y": 368
+        },
+        "s400x1008": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s400x976"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "n8",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s368x1040"
+              ],
+              "neighbor": "s368x1040",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 36,
+          "x": 1008,
+          "y": 400
+        },
+        "s400x240": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "n7"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s400x272",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s432x272"
+              ],
+              "farSw": 17,
+              "neighbor": "s432x272",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 25,
+          "x": 240,
+          "y": 400
+        },
+        "s400x272": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s400x240"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s400x304",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s432x240"
+              ],
+              "farSw": 16,
+              "neighbor": "s432x240",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 26,
+          "x": 272,
+          "y": 400
+        },
+        "s400x304": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s400x272"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s400x336",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s336x240"
+              ],
+              "farSw": 42,
+              "neighbor": "s336x240",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 27,
+          "x": 304,
+          "y": 400
+        },
+        "s400x336": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s400x304"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s400x656",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s368x368"
+              ],
+              "farSw": 38,
+              "neighbor": "s368x368",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 28,
+          "x": 336,
+          "y": 400
+        },
+        "s400x656": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s400x336"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s400x688",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s336x592"
+              ],
+              "neighbor": "s336x592",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 29,
+          "x": 656,
+          "y": 400
+        },
+        "s400x688": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s400x656"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s400x720",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s432x720"
+              ],
+              "farSw": 19,
+              "neighbor": "s432x720",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 30,
+          "x": 688,
+          "y": 400
+        },
+        "s400x720": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s400x688"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s400x752",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s304x624"
+              ],
+              "farSw": 50,
+              "neighbor": "s304x624",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 31,
+          "x": 720,
+          "y": 400
+        },
+        "s400x752": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s400x720"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s400x912",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s432x784"
+              ],
+              "farSw": 21,
+              "neighbor": "s432x784",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 32,
+          "x": 752,
+          "y": 400
+        },
+        "s400x912": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s400x752"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s400x944",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s432x880"
+              ],
+              "farSw": 23,
+              "neighbor": "s432x880",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 33,
+          "x": 912,
+          "y": 400
+        },
+        "s400x944": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s400x912"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s400x976",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s336x1008"
+              ],
+              "neighbor": "s336x1008",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 34,
+          "x": 944,
+          "y": 400
+        },
+        "s400x976": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s400x944"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s400x1008",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s432x944"
+              ],
+              "farSw": 24,
+              "neighbor": "s432x944",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 35,
+          "x": 976,
+          "y": 400
+        },
+        "s432x208": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "n5"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s432x240",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s464x176"
+              ],
+              "farSw": 7,
+              "neighbor": "s464x176",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 15,
+          "x": 208,
+          "y": 432
+        },
+        "s432x240": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s432x208"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s432x272",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s400x272"
+              ],
+              "farSw": 26,
+              "neighbor": "s400x272",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 16,
+          "x": 240,
+          "y": 432
+        },
+        "s432x272": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s432x240"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s432x656",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s400x240"
+              ],
+              "farSw": 25,
+              "neighbor": "s400x240",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 17,
+          "x": 272,
+          "y": 432
+        },
+        "s432x656": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s432x272"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s432x720",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s464x624"
+              ],
+              "farSw": 10,
+              "neighbor": "s464x624",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 18,
+          "x": 656,
+          "y": 432
+        },
+        "s432x720": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s432x656"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s432x752",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s400x688"
+              ],
+              "farSw": 30,
+              "neighbor": "s400x688",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 19,
+          "x": 720,
+          "y": 432
+        },
+        "s432x752": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s432x720"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s432x784",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s464x784"
+              ],
+              "farSw": 11,
+              "neighbor": "s464x784",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 20,
+          "x": 752,
+          "y": 432
+        },
+        "s432x784": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s432x752"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s432x816",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s400x752"
+              ],
+              "farSw": 32,
+              "neighbor": "s400x752",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 21,
+          "x": 784,
+          "y": 432
+        },
+        "s432x816": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s432x784"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s432x880",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s464x848"
+              ],
+              "farSw": 13,
+              "neighbor": "s464x848",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 22,
+          "x": 816,
+          "y": 432
+        },
+        "s432x880": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s432x816"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s432x944",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s400x912"
+              ],
+              "farSw": 33,
+              "neighbor": "s400x912",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 23,
+          "x": 880,
+          "y": 432
+        },
+        "s432x944": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s432x880"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "n6",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s400x976"
+              ],
+              "farSw": 35,
+              "neighbor": "s400x976",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 24,
+          "x": 944,
+          "y": 432
+        },
+        "s464x144": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "n3"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s464x176",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s496x112"
+              ],
+              "farSw": 1,
+              "neighbor": "s496x112",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 6,
+          "x": 144,
+          "y": 464
+        },
+        "s464x176": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s464x144"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s464x336",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s432x208"
+              ],
+              "farSw": 15,
+              "neighbor": "s432x208",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 7,
+          "x": 176,
+          "y": 464
+        },
+        "s464x336": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s464x176"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s464x368",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s496x368"
+              ],
+              "farSw": 3,
+              "neighbor": "s496x368",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 8,
+          "x": 336,
+          "y": 464
+        },
+        "s464x368": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s464x336"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s464x624",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s496x336"
+              ],
+              "farSw": 2,
+              "neighbor": "s496x336",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 9,
+          "x": 368,
+          "y": 464
+        },
+        "s464x624": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s464x368"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s464x784",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s432x656"
+              ],
+              "farSw": 18,
+              "neighbor": "s432x656",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 10,
+          "x": 624,
+          "y": 464
+        },
+        "s464x784": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s464x624"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s464x816",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s432x752"
+              ],
+              "farSw": 20,
+              "neighbor": "s432x752",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 11,
+          "x": 784,
+          "y": 464
+        },
+        "s464x816": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s464x784"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s464x848",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s496x848"
+              ],
+              "farSw": 4,
+              "neighbor": "s496x848",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 12,
+          "x": 816,
+          "y": 464
+        },
+        "s464x848": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s464x816"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s464x880",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s432x816"
+              ],
+              "farSw": 22,
+              "neighbor": "s432x816",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 13,
+          "x": 848,
+          "y": 464
+        },
+        "s464x880": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s464x848"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "n4",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "branchPath": [
+                "s496x912"
+              ],
+              "farSw": 5,
+              "neighbor": "s496x912",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 14,
+          "x": 880,
+          "y": 464
+        },
+        "s496x112": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "n1"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s496x336",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s464x144"
+              ],
+              "farSw": 6,
+              "neighbor": "s464x144",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 1,
+          "x": 112,
+          "y": 496
+        },
+        "s496x336": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s496x112"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s496x368",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s464x368"
+              ],
+              "farSw": 9,
+              "neighbor": "s464x368",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 2,
+          "x": 336,
+          "y": 496
+        },
+        "s496x368": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s496x336"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s496x848",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s464x336"
+              ],
+              "farSw": 8,
+              "neighbor": "s464x336",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 3,
+          "x": 368,
+          "y": 496
+        },
+        "s496x848": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s496x368"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "s496x912",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s464x816"
+              ],
+              "farSw": 12,
+              "neighbor": "s464x816",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 4,
+          "x": 848,
+          "y": 496
+        },
+        "s496x912": {
+          "exits": [
+            {
+              "bearing": {
+                "dx": -1,
+                "dy": 0
+              },
+              "neighbor": "s496x848"
+            },
+            {
+              "bearing": {
+                "dx": 1,
+                "dy": 0
+              },
+              "neighbor": "n2",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "branchPath": [
+                "s464x880"
+              ],
+              "farSw": 14,
+              "neighbor": "s464x880",
+              "viaSwitchPort": "reversed"
+            }
+          ],
+          "sw": 5,
+          "x": 912,
+          "y": 496
+        }
+      },
+      "signals": [
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "id": "NW1",
+          "x": 78,
+          "y": 496
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "id": "NW3",
+          "x": 110,
+          "y": 432
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "id": "NW5",
+          "x": 110,
+          "y": 336
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "id": "NW7",
+          "x": 270,
+          "y": 272
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "id": "NE2",
+          "x": 1070,
+          "y": 464
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "id": "NE4",
+          "x": 1070,
+          "y": 400
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "id": "NE5",
+          "x": 1070,
+          "y": 368
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "id": "NE6",
+          "x": 1070,
+          "y": 336
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "id": "XW2",
+          "x": 398,
+          "y": 464
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "id": "XW3",
+          "x": 398,
+          "y": 432
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "id": "XW4",
+          "x": 398,
+          "y": 400
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "id": "XW5",
+          "x": 398,
+          "y": 368
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "id": "XW6",
+          "x": 366,
+          "y": 336
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "id": "XW7",
+          "x": 366,
+          "y": 304
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "id": "XW8",
+          "x": 366,
+          "y": 272
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "id": "XE1",
+          "x": 590,
+          "y": 496
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "id": "XE2",
+          "x": 590,
+          "y": 464
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "id": "XE3",
+          "x": 590,
+          "y": 432
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "id": "XE4",
+          "x": 590,
+          "y": 400
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "id": "XE5",
+          "x": 494,
+          "y": 368
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "id": "XE6",
+          "x": 494,
+          "y": 336
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "id": "XE7",
+          "x": 494,
+          "y": 304
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "id": "XE8",
+          "x": 494,
+          "y": 272
+        }
+      ],
+      "trainHalfLen": 58
+    },
+    "notificationPolicy": {
+      "boardLimit": 40,
+      "departureCountdown": {
+        "firstThresholdSeconds": 30,
+        "station": "JNG",
+        "stopIndex": 1,
+        "urgentThresholdSeconds": 15
+      },
+      "heldAtSignalThresholdSeconds": 30,
+      "susulMeetStation": "JNG"
+    },
+    "signalSections": [
+      {
+        "hi": 590,
+        "lineY": 496,
+        "lo": 78,
+        "sig": "NW1"
+      },
+      {
+        "hi": 590,
+        "lineY": 432,
+        "lo": 110,
+        "sig": "NW3"
+      },
+      {
+        "hi": 494,
+        "lineY": 336,
+        "lo": 110,
+        "sig": "NW5"
+      },
+      {
+        "hi": 494,
+        "lineY": 272,
+        "lo": 270,
+        "sig": "NW7"
+      },
+      {
+        "hi": 1070,
+        "lineY": 464,
+        "lo": 398,
+        "sig": "NE2"
+      },
+      {
+        "hi": 1070,
+        "lineY": 400,
+        "lo": 398,
+        "sig": "NE4"
+      },
+      {
+        "hi": 1070,
+        "lineY": 368,
+        "lo": 1040,
+        "sig": "NE5"
+      },
+      {
+        "hi": 1070,
+        "lineY": 336,
+        "lo": 1008,
+        "sig": "NE6"
+      },
+      {
+        "hi": 398,
+        "lineY": 464,
+        "lo": 32,
+        "sig": "XW2"
+      },
+      {
+        "hi": 398,
+        "lineY": 432,
+        "lo": 32,
+        "sig": "XW3"
+      },
+      {
+        "hi": 398,
+        "lineY": 400,
+        "lo": 32,
+        "sig": "XW4"
+      },
+      {
+        "hi": 398,
+        "lineY": 368,
+        "lo": 336,
+        "sig": "XW5"
+      },
+      {
+        "hi": 366,
+        "lineY": 336,
+        "lo": 32,
+        "sig": "XW6"
+      },
+      {
+        "hi": 366,
+        "lineY": 304,
+        "lo": 32,
+        "sig": "XW7"
+      },
+      {
+        "hi": 366,
+        "lineY": 272,
+        "lo": 224,
+        "sig": "XW8"
+      },
+      {
+        "hi": 1120,
+        "lineY": 496,
+        "lo": 590,
+        "sig": "XE1"
+      },
+      {
+        "hi": 1120,
+        "lineY": 464,
+        "lo": 590,
+        "sig": "XE2"
+      },
+      {
+        "hi": 1120,
+        "lineY": 432,
+        "lo": 590,
+        "sig": "XE3"
+      },
+      {
+        "hi": 1120,
+        "lineY": 400,
+        "lo": 590,
+        "sig": "XE4"
+      },
+      {
+        "hi": 528,
+        "lineY": 368,
+        "lo": 494,
+        "sig": "XE5"
+      },
+      {
+        "hi": 592,
+        "lineY": 336,
+        "lo": 494,
+        "sig": "XE6"
+      },
+      {
+        "hi": 688,
+        "lineY": 304,
+        "lo": 494,
+        "sig": "XE7"
+      },
+      {
+        "hi": 528,
+        "lineY": 272,
+        "lo": 494,
+        "sig": "XE8"
+      }
+    ]
+  }
+}

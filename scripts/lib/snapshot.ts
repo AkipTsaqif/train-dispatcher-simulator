@@ -17,7 +17,12 @@
 import { serialize } from "./serialize";
 import type { DispatchRuntime } from "../../app/lib/dispatch-runtime";
 
-export const LAYOUT_IDS = ["bekasi-tambun-cibitung"] as const;
+// NOTE: the FIRST entry is the default for snapshot-layout.ts — keep Bekasi
+// first so `npm run snapshot:bekasi` (no argument) keeps its meaning.
+export const LAYOUT_IDS = [
+  "bekasi-tambun-cibitung",
+  "jatinegara",
+] as const;
 
 export const baselinePath = (layoutId: string): string =>
   `scripts/baselines/${layoutId}.snapshot.txt`;

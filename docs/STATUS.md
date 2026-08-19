@@ -6,13 +6,13 @@
 
 ## Current position
 
-- **Active phase:** none — Phase 8 landed; the program's planned arc (0–8) is
-  complete. Work is now interactive polish on the Jatinegara schematic.
-- **Current step:** —. Latest work: the JNG grid/interaction defect sweep
-  (train marker scale, scissors point controls, generated `dashSide`).
-- **Next action:** none queued. Open follow-ups are the Phase 8 documented
-  approximations (throat block boundaries still open at each track's end; no
-  real JNG timetable; no journey-through-junction routing).
+- **Active phase:** 9 — piece assembly (see `docs/PLAN-phase-9.md`). Phases 0–8
+  are complete; Phase 9 was authored after the original 0–8 arc.
+- **Current step:** pre-Step-1. A Jatinegara baseline snapshot was captured so
+  Phase 9's rebuild of the JNG topology has a "before camera" to diff against.
+- **Next action:** Step 1 — `scripts/diff-ir.ts` (structural IR diffing).
+  Note Step 2 (terminating switches in the compiler) ALREADY LANDED with
+  Phase 8 in `b08a98e` — `topology.ts` has `distinctPorts.size === 2`.
 
 ## Phase state
 
@@ -27,6 +27,7 @@
 | 6 | Flyovers / graded junctions | **DONE** |
 | 7 | Arbitrary-schematic rendering | **DONE** |
 | 8 | Drawn-extent tracks (terminating switches) | **DONE** |
+| 9 | Piece assembly (pieces → topology IR) | **ACTIVE** (Step 2 pre-landed in Phase 8) |
 
 Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any order.
 
@@ -272,6 +273,47 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   XML embedded in the committed `app/schematic/jng_grid.svg`, and the generator
   invokes it automatically. Verified: regenerating with the OLD generator code
   reproduced the committed topology byte-for-byte.
+
+- (Phase 9 prep) **Jatinegara baseline captured.** `LAYOUT_IDS` in
+  `scripts/lib/snapshot.ts` now lists `jatinegara` alongside Bekasi (Bekasi
+  stays FIRST — `snapshot-layout.ts` defaults to `LAYOUT_IDS[0]`, so
+  `npm run snapshot:bekasi` keeps its meaning). Wrote
+  `scripts/baselines/jatinegara.snapshot.txt` (136,840 bytes); it verifies
+  byte-identical. Rationale: Phase 9 Step 6 deliberately CHANGES the JNG
+  topology (true drawn extents), so git alone only preserves the old source
+  text — the snapshot preserves the compiled RUNTIME for before/after diffing.
+  This baseline is a reference point, NOT a frozen contract like Bekasi's:
+  expect it to be re-captured at Step 6 with the diff recorded here.
+- (Phase 9 prep) **`verify:bekasi` was failing at HEAD — pre-existing float
+  drift, now FIXED.** Confirmed against pristine HEAD before changing anything:
+  16 of 16,594 lines differed, ALL bearing `dx`/`dy`, max relative deviation
+  1.6e-16 (under 1 ULP) — no structural or behavioral change. Cause: the
+  baseline was captured under an older JS engine; the tree now runs bun 1.3.10
+  / node v24.16.0, and float64 results can differ in the last binary digit
+  across engine versions.
+- (Phase 9 prep) **Fix chosen (option 2 of 2, user's call): round floats in the
+  serializer**, not a plain baseline re-capture — it fixes the CLASS, so the
+  next runtime upgrade cannot turn the gate red again. `scripts/lib/serialize.ts`
+  now rounds every serialized number to `SNAPSHOT_PRECISION = 12` significant
+  digits. Rationale for 12: ULP noise is ~2.2e-16 relative, so 1e-12 sits four
+  orders of magnitude above the noise and far below any meaningful geometric
+  change (coordinates are integers; bearings are unit vectors, where 1e-12 is
+  ~0.06 nm over a 60 km corridor). A real regression cannot hide under it.
+  Integers, 0/-0, and Infinity/NaN tagging are unaffected; rounding is
+  idempotent.
+- (Phase 9 prep) **Both baselines re-captured under the rounding serializer**
+  (Bekasi 383,393 -> 375,936 bytes; Jatinegara 136,840 -> 135,861). This is a
+  deliberate, one-time format refresh. Proven safe before committing to it:
+  re-serializing the OLD runtime produced **zero structural differences** on
+  both layouts (0 key/shape changes; 1766 Bekasi + 241 JNG numeric lines
+  differing only in rounding, max 4.2e-12), and all four observed drift pairs
+  converge to identical text. Verified immune afterwards: perturbing EVERY
+  non-integer float in the projection by 1 ULP now yields 0 of 858 changed
+  snapshot lines.
+- (Phase 9 prep) Gates all green after the change: `tsc`, `verify:bekasi`
+  (byte-identical again), `verify:jatinegara:baseline`, `verify:jatinegara`,
+  verify three-main/loops/routes/flyover, and all four probes. NOT yet run:
+  `npm run build` and `npm run test:e2e`.
 
 ## Notes for the next worker
 

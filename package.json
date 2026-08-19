@@ -20,6 +20,8 @@
     "verify:flyover": "bun scripts/verify-flyover.ts",
     "verify:jatinegara": "bun scripts/verify-jatinegara.ts",
     "snapshot:bekasi": "bun scripts/snapshot-layout.ts",
+    "snapshot:jatinegara": "bun scripts/snapshot-layout.ts jatinegara",
+    "verify:jatinegara:baseline": "bun scripts/verify-layout.ts jatinegara",
     "verify:bekasi": "bun scripts/verify-layout.ts bekasi-tambun-cibitung"
   },
   "dependencies": {
