@@ -15,7 +15,7 @@ import type {
   Station,
   StationCell,
 } from "../lib/dispatch-map";
-import { JATINEGARA_TOPOLOGY } from "../topologies/jatinegara";
+import { JATINEGARA_ASSEMBLED as JATINEGARA_TOPOLOGY } from "../pieces/jatinegara";
 
 export type {
   Bearing,

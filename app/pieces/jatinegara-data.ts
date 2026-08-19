@@ -1,0 +1,138 @@
+// Jatinegara data tables that are NOT geometric (Phase 9 Step 6).
+//
+// These stay authored because no placement rule produces them: which lever
+// couples which switches, what a block section covers (a graph-global
+// question), where trains stop, and the legacy node ordering.
+//
+// Signals keep explicit edge ids here rather than group+x, because their
+// offsets were tuned against the generated split points; re-deriving them
+// would change the compiled output for no benefit.
+
+import type {
+  StationStopPoint,
+  SwitchControlGroup,
+  TopologyBlockSection,
+  TopologySignal,
+} from "../lib/topology";
+
+export const JATINEGARA_CONTROL_GROUPS: readonly SwitchControlGroup[] = [
+  {"id":"PC1","switchIds":[1,6],"coupled":true},
+  {"id":"PC2","switchIds":[7,15],"coupled":true},
+  {"id":"PC3","switchIds":[16,26],"coupled":true},
+  {"id":"PC4","switchIds":[25,17],"coupled":true},
+  {"id":"PC5","switchIds":[46,41],"coupled":true},
+  {"id":"PC6","switchIds":[40,47],"coupled":true},
+  {"id":"PC7","switchIds":[42,27],"coupled":true},
+  {"id":"PC8","switchIds":[48,52],"coupled":true},
+  {"id":"PC9","switchIds":[28,38],"coupled":true},
+  {"id":"PC10","switchIds":[2,9],"coupled":true},
+  {"id":"PC11","switchIds":[8,3],"coupled":true},
+  {"id":"PC12","switchIds":[10,18],"coupled":true},
+  {"id":"PC13","switchIds":[20,11],"coupled":true},
+  {"id":"PC14","switchIds":[30,19],"coupled":true},
+  {"id":"PC15","switchIds":[32,21],"coupled":true},
+  {"id":"PC16","switchIds":[22,13],"coupled":true},
+  {"id":"PC17","switchIds":[12,4],"coupled":true},
+  {"id":"PC18","switchIds":[14,5],"coupled":true},
+  {"id":"PC19","switchIds":[23,33],"coupled":true},
+  {"id":"PC20","switchIds":[24,35],"coupled":true},
+  {"id":"g29","switchIds":[29],"coupled":false},
+  {"id":"g31","switchIds":[31],"coupled":false},
+  {"id":"g34","switchIds":[34],"coupled":false},
+  {"id":"g36","switchIds":[36],"coupled":false},
+  {"id":"g43","switchIds":[43],"coupled":false},
+  {"id":"g44","switchIds":[44],"coupled":false},
+  {"id":"g49","switchIds":[49],"coupled":false},
+  {"id":"g50","switchIds":[50],"coupled":false},
+];
+
+export const JATINEGARA_SIGNALS: readonly TopologySignal[] = [
+  {"id":"NW1","edgeId":"e-t1-32-112","segmentIndex":0,"offset":46,"facing":"toward-to","mount":"up","label":"NW1","protectedBlockSectionId":"section-NW1"},
+  {"id":"NW3","edgeId":"e-t3-32-208","segmentIndex":0,"offset":78,"facing":"toward-to","mount":"up","label":"NW3","protectedBlockSectionId":"section-NW3"},
+  {"id":"NW5","edgeId":"e-t6-32-176","segmentIndex":0,"offset":78,"facing":"toward-to","mount":"up","label":"NW5","protectedBlockSectionId":"section-NW5"},
+  {"id":"NW7","edgeId":"e-t8-224-336","segmentIndex":0,"offset":46,"facing":"toward-to","mount":"up","label":"NW7","protectedBlockSectionId":"section-NW7"},
+  {"id":"NE2","edgeId":"e-t2-880-1120","segmentIndex":0,"offset":190,"facing":"toward-from","mount":"up","label":"NE2","protectedBlockSectionId":"section-NE2"},
+  {"id":"NE4","edgeId":"e-t4-1008-1120","segmentIndex":0,"offset":62,"facing":"toward-from","mount":"up","label":"NE4","protectedBlockSectionId":"section-NE4"},
+  {"id":"NE5","edgeId":"e-t5ap-1040-1120","segmentIndex":0,"offset":30,"facing":"toward-from","mount":"up","label":"NE5","protectedBlockSectionId":"section-NE5"},
+  {"id":"NE6","edgeId":"e-t6am-1008-1120","segmentIndex":0,"offset":62,"facing":"toward-from","mount":"up","label":"NE6","protectedBlockSectionId":"section-NE6"},
+  {"id":"XW2","edgeId":"e-t2-368-624","segmentIndex":0,"offset":30,"facing":"toward-from","mount":"up","label":"XW2","protectedBlockSectionId":"section-XW2"},
+  {"id":"XW3","edgeId":"e-t3-272-656","segmentIndex":0,"offset":126,"facing":"toward-from","mount":"up","label":"XW3","protectedBlockSectionId":"section-XW3"},
+  {"id":"XW4","edgeId":"e-t4-336-656","segmentIndex":0,"offset":62,"facing":"toward-from","mount":"up","label":"XW4","protectedBlockSectionId":"section-XW4"},
+  {"id":"XW5","edgeId":"e-t5-368-528","segmentIndex":0,"offset":30,"facing":"toward-from","mount":"up","label":"XW5","protectedBlockSectionId":"section-XW5"},
+  {"id":"XW6","edgeId":"e-t6-304-560","segmentIndex":0,"offset":62,"facing":"toward-from","mount":"up","label":"XW6","protectedBlockSectionId":"section-XW6"},
+  {"id":"XW7","edgeId":"e-t7-304-560","segmentIndex":0,"offset":62,"facing":"toward-from","mount":"up","label":"XW7","protectedBlockSectionId":"section-XW7"},
+  {"id":"XW8","edgeId":"e-t8-336-528","segmentIndex":0,"offset":30,"facing":"toward-from","mount":"up","label":"XW8","protectedBlockSectionId":"section-XW8"},
+  {"id":"XE1","edgeId":"e-t1-368-848","segmentIndex":0,"offset":222,"facing":"toward-to","mount":"up","label":"XE1","protectedBlockSectionId":"section-XE1"},
+  {"id":"XE2","edgeId":"e-t2-368-624","segmentIndex":0,"offset":222,"facing":"toward-to","mount":"up","label":"XE2","protectedBlockSectionId":"section-XE2"},
+  {"id":"XE3","edgeId":"e-t3-272-656","segmentIndex":0,"offset":318,"facing":"toward-to","mount":"up","label":"XE3","protectedBlockSectionId":"section-XE3"},
+  {"id":"XE4","edgeId":"e-t4-336-656","segmentIndex":0,"offset":254,"facing":"toward-to","mount":"up","label":"XE4","protectedBlockSectionId":"section-XE4"},
+  {"id":"XE5","edgeId":"e-t5-368-528","segmentIndex":0,"offset":126,"facing":"toward-to","mount":"up","label":"XE5","protectedBlockSectionId":"section-XE5"},
+  {"id":"XE6","edgeId":"e-t6-304-560","segmentIndex":0,"offset":190,"facing":"toward-to","mount":"up","label":"XE6","protectedBlockSectionId":"section-XE6"},
+  {"id":"XE7","edgeId":"e-t7-304-560","segmentIndex":0,"offset":190,"facing":"toward-to","mount":"up","label":"XE7","protectedBlockSectionId":"section-XE7"},
+  {"id":"XE8","edgeId":"e-t8-336-528","segmentIndex":0,"offset":158,"facing":"toward-to","mount":"up","label":"XE8","protectedBlockSectionId":"section-XE8"},
+];
+
+export const JATINEGARA_BLOCK_SECTIONS: readonly TopologyBlockSection[] = [
+  {"id":"section-NW1","signalId":"NW1","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t1-32-112","from":{"kind":"signal","signalId":"NW1"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t1-112-336","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t1-336-368","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t1-368-848","from":{"kind":"edge-end","end":"from"},"to":{"kind":"signal","signalId":"XE1"}}]},
+  {"id":"section-NW3","signalId":"NW3","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t3-32-208","from":{"kind":"signal","signalId":"NW3"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t3-208-240","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t3-240-272","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t3-272-656","from":{"kind":"edge-end","end":"from"},"to":{"kind":"signal","signalId":"XE3"}}]},
+  {"id":"section-NW5","signalId":"NW5","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t6-32-176","from":{"kind":"signal","signalId":"NW5"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t6-176-208","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t6-208-240","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t6-240-304","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t6-304-560","from":{"kind":"edge-end","end":"from"},"to":{"kind":"signal","signalId":"XE6"}}]},
+  {"id":"section-NW7","signalId":"NW7","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t8-224-336","from":{"kind":"signal","signalId":"NW7"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t8-336-528","from":{"kind":"edge-end","end":"from"},"to":{"kind":"signal","signalId":"XE8"}}]},
+  {"id":"section-NE2","signalId":"NE2","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t2-880-1120","from":{"kind":"signal","signalId":"NE2"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t2-848-880","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t2-816-848","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t2-784-816","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t2-624-784","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t2-368-624","from":{"kind":"edge-end","end":"to"},"to":{"kind":"signal","signalId":"XW2"}}]},
+  {"id":"section-NE4","signalId":"NE4","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t4-1008-1120","from":{"kind":"signal","signalId":"NE4"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t4-976-1008","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t4-944-976","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t4-912-944","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t4-752-912","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t4-720-752","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t4-688-720","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t4-656-688","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t4-336-656","from":{"kind":"edge-end","end":"to"},"to":{"kind":"signal","signalId":"XW4"}}]},
+  {"id":"section-NE5","signalId":"NE5","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t5ap-1040-1120","from":{"kind":"signal","signalId":"NE5"},"to":{"kind":"edge-end","end":"from"}}],"legacyOpenEnd":"west"},
+  {"id":"section-NE6","signalId":"NE6","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t6am-1008-1120","from":{"kind":"signal","signalId":"NE6"},"to":{"kind":"edge-end","end":"from"}}],"legacyOpenEnd":"west"},
+  {"id":"section-XW2","signalId":"XW2","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t2-368-624","from":{"kind":"signal","signalId":"XW2"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t2-336-368","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t2-176-336","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t2-144-176","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t2-32-144","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}}],"legacyOpenEnd":"west"},
+  {"id":"section-XW3","signalId":"XW3","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t3-272-656","from":{"kind":"signal","signalId":"XW3"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t3-240-272","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t3-208-240","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t3-32-208","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}}],"legacyOpenEnd":"west"},
+  {"id":"section-XW4","signalId":"XW4","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t4-336-656","from":{"kind":"signal","signalId":"XW4"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t4-304-336","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t4-272-304","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t4-240-272","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t4-32-240","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}}],"legacyOpenEnd":"west"},
+  {"id":"section-XW5","signalId":"XW5","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t5-368-528","from":{"kind":"signal","signalId":"XW5"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t5-336-368","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}}],"legacyOpenEnd":"west"},
+  {"id":"section-XW6","signalId":"XW6","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t6-304-560","from":{"kind":"signal","signalId":"XW6"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t6-240-304","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t6-208-240","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t6-176-208","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t6-32-176","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}}],"legacyOpenEnd":"west"},
+  {"id":"section-XW7","signalId":"XW7","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t7-304-560","from":{"kind":"signal","signalId":"XW7"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t7-208-304","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t7-176-208","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t7-32-176","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}}],"legacyOpenEnd":"west"},
+  {"id":"section-XW8","signalId":"XW8","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t8-336-528","from":{"kind":"signal","signalId":"XW8"},"to":{"kind":"edge-end","end":"from"}},{"edgeId":"e-t8-224-336","from":{"kind":"edge-end","end":"to"},"to":{"kind":"edge-end","end":"from"}}],"legacyOpenEnd":"west"},
+  {"id":"section-XE1","signalId":"XE1","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t1-368-848","from":{"kind":"signal","signalId":"XE1"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t1-848-912","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t1-912-1120","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}}],"legacyOpenEnd":"east"},
+  {"id":"section-XE2","signalId":"XE2","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t2-368-624","from":{"kind":"signal","signalId":"XE2"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t2-624-784","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t2-784-816","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t2-816-848","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t2-848-880","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t2-880-1120","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}}],"legacyOpenEnd":"east"},
+  {"id":"section-XE3","signalId":"XE3","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t3-272-656","from":{"kind":"signal","signalId":"XE3"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t3-656-720","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t3-720-752","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t3-752-784","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t3-784-816","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t3-816-880","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t3-880-944","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t3-944-1120","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}}],"legacyOpenEnd":"east"},
+  {"id":"section-XE4","signalId":"XE4","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t4-336-656","from":{"kind":"signal","signalId":"XE4"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t4-656-688","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t4-688-720","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t4-720-752","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t4-752-912","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t4-912-944","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t4-944-976","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t4-976-1008","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t4-1008-1120","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}}],"legacyOpenEnd":"east"},
+  {"id":"section-XE5","signalId":"XE5","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t5-368-528","from":{"kind":"signal","signalId":"XE5"},"to":{"kind":"edge-end","end":"to"}}],"legacyOpenEnd":"east"},
+  {"id":"section-XE6","signalId":"XE6","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t6-304-560","from":{"kind":"signal","signalId":"XE6"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t6-560-592","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}}],"legacyOpenEnd":"east"},
+  {"id":"section-XE7","signalId":"XE7","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t7-304-560","from":{"kind":"signal","signalId":"XE7"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t7-560-624","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}},{"edgeId":"e-t7-624-688","from":{"kind":"edge-end","end":"from"},"to":{"kind":"edge-end","end":"to"}}],"legacyOpenEnd":"east"},
+  {"id":"section-XE8","signalId":"XE8","coverage":"signal-to-boundary","edgeRanges":[{"edgeId":"e-t8-336-528","from":{"kind":"signal","signalId":"XE8"},"to":{"kind":"edge-end","end":"to"}}],"legacyOpenEnd":"east"},
+];
+
+export const JATINEGARA_STOP_POINTS: readonly StationStopPoint[] = [
+  {"stationCode":"JNG","edgeId":"e-t1-848-912","segmentIndex":0,"offset":2},
+  {"stationCode":"JNG","edgeId":"e-t2-368-624","segmentIndex":0,"offset":96},
+  {"stationCode":"JNG","edgeId":"e-t3-272-656","segmentIndex":0,"offset":192},
+  {"stationCode":"JNG","edgeId":"e-t4-336-656","segmentIndex":0,"offset":128},
+  {"stationCode":"JNG","edgeId":"e-t5-368-528","segmentIndex":0,"offset":48},
+  {"stationCode":"JNG","edgeId":"e-t6-304-560","segmentIndex":0,"offset":126},
+  {"stationCode":"JNG","edgeId":"e-t7-304-560","segmentIndex":0,"offset":96},
+  {"stationCode":"JNG","edgeId":"e-t8-336-528","segmentIndex":0,"offset":64},
+  {"stationCode":"JNG-W","edgeId":"e-t1-32-112","segmentIndex":0,"offset":8},
+  {"stationCode":"JNG-E","edgeId":"e-t1-912-1120","segmentIndex":0,"offset":200},
+  {"stationCode":"JNG-W","edgeId":"e-t2-32-144","segmentIndex":0,"offset":8},
+  {"stationCode":"JNG-E","edgeId":"e-t2-880-1120","segmentIndex":0,"offset":232},
+  {"stationCode":"JNG-W","edgeId":"e-t3-32-208","segmentIndex":0,"offset":8},
+  {"stationCode":"JNG-E","edgeId":"e-t3-944-1120","segmentIndex":0,"offset":168},
+  {"stationCode":"JNG-W","edgeId":"e-t4-32-240","segmentIndex":0,"offset":8},
+  {"stationCode":"JNG-E","edgeId":"e-t4-1008-1120","segmentIndex":0,"offset":104},
+  {"stationCode":"JNG-W","edgeId":"e-t5-336-368","segmentIndex":0,"offset":8},
+  {"stationCode":"JNG-E","edgeId":"e-t5-368-528","segmentIndex":0,"offset":152},
+  {"stationCode":"JNG-W","edgeId":"e-t6-32-176","segmentIndex":0,"offset":8},
+  {"stationCode":"JNG-E","edgeId":"e-t6-560-592","segmentIndex":0,"offset":24},
+  {"stationCode":"JNG-W","edgeId":"e-t7-32-176","segmentIndex":0,"offset":8},
+  {"stationCode":"JNG-E","edgeId":"e-t7-624-688","segmentIndex":0,"offset":56},
+  {"stationCode":"JNG-W","edgeId":"e-t8-224-336","segmentIndex":0,"offset":8},
+  {"stationCode":"JNG-E","edgeId":"e-t8-336-528","segmentIndex":0,"offset":184},
+  {"stationCode":"JNG-W","edgeId":"e-t5ap-1040-1120","segmentIndex":0,"offset":8},
+  {"stationCode":"JNG-E","edgeId":"e-t5ap-1040-1120","segmentIndex":0,"offset":72},
+  {"stationCode":"JNG-W","edgeId":"e-t6am-1008-1120","segmentIndex":0,"offset":8},
+  {"stationCode":"JNG-E","edgeId":"e-t6am-1008-1120","segmentIndex":0,"offset":104},
+  {"stationCode":"JNG-W","edgeId":"e-t5ac-752-976","segmentIndex":0,"offset":8},
+  {"stationCode":"JNG-E","edgeId":"e-t5ac-752-976","segmentIndex":0,"offset":216},
+  {"stationCode":"JNG-W","edgeId":"e-t5y-624-656","segmentIndex":0,"offset":8},
+  {"stationCode":"JNG-E","edgeId":"e-t5y-624-656","segmentIndex":0,"offset":24},
+  {"stationCode":"JNG-W","edgeId":"e-t6ab-688-720","segmentIndex":0,"offset":8},
+  {"stationCode":"JNG-E","edgeId":"e-t6ab-688-720","segmentIndex":0,"offset":24},
+];
+
+export const JATINEGARA_LEGACY_NODE_ORDER: readonly string[] = ["n1","s496x112","s496x336","s496x368","s496x848","s496x912","n2","n3","s464x144","s464x176","s464x336","s464x368","s464x624","s464x784","s464x816","s464x848","s464x880","n4","n5","s432x208","s432x240","s432x272","s432x656","s432x720","s432x752","s432x784","s432x816","s432x880","s432x944","n6","n7","s400x240","s400x272","s400x304","s400x336","s400x656","s400x688","s400x720","s400x752","s400x912","s400x944","s400x976","s400x1008","n8","s368x336","s368x368","s368x528","n9","s336x176","s336x208","s336x240","s336x304","s336x560","s336x592","n10","s304x176","s304x208","s304x304","s304x560","s304x624","s304x688","n11","s272x336","s272x528","s368x1040","n12","s336x1008","n13","s368x752","n14","n15","s368x656","s336x688","n16"];

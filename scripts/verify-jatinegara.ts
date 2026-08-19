@@ -12,7 +12,7 @@
 
 import { JATINEGARA_DISPATCH } from "../app/dispatching/jatinegara";
 import { compileTopology } from "../app/lib/topology";
-import { JATINEGARA_TOPOLOGY } from "../app/topologies/jatinegara";
+import { JATINEGARA_ASSEMBLED as JATINEGARA_TOPOLOGY } from "../app/pieces/jatinegara";
 import { findRoute, type RouteSearchSignal } from "../app/lib/route-search";
 
 let failures = 0;

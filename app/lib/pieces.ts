@@ -173,13 +173,62 @@ export type SignalPiece = {
   intent?: string;
 };
 
+/**
+ * A whole running line, split automatically wherever a `link` lands on it.
+ *
+ * This is the piece that makes a real station tractable. Jatinegara's IR has
+ * 90 edges, but an author should not write 90 of anything: the edges exist
+ * only because a line must be cut at every junction. Here the author writes
+ * the line ONCE, as its true drawn extent, and the cuts are derived from the
+ * links that actually touch it.
+ *
+ * Ids follow the established convention so the result is diffable against the
+ * generated file: nodes are `s{y}x{x}`, edges are `e-{group}-{x1}-{x2}`.
+ */
+export type LinePiece = {
+  kind: "line";
+  /** Track group id, e.g. "t1". */
+  id: string;
+  y: number;
+  /** Drawn extent. Not extended to the map boundary. */
+  from: number;
+  to: number;
+  role?: TrackRole;
+  normalDirection?: Dir;
+  bidirectional?: boolean;
+  /** Boundary node names, west then east. Omitted ends are named `s{y}x{x}`. */
+  endNodes?: { west?: string; east?: string };
+  intent?: string;
+};
+
+/**
+ * A diagonal connecting two lines. Becomes a one-edge track group.
+ *
+ * Whether each end is a SWITCH or a fixed track turn is derived, not
+ * declared: an end landing in the INTERIOR of a line is a switch, an end
+ * landing exactly at a line's extremity is a fixed turn. That single rule
+ * accounts for Jatinegara's 29 diagonals having 58 ends but only 48 switches.
+ */
+export type LinkPiece = {
+  kind: "link";
+  /** Track group id, e.g. "xov1". */
+  id: string;
+  from: TopologyPoint;
+  to: TopologyPoint;
+  role?: TrackRole;
+  level?: number;
+  intent?: string;
+};
+
 export type Piece =
   | TrackPiece
   | CrossoverPiece
   | TerminusPiece
   | LoopPiece
   | PlatformPiece
-  | SignalPiece;
+  | SignalPiece
+  | LinePiece
+  | LinkPiece;
 
 /** The parts that have no vocabulary yet (Step 5 removes this). */
 export type Passthrough = {
@@ -200,9 +249,172 @@ export type Passthrough = {
 export type PieceSet = {
   pieces: readonly Piece[];
   passthrough?: Passthrough;
+  /**
+   * Which lever works each derived switch. Geometry decides WHERE a switch is
+   * and which way it dashes; it cannot know which control group owns it, so
+   * that stays authored - keyed by the derived switch number.
+   */
+  switchMeta?: SwitchMeta;
 };
 
 const pointKey = (p: TopologyPoint): string => `${p[0]}|${p[1]}`;
+
+/** Node id convention for a point on a station grid. */
+const gridNodeId = (x: number, y: number): string => `s${y}x${x}`;
+
+/** Per-switch metadata the geometry cannot supply (which lever works it). */
+export type SwitchMeta = Record<
+  number,
+  { controlGroupId: string; label?: string; initialState?: "normal" | "reversed" }
+>;
+
+/**
+ * Lower `line` + `link` pieces into `track` + `crossover` pieces.
+ *
+ * Everything here is derivation the author would otherwise do by hand:
+ *   - cut each line at every link endpoint that lands on it,
+ *   - decide switch vs fixed track turn by interior-vs-extremity,
+ *   - number switches by line order then x ascending,
+ *   - derive dashSide from the diagonal's direction.
+ *
+ * A link endpoint that lands on NO line is an authoring error, reported with
+ * its coordinate rather than silently dropped - a diagonal floating in space
+ * is precisely the mistake this vocabulary should catch.
+ */
+const expandLines = (
+  pieces: readonly Piece[],
+  switchMeta: SwitchMeta
+): { pieces: readonly Piece[]; groupMeta: Passthrough["groupMeta"] } => {
+  const lines = pieces.filter((p): p is LinePiece => p.kind === "line");
+  const links = pieces.filter((p): p is LinkPiece => p.kind === "link");
+  if (lines.length === 0 && links.length === 0) return { pieces, groupMeta: undefined };
+
+  // A `line` carries its own direction, so the author states it ONCE on the
+  // piece rather than repeating it in a separate group table.
+  const groupMeta: NonNullable<Passthrough["groupMeta"]> = {};
+  for (const l of lines) {
+    groupMeta[l.id] = {
+      ...(l.role !== undefined ? { role: l.role } : { role: "main" as TrackRole }),
+      ...(l.normalDirection !== undefined ? { normalDirection: l.normalDirection } : {}),
+      ...(l.bidirectional !== undefined ? { bidirectional: l.bidirectional } : {}),
+    };
+  }
+
+  const lineOrder = new Map(lines.map((l, i) => [l.id, i]));
+  const lo = (l: LinePiece) => Math.min(l.from, l.to);
+  const hi = (l: LinePiece) => Math.max(l.from, l.to);
+  const lineAt = (p: TopologyPoint): LinePiece | undefined =>
+    lines.find((l) => l.y === p[1] && p[0] >= lo(l) && p[0] <= hi(l));
+
+  // --- switch numbering ------------------------------------------------------
+  // EVERY diagonal end is numbered by (line order, then x ascending), and the
+  // fixed turns are then dropped. Numbering before discarding - rather than
+  // after - is what leaves gaps in the id sequence (Jatinegara has no switch
+  // 37, 39, 45, or 51). That is load-bearing: switch ids appear in scenarios
+  // and control-group tables, so renumbering them densely would silently
+  // repoint every lever.
+  const ends: { line: LinePiece; x: number; interior: boolean }[] = [];
+  for (const link of links) {
+    for (const end of ["from", "to"] as const) {
+      const p = link[end];
+      const line = lineAt(p);
+      if (!line) {
+        throw new Error(
+          `link "${link.id}" ${end} end at (${p[0]},${p[1]}) lands on no line. ` +
+            `Pieces join by position - place it where a line actually runs.`
+        );
+      }
+      // Interior => a real switch. At the line's extremity => a fixed turn.
+      ends.push({ line, x: p[0], interior: p[0] > lo(line) && p[0] < hi(line) });
+    }
+  }
+  ends.sort((a, b) => lineOrder.get(a.line.id)! - lineOrder.get(b.line.id)! || a.x - b.x);
+  const switchIdAt = new Map<string, number>();
+  ends.forEach((e, i) => {
+    if (e.interior) switchIdAt.set(pointKey([e.x, e.line.y]), i + 1);
+  });
+
+  // --- cut each line wherever a link lands on it -----------------------------
+  const out: Piece[] = [];
+  for (const line of lines) {
+    const west = lo(line);
+    const east = hi(line);
+    const cuts = new Set<number>([west, east]);
+    for (const link of links) {
+      for (const end of ["from", "to"] as const) {
+        const p = link[end];
+        if (p[1] === line.y && p[0] > west && p[0] < east) cuts.add(p[0]);
+      }
+    }
+    const nameFor = (x: number) =>
+      x === west && line.endNodes?.west !== undefined
+        ? line.endNodes.west
+        : x === east && line.endNodes?.east !== undefined
+          ? line.endNodes.east
+          : gridNodeId(x, line.y);
+    const xs = [...cuts].sort((a, b) => a - b);
+    for (let i = 0; i < xs.length - 1; i++) {
+      out.push({
+        kind: "track",
+        id: `e-${line.id}-${xs[i]}-${xs[i + 1]}`,
+        groupId: line.id,
+        from: [xs[i], line.y],
+        to: [xs[i + 1], line.y],
+        fromNode: nameFor(xs[i]),
+        toNode: nameFor(xs[i + 1]),
+        renderSlots: [],
+      } as TrackPiece);
+    }
+  }
+
+  // --- links become one-edge crossover groups --------------------------------
+  for (const link of links) {
+    const switches: {
+      id: number;
+      end: "from" | "to";
+      initialState: "normal" | "reversed";
+      controlGroupId: string;
+      dashSide: "left" | "right";
+      label: string;
+    }[] = [];
+    for (const end of ["from", "to"] as const) {
+      const p = link[end];
+      const id = switchIdAt.get(pointKey(p));
+      if (id === undefined) continue; // fixed track turn, not a point
+      const other = end === "from" ? link.to : link.from;
+      const meta = switchMeta[id];
+      if (!meta) {
+        throw new Error(`switch ${id} at (${p[0]},${p[1]}) has no control-group mapping`);
+      }
+      switches.push({
+        id,
+        end,
+        initialState: meta.initialState ?? "normal",
+        controlGroupId: meta.controlGroupId,
+        // A diagonal heading EAST from the point dashes right, else left.
+        dashSide: other[0] > p[0] ? "right" : "left",
+        label: meta.label ?? meta.controlGroupId,
+      });
+    }
+    out.push({
+      kind: "crossover",
+      id: `d-${link.id}`,
+      groupId: link.id,
+      role: link.role ?? ("crossover" as TrackRole),
+      ...(link.level !== undefined ? { level: link.level } : {}),
+      from: link.from,
+      to: link.to,
+      renderSlots: [],
+      switches,
+    } as CrossoverPiece);
+  }
+
+  return {
+    pieces: [...pieces.filter((p) => p.kind !== "line" && p.kind !== "link"), ...out],
+    groupMeta,
+  };
+};
+
 
 /**
  * Assemble pieces into a TopologyDefinition.
@@ -212,7 +424,15 @@ const pointKey = (p: TopologyPoint): string => `${p[0]}|${p[1]}`;
  * two pieces disagreeing about a shared node is exactly the authoring mistake
  * this vocabulary is meant to make impossible.
  */
-export const assemblePieces = ({ pieces, passthrough = {} }: PieceSet): TopologyDefinition => {
+export const assemblePieces = ({
+  pieces: authored,
+  passthrough = {},
+  switchMeta = {},
+}: PieceSet): TopologyDefinition => {
+  // `line`/`link` are sugar over `track`/`crossover`: lower them first so
+  // there is exactly ONE join, switch, and grouping path to reason about.
+  const expanded = expandLines(authored, switchMeta);
+  const pieces = expanded.pieces;
   const tracks = pieces.filter((p): p is TrackPiece => p.kind === "track");
   const termini = pieces.filter((p): p is TerminusPiece => p.kind === "terminus");
   const loops = pieces.filter((p): p is LoopPiece => p.kind === "loop");
@@ -331,6 +551,31 @@ export const assemblePieces = ({ pieces, passthrough = {} }: PieceSet): Topology
     })),
   ];
 
+  // --- 2b. derive render slots where the author left them empty -------------
+  // Slots must be contiguous from zero. Ordering follows the established
+  // convention: track groups in declaration order, then crossover groups,
+  // each edge in ascending x. An author writing `line`/`link` never numbers
+  // these; a piece that DID declare slots keeps them.
+  if (edges.some((e) => e.renderSlots.length === 0)) {
+    const groupSeq: string[] = [];
+    for (const e of edges) if (!groupSeq.includes(e.trackGroupId)) groupSeq.push(e.trackGroupId);
+    const ordered = [...edges].sort((a, b) => {
+      const ga = groupSeq.indexOf(a.trackGroupId);
+      const gb = groupSeq.indexOf(b.trackGroupId);
+      if (ga !== gb) return ga - gb;
+      return a.geometry[0].point[0] - b.geometry[0].point[0];
+    });
+    let next = 0;
+    const assigned = new Map<string, number[]>();
+    for (const e of ordered) {
+      assigned.set(e.id, e.renderSlots.length > 0 ? [...e.renderSlots] : [next]);
+      next++;
+    }
+    for (let i = 0; i < edges.length; i++) {
+      edges[i] = { ...edges[i], renderSlots: assigned.get(edges[i].id)! };
+    }
+  }
+
   // --- 3. switch nodes ------------------------------------------------------
   // A node is a switch iff a crossover ends there; every other named point is
   // a boundary. Derived from placement, never declared twice.
@@ -433,7 +678,8 @@ export const assemblePieces = ({ pieces, passthrough = {} }: PieceSet): Topology
     }
     groupEdges.get(edge.trackGroupId)!.push(edge.id);
   }
-  const meta = passthrough.groupMeta ?? {};
+  // Explicit passthrough.groupMeta wins over metadata derived from a `line`.
+  const meta = { ...(expanded.groupMeta ?? {}), ...(passthrough.groupMeta ?? {}) };
   const trackGroups: TrackGroup[] = groupOrder.map((id) => {
     const m = meta[id] ?? {};
     const edgeIds = groupEdges.get(id)!;

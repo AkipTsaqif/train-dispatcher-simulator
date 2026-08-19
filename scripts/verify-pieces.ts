@@ -43,6 +43,11 @@ const FIXTURES = [
     pieces: async () => (await import("../app/pieces/loops-fixture")).LOOPS_FIXTURE_ASSEMBLED,
   },
   {
+    name: "jatinegara",
+    hand: async () => (await import("../app/topologies/jatinegara")).JATINEGARA_TOPOLOGY,
+    pieces: async () => (await import("../app/pieces/jatinegara")).JATINEGARA_ASSEMBLED,
+  },
+  {
     name: "flyover-fixture",
     hand: async () => (await import("../app/topologies/flyover-fixture")).FLYOVER_FIXTURE_TOPOLOGY,
     pieces: async () => (await import("../app/pieces/flyover-fixture")).FLYOVER_FIXTURE_ASSEMBLED,
