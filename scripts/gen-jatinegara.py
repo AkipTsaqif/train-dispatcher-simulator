@@ -11,9 +11,22 @@ Model (documented deviations in the file header):
     next same-direction signal or the boundary (open end).
 """
 import json
+import subprocess
+import sys
+import tempfile
 from collections import defaultdict
+from pathlib import Path
 
-cells = json.load(open("/tmp/jng_cells.json"))
+# The source drawing is committed as jng_grid.svg; its draw.io cell dump is
+# derived, never hand-kept in /tmp. Rebuild it automatically so regeneration
+# works after a reboot or in a fresh clone.
+CELLS_FILE = Path(tempfile.gettempdir()) / "jng_cells.json"
+if not CELLS_FILE.exists():
+    subprocess.run(
+        [sys.executable, str(Path(__file__).with_name("extract-jng-cells.py")), str(CELLS_FILE)],
+        check=True,
+    )
+cells = json.load(open(CELLS_FILE, encoding="utf-8"))
 
 def f(v):
     return float(v)
@@ -307,11 +320,33 @@ for e in edges:
     out.append(f"    {{ id: {ts_repr(e['id'])}, from: {ts_repr(e['from'])}, to: {ts_repr(e['to'])}, geometry: [{geom}], role: {ts_repr(e['role'])}, trackGroupId: {ts_repr(e['group'])}, renderSlots: [{slot[0]}] }},")
 out.append("  ],")
 out.append("  switches: [")
+EDGE_GEOM_BY_ID = {e["id"]: e["geom"] for e in edges}
+NODE_POINT_BY_ID = {n["id"]: (n["x"], n["y"]) for n in nodes}
+
+
+def dash_side_of(sw):
+    """Which side of the switch node its BRANCH departs toward.
+
+    `dashSide` is a render annotation: when the point is thrown, the UI draws
+    the now-inactive straight as a dashed stub on the side the branch leaves
+    from. It must therefore follow the reversed edge's own geometry. Deriving
+    it from the line's normal direction (the previous approach) is wrong for
+    every switch whose branch runs against the flow — 24 of 48 here.
+    """
+    geom = EDGE_GEOM_BY_ID[sw["reversed"]["edgeId"]]
+    node_x, node_y = NODE_POINT_BY_ID[sw["nodeId"]]
+    # the branch's far endpoint = the geometry end that is NOT the switch node
+    first, last = geom[0], geom[-1]
+    d_first = (first[0] - node_x) ** 2 + (first[1] - node_y) ** 2
+    d_last = (last[0] - node_x) ** 2 + (last[1] - node_y) ** 2
+    far = first if d_first > d_last else last
+    return "right" if far[0] > node_x else "left"
+
+
 for sw in switches:
     cgid = COUPLED_BY_SW.get(sw['id'], f"g{sw['id']}")
     lbl = COUPLED_BY_SW.get(sw['id'], f"sw {sw['id']}")
-    line_ndir = next(nd for (yy, gg, nd, _, _, _) in Y_LINES if gg == sw["group"])
-    side = "right" if line_ndir == "right" else "left"
+    side = dash_side_of(sw)
     out.append(f"    {{ id: {sw['id']}, nodeId: {ts_repr(sw['nodeId'])}, common: {ts_repr(sw['common'])}, normal: {ts_repr(sw['normal'])}, reversed: {ts_repr(sw['reversed'])}, initialState: \"normal\", controlGroupId: {ts_repr(cgid)}, dashSide: {ts_repr(side)}, label: {ts_repr(lbl)} }},")
 out.append("  ],")
 out.append("  controlGroups: [")
