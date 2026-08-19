@@ -396,10 +396,7 @@ const expandLines = (
       // the derived id still becomes `TopologySwitch.id`, but it is a position
       // in a walk and renumbers under geometry edits.
       const metaKey = `${link.id}:${end}`;
-      // Keep the first migration commit buildable while JNG's table is
-      // re-keyed in the next commit. The numeric fallback is deliberately
-      // temporary: it is removed once all piece sets use the stable key.
-      const meta = switchMeta[metaKey] ?? switchMeta[String(id)];
+      const meta = switchMeta[metaKey];
       if (!meta) {
         throw new Error(
           `switch ${id} ("${metaKey}") at (${p[0]},${p[1]}) has no control-group mapping`
