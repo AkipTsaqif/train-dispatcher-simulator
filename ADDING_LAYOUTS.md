@@ -149,6 +149,32 @@ Pieces reject rather than guess. A link landing on no line, or two pieces
 disagreeing about a shared point's node name, is a hard error naming the
 coordinate.
 
+### Reading coordinates off the drawing
+
+Pieces are authored in raw coordinates, but a drawing is easier to read by
+grid reference. `bun run grid` translates BOTH directions:
+
+```
+bun run grid -- AG6           # AG6 = [528, 336]
+bun run grid -- 528 336       # [528, 336] = AG6
+bun run grid -- --list        # every layout's pitch/offset/shift
+bun run grid -- -l bekasi 0 89
+```
+
+It defaults to `jatinegara`; use `-l/--layout` for another (aliases `jng`,
+`bekasi`, `bks`, ...). Each answer restates the grid geometry it used, so a
+result from the wrong layout is visible rather than silently misleading.
+
+A coordinate that is not on the lattice is FLAGGED, never rounded:
+
+```
+[0, 89] = ~H2 (off-lattice: col 6.50, row 2.03)
+```
+
+That matters because Bekasi's Ys are free-form while Jatinegara's are on a
+pitch-16 lattice. A `~` result on a layout that should be on-lattice means
+the coordinate is wrong, not that the tool is unsure.
+
 Verify with an IR diff against a reference, if you have one:
 
 ```
