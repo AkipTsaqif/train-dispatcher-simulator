@@ -61,6 +61,14 @@ export type PointControl = {
   y: number;
   coupled: boolean;
   label: string;
+  /**
+   * Which switch this handle sits on, when a coupled group is drawn as one
+   * handle PER switch rather than a single handle at their midpoint.
+   *
+   * Every handle in the group still throws the whole group - the coupling lives
+   * in the toggle, not the handle. This only changes where you can click.
+   */
+  onSwitchId?: number;
 };
 
 export type GNodeExit = {
@@ -174,6 +182,15 @@ export type SwitchControlGroup = {
   id: string;
   switchIds: readonly number[];
   coupled: boolean;
+  /**
+   * Draw a handle on EACH switch instead of one at the group's midpoint.
+   *
+   * A scissors' midpoint handle sits where its diagonals cross, which reads
+   * naturally. A group whose switches are far apart - the two ends of a long
+   * connector - puts its midpoint on empty track, nowhere near either point it
+   * works. Opt in per group so existing groups keep their single handle.
+   */
+  handlePerSwitch?: boolean;
 };
 
 export type SignalFacing = "toward-from" | "toward-to";
@@ -1381,6 +1398,22 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       if (!item) throw new Error(`Control group ${group.id} has unknown switch ${id}`);
       return item;
     });
+    // One handle per switch: same ids, so a click still throws the whole group,
+    // but placed ON each point instead of at a midpoint that may be nowhere near
+    // either of them.
+    if (group.handlePerSwitch) {
+      for (const item of groupSwitches) {
+        controls.push({
+          ids: [...group.switchIds],
+          x: item.x,
+          y: item.y,
+          coupled: true,
+          label: groupSwitches[0].label.split(",")[0],
+          onSwitchId: item.id,
+        });
+      }
+      continue;
+    }
     const control: PointControl = {
       ids: [...group.switchIds],
       x: groupSwitches.reduce((sum, item) => sum + item.x, 0) / groupSwitches.length,

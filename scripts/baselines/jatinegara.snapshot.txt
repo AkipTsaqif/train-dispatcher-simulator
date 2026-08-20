@@ -2917,6 +2917,17 @@
           "y": 304
         },
         {
+          "coupled": true,
+          "ids": [
+            59,
+            61
+          ],
+          "label": "PC21",
+          "onSwitchId": 59,
+          "x": 608,
+          "y": 352
+        },
+        {
           "coupled": false,
           "ids": [
             50
@@ -2947,16 +2958,6 @@
         {
           "coupled": true,
           "ids": [
-            59,
-            61
-          ],
-          "label": "PC21",
-          "x": 672,
-          "y": 352
-        },
-        {
-          "coupled": true,
-          "ids": [
             30,
             19
           ],
@@ -2972,6 +2973,17 @@
           "label": "sw 31",
           "x": 720,
           "y": 400
+        },
+        {
+          "coupled": true,
+          "ids": [
+            59,
+            61
+          ],
+          "label": "PC21",
+          "onSwitchId": 61,
+          "x": 736,
+          "y": 352
         },
         {
           "coupled": true,

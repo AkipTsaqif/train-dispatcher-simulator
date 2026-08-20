@@ -37,8 +37,9 @@ check(
     const singles = compiled.switches.controls.filter((c) => !c.coupled);
     const labelSet = new Set(coupled.map((c) => c.label));
     return (
-      coupled.length === 21 && singles.length === 9 &&
+      // PC21 draws a handle per switch, so count LEVERS (distinct labels), not handles
       labelSet.size === 21 &&
+      singles.length === 9 &&
       [...labelSet].every((l) => /^PC\d+$/.test(l))
     );
   })(),

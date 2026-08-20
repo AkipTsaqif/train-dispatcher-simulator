@@ -39,7 +39,7 @@ export const JATINEGARA_CONTROL_GROUPS: readonly SwitchControlGroup[] = [
   {"id":"g31","switchIds":[31],"coupled":false},
   {"id":"g34","switchIds":[34],"coupled":false},
   {"id":"g53","switchIds":[57],"coupled":false},
-  {"id":"PC21","switchIds":[59,61],"coupled":true},
+  {"id":"PC21","switchIds":[59,61],"coupled":true,"handlePerSwitch":true},
   {"id":"g36","switchIds":[36],"coupled":false},
   {"id":"g43","switchIds":[43],"coupled":false},
   {"id":"g44","switchIds":[44],"coupled":false},

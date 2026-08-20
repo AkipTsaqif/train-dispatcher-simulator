@@ -2290,7 +2290,7 @@ export default function DispatchingTable({
           const fitFont = Math.min(baseFont, ((r / cs) * 2 * 1.45) / Math.max(1, labelText.length));
           return (
             <g
-              key={ctl.ids.join("-")}
+              key={ctl.onSwitchId !== undefined ? `${ctl.label}-${ctl.onSwitchId}` : ctl.ids.join("-")}
               transform={`translate(${ctl.x}, ${ctl.y})`}
               className={`group select-none focus:outline-none ${locked ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
               role="button"
@@ -2421,7 +2421,13 @@ export default function DispatchingTable({
       <div className="mt-6">
         {showControls && (
         <div className="flex flex-wrap justify-center gap-2">
-          {POINT_CONTROLS.map((ctl) => {
+          {POINT_CONTROLS.filter(
+            // a handle-per-switch group has one control per point but is still ONE
+            // lever, so the button list shows it once
+            (ctl, index, all) =>
+              ctl.onSwitchId === undefined ||
+              all.findIndex((other) => other.label === ctl.label) === index
+          ).map((ctl) => {
             const id = ctl.ids[0];
             const reversed = switches[id] === "reversed";
             const locked = isLocked(id);
