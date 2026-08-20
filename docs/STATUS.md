@@ -15,10 +15,12 @@
 - **Next action:** reconcile `docs/PLAN-phase-10.md` and the JNG verifier with
   the implemented fixed-turn section walk. A section now continues through
   degree-2, switch-free vertices and stops before movable points; all functional
-  gates pass and Bekasi remains frozen. Separately, the BI8 topology prototype
-  proves that splitting the BG10→BK6 diagonal at BI8 can model its junction
-  with the t5ac branch; the authoring representation, control, and final label
-  remain deferred and are not part of this checkpoint.
+  gates pass and Bekasi remains frozen.
+- **BI8 is no longer a prototype — inverted points are shipped.** `switchMeta`
+  takes `branch: "line"` to invert which leg diverges, and `link.splitAt` cuts a
+  diagonal so a point can sit mid-span. JNG has three inverted points: P57 at
+  BI8 (single lever `g53`) and P59/P61 at each end of the flat `t5y` connector
+  (coupled as `PC21`). Counts are now 51 switches / 21 coupled groups / 12 mains.
 
 ## Phase state
 
@@ -563,6 +565,28 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   permits only that forced continuation and measures the boundary over all
   covered edges. All 15 functional gates and typecheck passed before the
   checkpoint; build/e2e are rerun immediately before commit and push.
+- 2026-08-20 — Inverted points get their own vocabulary rather than a special
+  case. `branch: "line"` declares WHICH leg diverges; everything else stays
+  derived. Rejected hand-authoring the two halves of a split diagonal: it made a
+  move a three-place edit whose parts had to stay collinear by hand, so
+  `link.splitAt` performs the cut instead and a move is one line again.
+- 2026-08-20 — An inverted point's TRUNK is derived from geometry, not from
+  which link half the lever was authored on. A point diverges into two legs on
+  the same side; the leg opposite is the common. Getting this backwards wired
+  P57's always-used leg behind the `normal` port, which the dashes exposed.
+- 2026-08-20 — `compileTopology`'s reciprocal-remote-switch check now asks
+  whether the far switch has SOME port on the shared chain, not specifically its
+  `reversed` port. An inverted point meets the chain on `common`; both are
+  reciprocal. Bekasi and all four fixtures stayed byte-identical.
+- 2026-08-20 — `controlGroup.handlePerSwitch` draws a coupled group as one
+  handle per switch instead of one at the midpoint. Opt-in: a scissors' midpoint
+  reads well, but PC21's points are 112 apart and its midpoint sat on empty
+  track. Coupling already lived in `toggleSwitch`, so this is render-only.
+- 2026-08-20 — Straightened the AM8→AS6 chain (`t5y`+`xov17`+`t6ab`) into one
+  flat line at y=352. It crosses `xov15`/`xov16`/`xov18` WITHOUT joining them:
+  pieces join only at shared endpoints and no diagonal ends on that row. One
+  line means one berth per station, so the duplicate JNG-W/JNG-E pair was
+  dropped and mains fell 13 → 12.
 
 ## Notes for the next worker
 
