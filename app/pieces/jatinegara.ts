@@ -161,7 +161,7 @@ export const JATINEGARA_PIECES: PieceSet = {
 		{ kind: "link", id: "xov14", from: [528, 368], to: [560, 336] },
 		// Split at AL7 [608,352] for the inverted point at t5y's west end.
 		{ kind: "link", id: "xov15", from: [608, 336], to: [672, 400], splitAt: [624, 352] },
-		{ kind: "link", id: "xov16", from: [624, 304], to: [720, 400] },
+		{ kind: "link", id: "xov16", from: [640, 304], to: [736, 400] },
 		// Split at AT7 [736,352] for the inverted point at t5y's east end.
 		{ kind: "link", id: "xov18", from: [688, 304], to: [752, 368], splitAt: [736, 352] },
 		{ kind: "link", id: "xov19", from: [688, 400], to: [720, 432] },
