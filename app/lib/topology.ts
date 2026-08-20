@@ -745,12 +745,27 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     // Phase 8: a reversed edge may END at a plain node — a FIXED track turn
     // (like Tambun's T3 curve), not a controllable point. Only a switch at the
     // far end needs the reciprocal guarantee.
-    if (
-      remoteSwitch &&
-      (!remoteReversedEdge ||
-        remoteReversedEdge.trackGroupId !== loopGroup.id ||
-        edgeEndNodeId(remoteReversedEdge, remoteSwitch.reversed.end) !== remoteNodeId)
-    ) {
+    //
+    // What the guarantee is really for: throwing this point sends a train down
+    // the crossover, so whatever sits at the far end must actually route onto
+    // that same chain — otherwise the reversed move leads nowhere. Normally the
+    // far switch meets it on its `reversed` port too. An INVERTED point meets it
+    // on `common`, because there the diagonal is the through axis and the
+    // terminating line is the branch. Both are reciprocal; only the port differs.
+    // So test the property that matters — the remote switch has SOME port on
+    // this chain at this node — rather than assuming which port it is.
+    const remotePortsHere = remoteSwitch
+      ? (["common", "normal", "reversed"] as const).filter((port) => {
+          const ref = remoteSwitch[port];
+          const edge = edgesById.get(ref.edgeId);
+          return (
+            edge !== undefined &&
+            edge.trackGroupId === loopGroup.id &&
+            edgeEndNodeId(edge, ref.end) === remoteNodeId
+          );
+        })
+      : [];
+    if (remoteSwitch && remotePortsHere.length === 0) {
       throw new Error(
         `Switch ${topologySwitch.id} has no reciprocal remote switch on its reversed track`
       );

@@ -250,12 +250,32 @@
         "exits": [
           {
             "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "neighbor": "s400x944"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": -0.707106781187
+            },
+            "neighbor": "s336x1008",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
               "dx": -1,
               "dy": 0
             },
-            "neighbor": "s368x752"
+            "branchPath": [
+              "s368x752"
+            ],
+            "neighbor": "s368x752",
+            "viaSwitchPort": "reversed"
           }
         ],
+        "sw": 57,
         "x": 976,
         "y": 368
       },
@@ -646,7 +666,7 @@
               "dx": -0.707106781187,
               "dy": 0.707106781187
             },
-            "neighbor": "s400x944"
+            "neighbor": "n14"
           }
         ],
         "x": 1008,
@@ -1355,9 +1375,10 @@
               "dy": -0.707106781187
             },
             "branchPath": [
-              "s336x1008"
+              "n14"
             ],
-            "neighbor": "s336x1008",
+            "farSw": 57,
+            "neighbor": "n14",
             "viaSwitchPort": "reversed"
           }
         ],
@@ -3025,6 +3046,15 @@
         {
           "coupled": false,
           "ids": [
+            57
+          ],
+          "label": "sw 57",
+          "x": 976,
+          "y": 368
+        },
+        {
+          "coupled": false,
+          "ids": [
             36
           ],
           "label": "sw 36",
@@ -3162,7 +3192,8 @@
         "48": "normal",
         "49": "normal",
         "50": "normal",
-        "52": "normal"
+        "52": "normal",
+        "57": "normal"
       },
       "items": [
         {
@@ -3463,7 +3494,7 @@
           "y": 400
         },
         {
-          "branch": "M944 400 L1008 336",
+          "branch": "M944 400 L976 368",
           "dashSide": "right",
           "id": 34,
           "label": "sw 34",
@@ -3596,6 +3627,15 @@
           "lineY": 272,
           "x": 336,
           "y": 272
+        },
+        {
+          "branch": "M752 368 H976",
+          "dashSide": "left",
+          "id": 57,
+          "label": "sw 57",
+          "lineY": 368,
+          "x": 976,
+          "y": 368
         }
       ]
     },
@@ -3687,7 +3727,8 @@
       "M880 432 L912 400",
       "M880 464 L912 496",
       "M624 464 L656 432",
-      "M944 400 L1008 336",
+      "M944 400 L976 368",
+      "M976 368 L1008 336",
       "M944 432 L976 400",
       "M1008 400 L1040 368"
     ]
@@ -3927,12 +3968,32 @@
           "exits": [
             {
               "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "neighbor": "s400x944"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": -0.707106781187
+              },
+              "neighbor": "s336x1008",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
                 "dx": -1,
                 "dy": 0
               },
-              "neighbor": "s368x752"
+              "branchPath": [
+                "s368x752"
+              ],
+              "neighbor": "s368x752",
+              "viaSwitchPort": "reversed"
             }
           ],
+          "sw": 57,
           "x": 976,
           "y": 368
         },
@@ -4323,7 +4384,7 @@
                 "dx": -0.707106781187,
                 "dy": 0.707106781187
               },
-              "neighbor": "s400x944"
+              "neighbor": "n14"
             }
           ],
           "x": 1008,
@@ -5032,9 +5093,10 @@
                 "dy": -0.707106781187
               },
               "branchPath": [
-                "s336x1008"
+                "n14"
               ],
-              "neighbor": "s336x1008",
+              "farSw": 57,
+              "neighbor": "n14",
               "viaSwitchPort": "reversed"
             }
           ],

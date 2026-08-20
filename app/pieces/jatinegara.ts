@@ -177,7 +177,10 @@ export const JATINEGARA_PIECES: PieceSet = {
 		{ kind: "link", id: "xov24", from: [880, 432], to: [912, 400] },
 		{ kind: "link", id: "xov25", from: [880, 464], to: [912, 496] },
 		{ kind: "link", id: "xov26", from: [624, 464], to: [656, 432] },
-		{ kind: "link", id: "xov27", from: [944, 400], to: [1008, 336] },
+		// xov27 is SPLIT at BI8 [976,368] so a point can sit there. Its two halves
+		// stay collinear, so together they remain the through axis.
+		{ kind: "link", id: "xov27", from: [944, 400], to: [976, 368] },
+		{ kind: "link", id: "xov27b", from: [976, 368], to: [1008, 336] },
 		{ kind: "link", id: "xov28", from: [944, 432], to: [976, 400] },
 		{ kind: "link", id: "xov29", from: [1008, 400], to: [1040, 368] },
 
@@ -283,6 +286,9 @@ export const JATINEGARA_PIECES: PieceSet = {
 		"xov20:from": { controlGroupId: "PC15" },
 		"xov24:to": { controlGroupId: "PC19" },
 		"xov27:from": { controlGroupId: "g34", label: "sw 34" },
+		// INVERTED point at BI8: the diagonal runs straight through, the
+		// terminating t5ac is the leg that diverges.
+		"xov27:to": { controlGroupId: "g53", label: "sw 57", branch: "line" },
 		"xov28:to": { controlGroupId: "PC20" },
 		"xov29:from": { controlGroupId: "g36", label: "sw 36" },
 		"xov11:to": { controlGroupId: "PC9" },

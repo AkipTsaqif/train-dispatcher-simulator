@@ -89,6 +89,8 @@ export type CrossoverPiece = {
     initialState: "normal" | "reversed";
     controlGroupId: string;
     dashSide: "left" | "right";
+    /** Which leg diverges; see SwitchMeta.branch. Default "link". */
+    branch?: "link" | "line";
     label: string;
   }[];
   intent?: string;
@@ -280,7 +282,23 @@ const gridNodeId = (x: number, y: number): string => `s${y}x${x}`;
  */
 export type SwitchMeta = Record<
   string,
-  { controlGroupId: string; label?: string; initialState?: "normal" | "reversed" }
+  {
+    controlGroupId: string;
+    label?: string;
+    initialState?: "normal" | "reversed";
+    /**
+     * Which leg diverges. Default "link": the usual point, where the running
+     * line goes straight through and the diagonal is the branch.
+     *
+     * "line" INVERTS that. The two halves of a split diagonal are collinear and
+     * become the through axis; the horizontal line that terminates here is the
+     * branch. Physically ordinary - a stub trailing into a diagonal - but the
+     * opposite of every other point, so the author must say so. The end must sit
+     * at the line's extremity, since a line running THROUGH the point cannot be
+     * the leg that diverges from it.
+     */
+    branch?: "link" | "line";
+  }
 >;
 
 /**
@@ -328,7 +346,7 @@ const expandLines = (
   // 37, 39, 45, or 51). That is load-bearing: switch ids appear in scenarios
   // and control-group tables, so renumbering them densely would silently
   // repoint every lever.
-  const ends: { line: LinePiece; x: number; interior: boolean }[] = [];
+  const ends: { line: LinePiece; x: number; interior: boolean; key: string }[] = [];
   const validSwitchMetaKeys = new Set<string>();
   for (const link of links) {
     for (const end of ["from", "to"] as const) {
@@ -340,10 +358,22 @@ const expandLines = (
             `Pieces join by position - place it where a line actually runs.`
         );
       }
-      // Interior => a real switch. At the line's extremity => a fixed turn.
+      // Interior => a real switch. At the line's extremity => a fixed turn,
+      // UNLESS the author declares an inverted point there (branch: "line"),
+      // where the terminating line is exactly the leg that diverges.
+      const key = `${link.id}:${end}`;
       const interior = p[0] > lo(line) && p[0] < hi(line);
-      if (interior) validSwitchMetaKeys.add(`${link.id}:${end}`);
-      ends.push({ line, x: p[0], interior });
+      const invertedHere = switchMeta[key]?.branch === "line";
+      if (invertedHere && interior) {
+        throw new Error(
+          `switch "${key}" at (${p[0]},${p[1]}) declares branch "line", but line ` +
+            `"${line.id}" runs THROUGH that point. A line can only be the diverging ` +
+            `leg where it ends - put the end at the line's extremity.`
+        );
+      }
+      const isSwitch = interior || invertedHere;
+      if (isSwitch) validSwitchMetaKeys.add(key);
+      ends.push({ line, x: p[0], interior: isSwitch, key });
     }
   }
   const orphanedSwitchMetaKeys = Object.keys(switchMeta).filter(
@@ -356,9 +386,13 @@ const expandLines = (
     );
   }
   ends.sort((a, b) => lineOrder.get(a.line.id)! - lineOrder.get(b.line.id)! || a.x - b.x);
-  const switchIdAt = new Map<string, number>();
+  // Keyed by link END, not by point: an inverted point has TWO link ends at the
+  // same coordinate (the two halves of the split diagonal), and only the one the
+  // author declared carries the lever. Keying by point would give both the same
+  // id and derive the switch twice.
+  const switchIdByEnd = new Map<string, number>();
   ends.forEach((e, i) => {
-    if (e.interior) switchIdAt.set(pointKey([e.x, e.line.y]), i + 1);
+    if (e.interior) switchIdByEnd.set(e.key, i + 1);
   });
 
   // --- cut each line wherever a link lands on it -----------------------------
@@ -402,30 +436,45 @@ const expandLines = (
       initialState: "normal" | "reversed";
       controlGroupId: string;
       dashSide: "left" | "right";
+      branch?: "link" | "line";
       label: string;
     }[] = [];
     for (const end of ["from", "to"] as const) {
       const p = link[end];
-      const id = switchIdAt.get(pointKey(p));
+      const metaKeyEarly = `${link.id}:${end}`;
+      const id = switchIdByEnd.get(metaKeyEarly);
       if (id === undefined) continue; // fixed track turn, not a point
       const other = end === "from" ? link.to : link.from;
       // Look the lever up by the AUTHORED identity, not the derived number:
       // the derived id still becomes `TopologySwitch.id`, but it is a position
       // in a walk and renumbers under geometry edits.
-      const metaKey = `${link.id}:${end}`;
+      const metaKey = metaKeyEarly;
       const meta = switchMeta[metaKey];
       if (!meta) {
         throw new Error(
           `switch ${id} ("${metaKey}") at (${p[0]},${p[1]}) has no control-group mapping`
         );
       }
+      // The dash marks the DIVERGING leg, so it follows whichever leg that is.
+      // Normally the diagonal: it dashes right when it heads east. For an
+      // inverted point the branch is the terminating line, which runs away from
+      // the point toward the far end of its own extent.
+      const branchLine = lineAt(p)!;
+      const dashSide =
+        meta.branch === "line"
+          ? p[0] === lo(branchLine)
+            ? ("right" as const)
+            : ("left" as const)
+          : other[0] > p[0]
+            ? ("right" as const)
+            : ("left" as const);
       switches.push({
         id,
         end,
         initialState: meta.initialState ?? "normal",
         controlGroupId: meta.controlGroupId,
-        // A diagonal heading EAST from the point dashes right, else left.
-        dashSide: other[0] > p[0] ? "right" : "left",
+        dashSide,
+        ...(meta.branch !== undefined ? { branch: meta.branch } : {}),
         label: meta.label ?? meta.controlGroupId,
       });
     }
@@ -660,6 +709,52 @@ export const assemblePieces = ({
           .filter((l) => l.id !== c.id)
           .map((l) => ({ id: l.id, from: l.from, to: l.to })),
       ];
+      // An INVERTED point swaps the roles: the two collinear halves of the split
+      // diagonal are the through axis, and the terminating line is the branch.
+      // Both legs are still DERIVED from what physically meets the point - only
+      // which set is searched changes.
+      if (sw.branch === "line") {
+        const lineHere = tracks.filter(
+          (t) => pointKey(t.from) === key || pointKey(t.to) === key
+        );
+        if (lineHere.length !== 1) {
+          throw new Error(
+            `Inverted switch ${sw.id} at (${point[0]},${point[1]}) needs exactly one ` +
+              `terminating line as its branch, found ${lineHere.length}. A line running ` +
+              `through the point cannot diverge from it.`
+          );
+        }
+        const onward = crossovers.find(
+          (o) => o.id !== c.id && (pointKey(o.from) === key || pointKey(o.to) === key)
+        );
+        if (!onward) {
+          throw new Error(
+            `Inverted switch ${sw.id} at (${point[0]},${point[1]}) has no continuing ` +
+              `diagonal: its through axis is the OTHER half of the split link. Author ` +
+              `both halves as separate links meeting at this point.`
+          );
+        }
+        const branchEdge = lineHere[0];
+        switches.push({
+          id: sw.id,
+          nodeId,
+          common: { edgeId: c.id, end: sw.end },
+          normal: {
+            edgeId: onward.id,
+            end: pointKey(onward.from) === key ? ("from" as const) : ("to" as const),
+          },
+          reversed: {
+            edgeId: branchEdge.id,
+            end: pointKey(branchEdge.from) === key ? ("from" as const) : ("to" as const),
+          },
+          initialState: sw.initialState,
+          controlGroupId: sw.controlGroupId,
+          dashSide: sw.dashSide,
+          label: sw.label,
+        });
+        continue;
+      }
+
       const arriving = throughCandidates.filter((t) => pointKey(t.to) === key);
       const leaving = throughCandidates.filter((t) => pointKey(t.from) === key);
 
