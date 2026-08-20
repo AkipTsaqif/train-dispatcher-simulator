@@ -12,7 +12,10 @@
   `app/topologies/jatinegara.ts` are DELETED; `/jng` renders from
   `app/pieces/jatinegara.ts` (13 lines + 29 links), byte-identical to the
   baseline captured before the port.
-- **Next action:** open to choose. Moving a JNG switch is now a one-line edit
+- **Next action:** Phase 10 (real throat block boundaries) — plan written at
+  `docs/PLAN-phase-10.md`, Step 1 evidence gathered, model decision still
+  open. BLOCKED on `app/pieces/jatinegara.ts` returning to green first (see
+  Phase 10 risks). Moving a JNG switch is now a one-line edit
   to `app/pieces/jatinegara.ts`; signals and platforms are positional, and
   block sections are derived from signal placement, so nothing in
   `jatinegara-data.ts` names an edge. The natural remaining candidates are the
@@ -539,6 +542,18 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   approximation as `legacyOpenEnd`, not a claim that the layout is wrong.
   Rationale + rejected alternatives in
   `specs/PROPOSAL-zero-length-leading-range.md`.
+-  2026-08-20 — Phase 10 opened: real throat block boundaries
+  (`docs/PLAN-phase-10.md`). Step 1 evidence classifies JNG's 17 open-ended
+  sections into THREE kinds, not two: 9 map-edge (correct as open), 7 throat
+  (wrong — track continues via a crossover into a switch: NE5 NE6 XW5 XE5
+  XE6 XE7 XE8), and 1 dead stub (XW8 at t8's west tip, nothing beyond).
+  So the fix needs 7 boundaries, not 17. Deliberately NOT decided yet:
+  whether a throat boundary is an existing physical signal (author it, no new
+  vocabulary) or a new marker kind — that needs the real signalling diagram,
+  and Phase 9's stale-premise lesson says re-derive from the artefact before
+  coding. Sections cannot simply "walk further": past a group's end lies a
+  switch, and which branch a section covers is runtime point state, so a
+  static section must end at an authored boundary.
 
 ## Notes for the next worker
 

@@ -43,6 +43,7 @@ assumptions in a controlled order.
 | 7 | [PLAN-phase-7.md](PLAN-phase-7.md) | Arbitrary-schematic rendering (decouple geometry from the grid) | 6 |
 | 8 | [PLAN-phase-8.md](PLAN-phase-8.md) | Drawn-extent tracks — **superseded by 9**; compiler half is 9 Step 2 | 7 |
 | 9 | [PLAN-phase-9.md](PLAN-phase-9.md) | Piece assembly: authored pieces → topology IR (`compileTopology` unchanged) | 7 |
+| 10 | [PLAN-phase-10.md](PLAN-phase-10.md) | Real throat block boundaries: replace the `legacyOpenEnd` approximation | 5 |
 
 **Ordering rationale.** Phase 0 is pure preparation (no behavior change) and
 unblocks everything. Phase 1 (bearings) is the keystone — every later phase
