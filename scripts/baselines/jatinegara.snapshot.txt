@@ -2917,15 +2917,6 @@
           "y": 304
         },
         {
-          "coupled": false,
-          "ids": [
-            50
-          ],
-          "label": "sw 50",
-          "x": 624,
-          "y": 304
-        },
-        {
           "coupled": true,
           "ids": [
             59,
@@ -2935,6 +2926,17 @@
           "onSwitchId": 59,
           "x": 624,
           "y": 352
+        },
+        {
+          "coupled": true,
+          "ids": [
+            50,
+            31
+          ],
+          "label": "PC22",
+          "onSwitchId": 50,
+          "x": 624,
+          "y": 304
         },
         {
           "coupled": true,
@@ -2966,11 +2968,13 @@
           "y": 416
         },
         {
-          "coupled": false,
+          "coupled": true,
           "ids": [
+            50,
             31
           ],
-          "label": "sw 31",
+          "label": "PC22",
+          "onSwitchId": 31,
           "x": 720,
           "y": 400
         },
@@ -3167,6 +3171,10 @@
         [
           59,
           61
+        ],
+        [
+          50,
+          31
         ]
       ],
       "initialState": {
@@ -3497,7 +3505,7 @@
           "branch": "M624 304 L720 400",
           "dashSide": "left",
           "id": 31,
-          "label": "sw 31",
+          "label": "PC22",
           "lineY": 400,
           "x": 720,
           "y": 400
@@ -3641,7 +3649,7 @@
           "branch": "M624 304 L720 400",
           "dashSide": "right",
           "id": 50,
-          "label": "sw 50",
+          "label": "PC22",
           "lineY": 304,
           "x": 624,
           "y": 304

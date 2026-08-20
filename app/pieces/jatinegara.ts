@@ -274,7 +274,7 @@ export const JATINEGARA_PIECES: PieceSet = {
 		"xov11:from": { controlGroupId: "PC9" },
 		"xov15b:to": { controlGroupId: "g29", label: "sw 29" },
 		"xov19:from": { controlGroupId: "PC14" },
-		"xov16:to": { controlGroupId: "g31", label: "sw 31" },
+		"xov16:to": { controlGroupId: "PC22", label: "PC22" },
 		"xov20:from": { controlGroupId: "PC15" },
 		"xov24:to": { controlGroupId: "PC19" },
 		"xov27:from": { controlGroupId: "g34", label: "sw 34" },
@@ -297,7 +297,7 @@ export const JATINEGARA_PIECES: PieceSet = {
 		"xov8:to": { controlGroupId: "PC6" },
 		"xov12:from": { controlGroupId: "PC8" },
 		"xov13:to": { controlGroupId: "g49", label: "sw 49" },
-		"xov16:from": { controlGroupId: "g50", label: "sw 50" },
+		"xov16:from": { controlGroupId: "PC22", label: "PC22" },
 		"xov12:to": { controlGroupId: "PC8" },
 	},
 

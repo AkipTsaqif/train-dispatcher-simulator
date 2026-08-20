@@ -31,15 +31,15 @@ check("compiles with 12 main lines", compiled.lines.mains.length === 12, `mains=
 check("51 switches (10 stub ends are fixed turns; P57/P59/P61 are inverted points)", compiled.switches.items.length === 51, `switches=${compiled.switches.items.length}`);
 check("23 signals (NW/NE/XW/XE)", compiled.signals.items.length === 23, `signals=${compiled.signals.items.length}`);
 check(
-  "21 coupled point pairs (PC1..PC21) + 9 singles",
+  "22 coupled point pairs (PC1..PC22) + 7 singles",
   (() => {
     const coupled = compiled.switches.controls.filter((c) => c.coupled);
     const singles = compiled.switches.controls.filter((c) => !c.coupled);
     const labelSet = new Set(coupled.map((c) => c.label));
     return (
       // PC21 draws a handle per switch, so count LEVERS (distinct labels), not handles
-      labelSet.size === 21 &&
-      singles.length === 9 &&
+      labelSet.size === 22 &&
+      singles.length === 7 &&
       [...labelSet].every((l) => /^PC\d+$/.test(l))
     );
   })(),

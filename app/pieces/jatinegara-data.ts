@@ -36,7 +36,6 @@ export const JATINEGARA_CONTROL_GROUPS: readonly SwitchControlGroup[] = [
   {"id":"PC19","switchIds":[23,33],"coupled":true},
   {"id":"PC20","switchIds":[24,35],"coupled":true},
   {"id":"g29","switchIds":[29],"coupled":false},
-  {"id":"g31","switchIds":[31],"coupled":false},
   {"id":"g34","switchIds":[34],"coupled":false},
   {"id":"g53","switchIds":[57],"coupled":false},
   {"id":"PC21","switchIds":[59,61],"coupled":true,"handlePerSwitch":true},
@@ -44,7 +43,7 @@ export const JATINEGARA_CONTROL_GROUPS: readonly SwitchControlGroup[] = [
   {"id":"g43","switchIds":[43],"coupled":false},
   {"id":"g44","switchIds":[44],"coupled":false},
   {"id":"g49","switchIds":[49],"coupled":false},
-  {"id":"g50","switchIds":[50],"coupled":false},
+  {"id":"PC22","switchIds":[50,31],"coupled":true,"handlePerSwitch":true},
 ];
 
 
