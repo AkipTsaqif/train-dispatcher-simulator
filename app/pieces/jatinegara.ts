@@ -22,8 +22,6 @@ import { assemblePieces, type PieceSet } from "../lib/pieces";
 import {
 	JATINEGARA_BLOCK_SECTIONS,
 	JATINEGARA_CONTROL_GROUPS,
-	JATINEGARA_SIGNALS,
-	JATINEGARA_STOP_POINTS,
 } from "./jatinegara-data";
 
 export const JATINEGARA_PIECES: PieceSet = {
@@ -183,6 +181,70 @@ export const JATINEGARA_PIECES: PieceSet = {
 		{ kind: "link", id: "xov27", from: [944, 400], to: [1008, 336] },
 		{ kind: "link", id: "xov28", from: [944, 432], to: [976, 400] },
 		{ kind: "link", id: "xov29", from: [1008, 400], to: [1040, 368] },
+
+		// --- signals. Positional: an x along a track group, resolved to an
+		// edge+segment+offset by assemblePieces. NOT an edge-id reference, so a
+		// switch move that re-cuts the line does not invalidate them.
+		{ kind: "signal", id: "NW1", groupId: "t1", x: 80, facing: "toward-to", mount: "up", label: "NW1", protectedBlockSectionId: "section-NW1" },
+		{ kind: "signal", id: "NW3", groupId: "t3", x: 112, facing: "toward-to", mount: "up", label: "NW3", protectedBlockSectionId: "section-NW3" },
+		{ kind: "signal", id: "NW5", groupId: "t6", x: 112, facing: "toward-to", mount: "up", label: "NW5", protectedBlockSectionId: "section-NW5" },
+		{ kind: "signal", id: "NW7", groupId: "t8", x: 272, facing: "toward-to", mount: "up", label: "NW7", protectedBlockSectionId: "section-NW7" },
+		{ kind: "signal", id: "NE2", groupId: "t2", x: 1072, facing: "toward-from", mount: "up", label: "NE2", protectedBlockSectionId: "section-NE2" },
+		{ kind: "signal", id: "NE4", groupId: "t4", x: 1072, facing: "toward-from", mount: "up", label: "NE4", protectedBlockSectionId: "section-NE4" },
+		{ kind: "signal", id: "NE5", groupId: "t5ap", x: 1072, facing: "toward-from", mount: "up", label: "NE5", protectedBlockSectionId: "section-NE5" },
+		{ kind: "signal", id: "NE6", groupId: "t6am", x: 1072, facing: "toward-from", mount: "up", label: "NE6", protectedBlockSectionId: "section-NE6" },
+		{ kind: "signal", id: "XW2", groupId: "t2", x: 400, facing: "toward-from", mount: "up", label: "XW2", protectedBlockSectionId: "section-XW2" },
+		{ kind: "signal", id: "XW3", groupId: "t3", x: 400, facing: "toward-from", mount: "up", label: "XW3", protectedBlockSectionId: "section-XW3" },
+		{ kind: "signal", id: "XW4", groupId: "t4", x: 400, facing: "toward-from", mount: "up", label: "XW4", protectedBlockSectionId: "section-XW4" },
+		{ kind: "signal", id: "XW5", groupId: "t5", x: 400, facing: "toward-from", mount: "up", label: "XW5", protectedBlockSectionId: "section-XW5" },
+		{ kind: "signal", id: "XW6", groupId: "t6", x: 368, facing: "toward-from", mount: "up", label: "XW6", protectedBlockSectionId: "section-XW6" },
+		{ kind: "signal", id: "XW7", groupId: "t7", x: 368, facing: "toward-from", mount: "up", label: "XW7", protectedBlockSectionId: "section-XW7" },
+		{ kind: "signal", id: "XW8", groupId: "t8", x: 368, facing: "toward-from", mount: "up", label: "XW8", protectedBlockSectionId: "section-XW8" },
+		{ kind: "signal", id: "XE1", groupId: "t1", x: 592, facing: "toward-to", mount: "up", label: "XE1", protectedBlockSectionId: "section-XE1" },
+		{ kind: "signal", id: "XE2", groupId: "t2", x: 592, facing: "toward-to", mount: "up", label: "XE2", protectedBlockSectionId: "section-XE2" },
+		{ kind: "signal", id: "XE3", groupId: "t3", x: 592, facing: "toward-to", mount: "up", label: "XE3", protectedBlockSectionId: "section-XE3" },
+		{ kind: "signal", id: "XE4", groupId: "t4", x: 592, facing: "toward-to", mount: "up", label: "XE4", protectedBlockSectionId: "section-XE4" },
+		{ kind: "signal", id: "XE5", groupId: "t5", x: 496, facing: "toward-to", mount: "up", label: "XE5", protectedBlockSectionId: "section-XE5" },
+		{ kind: "signal", id: "XE6", groupId: "t6", x: 496, facing: "toward-to", mount: "up", label: "XE6", protectedBlockSectionId: "section-XE6" },
+		{ kind: "signal", id: "XE7", groupId: "t7", x: 496, facing: "toward-to", mount: "up", label: "XE7", protectedBlockSectionId: "section-XE7" },
+		{ kind: "signal", id: "XE8", groupId: "t8", x: 496, facing: "toward-to", mount: "up", label: "XE8", protectedBlockSectionId: "section-XE8" },
+
+		// --- platforms. Same positional rule as signals: an x along a track
+		// group, resolved by assemblePieces rather than named by edge id.
+		{ kind: "platform", stationCode: "JNG", groupId: "t1", x: 850 },
+		{ kind: "platform", stationCode: "JNG", groupId: "t2", x: 464 },
+		{ kind: "platform", stationCode: "JNG", groupId: "t3", x: 464 },
+		{ kind: "platform", stationCode: "JNG", groupId: "t4", x: 464 },
+		{ kind: "platform", stationCode: "JNG", groupId: "t5", x: 416 },
+		{ kind: "platform", stationCode: "JNG", groupId: "t6", x: 430 },
+		{ kind: "platform", stationCode: "JNG", groupId: "t7", x: 400 },
+		{ kind: "platform", stationCode: "JNG", groupId: "t8", x: 400 },
+		{ kind: "platform", stationCode: "JNG-W", groupId: "t1", x: 40 },
+		{ kind: "platform", stationCode: "JNG-E", groupId: "t1", x: 1112 },
+		{ kind: "platform", stationCode: "JNG-W", groupId: "t2", x: 40 },
+		{ kind: "platform", stationCode: "JNG-E", groupId: "t2", x: 1112 },
+		{ kind: "platform", stationCode: "JNG-W", groupId: "t3", x: 40 },
+		{ kind: "platform", stationCode: "JNG-E", groupId: "t3", x: 1112 },
+		{ kind: "platform", stationCode: "JNG-W", groupId: "t4", x: 40 },
+		{ kind: "platform", stationCode: "JNG-E", groupId: "t4", x: 1112 },
+		{ kind: "platform", stationCode: "JNG-W", groupId: "t5", x: 344 },
+		{ kind: "platform", stationCode: "JNG-E", groupId: "t5", x: 520 },
+		{ kind: "platform", stationCode: "JNG-W", groupId: "t6", x: 40 },
+		{ kind: "platform", stationCode: "JNG-E", groupId: "t6", x: 584 },
+		{ kind: "platform", stationCode: "JNG-W", groupId: "t7", x: 40 },
+		{ kind: "platform", stationCode: "JNG-E", groupId: "t7", x: 680 },
+		{ kind: "platform", stationCode: "JNG-W", groupId: "t8", x: 232 },
+		{ kind: "platform", stationCode: "JNG-E", groupId: "t8", x: 520 },
+		{ kind: "platform", stationCode: "JNG-W", groupId: "t5ap", x: 1048 },
+		{ kind: "platform", stationCode: "JNG-E", groupId: "t5ap", x: 1112 },
+		{ kind: "platform", stationCode: "JNG-W", groupId: "t6am", x: 1016 },
+		{ kind: "platform", stationCode: "JNG-E", groupId: "t6am", x: 1112 },
+		{ kind: "platform", stationCode: "JNG-W", groupId: "t5ac", x: 760 },
+		{ kind: "platform", stationCode: "JNG-E", groupId: "t5ac", x: 968 },
+		{ kind: "platform", stationCode: "JNG-W", groupId: "t5y", x: 632 },
+		{ kind: "platform", stationCode: "JNG-E", groupId: "t5y", x: 648 },
+		{ kind: "platform", stationCode: "JNG-W", groupId: "t6ab", x: 696 },
+		{ kind: "platform", stationCode: "JNG-E", groupId: "t6ab", x: 712 },
 	],
 
 	// Which lever works each switch. Geometry decides WHERE a switch is and
@@ -240,9 +302,7 @@ export const JATINEGARA_PIECES: PieceSet = {
 
 	passthrough: {
 		controlGroups: JATINEGARA_CONTROL_GROUPS,
-		signals: JATINEGARA_SIGNALS,
 		blockSections: JATINEGARA_BLOCK_SECTIONS,
-		stationStopPoints: JATINEGARA_STOP_POINTS,
 	},
 };
 
