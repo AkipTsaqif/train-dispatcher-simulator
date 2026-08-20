@@ -28,6 +28,10 @@ positional or derived, so a move no longer invalidates them.
 > group, and block sections are derived from signal placement. Nothing in
 > `app/pieces/jatinegara-data.ts` names an edge any more.
 
+This holds for **inverted points** too — see the section below. They are split
+links, but the split is declared rather than authored, so the move is still one
+line.
+
 ## Step 1 — move the link
 
 A switch is one end of a `link` (a diagonal). Find it in
@@ -152,6 +156,56 @@ bun run snapshot:jatinegara
 
 `verify:bekasi` must never change. Bekasi does not go through pieces; if it
 moves, something is wrong beyond your edit.
+
+## Inverted points (the straight is the diagonal)
+
+Most points sit where a diagonal MEETS a line: the line runs straight through
+and the diagonal is the branch. An inverted point is the other way round — the
+diagonal runs straight through and a terminating line is the branch. JNG has one,
+**P57 at BI8**.
+
+A switch can only sit at a link **endpoint**, so a point partway along a diagonal
+needs that diagonal cut in two. Declare the cut instead of authoring the halves:
+
+```ts
+{ kind: "link", id: "xov27", from: [944, 400], to: [1008, 336], splitAt: [976, 368] },
+```
+
+That yields `xov27` and `xov27b`, meeting at `splitAt`. Because the halves are
+derived, **moving the point is still one line** — change the coordinates and the
+halves follow. `splitAt` must lie strictly between the ends and on the straight
+line joining them, or the cut is rejected:
+
+```
+link "xov27" splitAt (976,360) is not strictly between its ends (944,400)
+and (1008,336) on the straight line joining them.
+```
+
+The lever names the half it sits on, and declares which leg diverges:
+
+```ts
+"xov27:to": { controlGroupId: "g53", label: "sw 57", branch: "line" },
+```
+
+`branch: "line"` is what inverts it. The default, `"link"`, is every other point.
+Which half is the **trunk** is derived from geometry, not from which half you
+wrote the lever on: a point diverges into two legs lying to the same side of it,
+so the half facing away is the common leg that every route uses.
+
+### Extra constraints on an inverted point
+
+It has two far ends and a branch end, and **all three must stay on real track**:
+
+- The branch line must **end** at the point. If a move leaves the line running
+  through it, that is a hard error (`line "t5ac" runs THROUGH that point`).
+- Both far ends must still land on a line, and must not slide **inside** one —
+  that silently converts a fixed turn into a new switch, which then demands a
+  lever it does not have (`switch 55 ("xov27b:to") ... has no control-group
+  mapping`).
+
+All three are caught, but they mean an inverted point has less room to move than
+a conventional one. Moving P57 by ±16 hits the second constraint, because
+`t6am` starts at 1008.
 
 ## What you do NOT need to touch
 

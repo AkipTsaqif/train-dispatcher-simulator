@@ -224,6 +224,18 @@ export type LinkPiece = {
   to: TopologyPoint;
   role?: TrackRole;
   level?: number;
+  /**
+   * Cut this diagonal in two at the given point, yielding `<id>` and `<id>b`.
+   *
+   * A switch can only sit at a link ENDPOINT, so a point partway along a
+   * diagonal needs the diagonal split there. Authoring the halves by hand works
+   * but makes moving that point a three-place edit whose parts must stay
+   * collinear. Declaring the cut keeps the diagonal one piece: move `from`/`to`
+   * and the halves follow.
+   *
+   * The point must lie strictly between the ends and on the line between them.
+   */
+  splitAt?: TopologyPoint;
   intent?: string;
 };
 
@@ -319,8 +331,36 @@ const expandLines = (
   switchMeta: SwitchMeta
 ): { pieces: readonly Piece[]; groupMeta: Passthrough["groupMeta"] } => {
   const lines = pieces.filter((p): p is LinePiece => p.kind === "line");
-  const links = pieces.filter((p): p is LinkPiece => p.kind === "link");
-  if (lines.length === 0 && links.length === 0) return { pieces, groupMeta: undefined };
+  const authoredLinks = pieces.filter((p): p is LinkPiece => p.kind === "link");
+  if (lines.length === 0 && authoredLinks.length === 0) return { pieces, groupMeta: undefined };
+
+  // Apply `splitAt` first, so everything downstream sees ordinary two-ended
+  // links and needs no knowledge of the cut.
+  const links: LinkPiece[] = [];
+  for (const link of authoredLinks) {
+    if (!link.splitAt) {
+      links.push(link);
+      continue;
+    }
+    const [ax, ay] = link.from;
+    const [bx, by] = link.to;
+    const [cx, cy] = link.splitAt;
+    // Collinear and strictly between: a cut off the diagonal would silently bend
+    // it, which is the class of error this vocabulary exists to prevent.
+    const cross = (bx - ax) * (cy - ay) - (by - ay) * (cx - ax);
+    const between =
+      cx > Math.min(ax, bx) && cx < Math.max(ax, bx) && cy > Math.min(ay, by) && cy < Math.max(ay, by);
+    if (cross !== 0 || !between) {
+      throw new Error(
+        `link "${link.id}" splitAt (${cx},${cy}) is not strictly between its ends ` +
+          `(${ax},${ay}) and (${bx},${by}) on the straight line joining them. ` +
+          `A split point must lie ON the diagonal it cuts.`
+      );
+    }
+    const { splitAt: _omit, ...rest } = link;
+    links.push({ ...rest, id: link.id, from: link.from, to: link.splitAt });
+    links.push({ ...rest, id: `${link.id}b`, from: link.splitAt, to: link.to });
+  }
 
   // A `line` carries its own direction, so the author states it ONCE on the
   // piece rather than repeating it in a separate group table.
