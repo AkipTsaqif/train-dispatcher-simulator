@@ -1337,19 +1337,14 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     const node = nodesById.get(topologySwitch.nodeId)!;
     const reversedEdge = edgesById.get(topologySwitch.reversed.edgeId)!;
     // At an inverted point the straight is the diagonal, which no renderer can
-    // infer from the node alone. Publish it, joining the two collinear halves
-    // that meet here so the leg spans the whole cell rather than stopping dead
-    // at the node.
+    // infer from the node alone. Publish only the NORMAL half: it runs from the
+    // node away down the straight leg. The common half is deliberately excluded
+    // - every route crosses it whatever the point is set to, so ghosting it
+    // would dash track that is never actually out of use.
     let straightPath: string | undefined;
     if (topologySwitch.branch === "line") {
-      const commonEdge = edgesById.get(topologySwitch.common.edgeId)!;
       const normalEdge = edgesById.get(topologySwitch.normal.edgeId)!;
-      const farPoint = (edge: TrackEdge, end: EdgeEndName): TopologyPoint =>
-        end === "from" ? edge.geometry[1].point : edge.geometry[edge.geometry.length - 2].point;
-      straightPath = serializePath(
-        farPoint(commonEdge, topologySwitch.common.end),
-        farPoint(normalEdge, topologySwitch.normal.end)
-      );
+      straightPath = branchRenderPath(normalEdge, topologySwitch.normal.end);
     }
     return {
       id: topologySwitch.id,

@@ -250,17 +250,17 @@
         "exits": [
           {
             "bearing": {
-              "dx": -0.707106781187,
-              "dy": 0.707106781187
-            },
-            "neighbor": "s400x944"
-          },
-          {
-            "bearing": {
               "dx": 0.707106781187,
               "dy": -0.707106781187
             },
-            "neighbor": "s336x1008",
+            "neighbor": "s336x1008"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": 0.707106781187
+            },
+            "neighbor": "s400x944",
             "viaSwitchPort": "normal"
           },
           {
@@ -3634,7 +3634,7 @@
           "id": 57,
           "label": "sw 57",
           "lineY": 368,
-          "straightPath": "M944 400 L1008 336",
+          "straightPath": "M944 400 L976 368",
           "x": 976,
           "y": 368
         }
@@ -3969,17 +3969,17 @@
           "exits": [
             {
               "bearing": {
-                "dx": -0.707106781187,
-                "dy": 0.707106781187
-              },
-              "neighbor": "s400x944"
-            },
-            {
-              "bearing": {
                 "dx": 0.707106781187,
                 "dy": -0.707106781187
               },
-              "neighbor": "s336x1008",
+              "neighbor": "s336x1008"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": 0.707106781187
+              },
+              "neighbor": "s400x944",
               "viaSwitchPort": "normal"
             },
             {

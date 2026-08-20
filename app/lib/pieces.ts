@@ -735,18 +735,24 @@ export const assemblePieces = ({
           );
         }
         const branchEdge = lineHere[0];
+        // Which diagonal half is the TRUNK is geometry, not authoring order. A
+        // point diverges into two legs lying to the SAME side of it; the trunk
+        // is the leg opposite. So the half on the branch's side is the straight,
+        // and the half facing away is the common - the leg every route uses
+        // whatever the point is set to.
+        const endAt = (piece: { from: TopologyPoint; to: TopologyPoint }) =>
+          pointKey(piece.from) === key ? ("from" as const) : ("to" as const);
+        const awayX = (piece: { from: TopologyPoint; to: TopologyPoint }) =>
+          (endAt(piece) === "from" ? piece.to : piece.from)[0] - point[0];
+        const branchSign = Math.sign(awayX(branchEdge));
+        const trunk = Math.sign(awayX(c)) === branchSign ? onward : c;
+        const straight = trunk === c ? onward : c;
         switches.push({
           id: sw.id,
           nodeId,
-          common: { edgeId: c.id, end: sw.end },
-          normal: {
-            edgeId: onward.id,
-            end: pointKey(onward.from) === key ? ("from" as const) : ("to" as const),
-          },
-          reversed: {
-            edgeId: branchEdge.id,
-            end: pointKey(branchEdge.from) === key ? ("from" as const) : ("to" as const),
-          },
+          common: { edgeId: trunk.id, end: endAt(trunk) },
+          normal: { edgeId: straight.id, end: endAt(straight) },
+          reversed: { edgeId: branchEdge.id, end: endAt(branchEdge) },
           initialState: sw.initialState,
           controlGroupId: sw.controlGroupId,
           dashSide: sw.dashSide,

@@ -1676,23 +1676,38 @@ export default function DispatchingTable({
   const cellY0 = (sw: Sw, cellSize: number) =>
     Math.floor((sw.y - GRID_OFFSET[1]) / cellSize) * cellSize + GRID_OFFSET[1];
 
-  // The straight leg drawn through this cell. Normally the horizontal along the
-  // point's own line; at an inverted point the compiler publishes the diagonal.
+  // The straight leg, as drawn when it IS set. Normally the full horizontal
+  // across the cell. At an inverted point the compiler publishes the diagonal's
+  // normal half, so add the common half back: the whole diagonal is in use.
   const straightPath = (sw: Sw, cellSize: number) =>
-    sw.straightPath ??
-    `M${cellX0(sw, cellSize)} ${sw.lineY} H${cellX0(sw, cellSize) + cellSize}`;
+    sw.straightPath
+      ? `${sw.straightPath} ${commonHalf(sw, cellSize)}`
+      : `M${cellX0(sw, cellSize)} ${sw.lineY} H${cellX0(sw, cellSize) + cellSize}`;
+
+  // The half of an inverted point's diagonal on the far side of the node from
+  // the straight leg. Mirroring the normal half through the node reconstructs it
+  // without the renderer having to know the diagonal's slope.
+  const commonHalf = (sw: Sw, cellSize: number) => {
+    const match = /L(-?[\d.]+) (-?[\d.]+)$/.exec(sw.straightPath ?? "");
+    if (!match) return "";
+    const towardNode = Number(match[1]) === sw.x && Number(match[2]) === sw.y;
+    const other = towardNode
+      ? /^M(-?[\d.]+) (-?[\d.]+)/.exec(sw.straightPath!)
+      : match;
+    if (!other) return "";
+    return `M${sw.x} ${sw.y} L${2 * sw.x - Number(other[1])} ${2 * sw.y - Number(other[2])}`;
+  };
 
   // The leg that is NOT set: ghosted. When the point is reversed the straight is
-  // idle, when it is normal the branch is. Erasing only half the straight (up to
-  // the node) is what makes a conventional point read as a stub, but an inverted
-  // point's straight is a full diagonal, so ghost all of it.
+  // idle, when it is normal the branch is. Erasing only as far as the node is
+  // what makes the idle leg read as a stub -- and is why the common half of an
+  // inverted point is never ghosted: every route uses it, whatever the setting.
   const inactivePath = (sw: Sw, reversed: boolean, cellSize: number) =>
     reversed
-      ? sw.straightPath
-        ? sw.straightPath
-        : sw.dashSide === "left"
+      ? (sw.straightPath ??
+        (sw.dashSide === "left"
           ? `M${cellX0(sw, cellSize)} ${sw.lineY} H${sw.x}`
-          : `M${sw.x} ${sw.lineY} H${cellX0(sw, cellSize) + cellSize}`
+          : `M${sw.x} ${sw.lineY} H${cellX0(sw, cellSize) + cellSize}`))
       : sw.branch;
 
   return (
