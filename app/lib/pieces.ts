@@ -750,6 +750,7 @@ export const assemblePieces = ({
           initialState: sw.initialState,
           controlGroupId: sw.controlGroupId,
           dashSide: sw.dashSide,
+          branch: "line",
           label: sw.label,
         });
         continue;

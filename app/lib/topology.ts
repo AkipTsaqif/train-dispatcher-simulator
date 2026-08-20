@@ -43,6 +43,15 @@ export type Sw = {
   lineY: number;
   dashSide: "left" | "right";
   branch: string;
+  /**
+   * The STRAIGHT leg, when it is not the horizontal through this cell.
+   *
+   * Renderers may assume the straight runs flat across the point's own line,
+   * which holds for every conventional point. At an inverted point the straight
+   * IS the diagonal, so that assumption draws the wrong leg solid. Present only
+   * where the assumption fails, so conventional layouts are untouched.
+   */
+  straightPath?: string;
   label: string;
 };
 
@@ -156,6 +165,8 @@ export type TopologySwitch = {
   initialState: SwitchState;
   controlGroupId: string;
   dashSide: "left" | "right";
+  /** Which leg diverges. Default "link"; "line" inverts straight and branch. */
+  branch?: "link" | "line";
   label: string;
 };
 
@@ -1325,6 +1336,21 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
   const switchItems: Sw[] = definition.switches.map((topologySwitch) => {
     const node = nodesById.get(topologySwitch.nodeId)!;
     const reversedEdge = edgesById.get(topologySwitch.reversed.edgeId)!;
+    // At an inverted point the straight is the diagonal, which no renderer can
+    // infer from the node alone. Publish it, joining the two collinear halves
+    // that meet here so the leg spans the whole cell rather than stopping dead
+    // at the node.
+    let straightPath: string | undefined;
+    if (topologySwitch.branch === "line") {
+      const commonEdge = edgesById.get(topologySwitch.common.edgeId)!;
+      const normalEdge = edgesById.get(topologySwitch.normal.edgeId)!;
+      const farPoint = (edge: TrackEdge, end: EdgeEndName): TopologyPoint =>
+        end === "from" ? edge.geometry[1].point : edge.geometry[edge.geometry.length - 2].point;
+      straightPath = serializePath(
+        farPoint(commonEdge, topologySwitch.common.end),
+        farPoint(normalEdge, topologySwitch.normal.end)
+      );
+    }
     return {
       id: topologySwitch.id,
       x: node.point[0],
@@ -1332,6 +1358,7 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       lineY: node.point[1],
       dashSide: topologySwitch.dashSide,
       branch: branchRenderPath(reversedEdge, topologySwitch.reversed.end),
+      ...(straightPath !== undefined ? { straightPath } : {}),
       label: topologySwitch.label,
     };
   });

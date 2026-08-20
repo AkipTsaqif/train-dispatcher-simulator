@@ -1676,11 +1676,23 @@ export default function DispatchingTable({
   const cellY0 = (sw: Sw, cellSize: number) =>
     Math.floor((sw.y - GRID_OFFSET[1]) / cellSize) * cellSize + GRID_OFFSET[1];
 
+  // The straight leg drawn through this cell. Normally the horizontal along the
+  // point's own line; at an inverted point the compiler publishes the diagonal.
+  const straightPath = (sw: Sw, cellSize: number) =>
+    sw.straightPath ??
+    `M${cellX0(sw, cellSize)} ${sw.lineY} H${cellX0(sw, cellSize) + cellSize}`;
+
+  // The leg that is NOT set: ghosted. When the point is reversed the straight is
+  // idle, when it is normal the branch is. Erasing only half the straight (up to
+  // the node) is what makes a conventional point read as a stub, but an inverted
+  // point's straight is a full diagonal, so ghost all of it.
   const inactivePath = (sw: Sw, reversed: boolean, cellSize: number) =>
     reversed
-      ? sw.dashSide === "left"
-        ? `M${cellX0(sw, cellSize)} ${sw.lineY} H${sw.x}`
-        : `M${sw.x} ${sw.lineY} H${cellX0(sw, cellSize) + cellSize}`
+      ? sw.straightPath
+        ? sw.straightPath
+        : sw.dashSide === "left"
+          ? `M${cellX0(sw, cellSize)} ${sw.lineY} H${sw.x}`
+          : `M${sw.x} ${sw.lineY} H${cellX0(sw, cellSize) + cellSize}`
       : sw.branch;
 
   return (
@@ -2017,8 +2029,7 @@ export default function DispatchingTable({
           const reversed = switches[sw.id] === "reversed";
           const d = inactivePath(sw, reversed, GRID_PITCH);
           // the straight through this cell, at the switch's own line
-          const cellLeft = cellX0(sw, GRID_PITCH);
-          const throughD = `M${cellLeft} ${sw.lineY} H${cellLeft + GRID_PITCH}`;
+          const throughD = straightPath(sw, GRID_PITCH);
           // The inactive leg's white eraser starts right on the junction, so
           // it necessarily crosses the ACTIVE leg. Restore that active leg
           // after the ghost: normal = through straight, reversed = branch.
