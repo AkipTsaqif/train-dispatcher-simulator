@@ -848,6 +848,21 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     return placement.point;
   };
 
+  // An edge is reachable by a forced continuation when at least one of its
+  // endpoints is a plain fixed turn: exactly two edges, no switch. Points are
+  // never traversed this way, so a section's extent stays independent of
+  // runtime point state.
+  const edgeCountByNode = new Map<string, number>();
+  for (const edge of definition.edges) {
+    for (const nodeId of [edge.from, edge.to]) {
+      edgeCountByNode.set(nodeId, (edgeCountByNode.get(nodeId) ?? 0) + 1);
+    }
+  }
+  const isFixedTurn = (nodeId: string): boolean =>
+    edgeCountByNode.get(nodeId) === 2 && !switchesByNode.has(nodeId);
+  const isForcedContinuation = (edge: TrackEdge): boolean =>
+    isFixedTurn(edge.from) || isFixedTurn(edge.to);
+
   const blockLegacyEndX = new Map<string, number>();
   for (const section of definition.blockSections) {
     const signal = signalsById.get(section.signalId);
@@ -864,7 +879,16 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
     let previousTo: TopologyPoint | undefined;
     for (const range of section.edgeRanges) {
       const edge = edgesById.get(range.edgeId);
-      if (!edge || edge.trackGroupId !== sourceGroup.id) {
+      if (!edge) {
+        throw new Error(`Block section ${section.id} leaves track group ${sourceGroup.id}`);
+      }
+      // A section normally stays inside its signal's track group. It may leave
+      // only by a FORCED continuation: a vertex where two edges meet and no
+      // switch sits, so the train has exactly one way to go (Jatinegara's stub
+      // ends, e.g. AG8 -> d-xov14). Range continuity is checked just below, so
+      // an out-of-group edge still has to physically join the previous one --
+      // this cannot let an unrelated edge in.
+      if (edge.trackGroupId !== sourceGroup.id && !isForcedContinuation(edge)) {
         throw new Error(`Block section ${section.id} leaves track group ${sourceGroup.id}`);
       }
       const from = edgeRangePoint(range, range.from, section.id);
@@ -949,13 +973,19 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       if (section.legacyOpenEnd !== expectedSide) {
         throw new Error(`Block section ${section.id} opens against its signal direction`);
       }
-      const groupPoints = sourceGroup.edgeIds.flatMap((edgeId) =>
-        edgesById.get(edgeId)!.geometry.map((vertex) => vertex.point)
+      // The section must run out of track, not stop early. That is normally
+      // the group's own extreme x -- but a section that follows a forced
+      // continuation into the throat ends further out, on an edge belonging to
+      // another group, so measure across every edge the section actually
+      // covers as well.
+      const coveredIds = new Set(section.edgeRanges.map((range) => range.edgeId));
+      const reachPoints = [...new Set([...sourceGroup.edgeIds, ...coveredIds])].flatMap(
+        (edgeId) => edgesById.get(edgeId)!.geometry.map((vertex) => vertex.point)
       );
       const expectedBoundaryX =
         expectedSide === "east"
-          ? Math.max(...groupPoints.map((point) => point[0]))
-          : Math.min(...groupPoints.map((point) => point[0]));
+          ? Math.max(...reachPoints.map((point) => point[0]))
+          : Math.min(...reachPoints.map((point) => point[0]));
       if (previousTo?.[0] !== expectedBoundaryX) {
         throw new Error(`Block section ${section.id} does not reach its open boundary`);
       }

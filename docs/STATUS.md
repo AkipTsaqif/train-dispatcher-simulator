@@ -12,15 +12,13 @@
   `app/topologies/jatinegara.ts` are DELETED; `/jng` renders from
   `app/pieces/jatinegara.ts` (13 lines + 29 links), byte-identical to the
   baseline captured before the port.
-- **Next action:** Phase 10 (real throat block boundaries) — plan written at
-  `docs/PLAN-phase-10.md`, Step 1 evidence gathered, model decision still
-  open. BLOCKED on `app/pieces/jatinegara.ts` returning to green first (see
-  Phase 10 risks). Moving a JNG switch is now a one-line edit
-  to `app/pieces/jatinegara.ts`; signals and platforms are positional, and
-  block sections are derived from signal placement, so nothing in
-  `jatinegara-data.ts` names an edge. The natural remaining candidates are the
-  known-open JNG items: real throat block boundaries (boundary signals, which
-  would replace the derived `legacyOpenEnd` fallback) and the stub timetable.
+- **Next action:** reconcile `docs/PLAN-phase-10.md` and the JNG verifier with
+  the implemented fixed-turn section walk. A section now continues through
+  degree-2, switch-free vertices and stops before movable points; all functional
+  gates pass and Bekasi remains frozen. Separately, the BI8 topology prototype
+  proves that splitting the BG10→BK6 diagonal at BI8 can model its junction
+  with the t5ac branch; the authoring representation, control, and final label
+  remain deferred and are not part of this checkpoint.
 
 ## Phase state
 
@@ -554,6 +552,17 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   coding. Sections cannot simply "walk further": past a group's end lies a
   switch, and which branch a section covers is runtime point state, so a
   static section must end at an authored boundary.
+- 2026-08-20 — Corrected throat geometry: BI8 is not a dead end. It is the
+  midpoint of the BG10→BK6 diagonal (`xov27`), with the t5ac branch from AU8
+  joining there. The topology-only prototype passed: split the diagonal at
+  BI8, keep P34 at BG10 and BK6 as a fixed turn, and make t5ac the BI8 branch.
+  No BI8 production layout or vocabulary change is in this checkpoint; control
+  identity and label remain undecided.
+- 2026-08-20 — Checkpoint the fixed-turn section walk before further BI8 work.
+  The walk crosses only degree-2, switch-free vertices; section validation
+  permits only that forced continuation and measures the boundary over all
+  covered edges. All 15 functional gates and typecheck passed before the
+  checkpoint; build/e2e are rerun immediately before commit and push.
 
 ## Notes for the next worker
 

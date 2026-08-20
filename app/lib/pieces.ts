@@ -833,6 +833,78 @@ export const assemblePieces = ({
   };
   const signalGroup = (s: TopologySignal): string => edgeById.get(s.edgeId)!.trackGroupId;
 
+  // --- walking past a fixed turn ------------------------------------------
+  // A track group can end at a vertex that is NOT a decision point: two edges
+  // meet, no switch sits there, so an approaching train has exactly one way to
+  // go. Jatinegara's stub ends are like this (AG8 -> d-xov14, AG2 -> d-xov13):
+  // the group changes, but nothing about the route is ambiguous.
+  //
+  // Section derivation used to stop dead at the group boundary, which made a
+  // signal on such a vertex protect zero track even though the railway plainly
+  // continues. We therefore keep walking while the continuation is forced, and
+  // stop as soon as a real decision or a real end appears:
+  //
+  //   * a switch      -> which way the section runs is runtime point state
+  //   * degree != 2   -> a dead end, or a fan-out we must not guess through
+  //   * a signal      -> the next block starts here
+  //
+  // Only the first case is genuinely undecidable; the others are terminal by
+  // definition. Nothing here consults switch position, so sections stay static.
+  const nodeById = new Map(nodes.map((n) => [n.id, n]));
+  const edgesByNode = new Map<string, TrackEdge[]>();
+  for (const edge of edges) {
+    for (const nodeId of [edge.from, edge.to]) {
+      const list = edgesByNode.get(nodeId);
+      if (list) list.push(edge);
+      else edgesByNode.set(nodeId, [edge]);
+    }
+  }
+  const switchByNode = new Set(switches.map((s) => s.nodeId));
+  const signalNodeIds = new Set(
+    signals
+      .map((s) => {
+        const x = signalX(s);
+        const edge = edgeById.get(s.edgeId)!;
+        const y = edge.geometry[0].point[1];
+        return nodes.find((n) => n.point[0] === x && n.point[1] === y)?.id;
+      })
+      .filter((id): id is string => id !== undefined)
+  );
+
+  /**
+   * From `nodeId`, having arrived along `viaEdgeId`, list the edges a section
+   * may continue through without guessing. Empty when the section must stop.
+   */
+  const walkFixedTurns = (
+    nodeId: string,
+    viaEdgeId: string
+  ): { edge: TrackEdge; enteredAt: "from" | "to" }[] => {
+    const out: { edge: TrackEdge; enteredAt: "from" | "to" }[] = [];
+    let currentNode = nodeId;
+    let currentEdge = viaEdgeId;
+    const visited = new Set<string>([viaEdgeId]);
+
+    // bounded: each step consumes an edge, and no edge repeats
+    for (let guard = 0; guard <= edges.length; guard += 1) {
+      if (switchByNode.has(currentNode)) return out;
+      if (out.length && signalNodeIds.has(currentNode)) return out;
+
+      const here = edgesByNode.get(currentNode) ?? [];
+      if (here.length !== 2) return out;
+
+      const next = here.find((e) => e.id !== currentEdge);
+      if (next === undefined || visited.has(next.id)) return out;
+
+      visited.add(next.id);
+      // we enter this edge at whichever of its ends we are standing on, which
+      // is not implied by x-order once the track turns back on itself
+      out.push({ edge: next, enteredAt: next.from === currentNode ? "from" : "to" });
+      currentNode = next.from === currentNode ? next.to : next.from;
+      currentEdge = next.id;
+    }
+    return out;
+  };
+
   const deriveBlockSections = (): TopologyBlockSection[] =>
     signals.map((signal) => {
       const east = signal.facing === "toward-to";
@@ -869,17 +941,43 @@ export const assemblePieces = ({
         })
         .sort((p, q) => (east ? edgeLo(p) - edgeLo(q) : edgeLo(q) - edgeLo(p)));
 
-      const edgeRanges = covered.map((edgeId, i) => ({
-        edgeId,
-        from:
-          i === 0
+      // the group ran out with no signal ahead: follow any forced continuation
+      // into the throat, so a signal on the group's last vertex still protects
+      // the track the train will actually occupy.
+      const continuation: { edge: TrackEdge; enteredAt: "from" | "to" }[] = [];
+      if (next === undefined && covered.length) {
+        const lastId = covered[covered.length - 1];
+        const lastEdge = edgeById.get(lastId)!;
+        const lastLo = edgeLo(lastId);
+        const lastHi = edgeHi(lastId);
+        // the open end is whichever node sits at the far side of travel
+        const farPoint = east ? lastHi : lastLo;
+        const endNodeId =
+          nodeById.get(lastEdge.to)!.point[0] === farPoint ? lastEdge.to : lastEdge.from;
+        continuation.push(...walkFixedTurns(endNodeId, lastId));
+      }
+
+      const orderedIds = [...covered, ...continuation.map((c) => c.edge.id)];
+      const edgeRanges = orderedIds.map((edgeId, i) => {
+        const isFirst = i === 0;
+        const isLast = i === orderedIds.length - 1;
+        const step = i >= covered.length ? continuation[i - covered.length] : undefined;
+        // in-group edges run with x; a continuation edge is traversed from the
+        // end we actually arrived at, which x-order does not imply once the
+        // track turns.
+        const entry = step ? step.enteredAt : east ? "from" : "to";
+        const exit = step ? (step.enteredAt === "from" ? "to" : "from") : east ? "to" : "from";
+        return {
+          edgeId,
+          from: isFirst
             ? ({ kind: "signal", signalId: signal.id } as const)
-            : ({ kind: "edge-end", end: east ? "from" : "to" } as const),
-        to:
-          next !== undefined && i === covered.length - 1
-            ? ({ kind: "signal", signalId: next.id } as const)
-            : ({ kind: "edge-end", end: east ? "to" : "from" } as const),
-      }));
+            : ({ kind: "edge-end", end: entry } as const),
+          to:
+            next !== undefined && isLast
+              ? ({ kind: "signal", signalId: next.id } as const)
+              : ({ kind: "edge-end", end: exit } as const),
+        };
+      });
 
       return {
         id: signal.protectedBlockSectionId,
