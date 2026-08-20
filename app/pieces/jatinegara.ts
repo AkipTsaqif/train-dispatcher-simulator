@@ -131,21 +131,15 @@ export const JATINEGARA_PIECES: PieceSet = {
 		},
 		{
 			kind: "line",
+			// A flat connector at y=352, between the t5 and t6 rows. It CROSSES
+			// xov15/16/18 without joining them: pieces join only at shared
+			// endpoints, and none of those diagonals ends on this row.
 			id: "t5y",
-			y: 368,
-			from: 624,
-			to: 656,
+			y: 352,
+			from: 608,
+			to: 736,
 			normalDirection: "right",
-			endNodes: { west: "n15" },
-		},
-		{
-			kind: "line",
-			id: "t6ab",
-			y: 336,
-			from: 688,
-			to: 720,
-			normalDirection: "right",
-			endNodes: { east: "n16" },
+			endNodes: { west: "n15", east: "n16" },
 		},
 
 		// --- diagonals. An end landing INSIDE a line is a switch; an end
@@ -167,7 +161,6 @@ export const JATINEGARA_PIECES: PieceSet = {
 		{ kind: "link", id: "xov14", from: [528, 368], to: [560, 336] },
 		{ kind: "link", id: "xov15", from: [592, 336], to: [656, 400] },
 		{ kind: "link", id: "xov16", from: [624, 304], to: [720, 400] },
-		{ kind: "link", id: "xov17", from: [656, 368], to: [688, 336] },
 		{ kind: "link", id: "xov18", from: [688, 304], to: [752, 368] },
 		{ kind: "link", id: "xov19", from: [688, 400], to: [720, 432] },
 		{ kind: "link", id: "xov20", from: [752, 400], to: [784, 432] },
@@ -244,8 +237,6 @@ export const JATINEGARA_PIECES: PieceSet = {
 		{ kind: "platform", stationCode: "JNG-E", groupId: "t5ac", x: 968 },
 		{ kind: "platform", stationCode: "JNG-W", groupId: "t5y", x: 632 },
 		{ kind: "platform", stationCode: "JNG-E", groupId: "t5y", x: 648 },
-		{ kind: "platform", stationCode: "JNG-W", groupId: "t6ab", x: 696 },
-		{ kind: "platform", stationCode: "JNG-E", groupId: "t6ab", x: 712 },
 	],
 
 	// Which lever works each switch. Geometry decides WHERE a switch is and

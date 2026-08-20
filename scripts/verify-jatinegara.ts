@@ -27,7 +27,7 @@ const map = runtime.map;
 
 // 1. structure (Phase 8: drawn extents — 13 mains incl. the 5 east-throat
 // fragments; the stubs end at junctions, 6 tracks per map boundary)
-check("compiles with 13 main lines", compiled.lines.mains.length === 13, `mains=${compiled.lines.mains.length}`);
+check("compiles with 12 main lines", compiled.lines.mains.length === 12, `mains=${compiled.lines.mains.length}`);
 check("49 switches (10 stub ends are fixed turns; P57 at BI8 is the inverted point)", compiled.switches.items.length === 49, `switches=${compiled.switches.items.length}`);
 check("23 signals (NW/NE/XW/XE)", compiled.signals.items.length === 23, `signals=${compiled.signals.items.length}`);
 check(
