@@ -12,11 +12,12 @@
   `app/topologies/jatinegara.ts` are DELETED; `/jng` renders from
   `app/pieces/jatinegara.ts` (13 lines + 29 links), byte-identical to the
   baseline captured before the port.
-- **Next action:** open to choose. `specs/REFACTOR_LATEST.md` is fully
-  implemented (stable `linkId:end` switch keys, orphan rejection, derived node
-  order, operational edge preflight, docs, block-anchor spike). The spike
-  recommends DEFER, so the natural candidates are again the known-open JNG
-  items: throat block boundaries and the stub timetable.
+- **Next action:** open to choose. Moving a JNG switch is now a one-line edit
+  to `app/pieces/jatinegara.ts`; signals and platforms are positional, and
+  block sections are derived from signal placement, so nothing in
+  `jatinegara-data.ts` names an edge. The natural remaining candidates are the
+  known-open JNG items: real throat block boundaries (boundary signals, which
+  would replace the derived `legacyOpenEnd` fallback) and the stub timetable.
 
 ## Phase state
 
@@ -503,6 +504,16 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   ladder fixture, JNG's placement-derived node order is already exactly the
   historical 74-node order, proven before removal; the compiled/runtime
   baseline remains byte-identical.
+-  2026-08-19 — Block sections are now DERIVED in `assemblePieces`, not
+  authored. The retired Python generator computed them from signal placement
+  alone (walk to the next same-facing signal on the same track group; none =>
+  map edge => `legacyOpenEnd`), so the "graph problem" that kept them in
+  passthrough was local to one group all along. All 23 JNG sections and 92
+  edgeRanges reproduce byte-identically. `legacyOpenEnd` is a computed
+  fallback, NOT authored data - boundary signals would replace it.
+-  2026-08-19 — Signals (23) and platforms (34) authored positionally as an
+  `x` along a track group. With block sections derived, JNG now has ZERO
+  hand-written edge ids and a switch move is a one-line edit.
 -  2026-08-19 — Block-section anchors spiked and DEFERRED
   (`specs/archive/spikes/SPIKE-block-section-anchors.md`). ~69 of JNG's 92
   `edgeRanges` entries are mechanical, so the idea is sound, but the new

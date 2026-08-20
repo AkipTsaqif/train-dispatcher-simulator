@@ -20,7 +20,6 @@
 
 import { assemblePieces, type PieceSet } from "../lib/pieces";
 import {
-	JATINEGARA_BLOCK_SECTIONS,
 	JATINEGARA_CONTROL_GROUPS,
 } from "./jatinegara-data";
 
@@ -302,7 +301,6 @@ export const JATINEGARA_PIECES: PieceSet = {
 
 	passthrough: {
 		controlGroups: JATINEGARA_CONTROL_GROUPS,
-		blockSections: JATINEGARA_BLOCK_SECTIONS,
 	},
 };
 

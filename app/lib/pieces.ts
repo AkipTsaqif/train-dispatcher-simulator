@@ -18,9 +18,14 @@
 //
 // Step 5 adds `loop` (a multi-edge chain attaching through switches at both
 // ends), graded links (the flyover ramp: a link carrying `level`), `platform`
-// and `signal`. Block sections stay in `passthrough` on purpose — the plan
-// keeps them GLOBAL, since a piece can say where a signal is but cannot know
-// what its section covers without solving a graph problem.
+// and `signal`.
+//
+// Block sections were originally left in `passthrough` on the grounds that a
+// piece cannot know what its section covers "without solving a graph problem".
+// They are now DERIVED (see 7b): the walk is local to one track group - from a
+// signal to the next same-facing signal on that group, or off the map edge if
+// there is none - so no global solve is needed. A layout may still pass a
+// table explicitly, and hand-authored IR does.
 // ---------------------------------------------------------------------------
 
 import type {
@@ -807,6 +812,89 @@ export const assemblePieces = ({
     }),
   ];
 
+  // --- 7b. derive block sections from signal placement ----------------------
+  // A signal's section runs from the signal to the NEXT same-facing signal on
+  // the same track group; if there is none, the section runs off the map edge
+  // and is flagged open on that side. That walk is the whole "graph problem"
+  // an earlier note said a piece could not solve - it is local to one group,
+  // so the assembler can do it and the author never writes an edge id.
+  //
+  // A layout may still hand the sections in via `passthrough.blockSections`;
+  // an authored table wins, so hand-authored IR keeps working unchanged.
+  const edgeLo = (edgeId: string): number =>
+    Math.min(...edgeById.get(edgeId)!.geometry.map((v) => v.point[0]));
+  const edgeHi = (edgeId: string): number =>
+    Math.max(...edgeById.get(edgeId)!.geometry.map((v) => v.point[0]));
+  const signalX = (s: TopologySignal): number => {
+    const edge = edgeById.get(s.edgeId)!;
+    const a = edge.geometry[s.segmentIndex].point;
+    const b = edge.geometry[s.segmentIndex + 1].point;
+    return a[0] + (b[0] > a[0] ? s.offset : -s.offset);
+  };
+  const signalGroup = (s: TopologySignal): string => edgeById.get(s.edgeId)!.trackGroupId;
+
+  const deriveBlockSections = (): TopologyBlockSection[] =>
+    signals.map((signal) => {
+      const east = signal.facing === "toward-to";
+      const groupId = signalGroup(signal);
+      const group = trackGroups.find((g) => g.id === groupId)!;
+      const x = signalX(signal);
+
+      // nearest same-facing signal ahead, on this group only: a stub track's
+      // section cannot span a throat gap into another group.
+      const ahead = signals.filter(
+        (o) =>
+          o.id !== signal.id &&
+          signalGroup(o) === groupId &&
+          o.facing === signal.facing &&
+          (east ? signalX(o) > x : signalX(o) < x)
+      );
+      const next = ahead.length
+        ? ahead.reduce((p, c) =>
+            (east ? signalX(c) < signalX(p) : signalX(c) > signalX(p)) ? c : p
+          )
+        : undefined;
+      const nextLo = next ? edgeLo(next.edgeId) : undefined;
+      const nextHi = next ? edgeHi(next.edgeId) : undefined;
+      const ownLo = edgeLo(signal.edgeId);
+      const ownHi = edgeHi(signal.edgeId);
+
+      const covered = [...group.edgeIds]
+        .filter((edgeId) => {
+          const a = edgeLo(edgeId);
+          const b = edgeHi(edgeId);
+          return east
+            ? a >= ownLo && (next === undefined || b <= nextHi!)
+            : (next === undefined || a >= nextLo!) && b <= ownHi;
+        })
+        .sort((p, q) => (east ? edgeLo(p) - edgeLo(q) : edgeLo(q) - edgeLo(p)));
+
+      const edgeRanges = covered.map((edgeId, i) => ({
+        edgeId,
+        from:
+          i === 0
+            ? ({ kind: "signal", signalId: signal.id } as const)
+            : ({ kind: "edge-end", end: east ? "from" : "to" } as const),
+        to:
+          next !== undefined && i === covered.length - 1
+            ? ({ kind: "signal", signalId: next.id } as const)
+            : ({ kind: "edge-end", end: east ? "to" : "from" } as const),
+      }));
+
+      return {
+        id: signal.protectedBlockSectionId,
+        signalId: signal.id,
+        coverage: "signal-to-boundary" as const,
+        edgeRanges,
+        ...(next === undefined ? { legacyOpenEnd: east ? ("east" as const) : ("west" as const) } : {}),
+      };
+    });
+
+  const blockSections: TopologyBlockSection[] =
+    passthrough.blockSections !== undefined
+      ? [...passthrough.blockSections]
+      : deriveBlockSections();
+
   // --- 8. preflight: every authored edge reference names a real edge --------
   // Signals, stop points and block sections stay author-maintained (they are
   // operations, not geometry), so they are the one place a hand-written edge
@@ -835,11 +923,11 @@ export const assemblePieces = ({
     );
   });
 
-  (passthrough.blockSections ?? []).forEach((section, i) => {
+  blockSections.forEach((section, i) => {
     section.edgeRanges.forEach((range, j) => {
       requireEdge(
         range.edgeId,
-        `passthrough.blockSections[${i}].edgeRanges[${j}] (block section "${section.id}")`
+        `blockSections[${i}].edgeRanges[${j}] (block section "${section.id}")`
       );
     });
   });
@@ -851,7 +939,7 @@ export const assemblePieces = ({
     controlGroups,
     signals,
     trackGroups,
-    blockSections: [...(passthrough.blockSections ?? [])],
+    blockSections,
     stationStopPoints,
     legacyNodeOrder: [...(passthrough.legacyNodeOrder ?? nodes.map((n) => n.id))],
   };

@@ -17,11 +17,16 @@ reading the code.
 
 1. Edit the `link` piece's coordinates in `app/pieces/jatinegara.ts`.
    **Move BOTH ends by the same delta**, or you change the crossover's slope.
-2. Run `bun run verify:jatinegara`. It names any edge id the move invalidated.
-3. Fix those ids in `app/pieces/jatinegara-data.ts`. Repeat until green.
-4. Look at `/jng`. The verifier cannot see that a diagonal is the wrong shape.
+2. Run `bun run verify:jatinegara`.
+3. Look at `/jng`. The verifier cannot see that a diagonal is the wrong shape.
 
-Typical cost: **one line moved, a handful of edge ids renamed.**
+Typical cost: **one line.** Signals, platforms, and block sections are all
+positional or derived, so a move no longer invalidates them.
+
+> **Older revisions of this guide had a step 3 for repairing renamed edge ids.**
+> That is gone: signals and platforms are authored as an `x` along a track
+> group, and block sections are derived from signal placement. Nothing in
+> `app/pieces/jatinegara-data.ts` names an edge any more.
 
 ## Step 1 — move the link
 
@@ -67,7 +72,18 @@ bun run grid -- 528 336    # [528, 336] = AG6
 An `~` in the answer means the coordinate is off-lattice — on JNG that means
 it is wrong.
 
-## Step 2 — let the verifier find the fallout
+## Step 2 — verify
+
+```bash
+bun run verify:jatinegara
+```
+
+A move of a switch normally needs no other edit. If the verifier does report a
+stale edge reference, it is because a layout still passes an explicit table
+through `passthrough` — JNG no longer does. The rest of this section describes
+that case, and is kept for hand-authored IR layouts.
+
+## Step 2b — (only for passthrough layouts) let the verifier find the fallout
 
 ```bash
 bun run verify:jatinegara
