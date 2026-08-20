@@ -159,9 +159,11 @@ export const JATINEGARA_PIECES: PieceSet = {
 		{ kind: "link", id: "xov12", from: [304, 304], to: [336, 272] },
 		{ kind: "link", id: "xov13", from: [528, 272], to: [560, 304] },
 		{ kind: "link", id: "xov14", from: [528, 368], to: [560, 336] },
-		{ kind: "link", id: "xov15", from: [592, 336], to: [656, 400] },
+		// Split at AL7 [608,352] for the inverted point at t5y's west end.
+		{ kind: "link", id: "xov15", from: [592, 336], to: [656, 400], splitAt: [608, 352] },
 		{ kind: "link", id: "xov16", from: [624, 304], to: [720, 400] },
-		{ kind: "link", id: "xov18", from: [688, 304], to: [752, 368] },
+		// Split at AT7 [736,352] for the inverted point at t5y's east end.
+		{ kind: "link", id: "xov18", from: [688, 304], to: [752, 368], splitAt: [736, 352] },
 		{ kind: "link", id: "xov19", from: [688, 400], to: [720, 432] },
 		{ kind: "link", id: "xov20", from: [752, 400], to: [784, 432] },
 		{ kind: "link", id: "xov21", from: [752, 432], to: [784, 464] },
@@ -270,7 +272,7 @@ export const JATINEGARA_PIECES: PieceSet = {
 		"xov3:to": { controlGroupId: "PC3" },
 		"xov7:to": { controlGroupId: "PC7" },
 		"xov11:from": { controlGroupId: "PC9" },
-		"xov15:to": { controlGroupId: "g29", label: "sw 29" },
+		"xov15b:to": { controlGroupId: "g29", label: "sw 29" },
 		"xov19:from": { controlGroupId: "PC14" },
 		"xov16:to": { controlGroupId: "g31", label: "sw 31" },
 		"xov20:from": { controlGroupId: "PC15" },
@@ -279,6 +281,10 @@ export const JATINEGARA_PIECES: PieceSet = {
 		// INVERTED point at BI8: the diagonal runs straight through, the
 		// terminating t5ac is the leg that diverges.
 		"xov27:to": { controlGroupId: "g53", label: "sw 57", branch: "line" },
+		// PC21: the two inverted points at each end of the flat t5y connector,
+		// worked together so the whole path is set by one lever.
+		"xov15:to": { controlGroupId: "PC21", label: "PC21", branch: "line" },
+		"xov18:to": { controlGroupId: "PC21", label: "PC21", branch: "line" },
 		"xov28:to": { controlGroupId: "PC20" },
 		"xov29:from": { controlGroupId: "g36", label: "sw 36" },
 		"xov11:to": { controlGroupId: "PC9" },

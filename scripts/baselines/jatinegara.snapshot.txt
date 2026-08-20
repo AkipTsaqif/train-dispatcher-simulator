@@ -279,12 +279,33 @@
         "exits": [
           {
             "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "neighbor": "s336x592"
+          },
+          {
+            "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "neighbor": "s400x656",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
               "dx": 1,
               "dy": 0
             },
-            "neighbor": "n16"
+            "branchPath": [
+              "n16"
+            ],
+            "farSw": 61,
+            "neighbor": "n16",
+            "viaSwitchPort": "reversed"
           }
         ],
+        "sw": 59,
         "x": 608,
         "y": 352
       },
@@ -292,12 +313,33 @@
         "exits": [
           {
             "bearing": {
+              "dx": 0.707106781187,
+              "dy": 0.707106781187
+            },
+            "neighbor": "s368x752"
+          },
+          {
+            "bearing": {
+              "dx": -0.707106781187,
+              "dy": -0.707106781187
+            },
+            "neighbor": "s304x688",
+            "viaSwitchPort": "normal"
+          },
+          {
+            "bearing": {
               "dx": -1,
               "dy": 0
             },
-            "neighbor": "n15"
+            "branchPath": [
+              "n15"
+            ],
+            "farSw": 59,
+            "neighbor": "n15",
+            "viaSwitchPort": "reversed"
           }
         ],
+        "sw": 61,
         "x": 736,
         "y": 352
       },
@@ -642,7 +684,7 @@
               "dx": 0.707106781187,
               "dy": 0.707106781187
             },
-            "neighbor": "s368x752"
+            "neighbor": "n16"
           }
         ],
         "x": 688,
@@ -850,7 +892,7 @@
               "dx": 0.707106781187,
               "dy": 0.707106781187
             },
-            "neighbor": "s400x656"
+            "neighbor": "n15"
           }
         ],
         "x": 592,
@@ -964,7 +1006,7 @@
               "dx": -0.707106781187,
               "dy": -0.707106781187
             },
-            "neighbor": "s304x688"
+            "neighbor": "n16"
           }
         ],
         "x": 752,
@@ -1162,9 +1204,10 @@
               "dy": -0.707106781187
             },
             "branchPath": [
-              "s336x592"
+              "n15"
             ],
-            "neighbor": "s336x592",
+            "farSw": 59,
+            "neighbor": "n15",
             "viaSwitchPort": "reversed"
           }
         ],
@@ -2904,6 +2947,16 @@
         {
           "coupled": true,
           "ids": [
+            59,
+            61
+          ],
+          "label": "PC21",
+          "x": 672,
+          "y": 352
+        },
+        {
+          "coupled": true,
+          "ids": [
             30,
             19
           ],
@@ -3098,6 +3151,10 @@
         [
           24,
           35
+        ],
+        [
+          59,
+          61
         ]
       ],
       "initialState": {
@@ -3149,7 +3206,9 @@
         "49": "normal",
         "50": "normal",
         "52": "normal",
-        "57": "normal"
+        "57": "normal",
+        "59": "normal",
+        "61": "normal"
       },
       "items": [
         {
@@ -3405,7 +3464,7 @@
           "y": 400
         },
         {
-          "branch": "M592 336 L656 400",
+          "branch": "M608 352 L656 400",
           "dashSide": "left",
           "id": 29,
           "label": "sw 29",
@@ -3593,6 +3652,26 @@
           "straightPath": "M944 400 L976 368",
           "x": 976,
           "y": 368
+        },
+        {
+          "branch": "M608 352 H736",
+          "dashSide": "right",
+          "id": 59,
+          "label": "PC21",
+          "lineY": 352,
+          "straightPath": "M608 352 L656 400",
+          "x": 608,
+          "y": 352
+        },
+        {
+          "branch": "M608 352 H736",
+          "dashSide": "left",
+          "id": 61,
+          "label": "PC21",
+          "lineY": 352,
+          "straightPath": "M688 304 L736 352",
+          "x": 736,
+          "y": 352
         }
       ]
     },
@@ -3671,9 +3750,11 @@
       "M304 304 L336 272",
       "M528 272 L560 304",
       "M528 368 L560 336",
-      "M592 336 L656 400",
+      "M592 336 L608 352",
+      "M608 352 L656 400",
       "M624 304 L720 400",
-      "M688 304 L752 368",
+      "M688 304 L736 352",
+      "M736 352 L752 368",
       "M688 400 L720 432",
       "M752 400 L784 432",
       "M752 432 L784 464",
@@ -3956,12 +4037,33 @@
           "exits": [
             {
               "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "neighbor": "s336x592"
+            },
+            {
+              "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "neighbor": "s400x656",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
                 "dx": 1,
                 "dy": 0
               },
-              "neighbor": "n16"
+              "branchPath": [
+                "n16"
+              ],
+              "farSw": 61,
+              "neighbor": "n16",
+              "viaSwitchPort": "reversed"
             }
           ],
+          "sw": 59,
           "x": 608,
           "y": 352
         },
@@ -3969,12 +4071,33 @@
           "exits": [
             {
               "bearing": {
+                "dx": 0.707106781187,
+                "dy": 0.707106781187
+              },
+              "neighbor": "s368x752"
+            },
+            {
+              "bearing": {
+                "dx": -0.707106781187,
+                "dy": -0.707106781187
+              },
+              "neighbor": "s304x688",
+              "viaSwitchPort": "normal"
+            },
+            {
+              "bearing": {
                 "dx": -1,
                 "dy": 0
               },
-              "neighbor": "n15"
+              "branchPath": [
+                "n15"
+              ],
+              "farSw": 59,
+              "neighbor": "n15",
+              "viaSwitchPort": "reversed"
             }
           ],
+          "sw": 61,
           "x": 736,
           "y": 352
         },
@@ -4319,7 +4442,7 @@
                 "dx": 0.707106781187,
                 "dy": 0.707106781187
               },
-              "neighbor": "s368x752"
+              "neighbor": "n16"
             }
           ],
           "x": 688,
@@ -4527,7 +4650,7 @@
                 "dx": 0.707106781187,
                 "dy": 0.707106781187
               },
-              "neighbor": "s400x656"
+              "neighbor": "n15"
             }
           ],
           "x": 592,
@@ -4641,7 +4764,7 @@
                 "dx": -0.707106781187,
                 "dy": -0.707106781187
               },
-              "neighbor": "s304x688"
+              "neighbor": "n16"
             }
           ],
           "x": 752,
@@ -4839,9 +4962,10 @@
                 "dy": -0.707106781187
               },
               "branchPath": [
-                "s336x592"
+                "n15"
               ],
-              "neighbor": "s336x592",
+              "farSw": 59,
+              "neighbor": "n15",
               "viaSwitchPort": "reversed"
             }
           ],

@@ -28,17 +28,17 @@ const map = runtime.map;
 // 1. structure (Phase 8: drawn extents — 13 mains incl. the 5 east-throat
 // fragments; the stubs end at junctions, 6 tracks per map boundary)
 check("compiles with 12 main lines", compiled.lines.mains.length === 12, `mains=${compiled.lines.mains.length}`);
-check("49 switches (10 stub ends are fixed turns; P57 at BI8 is the inverted point)", compiled.switches.items.length === 49, `switches=${compiled.switches.items.length}`);
+check("51 switches (10 stub ends are fixed turns; P57/P59/P61 are inverted points)", compiled.switches.items.length === 51, `switches=${compiled.switches.items.length}`);
 check("23 signals (NW/NE/XW/XE)", compiled.signals.items.length === 23, `signals=${compiled.signals.items.length}`);
 check(
-  "20 coupled point pairs (PC1..PC20) + 9 singles",
+  "21 coupled point pairs (PC1..PC21) + 9 singles",
   (() => {
     const coupled = compiled.switches.controls.filter((c) => c.coupled);
     const singles = compiled.switches.controls.filter((c) => !c.coupled);
     const labelSet = new Set(coupled.map((c) => c.label));
     return (
-      coupled.length === 20 && singles.length === 9 &&
-      labelSet.size === 20 &&
+      coupled.length === 21 && singles.length === 9 &&
+      labelSet.size === 21 &&
       [...labelSet].every((l) => /^PC\d+$/.test(l))
     );
   })(),

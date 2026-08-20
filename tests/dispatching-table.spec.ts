@@ -830,7 +830,7 @@ test.describe("dispatching table", () => {
     // overlap each other and train markers never paint over a point control.
     await page.goto("/jng?start=08:00");
     const controls = page.locator('[role="button"][aria-label^="Wesel"]');
-    await expect(controls).toHaveCount(29);
+    await expect(controls).toHaveCount(30);
 
     // A native Playwright click fails if another SVG element owns the centre —
     // exactly how stacked scissors controls and train rectangles regressed.
@@ -853,7 +853,7 @@ test.describe("dispatching table", () => {
     await expect(page.getByRole("button", { name: /^XE8 ·/ })).toBeVisible();
     await expect(page.getByText("A", { exact: true })).toHaveCount(2); // the graph-paper grid chrome is shown (top + bottom letters)
     // the point controls are present (28: 20 coupled pairs + 8 singles)
-    await expect(page.locator('[role="button"][aria-label^="Wesel"]')).toHaveCount(29);
+    await expect(page.locator('[role="button"][aria-label^="Wesel"]')).toHaveCount(30);
     // auto route set: clearing NW1 lights it (amber — next signal still red)
     await page.getByRole("button", { name: /^NW1 · MERAH/ }).click();
     await expect(page.getByRole("button", { name: /^NW1 · KUNING/ })).toBeVisible();
