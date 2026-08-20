@@ -46,13 +46,13 @@ check(
   `coupled=${compiled.switches.controls.filter((c) => c.coupled).length} singles=${compiled.switches.controls.filter((c) => !c.coupled).length}`
 );
 check(
-  "the stub ends are now plain joins (no switch at 528,368 / 592,336 / 528,272 / 688,304)",
-  compiled.nodes["s368x528"]?.sw === undefined && compiled.nodes["s336x592"]?.sw === undefined && compiled.nodes["s272x528"]?.sw === undefined && compiled.nodes["s304x688"]?.sw === undefined,
+  "the stub ends are now plain joins (no switch at 528,368 / 608,336 / 528,272 / 688,304)",
+  compiled.nodes["s368x528"]?.sw === undefined && compiled.nodes["s336x608"]?.sw === undefined && compiled.nodes["s272x528"]?.sw === undefined && compiled.nodes["s304x688"]?.sw === undefined,
   "stub-end node still has a switch"
 );
 check(
-  "stub tracks end at their drawn extents (t5 336..528, t6 32..592, t8 224..528)",
-  compiled.nodes["s368x336"] !== undefined && compiled.nodes["s368x528"] !== undefined && compiled.nodes["s336x592"] !== undefined && compiled.nodes["s272x528"] !== undefined,
+  "stub tracks end at their drawn extents (t5 336..528, t6 32..608, t8 224..528)",
+  compiled.nodes["s368x336"] !== undefined && compiled.nodes["s368x528"] !== undefined && compiled.nodes["s336x608"] !== undefined && compiled.nodes["s272x528"] !== undefined,
   "missing stub-end node"
 );
 check(

@@ -77,7 +77,7 @@ export const JATINEGARA_PIECES: PieceSet = {
 			id: "t6",
 			y: 336,
 			from: 32,
-			to: 592,
+			to: 608,
 			normalDirection: "right",
 			bidirectional: true,
 			endNodes: { west: "n9" },
@@ -136,7 +136,7 @@ export const JATINEGARA_PIECES: PieceSet = {
 			// endpoints, and none of those diagonals ends on this row.
 			id: "t5y",
 			y: 352,
-			from: 608,
+			from: 624,
 			to: 736,
 			normalDirection: "right",
 			endNodes: { west: "n15", east: "n16" },
@@ -160,7 +160,7 @@ export const JATINEGARA_PIECES: PieceSet = {
 		{ kind: "link", id: "xov13", from: [528, 272], to: [560, 304] },
 		{ kind: "link", id: "xov14", from: [528, 368], to: [560, 336] },
 		// Split at AL7 [608,352] for the inverted point at t5y's west end.
-		{ kind: "link", id: "xov15", from: [592, 336], to: [656, 400], splitAt: [608, 352] },
+		{ kind: "link", id: "xov15", from: [608, 336], to: [672, 400], splitAt: [624, 352] },
 		{ kind: "link", id: "xov16", from: [624, 304], to: [720, 400] },
 		// Split at AT7 [736,352] for the inverted point at t5y's east end.
 		{ kind: "link", id: "xov18", from: [688, 304], to: [752, 368], splitAt: [736, 352] },
