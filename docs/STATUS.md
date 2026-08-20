@@ -526,6 +526,20 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   boundary with the stale table/id/context named, instead of a cryptic later
   compiler failure. The operational tables remain explicit by decision.
 
+-  2026-08-20 — Engine change (approved): a signal may now sit on an edge
+  vertex. `topology.ts` skips the direction comparison when a range's deltaX
+  is 0 - such a range carries no direction and so cannot contradict the
+  signal, whose `dir` is already authoritative from its own `facing`. The
+  comparison was only ever a reversal guard, and that guard is unchanged for
+  ranges with real length (verified by fixture). Separately, a
+  `signal-to-boundary` section that is zero-length OVERALL is rejected: a
+  signal at a group's end protects nothing, and tolerating the per-range case
+  must not legalise that. The message names the GROUP-LOCAL scope, because
+  the track usually does continue into the throat - this is the same
+  approximation as `legacyOpenEnd`, not a claim that the layout is wrong.
+  Rationale + rejected alternatives in
+  `specs/PROPOSAL-zero-length-leading-range.md`.
+
 ## Notes for the next worker
 
 - **Recurring bug class — check this first on any dense/schematic layout.**

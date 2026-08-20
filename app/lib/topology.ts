@@ -872,13 +872,39 @@ const compileTopologyInternal = (definition: TopologyDefinition): CompiledTopolo
       if (previousTo && !pointEquals(previousTo, from)) {
         throw new Error(`Block section ${section.id} has discontinuous edge ranges`);
       }
+      // A zero-length range carries no direction, so it cannot contradict the
+      // signal. This happens when a signal sits exactly on the vertex that ends
+      // its own edge: the derived leading range spans signal -> that same point.
+      // `placement.dir` is authoritative (derived from the signal's `facing`),
+      // so the comparison below is only a reversal guard for ranges that have
+      // real length. Total-length is checked separately, after the loop.
+      const delta = to[0] - from[0];
       if (
-        directionForDelta(to[0] - from[0], `Block section ${section.id}`) !==
-        placement.dir
+        delta !== 0 &&
+        directionForDelta(delta, `Block section ${section.id}`) !== placement.dir
       ) {
         throw new Error(`Block section ${section.id} reverses its signal direction`);
       }
       previousTo = to;
+    }
+
+    // A signal at the very end of a stub, facing the end, protects no track at
+    // all. Tolerating the individual zero-length ranges above must not silently
+    // legalise a section that is empty overall.
+    if (section.coverage === "signal-to-boundary") {
+      const spanFrom = edgeRangePoint(section.edgeRanges[0], section.edgeRanges[0].from, section.id);
+      const spanTo = edgeRangePoint(
+        section.edgeRanges[section.edgeRanges.length - 1],
+        section.edgeRanges[section.edgeRanges.length - 1].to,
+        section.id
+      );
+      if (spanFrom[0] === spanTo[0]) {
+        throw new Error(
+          `Block section ${section.id} protects zero track within group ${sourceGroup.id}: ` +
+            `signal ${section.signalId} is at that group's end, and section derivation does ` +
+            `not cross the throat (see docs/STATUS.md, throat block boundaries)`
+        );
+      }
     }
 
     const firstRange = section.edgeRanges[0];
