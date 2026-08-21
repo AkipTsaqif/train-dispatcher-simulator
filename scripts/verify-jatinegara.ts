@@ -27,32 +27,32 @@ const map = runtime.map;
 
 // 1. structure (Phase 8: drawn extents — 13 mains incl. the 5 east-throat
 // fragments; the stubs end at junctions, 6 tracks per map boundary)
-check("compiles with 12 main lines", compiled.lines.mains.length === 12, `mains=${compiled.lines.mains.length}`);
-check("51 switches (10 stub ends are fixed turns; P57/P59/P61 are inverted points)", compiled.switches.items.length === 51, `switches=${compiled.switches.items.length}`);
-check("23 signals (NW/NE/XW/XE)", compiled.signals.items.length === 23, `signals=${compiled.signals.items.length}`);
+check("compiles with 13 main lines", compiled.lines.mains.length === 13, `mains=${compiled.lines.mains.length}`);
+check("56 switches (10 stub ends are fixed turns; P58/P63/P65/P67 are inverted points)", compiled.switches.items.length === 56, `switches=${compiled.switches.items.length}`);
+check("24 signals (NW/NE/XW/XE)", compiled.signals.items.length === 24, `signals=${compiled.signals.items.length}`);
 check(
-  "22 coupled point pairs (PC1..PC22) + 7 singles",
+  "24 coupled point pairs (PC1..PC24) + 8 singles",
   (() => {
     const coupled = compiled.switches.controls.filter((c) => c.coupled);
     const singles = compiled.switches.controls.filter((c) => !c.coupled);
     const labelSet = new Set(coupled.map((c) => c.label));
     return (
       // PC21 draws a handle per switch, so count LEVERS (distinct labels), not handles
-      labelSet.size === 22 &&
-      singles.length === 7 &&
+      labelSet.size === 24 &&
+      singles.length === 8 &&
       [...labelSet].every((l) => /^PC\d+$/.test(l))
     );
   })(),
   `coupled=${compiled.switches.controls.filter((c) => c.coupled).length} singles=${compiled.switches.controls.filter((c) => !c.coupled).length}`
 );
 check(
-  "the stub ends are now plain joins (no switch at 528,368 / 608,336 / 528,272 / 688,304)",
-  compiled.nodes["s368x528"]?.sw === undefined && compiled.nodes["s336x608"]?.sw === undefined && compiled.nodes["s272x528"]?.sw === undefined && compiled.nodes["s304x688"]?.sw === undefined,
+  "the stub ends are now plain joins (no switch at 592,368 / 640,336 / 592,272 / 688,304)",
+  compiled.nodes["s368x592"]?.sw === undefined && compiled.nodes["s336x640"]?.sw === undefined && compiled.nodes["s272x592"]?.sw === undefined && compiled.nodes["s304x688"]?.sw === undefined,
   "stub-end node still has a switch"
 );
 check(
-  "stub tracks end at their drawn extents (t5 336..528, t6 32..608, t8 224..528)",
-  compiled.nodes["s368x336"] !== undefined && compiled.nodes["s368x528"] !== undefined && compiled.nodes["s336x608"] !== undefined && compiled.nodes["s272x528"] !== undefined,
+  "stub tracks end at their drawn extents (t5 480..592, t6 32..640, t8 224..592)",
+  compiled.nodes["s368x480"] !== undefined && compiled.nodes["s368x592"] !== undefined && compiled.nodes["s336x640"] !== undefined && compiled.nodes["s272x592"] !== undefined,
   "missing stub-end node"
 );
 check(
@@ -65,7 +65,7 @@ check(
 const jngXs = compiled.stationStopXs["JNG"];
 check(
   "JNG has per-track platform Xs (multi-length)",
-  jngXs?.t1 === 850 && jngXs?.t2 === 464 && jngXs?.t5 === 416 && jngXs?.t6 === 430 && jngXs?.t8 === 400,
+  jngXs?.t1 === 850 && jngXs?.t2 === 464 && jngXs?.t5 === 560 && jngXs?.t6 === 430 && jngXs?.t8 === 400,
   JSON.stringify(jngXs)
 );
 check(
@@ -87,8 +87,8 @@ check(
     runtime.journeys.map((j) => [j.train.train_no, dwellX(j.train.train_no)])
   );
   check(
-    "J201 (t1) dwells at x=850, J102 (t2) at 464, J310 (t6) at 430, J410 (t5) at 416",
-    stops["J201"] === 850 && stops["J102"] === 464 && stops["J310"] === 430 && stops["J410"] === 416,
+    "J201 (t1) dwells at x=850, J102 (t2) at 464, J310 (t6) at 430, J410 (t5) at 560",
+    stops["J201"] === 850 && stops["J102"] === 464 && stops["J310"] === 430 && stops["J410"] === 560,
     JSON.stringify(stops)
   );
   check("J310 (eastbound) uses the bidirectional t6 line", runtime.journeys.find((j) => j.train.train_no === "J310")!.plan.start.y === 336);

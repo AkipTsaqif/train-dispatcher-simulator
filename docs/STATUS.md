@@ -587,6 +587,20 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   pieces join only at shared endpoints and no diagonal ends on that row. One
   line means one berth per station, so the duplicate JNG-W/JNG-E pair was
   dropped and mains fell 13 → 12.
+- 2026-08-20 — Signals and point handles get their OWN scale knobs.
+  `presentation.signalScale` and `presentation.pointScale` multiply onto
+  `controlScale` (both default 1, so Bekasi is untouched). JNG sets 0.75 for
+  each: at pitch 16 a signal head spanned nearly two cells and the coupled
+  circles overlapped. Rejected lowering `controlScale` itself — that also
+  shrinks train markers, which are already correctly sized.
+- 2026-08-20 — Switch ids are POSITIONAL, so adding a link renumbers every
+  switch after it and silently detaches `controlGroup.switchIds`. The compiler
+  catches it (`Control group gNN disagrees with switch N`), but the fix is
+  manual. This bit three times in one session; the `linkId:end` lever keys are
+  what keep it survivable.
+- 2026-08-20 — A signal on a DIAGONAL needs the positional `at` escape
+  (`{edgeIndex, segmentIndex, offset}`), not an `x`: an x does not identify a
+  point on a slope. NE8 sits at BK4, the midpoint of `xov30` (offset 45.25).
 
 ## Notes for the next worker
 
