@@ -75,6 +75,14 @@ export type Presentation = {
   /** Scale for the signal/point/train controls (default 1) — a dense map with
    *  close track spacing shrinks the controls to match its pitch. */
   controlScale?: number;
+  /** Extra scale for SIGNALS only, multiplied onto controlScale (default 1).
+   *  A signal head is tall next to a point circle, so a dense layout may
+   *  want it smaller without shrinking the point handles too. */
+  signalScale?: number;
+  /** Extra scale for POINT CONTROL circles only, multiplied onto
+   *  controlScale (default 1). Lets the handles shrink toward the grid
+   *  pitch without also shrinking train markers. */
+  pointScale?: number;
   /** Schematic mode may still draw the graph-paper chrome (grid lines, column
    *  letters, row numbers) behind the free-form geometry. */
   grid?: boolean;

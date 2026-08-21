@@ -389,6 +389,8 @@ export default function DispatchingTable({
   const SCHEMATIC_VIEWBOX = IS_SCHEMATIC ? PRESENTATION.viewBox : undefined;
   const STATION_SHAPES = PRESENTATION.stationShapes ?? [];
   const CONTROL_SCALE = PRESENTATION.controlScale ?? 1;
+  const SIGNAL_SCALE = CONTROL_SCALE * (PRESENTATION.signalScale ?? 1);
+  const POINT_SCALE = CONTROL_SCALE * (PRESENTATION.pointScale ?? 1);
   // Train marker geometry follows the same scale as the signal/point controls.
   // The body is authored in CELL units (the sim's footprint unit), but a dense
   // layout draws its tracks far closer together than CELL, so an unscaled
@@ -2275,7 +2277,7 @@ export default function DispatchingTable({
           const id = ctl.ids[0];
           const reversed = switches[id] === "reversed";
           const locked = isLocked(id);
-          const cs = CONTROL_SCALE;
+          const cs = POINT_SCALE; // handles may shrink further than the trains
           const r = (ctl.coupled ? 12 : 10) * cs;
           // the circle label: the PCx name for the JNG-style coupled groups,
           // else the concatenated ids (Bekasi's "78"); the font is fitted to
@@ -2346,7 +2348,7 @@ export default function DispatchingTable({
           const aspect = aspectOf(sig.id);
           const passive = sig.block === true; // ai signals never render here
           const up = sig.mount === "up";
-          const cs = CONTROL_SCALE; // controls follow the map's scale
+          const cs = SIGNAL_SCALE; // signals may shrink further than the points
           const headTop = up ? -50 * cs : 6 * cs;
           const lamps = [up ? -38 * cs : 18 * cs, up ? -26 * cs : 30 * cs, up ? -14 * cs : 42 * cs];
           const lit = [aspect === "green", aspect === "amber", aspect === "red"];
