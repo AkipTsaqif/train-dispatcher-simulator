@@ -38,7 +38,10 @@ const SCHEDULE: ScheduleEntry[] = [
     // 336) and stay within t5's extent (344..520)
     train_no: "J410", train_name: "Rajawali 410",
     stops: [
-      { station: "JNG-W", arr_actual: "06:02:00", dep_actual: "06:02:00" },
+      // Enters the map on t6 from the west border and crosses onto t5
+      // through the xov10 points (sw43) — a realistic approach through the
+      // throat instead of materializing on the t5 stub.
+      { station: "JNG-W", arr_actual: "06:02:00", dep_actual: "06:02:00", entryLine: "t6" },
       { station: "JNG", arr_actual: "06:10:00", dep_actual: "06:12:00", line: "t5" },
       { station: "JNG-E", arr_actual: "06:20:00", dep_actual: "06:20:00" },
     ],

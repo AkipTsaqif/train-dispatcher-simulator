@@ -115,11 +115,19 @@ export const findRoute = (input: FindRouteInput): FoundRoute | null => {
   // continuity) — otherwise a loop's far end or a crossover can produce
   // 'wrong-way' alternative paths
   const entranceBearing: Bearing = dir === "right" ? { dx: 1, dy: 0 } : { dx: -1, dy: 0 };
-  // the exit must continue the signal's general direction — but a crossover
-  // diagonal can have a small against-flow x-component, so only fully-opposite
-  // exits (a loop's far end, dot < -0.8) are rejected
-  const continues = (bearing: Bearing): boolean =>
-    bearing.dx * entranceBearing.dx + bearing.dy * entranceBearing.dy > -0.8;
+  // The exit must continue the signal's general direction. A crossover diagonal
+  // is allowed, but it must still make progress ALONG the running direction: a
+  // 45-degree diagonal that runs backwards scores -0.707 on a plain dot product,
+  // so a fixed "> -0.8" threshold let a route double back on itself (a train
+  // could be signalled east, then routed west over a crossover).
+  //
+  // Judge the along-axis component instead: strictly forward, or purely lateral
+  // (dx == 0, a rare vertical link). Anything with backward travel is refused,
+  // whatever its angle.
+  const continues = (bearing: Bearing): boolean => {
+    const along = bearing.dx * entranceBearing.dx + bearing.dy * entranceBearing.dy;
+    return along > 1e-9 || Math.abs(bearing.dx) < 1e-9;
+  };
 
   // a same-direction signal sitting on the segment from→to (geometric check)
   const exitSignalOnSegment = (
@@ -246,6 +254,47 @@ const polylineLength = (pts: LeveledPoint[]): number => {
  * (`foulingDistance`). These must be locked in a non-fouling position while
  * the route is active.
  */
+/**
+ * A stretch of track that exists on the diagram but cannot carry traffic
+ * (under construction, closed for works). Authored as layout data — no
+ * arrangement of points can imply it.
+ */
+export type ClosedSpan = {
+  groupId: string;
+  lineY: number;
+  fromX: number;
+  toX: number;
+  reason?: string;
+};
+
+/**
+ * The first closed span a route runs over, or null when the route is clear.
+ *
+ * A span is hit when the route has a segment ALONG that line (same y) whose
+ * x-extent overlaps the closed interval. Merely touching an endpoint does not
+ * count — a route may legitimately end at the boundary of a closed section,
+ * which is what lets a train stop short of the works.
+ */
+export const closedSpanOnRoute = (
+  route: FoundRoute,
+  spans: ClosedSpan[]
+): ClosedSpan | null => {
+  if (!spans.length) return null;
+  for (let i = 1; i < route.pts.length; i++) {
+    const [x1, y1] = route.pts[i - 1];
+    const [x2, y2] = route.pts[i];
+    if (y1 !== y2) continue; // a diagonal crosses rows; only along-line running counts
+    const lo = Math.min(x1, x2);
+    const hi = Math.max(x1, x2);
+    for (const span of spans) {
+      if (span.lineY !== y1) continue;
+      const overlap = Math.min(hi, span.toX) - Math.max(lo, span.fromX);
+      if (overlap > 0) return span;
+    }
+  }
+  return null;
+};
+
 export const flankPoints = (
   route: FoundRoute,
   graph: Record<string, GraphNodeLike>,

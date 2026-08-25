@@ -12,15 +12,18 @@
   `app/topologies/jatinegara.ts` are DELETED; `/jng` renders from
   `app/pieces/jatinegara.ts` (13 lines + 29 links), byte-identical to the
   baseline captured before the port.
-- **Next action:** reconcile `docs/PLAN-phase-10.md` and the JNG verifier with
-  the implemented fixed-turn section walk. A section now continues through
-  degree-2, switch-free vertices and stops before movable points; all functional
-  gates pass and Bekasi remains frozen.
-- **BI8 is no longer a prototype — inverted points are shipped.** `switchMeta`
-  takes `branch: "line"` to invert which leg diverges, and `link.splitAt` cuts a
-  diagonal so a point can sit mid-span. JNG has three inverted points: P57 at
-  BI8 (single lever `g53`) and P59/P61 at each end of the flat `t5y` connector
-  (coupled as `PC21`). Counts are now 51 switches / 21 coupled groups / 12 mains.
+- **Next action:** continue user-directed JNG layout editing. The former B–N
+  plain approach was removed; old N and everything east translated left 12
+  columns, making it new B while preserving short western signal approaches.
+  PC22 was then shifted one grid column left as a coupled unit. JNG now uses
+  a layout-specific flank clearance just under one grid interval so that PC22
+  is not locked as a flank of NE2→XW4; connectivity, switch ids, and Bekasi
+  stay frozen.
+- **Inverted points are shipped.** `switchMeta` takes `branch: "line"` to
+  invert which leg diverges, and `link.splitAt` cuts a diagonal so a point can
+  sit mid-span. After western compaction, P57 sits at AU8 (single lever `g53`)
+  and P59/P61 sit at each end of the flat `t5y` connector (coupled as `PC21`).
+  Counts are now 51 switches / 21 coupled groups / 12 mains.
 
 ## Phase state
 
@@ -41,6 +44,20 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
 
 ## Done
 
+- 2026-08-25 — **JNG spawn-follow fix (the J310/J410 t6 freeze)**: two
+  trains sharing an entry line (J410 origin 06:02, J310 06:05, both spawned
+  on t6) materialised at the same x and the old conflict failsafe stopped
+  BOTH — a deadlock neither could clear. Semantics fix in the tick's overlap
+  loop: same line + same direction is a FOLLOW, not a collision — only the
+  REAR train stops (new `stopReason: "queue"`, amber body + roster dot,
+  "Mengikuti" status; no "!" badge, no conflict toast). The leader is the
+  frontmost in the travel direction; at a spawn-coincidence tie the earlier
+  scheduled origin leads. Head-on/crossing overlaps keep both-stop collision
+  semantics (Bekasi's opposite-direction refusal test unchanged). Engine:
+  `advanceTrain` treats `queue` like `conflict` (tick-loop-released hold).
+  This also fixes the general same-direction catch-up deadlock class. Gates:
+  tsc, all 9 jatinegara + collision e2e green, verify-jatinegara ALL PASS;
+  the 5 visual failures are the pre-existing win32→linux snapshot mismatch.
 - 2026-08-07 — Program scoped; INDEX + PLAN-phase-0..7 + STATUS authored;
   standing rules added to AGENTS.md. No production code changed yet.
 - 2026-08-07 — Phase 0 complete (branch `chore/phase-0-contract-extraction`):
@@ -495,6 +512,165 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   are off-lattice. The tool reports off-lattice positions as `~M4 (col 12.05,
   row 4.03)` rather than rounding, since a rounded ref would be confidently
   wrong.
+- (JNG, user-directed) **Bendy-marker arrow now follows the NOSE.** While an
+  articulated body spans a thrown point but its centre is still on the
+  straight, the old code rotated the arrow by `ang` (the CENTRE segment's
+  bearing) — 0 on a horizontal, so the arrow kept pointing straight for up to
+  half a body length (repro: /jng start 06:00, P22+P13 BELOK, NE2 KUNING,
+  watch J102). Fix: when bendy, the arrow must follow the NOSE. Two traps:
+  (1) `spineOf` builds the spine nose-first but running BACKWARDS
+  (`spine[0] = at(noseS)`), so travel direction = spine[1] → spine[0] —
+  using either segment unreversed points the arrow backwards.
+  (2) The arrow glyph spans +x only (it hugs the leading edge by design), so
+  rotating it about the marker centre swings it off the bent body entirely.
+  Fix: anchor the glyph in the group's LOCAL frame (map ÷ CONTROL_SCALE) so
+  its TIP lands just inside spine[0], rotated onto the travel direction
+  there; beware map-vs-local unit mixing — TRAIN_HALF_LEN is local units,
+  spine points are map units.
+  Verified in-browser over your repro: 60/60 bendy frames with rotate(-135°)
+  AND the transform-corrected arrow bbox overlapping the articulated body's
+  bbox — direction and placement both correct; zero flipped/stuck/detached
+  readings. Follow-up (same session): the train NUMBER had the same symptom
+  while bendy — it sat rigidly at the group origin instead of riding the
+  curving body. It now anchors on the spine's REAR segment midpoint (kept
+  upright for legibility; arrow holds the nose, number rides the rear body).
+  the body's bbox. (JNG, user-directed) **Trains now spawn at their TRACK's
+  edge, not the grid edge** — opt-in `scenario.spawn.atTrackEdge`: with it,
+  buildJourney clamps the approach spawn to the journey's own line extent
+  (nodes on its lineY) instead of the global map edge, so J310 enters at
+  x=32 where t6 actually starts instead of floating before column A
+  (old spawn was x=-8993). Schedule-derived spawns already inside drawn
+  track are kept. Bekasi does not set the flag → baseline byte-identical
+  (verified); JNG snapshot diff is exactly the four journey plans.
+  Follow-up (same session, user refinement): spawn should EMERGE piece by
+  piece at the track end, not pop in there. buildJourney's atTrackEdge clamp
+  now leaves a full MARGIN of lead-in short of the line's first drawn point,
+  and the renderer clips each marker to its own line's drawn extent
+  (per-train clipPath over [lineMinX, lineMaxX], shifted-diagram coords) —
+  nothing renders over blank space; the body slides in nose-first across the
+  track end (and symmetrically slides out at the far end). Verified live:
+  J310 at data-x=-56 hits nothing (hidden), at data-x=+56 fully rendered.
+  (JNG, user-reported) **Cleared entry signal reserved only a platform stub.**
+  Clearing NW5→KUNING rendered the amber route as M336→400 (ahead of J410's
+  front on the ADJACENT t5) instead of NW5's full x=112→400 route: both
+  `unpassedOf`'s owner-less fallback and the tick loop's ownership claim
+  treated ANY same-direction train within CELL (58u) of the polyline as "on
+  the route" — and JNG's track spacing is 32u, so parallel-track trains
+  qualified (trimming the render, claiming ownership, later releasing it).
+  Fix: "on the route" now means centre within CELL/3 (~19u < spacing) in
+  BOTH places; an unclaimed reservation renders in full until a real train
+  is on it. Verified live: full M112→400 amber path immediately on click,
+  no train required. Fix proven global: both sites are shared code, so every
+  signal on every layout benefits; threshold scales with CELL.
+  (JNG, user-reported) **J310 stopped at O–R instead of the U–X island**:
+  the timetable stop X for JNG on t6 (pieces: x=238) disagreed with the
+  DRAWN island platform graphic (stationShapes: x=360, spanning U–X).
+  Moved the t6 platform piece to x=360 (flanks clear: XW6@320 behind,
+  XE6@400 ahead, no points on t6); verifier expectations updated; JNG
+  snapshot regenerated. NOTE: the 5 failing Bekasi visual snapshots were
+  bisected — they fail identically with ALL component changes stashed, so
+  they are pre-existing WIP drift, not caused by any of today's fixes.
+  (JNG, user-requested) **Reservations now free only after the train's REAR
+  fully clears each cell** (was: trimmed/released at the nose). Three sites:
+  unpassedOf trims at centre−CELL (engine rear), passedEnd releases when the
+  REAR passes the route end, and signal-pass consumption no longer deletes
+  upstream reservations instantly — the consuming train CLAIMS them and the
+  progress logic frees them cell by cell. Live probe: highlight trails the
+  visible body conservatively (engine centre runs ~20u behind the drawn
+  articulated body), never frees early. Suite: 50 passed + the same 5
+  pre-existing visual failures.
+  (JNG, user-requested refinements) **Closer freeing + hidden behind body +
+  driver reaction**: trim/release offset moved from CELL(58) to the DRAWN
+  half-length (TRAIN_HALF_LEN) so cells free right at the visible tail; a
+  `visibleOf` helper now paints only the route strictly AHEAD of the nose
+  (amber invisible over/behind the body — reservation itself unchanged,
+  clash checks still use unpassedOf); scenario knob `driver.reactionSeconds`
+  (JNG=5) holds a signal-stopped train ~5s after its signal clears before
+  resuming — measured via ctx.now since st.time is frozen while stopped;
+  reaction clock resets if the signal re-reddens. Live probe: amber starts
+  at/past centre in 12/12 samples; clearance→movement = 5.2s. Bekasi keeps
+  the default (0) so its behavior is preserved.
+  (JNG, user-reported) **J310 crawled at 0.05–0.67 u/s** (Bekasi runs ~7):
+  with an empty segmentKm table every leg speed degrades to distance ÷
+  timetable gap, and the stub schedule's long gaps over short distances
+  (worst: 32u over 600s) produce crawls. Added opt-in
+  `speed.minUnitsPerSecond` floor (JNG=2.5): applied in buildJourney leg
+  derivation + approach leg and dispatch-runtime firstLegSpeed; trains run
+  at the floor and dwell until their scheduled departure. Bekasi absent →
+  unchanged. Retuned two jatinegara bend-test fast-forwards (2:25→1:20,
+  3:20→1:50) to the new speed. JNG snapshot regenerated; verifier ALL
+  PASSED; suite 50 passed + same 5 pre-existing visual failures.
+  (JNG, user-provided real-world speeds) **Track-class speed model**: new
+  `trackSpeeds` scenario config + `buildSegmentLimits` + engine per-segment
+  caps (MoveCtx.segmentSpeeds, min(plan speed, segment limit); TrainState
+  .segLimitU set in setSegment). JNG: G→Y = 900m/288u (3.125 m/u);
+  straights on t1-t4/t6/t7 = 60 km/h; ALL turnouts/crossovers = 30; t5+t8
+  = 30 everywhere; east of column Y the scale is Y→AW = 900m/384u
+  (2.34375 m/u) with t1-t4 = 120 km/h and everything else east = 30.
+  Leg plan speeds become the layout max when trackSpeeds is present, so
+  caps shape the actual run. Placement pass deliberately ignores caps.
+  Bend tests rewritten to poll 1s clock steps (robust to speed changes).
+  Live probe: east-zone ≈14-16 u/s (=120 km/h at eastern scale) vs station
+  straights ≈5.3 and turnouts 2.7. Snapshot regenerated; verifier passed;
+  suite unchanged (same 5 pre-existing).
+  (JNG, user-reported mid-throat spawns) **Placement teleport fix**: at sim
+  start the placement pass interpolated each train's approach by
+  `sec − originArr` at realistic speeds → trains materialized deep in the
+  throat (often on top of a red signal, freezing there). buildJourney now
+  exposes `start.entryX` for atTrackEdge journeys and initializeSim caps the
+  interpolation at that entry: trains enter from the visible track edge and
+  run the rest live; internal clock only advances by covered distance so
+  absolute dwell anchors still hold. Bekasi plans carry no entryX →
+  untouched. Snap test now sets the NW1 route like a dispatcher (trains
+  queue at red entry signals until routed). Live probe: all four trains
+  slide in from their entries and hold at their first facing signal.
+  (JNG, spawn/dwell clock fix — the real root cause of the frozen trains)
+  **Symptoms**: trains teleported to hold points on the first tick and sat
+  there with GREEN bodies forever, regardless of signal aspects. Root cause:
+  buildJourney returns originArr=0 while timetable anchors were absolute
+  seconds-of-day, so the tick loop computed a ~21600s travel budget and the
+  engine burned it by insta-consuming every dwell. Fix (all gated on new
+  scenario knob `dwell.relativeAnchors`, JNG only → Bekasi byte-identical):
+  ① anchors rebased onto the train's own materialization clock so dwells
+  last their scheduled DURATION (departAt now 0/600/602 not 21900/…);
+  ② initializeSim places relative-clock trains fresh at their entry with
+  st.time=0 (no schedule interpolation); ③ the live tick feeds REAL elapsed
+  seconds per train (lastTickRef/spawnSimRef) instead of a travel budget;
+  meetsRelease compares against rel-now. Signals stay ALL RED at start
+  (user request — the seeded-clear experiment was fully reverted, including
+  its test edits). Live probe: slide-in from edges → red-body holds at
+  entry signals → run after dispatch → all four reach the platform island.
+  Tests: grid-snap asserts Math.abs(x%16)==8 (entry x is negative); NW1 map-
+  click sets J201's road; interactive/NE2/bend tests back to red-first flows. The 5
+  failing visual snapshots are pre-existing
+  WIP drift (proven by surgically reverting the fix and re-running —
+  identical failures, 0 pixel delta attributable to the change).
+- (JNG, user-reported) **Platform-dwell marker jump fixed (render-only).**
+  While running, the drawn marker leads the engine centre by the
+  engine-to-visual front difference (58−32=26 on JNG) so its nose tracks the
+  protection footprint, but the dwell parked the CENTRE on the platform — so
+  the lead was switched OFF the instant the dwell started: the marker ran one
+  cell past the platform, then teleported back (and would jump forward again
+  at departure). Bekasi is immune (half-lengths equal → difference 0). Fix:
+  the lead now RAMPS to zero around the dwell waypoint (`dwellEaseRef` in
+  dispatching-table.tsx): the marker glides onto the platform as the engine
+  arrives and pulls ahead again as it departs. Engine positions, occupancy,
+  and both topology snapshots are untouched; probe-proven (rx 392→360 jump
+  became a monotone glide, 0-cell jump at dwell start); JNG e2e 7/7, full
+  suite 51 passed + the 5 pre-existing visual failures.
+- **KNOWN BREAKAGE (pre-existing, uncommitted WIP): `verify:bekasi` FAILS.**
+  The in-flight atTrackEdge work added `entryX?` to `plan.start`; the snapshot
+  serializer encodes undefined as `{$undefined: true}`, so all 342 Bekasi
+  journeys now serialize an entryX block (1026 lines) — a serialization-only
+  delta, no behavior change. The JNG baseline was regenerated but Bekasi's
+  was not. Repair choice (regenerate Bekasi baseline vs. omit undefined in
+  the projection) is PENDING — user said leave it for now; whoever commits
+  the atTrackEdge WIP must decide.
+- (deferred by user) **J410 should eventually APPROACH VIA t6**: enter the map
+  on t6 from the west border and cross onto t5 through the xov10 points,
+  instead of materializing at t5's west end (column R). Requires routing the
+  approach leg through the throat — an engine change, not yet designed. Do
+  NOT treat the current column-R slide-in as final behavior.
 
 ## Refactor progress
 
@@ -600,7 +776,192 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   what keep it survivable.
 - 2026-08-20 — A signal on a DIAGONAL needs the positional `at` escape
   (`{edgeIndex, segmentIndex, offset}`), not an `x`: an x does not identify a
-  point on a slope. NE8 sits at BK4, the midpoint of `xov30` (offset 45.25).
+  point on a slope. NE8 sits at AY4, the midpoint of `xov30` (offset 45.25).
+
+- 2026-08-21 — Western compaction completed: the empty old B–N approach was
+  removed, while the old N boundary and all geometry east of it moved left 12
+  columns (now B). Western entry approaches remain before NW1/NW3/NW5/NW7;
+  their map-edge stop stays 8 units inside B. Translated piece positions,
+  station stops/shapes, grid width/viewBox, verifier expectations, and the JNG
+  snapshot were all updated. Topology/connectivity and derived switch ids are
+  unchanged; Bekasi remains byte-identical.
+- 2026-08-21 — PC22 was moved left by one JNG grid column. It is the two ends
+  of `xov16`, so both endpoints moved together: AC4→AB4 and AI10→AH10. The
+  compiler and JNG verifier accept the move; its PC22 control-group mapping
+  and switch identities remain intact.
+- 2026-08-21 — Flank protection is now layout-configurable. Default behaviour
+  remains Bekasi's `CELL / 3`; JNG sets an 11-unit clearance. This preserves
+  route locks for NE2→XW4 through PC13/PC14 while excluding the adjacent but
+  non-fouling coupled PC22 at AH10/AB4 (its branch stays 11.31 units clear).
+  NE4's candidate route still passes PC22 at AH10, but neither candidate now
+  spuriously treats PC22 as a flank; normal route/point locking decides any
+  simultaneous-route conflict.
+- 2026-08-21 — PC15, PC16, PC18, PC19, and PC20 each moved one grid column
+  left, as coupled units (`xov20`, `xov22`, `xov24`, `xov25`, `xov28` moved
+  whole). Controls now sit at AJ11, AM13, AP15, AP11, and AS11. Topology,
+  switch ids, control groups, dashSides, and Bekasi are unchanged; the JNG
+  baseline was re-captured.
+- 2026-08-21 — P34, P63, and P58 moved one grid column left. They are one
+  chain, not three independent points: P34 is `xov27:from`, P63 is its
+  `splitAt` inverted point, and P58 is `xov30:from`. `xov27` moved whole to
+  AR10–AV6 (split AT8) and `xov30`'s west end followed, so the `t5ac` east
+  extremity (752→736) and the `t6am` west extremity (784→768) moved with
+  them, plus the JNG-E `t5ac` platform (744→728) that must sit on the line.
+- 2026-08-21 — The BA2 fixed turn moved one column left to AZ2: `xov30`'s east
+  end and the `t8am` west extremity both went 848→832. This also restores
+  `xov30` to a true 45° diagonal (64×64 instead of 80×64), so the vertex
+  signal NE8 stays at its authored midpoint offset and now renders at AX4.
+- 2026-08-21 — P36 (`xov29:from`, single lever `g36`) and its fixed turn moved
+  one column left: `xov29` went AV10→AU10 / AX8→AW8 whole, and the `t5ap` west
+  extremity followed (800→784). The turn stays a plain join (no switch), and
+  the t5ap platforms at 856/920 still sit on the line.
+- 2026-08-21 — PC23 and PC24 each moved one column left as coupled units
+  (`xov31` and `xov32` moved whole). Controls now sit at AX7 and BA7. Both
+  land inside existing lines, so no extremity or platform edits were needed.
+- 2026-08-21 — The AE4 turn, PC21's right lever, and the AI8 turn moved one
+  column left. All three are `xov18`: its ends are the two turns and its
+  `splitAt` is PC21's east inverted point. `xov18` moved whole to AD4–AH8
+  (split AG7), so the `t7` east extremity (496→480), the `t5ac` west extremity
+  (560→544), and `t5y`'s east end (544→528) followed. PC21's WEST lever
+  stays at AC7, so the t5y connector is now 64 units long instead of 80. The
+  JNG-E `t7` platform moved 488→472 to stay on the line.
+- 2026-08-21 — PC19, P34, P63, P58, and the AZ2 turn all moved one column
+  left: `xov24` whole (AO12–AQ10), `xov27` whole (AQ10–AU6, split AS8), and
+  `xov30` whole (AU6–AY2). Extremities followed — `t5ac` east 736→720, `t6am`
+  west 768→752, `t8am` west 832→816 — plus the JNG-E `t5ac` platform
+  728→712. PC19's control is now at AO11 and NE8 renders at AW4. P34 and P58
+  now sit at the same x as PC19's east lever and P63's diagonal respectively,
+  keeping the whole east-throat chain rigid.
+- 2026-08-21 — PC20, P36, and the AW8 turn moved TWO columns (32 units) left:
+  `xov28` whole (AP12–AR10) and `xov29` whole (AS10–AU8), with the `t5ap` west
+  extremity following 784→752. PC20's control is now at AQ11. t4 (y=400) now
+  carries four consecutive points at AP10/AQ10/AR10/AS10 with no plain track
+  between them — tight but legal; the verifier's control-spacing and
+  signal-clearance checks still pass.
+- 2026-08-21 — PC23 and PC24 moved another column left (`xov31`, `xov32`
+  whole); controls now at AW7 and AZ7. P59 at AV6 is now adjacent to P58 at
+  AU6, so the t6am stub between them is one interval with no plain track.
+- 2026-08-21 — NE4, NE5, and NE6 moved two columns (32 units) left to AW10,
+  BB8, and BB6. Signals are authored as an x along a track group, so these
+  are pure `x` edits; each still resolves onto its own group's east edge and
+  keeps its protected block section. Platforms were not touched, so NE5/NE6
+  now sit west of the JNG-E t5ap/t6am stops at 920.
+- 2026-08-21 — Eastern trim: the map now ends at BD instead of BF. All seven
+  lines reaching the east edge went `to: 928 → 896` (t1..t4, t5ap, t6am,
+  t8am), the six JNG-E boundary stops on those lines went 920→888, and the
+  chrome shrank with them (`grid.width` 968→936, schematic viewBox width
+  1048→1016). No switch, signal, or connectivity change — only plain track
+  east of the throat was removed.
+- 2026-08-21 — **Routes could double back on themselves.** `findRoute`'s bearing
+  test was `dot > -0.8`, chosen so forward crossover diagonals pass — but a
+  BACKWARD 45-degree diagonal scores -0.707 and passed too. So a signal cleared
+  east could be routed west over a crossover: XE1 cleared with PC17 set against
+  it (`656,496 -> 624,464`), NE4 reached XW3 by running east while signalled
+  west, and Bekasi's J5 ran east over P1. Replaced with a requirement of
+  forward progress along the running direction (lateral dx==0 still allowed).
+  Two tests had ENSHRINED the bug and were retargeted, not deleted: the JNG
+  verifier expected NE4=XW3, and the Bekasi E2E used J5's wrong-way route as a
+  workaround (its own comment called it "wrong-way"). Added a JNG verifier
+  check that no route reverses, over all signals x 4 point arrangements.
+- 2026-08-21 — Out-of-service track added as `map.outOfService` (group + x
+  span + reason). JNG closes t4 and t3 west of H (x 32–128) as "jalur dalam
+  pembangunan". Unlike reachability, being unbuilt is a REAL-WORLD FACT no
+  switch arrangement can imply, so it is authored — but deliberately kept OUT
+  of the topology, leaving connectivity, switch ids, and compiled geometry
+  untouched (reopening a line is a one-line edit). `closedSpanOnRoute` in
+  route-search.ts refuses any route running along a closed span; the renderer
+  greys it and crosses its open end. XW4 all-normal is refused; PC3 alone only
+  reaches t3 (also closed); PC7, or PC3+PC2, give a clear road.
+- 2026-08-21 — Route setting is now layout policy: `interlocking.routeSetting`
+  is `"auto"` (default, Bekasi's historical auto-throw) or `"manual"`. JNG uses
+  manual, so a signal whose route needs a point the user has not set is
+  refused and the point is NOT moved for them. The refusal is specific and
+  DERIVED from the route's required switch moves: `"posisi wesel salah: Wesel
+  36 harus BELOK"` (with every wrong control named once, including coupled
+  levers). A physically out-of-service span instead says `"jalur tidak bisa
+  dilewati"`, because moving a point cannot fix it. REJECTED: authoring an
+  `inactive` flag per track — reachability is already implied by switch
+  positions plus connectivity, it is per-route rather than per-track (t5ac is
+  unreachable from NE2 but live from XE5), and a second source of truth would
+  need re-authoring on every point move. The E2E case was retargeted from auto
+  to manual (NE5 needs P36; refused, then clears once thrown).
+- 2026-08-21 — JNG train markers now hop on the 16-unit display grid, like
+  Bekasi, rather than sliding continuously. This is a PRESENTATION choice:
+  `continuousTrains` is omitted on JNG, and the shared renderer snaps to the
+  layout's visual `gridCellSize` (16), not the engine's 58-unit cell. The
+  engine still runs continuously and retains true coordinates for stops,
+  occupancy, conflicts, and reservations. The flyover fixture keeps
+  `continuousTrains: true`; Bekasi's existing 58-unit snapped branch remains
+  byte-identical. The marker centre snaps to JNG's VERTICAL grid lines (`x = 8
+  mod 16`), letting its four-cell body occupy whole cells instead of straddling
+  them. The visual marker also compensates for the engine's longer safety
+  footprint when held: J102 at NE2 (AT14) now begins at AU14 rather than AV14,
+  while its true operational stop and protection are unchanged. The same
+  visual-front offset applies while running, too: clearing NE2 can never make
+  J102 jump back east one cell as the engine transitions from stopped to
+  running. E2E asserts both the 16-unit lattice hops, the NE2 hold (`x=776`),
+  and no eastward jump after release. Turning markers are already derived from
+  the compiled current segment rather than their cardinal train direction:
+  thrown PC13 sends J102 through the 45° crossover at AM13–AO15 and it renders
+  with `rotate(-135)` while stepping its 16-unit grid cells. E2E covers that
+  visible rotation.
+- 2026-08-22 — Train markers can now be ARTICULATED: `presentation.
+  articulatedTrains` (JNG on, everything else off) draws the body as a mitred
+  outline along the track centre-line, so a train straddling a thrown point
+  bends at the junction instead of staying a rigid rotated box. The spine is
+  walked from the marker's own visual front through the engine's existing
+  segment + trail geometry, so the drawn shape cannot disagree with the
+  simulated one; collinear joints are dropped, so plain track keeps the
+  cheaper rect and the bend is never sticky. Engine footprint, stopping,
+  occupancy, and conflicts are untouched. REJECTED: bending by rotating
+  sub-boxes per segment (gaps/overlaps at the joint) and widening the marker
+  into a curve (a schematic point is a hard angle, not a radius). NOTE: JNG's
+  45° crossovers are shorter than the 64-unit marker, so a train there is
+  bendy from entry to exit and never rigid mid-crossing — the old "rigid marker
+  rotates on the diagonal" E2E was superseded by the bend test rather than
+  kept as a false expectation.
+- 2026-08-22 — The bend was appearing HALF A BODY LATE (it only looked bent
+  once the tail neared the point). Cause: the engine only records nodes the
+  train's CENTRE has passed (`trail`), and swaps `segFrom`/`segTo` at the
+  centre too — so a nose already inside a thrown point is invisible to any
+  spine built from history alone. Fix: `pathAhead()` in train-engine walks the
+  route FORWARD from the current segment using the same `resolveNode` point
+  logic (read-only, bounded to 16 hops), and the renderer now builds the body
+  as an arc-length window on one continuous route polyline (trail + current
+  segment + lookahead), locating the drawn centre by projection. That also
+  fixed two artifacts from mixing snapped display coords with raw engine
+  geometry: a bendy/rigid flicker mid-crossover, and the marker jumping
+  BACKWARD one cell at the straight-to-diagonal handover — the diagonal branch
+  was missing the visual-front compensation the horizontal branch already had
+  (now shared as `VISUAL_HALF_LEN`).
+- 2026-08-22 — JNG platform dwells appeared one/two cells beyond the island
+  (J201/J310 around W–Z; J102 around S–V) after the signal-safe visual offset
+  was added. Root cause: the renderer treated EVERY `departAt` dwell as if it
+  were a signal hold and shifted the marker by the engine-vs-visual safety
+  footprint. A scheduled station waypoint is already the TRAIN CENTRE at its
+  authored platform X, so that offset is wrong there. The renderer now detects
+  `atPlatformDwell` and uses zero front compensation for that state; signal
+  holds and running trains retain the safety-front offset. Engine stop Xs stay
+  unchanged (`JNG=360`), and an E2E asserts all four JNG services render at
+  the drawn island centre.
+- 2026-08-22 — JNG arrivals could show one cell beyond the platform, consume
+  the exit signal, then teleport back for the dwell; with the exit red they
+  could be held before the station and never enter the dwell. Cause: after
+  reaching the station waypoint the engine reused the SAME animation-frame
+  time budget on the next leg before the renderer got an arrival frame. On a
+  compact platform the train nose is already at the exit signal, so that extra
+  movement also consumed its clear and claimed the reservation. Live movement
+  (`ctx.now`) now ends the frame at a waypoint whenever the next leg has a
+  pending dwell. The next frame performs the dwell from the exact platform
+  centre; the exit signal remains red/unconsumed and governs departure later.
+  One-shot placement and meets probes deliberately keep carrying their budget.
+  E2E checks arrival at U–X, 20 consecutive dwell seconds with no overrun, and
+  a continued platform hold after booked departure while XE1 remains red.
+- 2026-08-21 — Grid chrome trimmed to end at BF: `grid.width` 936→928. The
+  column count is `round(grid.width / gridCellSize)`, so 936 drew 59 columns
+  (last BG) while the track ends at BD. 928 draws 58 (last BF), keeping one
+  spare column past the map edge for the boundary marks.
+
 
 ## Notes for the next worker
 
@@ -622,3 +983,7 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   one deliberate projection update).
 - If this file lacks enough detail to act, re-read the relevant
   `docs/PLAN-phase-N.md` — do not reconstruct from memory.
+- **`verify:bekasi` is currently RED on the working tree (see decisions log).**
+  It is a pre-existing, serialization-only delta from the uncommitted
+  atTrackEdge WIP (entryX undefined blocks), not a regression of whatever you
+  just changed — verify with `git stash` if unsure.

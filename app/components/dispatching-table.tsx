@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import {
   initTrain,
   advanceTrain,
@@ -8,6 +8,8 @@ import {
   reservationAhead,
   footprintOf,
   bodiesOverlap,
+  pathAhead,
+  buildSegmentLimits,
   type TrainState,
   type MoveCtx,
   type LegPlan,
@@ -16,7 +18,7 @@ import { polylinesOverlap, routesOverlap } from "../lib/geometry";
 import { BEKASI_TAMBUN_CIBITUNG_DISPATCH } from "../dispatching/bekasi-tambun-cibitung";
 import type { DispatchRuntime } from "../lib/dispatch-runtime";
 import { bearingDot, bearingOf } from "../lib/topology";
-import { findRoute, flankPoints } from "../lib/route-search";
+import { findRoute, flankPoints, closedSpanOnRoute, type ClosedSpan } from "../lib/route-search";
 import type { Bearing, GNodeExit, LeveledPoint } from "../lib/topology";
 import type {
   Dir,
@@ -55,16 +57,214 @@ const ARROW_TAIL_FRAC = 32 / 58;
 const ARROW_TIP_FRAC = 41 / 58;
 const ARROW_BARB_FRAC = 36 / 58;
 const ARROW_BARB_HALF_FRAC = 4 / 58;
-const arrowPath = (halfLen: number, sign: 1 | -1) => {
+// Furthest along the half-length the tip may reach. Short of 1 so the stroke
+// sits inside the border rather than straddling it.
+const ARROW_TIP_LIMIT_FRAC = 0.9;
+// Largest scale that respects that limit. Scaling the fractions naively lets
+// the arrow escape the marker (41/58 * 1.6 > 1), so the growth is clamped here
+// rather than left to each layout to get right by trial.
+const ARROW_MAX_SCALE = ARROW_TIP_LIMIT_FRAC / ARROW_TIP_FRAC;
+// `scale` grows the whole glyph about the box centre, which also pushes the
+// tail away from the centred train number. 1 reproduces the Bekasi geometry.
+// The barb half-width is deliberately NOT clamped: only the along-axis extent
+// can overflow, and a wider barb still reads correctly inside a taller box.
+const arrowPath = (halfLen: number, sign: 1 | -1, scale = 1) => {
   const round = (v: number) => Number(v.toFixed(4));
-  const tail = round(sign * halfLen * ARROW_TAIL_FRAC);
-  const tip = round(sign * halfLen * ARROW_TIP_FRAC);
-  const barb = round(sign * halfLen * ARROW_BARB_FRAC);
-  const half = round(halfLen * ARROW_BARB_HALF_FRAC);
+  const axial = Math.min(scale, ARROW_MAX_SCALE);
+  const tail = round(sign * halfLen * ARROW_TAIL_FRAC * axial);
+  const tip = round(sign * halfLen * ARROW_TIP_FRAC * axial);
+  const barb = round(sign * halfLen * ARROW_BARB_FRAC * axial);
+  const half = round(halfLen * ARROW_BARB_HALF_FRAC * scale);
   return `M${tail},0 H${tip} M${barb},-${half} L${tip},0 L${barb},${half}`;
 };
-const arrowRight = (halfLen: number) => arrowPath(halfLen, 1);
-const arrowLeft = (halfLen: number) => arrowPath(halfLen, -1);
+const arrowRight = (halfLen: number, scale = 1) => arrowPath(halfLen, 1, scale);
+const arrowLeft = (halfLen: number, scale = 1) => arrowPath(halfLen, -1, scale);
+
+/**
+ * The train body as an ARTICULATED outline that follows the track centre-line.
+ *
+ * A rigid rotated box cannot express a train straddling a junction: on a
+ * thrown point the real body is bent, with one part still on the straight and
+ * the rest already on the diagonal. Given the centre-line the body occupies
+ * (front first, running backwards), this offsets that polyline by half the
+ * body height to each side and closes the ends, so the marker bends at the
+ * junction and stays pointy along the rails.
+ *
+ * Purely presentational. The spine comes from the same footprint geometry the
+ * engine already computes, so the drawn shape cannot disagree with the
+ * simulated one.
+ */
+const articulatedBodyPath = (spine: [number, number][], halfHeight: number): string => {
+  if (spine.length < 2) return "";
+  const round = (v: number) => Number(v.toFixed(3));
+  const unit = (from: number, to: number): [number, number] => {
+    const dx = spine[to][0] - spine[from][0];
+    const dy = spine[to][1] - spine[from][1];
+    const len = Math.hypot(dx, dy) || 1;
+    return [-dy / len, dx / len]; // the tangent, rotated 90 degrees
+  };
+  // The offset direction at each vertex. At a bend the two adjacent segment
+  // normals are averaged and lengthened to the MITRE, so both offset edges
+  // meet exactly on the corner instead of pinching the body at the joint.
+  const normals: [number, number][] = spine.map((_, i) => {
+    if (i === 0) return unit(0, 1);
+    if (i === spine.length - 1) return unit(spine.length - 2, spine.length - 1);
+    const [ax, ay] = unit(i - 1, i);
+    const [bx, by] = unit(i, i + 1);
+    const mx = ax + bx;
+    const my = ay + by;
+    const mitre = mx * ax + my * ay || 1; // 1 + cos(turn) — 0 only at a reversal
+    return [mx / mitre, my / mitre];
+  });
+  const side = (sign: 1 | -1): [number, number][] =>
+    spine.map((pt, i) => [
+      round(pt[0] + sign * normals[i][0] * halfHeight),
+      round(pt[1] + sign * normals[i][1] * halfHeight),
+    ]);
+  const ring = [...side(1), ...side(-1).reverse()];
+  return `M${ring.map(([x, y]) => `${x},${y}`).join(" L")} Z`;
+};
+
+/**
+ * The centre-line the DRAWN body covers: from its visual front, back along the
+ * current segment and then through the trail, for one body length.
+ *
+ * This mirrors the engine's own footprint walk, but takes the marker's snapped
+ * centre and its (possibly shorter) visual half-length, so the bend appears
+ * exactly where the drawn marker sits rather than where the longer operational
+ * footprint reaches. Returns null when the geometry is unusable.
+ */
+const spineOf = (
+  st: { segFrom: [number, number]; segTo: [number, number]; trail: { pt: [number, number] }[] },
+  center: [number, number],
+  halfLen: number,
+  /** Node positions the train is about to run over, in travel order. */
+  ahead: [number, number][]
+): [number, number][] | null => {
+  const segLen = Math.hypot(st.segTo[0] - st.segFrom[0], st.segTo[1] - st.segFrom[1]);
+  if (!segLen) return null;
+
+  // Build ONE continuous route polyline in travel order: the trail behind,
+  // then the current segment, then the points the train is about to reach.
+  // Working on a single path means the body is just an arc-length window on
+  // it, so the nose and tail can never be computed from different geometry.
+  const route: [number, number][] = [];
+  const push = (pt: [number, number]) => {
+    const last = route[route.length - 1];
+    if (!last || Math.hypot(pt[0] - last[0], pt[1] - last[1]) > 1e-9) route.push(pt);
+  };
+  for (const t of st.trail) push([t.pt[0], t.pt[1]]);
+  push([st.segFrom[0], st.segFrom[1]]);
+  push([st.segTo[0], st.segTo[1]]);
+  for (const pt of ahead) push(pt);
+
+  // Where the DRAWN centre sits on that route. The marker's x is snapped to
+  // the display grid, so project it onto the route rather than assuming it is
+  // exactly the engine's position — otherwise a snapped centre and an
+  // unsnapped nose disagree and the body jitters at a junction.
+  let centerS: number | null = null;
+  let best = Infinity;
+  let s = 0;
+  for (let i = 0; i + 1 < route.length; i++) {
+    const [ax, ay] = route[i];
+    const [bx, by] = route[i + 1];
+    const dx = bx - ax;
+    const dy = by - ay;
+    const len = Math.hypot(dx, dy);
+    if (!len) continue;
+    const t = Math.max(0, Math.min(1, ((center[0] - ax) * dx + (center[1] - ay) * dy) / (len * len)));
+    const px = ax + dx * t;
+    const py = ay + dy * t;
+    const d = Math.hypot(center[0] - px, center[1] - py);
+    if (d < best) {
+      best = d;
+      centerS = s + len * t;
+    }
+    s += len;
+  }
+  const total = s;
+  if (centerS === null) return null;
+
+  // Sample the route at an arc-length distance from its start, clamping past
+  // either end by extending the terminal bearing so the body always keeps its
+  // full drawn length (a freshly spawned train has almost no trail).
+  const at = (target: number): [number, number] => {
+    if (target <= 0) {
+      const [ax, ay] = route[0];
+      const [bx, by] = route[1] ?? route[0];
+      const len = Math.hypot(bx - ax, by - ay) || 1;
+      return [ax - ((bx - ax) / len) * -target, ay - ((by - ay) / len) * -target];
+    }
+    if (target >= total) {
+      const [ax, ay] = route[route.length - 2] ?? route[route.length - 1];
+      const [bx, by] = route[route.length - 1];
+      const len = Math.hypot(bx - ax, by - ay) || 1;
+      const over = target - total;
+      return [bx + ((bx - ax) / len) * over, by + ((by - ay) / len) * over];
+    }
+    let acc = 0;
+    for (let i = 0; i + 1 < route.length; i++) {
+      const [ax, ay] = route[i];
+      const [bx, by] = route[i + 1];
+      const len = Math.hypot(bx - ax, by - ay);
+      if (!len) continue;
+      if (target <= acc + len) {
+        const t = (target - acc) / len;
+        return [ax + (bx - ax) * t, ay + (by - ay) * t];
+      }
+      acc += len;
+    }
+    return [...route[route.length - 1]] as [number, number];
+  };
+
+  // The body is the window [centre - half, centre + half], nose first, with
+  // every route vertex strictly inside it kept so real junctions become bends.
+  const noseS = centerS + halfLen;
+  const tailS = centerS - halfLen;
+  const spine: [number, number][] = [at(noseS)];
+  let acc = 0;
+  const vertices: { s: number; pt: [number, number] }[] = [];
+  for (let i = 0; i + 1 < route.length; i++) {
+    const len = Math.hypot(route[i + 1][0] - route[i][0], route[i + 1][1] - route[i][1]);
+    if (!len) continue;
+    acc += len;
+    if (i + 1 < route.length - 1) vertices.push({ s: acc, pt: route[i + 1] });
+  }
+  for (let i = vertices.length - 1; i >= 0; i--) {
+    const v = vertices[i];
+    if (v.s < noseS && v.s > tailS) spine.push([...v.pt] as [number, number]);
+  }
+  spine.push(at(tailS));
+  return spine;
+};
+
+/**
+ * Drop vertices that do not actually turn.
+ *
+ * A train passing a node on plain track still collects that node as a spine
+ * point, and a straight "bend" would pointlessly switch the marker to path
+ * mode (and mitre against a zero angle). Only real direction changes survive.
+ */
+const withoutStraightJoints = (spine: [number, number][]): [number, number][] => {
+  if (spine.length < 3) return spine;
+  const kept: [number, number][] = [spine[0]];
+  for (let i = 1; i < spine.length - 1; i++) {
+    const [px, py] = kept[kept.length - 1];
+    const [cx, cy] = spine[i];
+    const [nx, ny] = spine[i + 1];
+    const ax = cx - px;
+    const ay = cy - py;
+    const bx = nx - cx;
+    const by = ny - cy;
+    const al = Math.hypot(ax, ay);
+    const bl = Math.hypot(bx, by);
+    if (!al || !bl) continue; // a duplicate point is never a joint
+    // the sine of the turn; well below a degree is the same bearing
+    if (Math.abs((ax * by - ay * bx) / (al * bl)) > 1e-6) kept.push(spine[i]);
+  }
+  kept.push(spine[spine.length - 1]);
+  return kept;
+};
 
 // Train marker color by state: blue = running, green = stopped at a station per
 // the schedule (dwell), red = held at a red signal, amber = waiting at a junction.
@@ -73,6 +273,7 @@ const TRAIN_COLORS = {
   station: { fill: "#bbf7d0", stroke: "#16a34a" },
   signal: { fill: "#fecaca", stroke: "#dc2626" },
   junction: { fill: "#fde68a", stroke: "#d97706" },
+  queue: { fill: "#fde68a", stroke: "#b45309" },
   conflict: { fill: "#ef4444", stroke: "#450a0a" },
 } as const;
 type TrainStopState = keyof typeof TRAIN_COLORS;
@@ -360,8 +561,9 @@ const calculateSignalAspect = (
   if (!dependencies.signalOn[id]) return "red";
   const route = dependencies.routeOf(id);
   if (route.blocked) return "red";
-  return nextId
-    ? calculateSignalAspect(nextId, dependencies, visited, selfIdx) === "red"
+  const next = nextId;
+  return next
+    ? calculateSignalAspect(next, dependencies, visited, selfIdx) === "red"
       ? "amber"
       : "green"
     : "green";
@@ -375,6 +577,7 @@ export default function DispatchingTable({
 }: { dispatch?: DispatchRuntime } = {}) {
   const {
     map: DISPATCH_MAP,
+    scenario: DISPATCH_SCENARIO,
     notificationPolicy: NOTIFICATION_POLICY,
     journeys: JOURNEYS,
     signalSections: SIGNAL_SECTIONS,
@@ -396,8 +599,35 @@ export default function DispatchingTable({
   // layout draws its tracks far closer together than CELL, so an unscaled
   // marker spans several tracks and swallows the controls underneath it.
   // Purely visual — the engine's own footprint still uses CELL.
-  const TRAIN_HALF_LEN = DISPATCH_MAP.grid.cellSize * CONTROL_SCALE;
-  const TRAIN_HALF_HEIGHT = 11 * CONTROL_SCALE;
+  // Same scaled group as the height, so an authored length is the length the
+  // marker ends up drawn at. The engine's own trainHalfLen is untouched.
+  const TRAIN_HALF_LEN =
+    PRESENTATION.trainLength !== undefined
+      ? PRESENTATION.trainLength / 2 / CONTROL_SCALE
+      : DISPATCH_MAP.grid.cellSize * CONTROL_SCALE;
+  // The body height is a layout knob: a dense layout can ask for exactly its
+  // grid pitch so the marker fills a cell. The marker group is drawn with
+  // scale(CONTROL_SCALE) at tick time, so the authored height is divided by
+  // it here — trainHeight is the height the train ENDS UP drawn at on the map.
+  const TRAIN_HALF_HEIGHT =
+    PRESENTATION.trainHeight !== undefined
+      ? PRESENTATION.trainHeight / 2 / CONTROL_SCALE
+      : 11 * CONTROL_SCALE;
+  // Same scaled group, so the authored size is likewise the size on the map.
+  const TRAIN_FONT_SIZE =
+    PRESENTATION.trainFontSize !== undefined
+      ? PRESENTATION.trainFontSize / CONTROL_SCALE
+      : 12 * CONTROL_SCALE;
+  // a pure multiplier, so no scale correction is needed
+  const TRAIN_ARROW_SCALE = PRESENTATION.trainArrowScale ?? 1;
+  // A bendy body is opt-in presentation: layouts that say nothing keep the
+  // historical rigid rotated box.
+  const ARTICULATED_TRAINS = PRESENTATION.articulatedTrains === true;
+  // The DRAWN half-length in map units. The engine protects a signal with its
+  // own (possibly longer) footprint, so every placement path has to convert
+  // between the two consistently — a mismatch shows up as the marker jumping
+  // when it changes segment.
+  const VISUAL_HALF_LEN = TRAIN_HALF_LEN * CONTROL_SCALE;
   // conflict "!" badge sits just past the marker's leading corner
   const EXCLAM_OFFSET: [number, number] = [
     TRAIN_HALF_LEN - 10 * CONTROL_SCALE,
@@ -424,6 +654,29 @@ export default function DispatchingTable({
   //     reading as a dashed line at all.
   // Both are capped at 1 so a coarse grid keeps the authored Bekasi look.
   const CELL_RATIO = Math.min(1, GRID_PITCH / DISPATCH_MAP.grid.cellSize);
+  // Safety distance is layout data, not display geometry. Bekasi retains its
+  // historical CELL/3 clearance; dense schematics can author a tighter value.
+  const FLANK_CLEARANCE = DISPATCH_MAP.interlocking?.flankClearance ?? DISPATCH_MAP.grid.cellSize / 3;
+  // Route-setting policy is layout data; layouts that say nothing keep the
+  // historical auto-set behaviour.
+  const ROUTE_SETTING = DISPATCH_MAP.interlocking?.routeSetting ?? "auto";
+  // Track that is drawn and connected but cannot carry traffic. Resolved to a
+  // line Y once, so the route check is a plain interval test.
+  const CLOSED_SPANS: ClosedSpan[] = (DISPATCH_MAP.outOfService ?? []).map((span) => {
+    const main = DISPATCH_MAP.lines.mains.find((m) => m.trackGroupId === span.groupId);
+    if (!main) {
+      throw new Error(
+        `outOfService names unknown track group "${span.groupId}".`
+      );
+    }
+    return {
+      groupId: span.groupId,
+      lineY: main.lineY,
+      fromX: Math.min(span.fromX, span.toX),
+      toX: Math.max(span.fromX, span.toX),
+      reason: span.reason,
+    };
+  });
   // ...but the eraser has a HARD FLOOR: the solid track it must hide is drawn
   // at a fixed strokeWidth of 2 (TRACK_STROKE, not scaled), so an eraser
   // narrower than that leaves black slivers down both sides of the dashed
@@ -477,6 +730,21 @@ export default function DispatchingTable({
       platformCenterX: PLATFORM_CENTER_X,
     },
   } = DISPATCH_MAP;
+
+  // With scenario.spawn.atTrackEdge, trains approach from just short of their
+  // OWN line's end (buildJourney clamps the spawn there), and each marker is
+  // clipped to that line's drawn extent here: nothing is ever shown over the
+  // blank space between the frame/grid edge and where the track actually
+  // begins — the body slides in piece by piece across the track end instead.
+  // Coordinates are in the shifted diagram's space (hence the − SHIFT).
+  const TRACK_CLIPS = DISPATCH_SCENARIO.spawn?.atTrackEdge === true
+    ? JOURNEYS.map(({ plan }) => {
+        const xs = Object.values(MOVEMENT_DEFINITION.nodes)
+          .filter((n) => n.y === plan.start.y)
+          .map((n) => n.x);
+        return xs.length ? { lo: Math.min(...xs) - SHIFT, hi: Math.max(...xs) - SHIFT } : null;
+      })
+    : null;
 
   // Phase 5: protected-block section of each signal as a track polyline.
   const SECTION_PATHS = DISPATCH_MAP.sectionPaths as Record<string, LeveledPoint[]>;
@@ -572,6 +840,16 @@ export default function DispatchingTable({
   // Simulation-time accumulator (trains will consume this) + direct DOM clock
   // updates so the display stays smooth without re-rendering the table 60×/s.
   const simRef = useRef(0);
+  /** Relative-clock mode (dwell.relativeAnchors): trains materialize at the
+   *  chosen start second with st.time = 0 and are fed REAL elapsed seconds;
+   *  station dwells then last their scheduled duration. */
+  const RELATIVE_CLOCK = DISPATCH_SCENARIO.dwell?.relativeAnchors === true;
+  const spawnSimRef = useRef<number[]>([]);
+  const lastTickRef = useRef<number[]>([]);
+  // Per-train platform-dwell marker easing: which leg the ease was engaged on
+  // and the waypoint it eases toward (leg −1 = none). See the marker
+  // placement in the tick loop for why the lead must ramp, not toggle.
+  const dwellEaseRef = useRef<{ leg: number; x: number }[]>([]);
   const clockRef = useRef<HTMLSpanElement>(null);
   const scaleRef = useRef<number>(1);
   scaleRef.current = paused ? 0 : timeScale; // keep the tick loop in sync with the selected scale
@@ -604,7 +882,10 @@ export default function DispatchingTable({
       // the partner hasn't crossed the platform yet (behind / late) — on a
       // single track it cannot pass the held train, so there is nothing to
       // wait for: the train leaves on its schedule and the partner follows
-      if (crossed == null || crossed >= simRef.current) continue;
+      const relNow = RELATIVE_CLOCK
+        ? simRef.current - (spawnSimRef.current[0] ?? simRef.current)
+        : simRef.current;
+      if (crossed == null || crossed >= relNow) continue;
       release = Math.max(release, crossed + d.releaseOffset);
     }
     return release;
@@ -618,6 +899,7 @@ export default function DispatchingTable({
   const trainRectRefs = useRef<(SVGRectElement | null)[]>([]);
   const trainTextRefs = useRef<(SVGTextElement | null)[]>([]);
   const trainArrowRefs = useRef<(SVGPathElement | null)[]>([]);
+  const trainBendyRefs = useRef<(SVGPathElement | null)[]>([]);
   const trainExclamRefs = useRef<(SVGGElement | null)[]>([]);
   const [occupancyTick, setOccupancyTick] = useState(0);
   const trainSectionKeyRef = useRef("");
@@ -655,16 +937,75 @@ export default function DispatchingTable({
     const ownerIdx = reservedByRef.current[id];
     const owner = ownerIdx !== undefined ? trainStatesRef.current[ownerIdx] : undefined;
     if (owner && owner.done) return null;
-    const fronts =
-      owner && owner.spawned
-        ? [{ lineY: owner.y, front: owner.dir === "left" ? owner.x - CELL : owner.x + CELL }]
-        : trainStatesRef.current
-            .filter((m) => m.spawned && !m.done && m.dir === SIGNALS.find((s) => s.id === id)?.dir)
-            .map((m) => ({ lineY: m.y, front: m.dir === "left" ? m.x - CELL : m.x + CELL }));
+    const ownerDir = SIGNALS.find((s) => s.id === id)?.dir;
+    // Trim at the train's REAR, not its nose: a cell stays reserved until the
+    // whole body has left it. The offset is the DRAWN half-length — the
+    // highlight hugs the visible tail instead of trailing an engine-footprint
+    // margin behind it. (reservationAhead splits the polyline at the given
+    // point and keeps the far side.)
+    let fronts: { lineY: number; front: number }[] = [];
+    if (owner && owner.spawned) {
+      fronts = [
+        { lineY: owner.y, front: owner.dir === "left" ? owner.x + TRAIN_HALF_LEN : owner.x - TRAIN_HALF_LEN },
+      ];
+    } else {
+      // No claimed owner yet. A freshly set reservation must render IN FULL —
+      // trimming against just any same-direction train lets a train on the
+      // ADJACENT parallel track (32u away on JNG) cut the route to the stub
+      // ahead of it, so a cleared signal appears to reserve only at the
+      // platform. Only trains whose centre is essentially ON the polyline
+      // (the same criterion ownership uses) may trim it.
+      fronts = trainStatesRef.current
+        .filter(
+          (m) =>
+            m.spawned &&
+            !m.done &&
+            m.dir === ownerDir &&
+            distToPoly(m.x, m.y, res.pts) <= CELL / 3
+        )
+        .map((m) => ({ lineY: m.y, front: m.dir === "left" ? m.x + CELL : m.x - CELL }));
+    }
+    return reservationAhead(res.pts, fronts) ?? res.pts;
+  };
+  /** The VISIBLE highlight: only the route strictly AHEAD of the owner's nose
+   *  is painted — the amber line is invisible over/behind the train body even
+   *  though those cells stay reserved (freeing logic stays rear-based via
+   *  unpassedOf). Same ownerless filtering as unpassedOf. */
+  const visibleOf = (id: string, res: Reservation): LeveledPoint[] | null => {
+    const ownerIdx = reservedByRef.current[id];
+    const owner = ownerIdx !== undefined ? trainStatesRef.current[ownerIdx] : undefined;
+    if (owner && owner.done) return null;
+    const ownerDir = SIGNALS.find((s) => s.id === id)?.dir;
+    let fronts: { lineY: number; front: number }[] = [];
+    if (owner && owner.spawned) {
+      fronts = [
+        { lineY: owner.y, front: owner.dir === "left" ? owner.x - TRAIN_HALF_LEN : owner.x + TRAIN_HALF_LEN },
+      ];
+    } else {
+      fronts = trainStatesRef.current
+        .filter(
+          (m) =>
+            m.spawned &&
+            !m.done &&
+            m.dir === ownerDir &&
+            distToPoly(m.x, m.y, res.pts) <= CELL / 3
+        )
+        .map((m) => ({ lineY: m.y, front: m.dir === "left" ? m.x - TRAIN_HALF_LEN : m.x + TRAIN_HALF_LEN }));
+    }
     return reservationAhead(res.pts, fronts) ?? res.pts;
   };
   // latest ctx for the tick loop (mutated each render)
   const switchesRef = useRef(switches);
+  switchesRef.current = switches;
+  // Track-class speed caps, derived once: straight vs turnout vs fast zone.
+  const segmentSpeeds = useMemo(
+    () =>
+      DISPATCH_SCENARIO.trackSpeeds
+        ? buildSegmentLimits(DISPATCH_MAP.nodes, DISPATCH_SCENARIO.trackSpeeds)
+        : undefined,
+    []
+  );
+  const segmentSpeedsRef = useRef(segmentSpeeds);
   switchesRef.current = switches;
   const aspectOfRef = useRef<(id: string, selfIdx?: number) => Aspect>(() => "red");
 
@@ -702,9 +1043,29 @@ export default function DispatchingTable({
           return;
         }
         st.spawned = true;
+        spawnSimRef.current[ti] = sec;
+        lastTickRef.current[ti] = sec;
+        if (RELATIVE_CLOCK) {
+          // fresh at the spawn edge with a zeroed clock — the approach runs
+          // LIVE from tick one (no schedule interpolation, no teleport)
+          return;
+        }
         const travel = sec - st.originArr;
-        if (!st.done) advanceTrain(st, travel, ctx, plan.legs);
-        st.time = travel;
+        // Cap schedule interpolation at the line entry for edge-spawned
+        // journeys: with realistic leg speeds even a small pre-start window
+        // would otherwise teleport the train deep into the throat (often on
+        // top of a red signal, where it freezes). It enters from the visible
+        // edge instead and runs the rest LIVE; its internal clock only
+        // advances by distance actually covered, so absolute dwell anchors
+        // still apply.
+        let adv = travel;
+        if (!st.done && plan.approach && plan.start.entryX !== undefined && adv > 0) {
+          const v = Math.max(1e-9, plan.legs[0]?.speed ?? 1);
+          const cap = Math.abs(plan.start.entryX - plan.start.x) / v;
+          if (adv > cap) adv = cap;
+        }
+        if (!st.done) advanceTrain(st, adv, ctx, plan.legs);
+        st.time = adv;
       });
     };
     // pass 1 — place with meets holds OFF so every partner's crossing time is
@@ -723,6 +1084,7 @@ export default function DispatchingTable({
       n.actualArr = JOURNEYS[ti].train.stops.map(() => null);
       return n;
     });
+    dwellEaseRef.current = JOURNEYS.map(() => ({ leg: -1, x: 0 }));
     meetsReadRef.current = (pi, si) => snapshot[pi]?.[si] ?? null;
     const ctx2 = mkCtx();
     ctx2.meetsHold = meetsHold;
@@ -779,9 +1141,16 @@ export default function DispatchingTable({
       const ctx: MoveCtx = {
         ...MOVEMENT_DEFINITION,
         segmentLevels: DISPATCH_MAP.segmentLevels,
+        // per-segment track-class caps (straight / turnout / fast zone) —
+        // placement (initializeSim) deliberately omits these so scheduled
+        // positioning ignores track classes
+        segmentSpeeds: segmentSpeedsRef.current,
         switches: switchesRef.current,
         aspectOf: aspectOfRef.current,
         meetsHold,
+        now: simRef.current,
+        driverReactionSeconds: DISPATCH_SCENARIO.driver?.reactionSeconds ?? 0,
+        stopFrameAtDwellArrival: RELATIVE_CLOCK,
       };
       // partner crossings come from the live states each tick
       meetsReadRef.current = (pi, si) => trainStatesRef.current[pi]?.actualArr[si] ?? null;
@@ -809,6 +1178,22 @@ export default function DispatchingTable({
       // removes the |Δy| < CELL/2 track-spacing fudge that was fragile at the
       // 57–59 px spacing and flagged opposite loop diagonals that never meet.
       const overlaps = (a: TrainState, b: TrainState) => bodiesOverlap(a, b, CELL);
+      // Same line, same direction → this is a FOLLOW, not a collision: only
+      // the REAR train stops (the leader may be a dwelling queue head or
+      // simply ahead). Stopping both would deadlock them — each waits for the
+      // other to clear, and two co-moving trains at track speed (e.g. spawned
+      // together at a shared entry edge, like J310+J410 on t6) would freeze
+      // forever. The follower releases via the loop below once the leader
+      // moves on. The leader is the frontmost in the travel direction; at a
+      // spawn-coincidence tie (identical x) the earlier scheduled origin
+      // leads, index as the deterministic fallback.
+      const leaderOf = (a: TrainState, b: TrainState): TrainState => {
+        if (a.x !== b.x) return (a.dir === "right" ? a.x > b.x : a.x < b.x) ? a : b;
+        const aOrigin = JOURNEYS[a.idx]?.train.stops[0]?.arr ?? 0;
+        const bOrigin = JOURNEYS[b.idx]?.train.stops[0]?.arr ?? 0;
+        if (aOrigin !== bOrigin) return aOrigin < bOrigin ? a : b;
+        return a.idx < b.idx ? a : b;
+      };
       const conflictIdx = new Set<number>();
       let newConflict = false;
       let conflictPair: string | null = null;
@@ -817,14 +1202,24 @@ export default function DispatchingTable({
           const a = live[i];
           const b = live[j];
           if (!overlaps(a, b) || (atRest(a) && atRest(b))) continue; // tolerated queue
-          conflictIdx.add(a.idx);
-          conflictIdx.add(b.idx);
+          // same line + same direction: a following move — stop the follower
+          // only, the leader keeps its state (running, signal-held, dwelling)
+          const follow = a.y === b.y && a.dir === b.dir;
+          const leader = follow ? leaderOf(a, b) : null;
+          if (follow) {
+            // a following move: stop the follower only — the badge and toast
+            // stay reserved for genuine collisions
+          } else {
+            conflictIdx.add(a.idx);
+            conflictIdx.add(b.idx);
+          }
           conflictPair = `${JOURNEYS[a.idx]?.train.train_no ?? "?"} vs ${JOURNEYS[b.idx]?.train.train_no ?? "?"}`;
           for (const t of [a, b]) {
+            if (t === leader) continue; // the leader is free to run
             if (!atRest(t)) {
               t.stopped = true;
-              t.stopReason = "conflict";
-              newConflict = true;
+              t.stopReason = follow ? "queue" : "conflict";
+              if (!follow) newConflict = true;
             }
           }
         }
@@ -837,10 +1232,20 @@ export default function DispatchingTable({
       }
       if (!newConflict) conflictReportedRef.current = false;
       for (const m of live) {
-        if (m.stopped && m.stopReason === "conflict" && !live.some((o) => o.idx !== m.idx && overlaps(o, m))) {
+        if (
+          m.stopped &&
+          (m.stopReason === "conflict" || m.stopReason === "queue") &&
+          !live.some((o) => o.idx !== m.idx && overlaps(o, m))
+        ) {
           m.stopped = false;
           m.stopReason = null;
-          m.time = simRef.current - m.originArr; // absorb the frozen period
+          if (RELATIVE_CLOCK) {
+            // relative clock: resume from the train's own timeline, not the
+            // absolute sim second (its anchors are materialization-relative)
+            lastTickRef.current[m.idx] = simRef.current;
+          } else {
+            m.time = simRef.current - m.originArr; // absorb the frozen period
+          }
         }
       }
       const sections = JOURNEYS.map((j, ti) => {
@@ -863,6 +1268,22 @@ export default function DispatchingTable({
           return "";
         }
         st.spawned = true;
+        if (RELATIVE_CLOCK) {
+          // Relative clock (dwell.relativeAnchors scenarios): feed the engine
+          // real elapsed seconds each tick. The train runs its approach LIVE
+          // from the spawn edge and its station dwells last their scheduled
+          // DURATION — no first-tick mega-budget teleporting it to its hold
+          // point. While stopped, time is frozen (no schedule consumed).
+          const spawnedAt = spawnSimRef.current[ti];
+          const last = Math.max(lastTickRef.current[ti] ?? spawnedAt, spawnedAt);
+          if (st.stopped || st.done) {
+            advanceTrain(st, 0, ctx, plan.legs);
+            if (!st.stopped && !st.done) lastTickRef.current[ti] = simRef.current; // resume without a jump
+          } else if (simRef.current > last) {
+            advanceTrain(st, simRef.current - last, ctx, plan.legs);
+            lastTickRef.current[ti] = simRef.current;
+          }
+        } else {
         // advance only the travel time since the origin (big sim jumps must not
         // let the train run before it materializes). While stopped, no travel
         // time is consumed — the engine only re-checks the release condition,
@@ -876,9 +1297,13 @@ export default function DispatchingTable({
           if (delta > 0 && !st.done) advanceTrain(st, delta, ctx, plan.legs);
           // st.time is advanced by the engine (movement + scheduled dwells)
         }
-        // Signal-pass consumption: signals the train's leading edge crossed this
-        // tick lose their player clear (they stay red until re-clicked) and the
-        // reservations whose routes ended there are released.
+        }
+        // Signal-pass consumption: signals the train's leading edge crossed
+        // this tick lose their player clear (they stay red until re-clicked).
+        // Reservations whose routes ENDED at the consumed signal are NOT freed
+        // here — the consuming train's body is usually still inside their
+        // cells. Instead the train CLAIMS them, and the progress logic below
+        // frees each cell once its REAR has fully passed it.
         for (const pid of st.passedSignals) {
           const s = SIGNALS.find((x) => x.id === pid);
           if (!s) continue;
@@ -888,17 +1313,11 @@ export default function DispatchingTable({
             if (reservationsRef.current[s.id]) reservedByRef.current[s.id] = ti;
             setSignalOn((o) => (o[s.id] ? { ...o, [s.id]: false } : o));
           }
-          setReservations((r) => {
-            let changed = false;
-            const out: Record<string, Reservation> = {};
-            for (const [k, v] of Object.entries(r)) {
-              if (v.nextSignalId === s.id) {
-                changed = true;
-                delete reservedByRef.current[k];
-              } else out[k] = v;
+          for (const [k, v] of Object.entries(reservationsRef.current)) {
+            if (v.nextSignalId === s.id && reservedByRef.current[k] === undefined) {
+              reservedByRef.current[k] = ti;
             }
-            return changed ? out : r;
-          });
+          }
         }
         // Held-at-signal notifications: a train held past the configured threshold fires
         // a board notice; it resolves when the train moves again.
@@ -1052,18 +1471,26 @@ export default function DispatchingTable({
                 bestIdx = i;
               }
             });
-            if (bestIdx !== undefined && bestD <= CELL) {
+            // Ownership threshold must stay BELOW the track spacing (32 on
+            // JNG): with CELL (58) a train on the ADJACENT parallel track is
+            // within range and claims — trims, then releases — a route it
+            // never runs over. A centre essentially ON the polyline is a user;
+            // anything else is merely near it.
+            if (bestIdx !== undefined && bestD <= CELL / 3) {
               reservedByRef.current[id] = bestIdx;
               userIdx = bestIdx;
               user = trainStatesRef.current[bestIdx];
             }
           }
           const end = res.pts[res.pts.length - 1];
-          const front = user ? (ownerDir === "left" ? user.x - CELL : user.x + CELL) : 0;
+          // "Fully passed" is judged at the train's REAR — releasing at the
+          // nose would free cells the body still occupies. The offset is the
+          // DRAWN half-length so the highlight hugs the visible tail.
+          const rear = user ? (ownerDir === "left" ? user.x + TRAIN_HALF_LEN : user.x - TRAIN_HALF_LEN) : 0;
           const passedEnd = user
             ? ownerDir === "left"
-              ? front <= end[0]
-              : front >= end[0]
+              ? rear <= end[0]
+              : rear >= end[0]
             : false;
           // the user left the route (diverged away) without finishing it
           const leftRoute = !!user && !user.done && distToPoly(user.x, user.y, res.pts) > CELL * 1.5;
@@ -1082,9 +1509,9 @@ export default function DispatchingTable({
                 user.x >= loop.minX &&
                 user.x <= loop.maxX
             );
-          // release once the train using the route finished (above), its front
-          // passed the far end, it diverged away, or it is physically in the loop
-          // — points unlock, signals clear
+          // release once the train using the route finished (above), its REAR
+          // passed the far end, it diverged away, or it is physically in the
+          // loop — points unlock, signals clear
           if (userIdx !== undefined && (passedEnd || leftRoute || onLoop)) {
             delete reservedByRef.current[id];
             setReservations((r) => {
@@ -1095,87 +1522,272 @@ export default function DispatchingTable({
             continue;
           }
           if (el) {
-            const ahead = unpassedOf(id, res);
+            const ahead = visibleOf(id, res);
             const d = ahead && ahead.length >= 2 ? "M" + ahead.map(([x, y]) => `${x},${y}`).join(" ") : "";
             if (el.getAttribute("d") !== d) el.setAttribute("d", d);
           }
         }
-        // render: grid mode snaps straights to the nearest 2-cell span and steps
-        // diagonals in CELL hops; schematic mode places markers at their true
-        // continuous position, rotated to the segment bearing.
+        // Render mode is presentation only. The engine always moves, stops,
+        // reserves, and tests occupancy at its true continuous coordinates.
+        // A grid (or a schematic that opts OUT of continuousTrains) merely
+        // snaps the marker to its visual pitch, like Bekasi's cell-to-cell
+        // motion. `GRID_PITCH` makes a dense schematic such as JNG use its
+        // 16-unit graph-paper cells rather than the engine's 58-unit CELL.
+        // A scheduled platform dwell is different from a signal hold: the
+        // platform is authored for the TRAIN CENTRE, so do not apply the
+        // operational-front compensation there. Otherwise J201/J310 drift
+        // east to W–Z and J102 drifts west to S–V instead of occupying the
+        // U–X platform.
+        const renderLeg = plan.legs[Math.min(st.leg, plan.legs.length - 1)];
+        const atPlatformDwell =
+          st.stationDepartureHold ||
+          (!st.stopped && renderLeg.departAt !== undefined && st.time < renderLeg.departAt);
+        // Platform-dwell marker EASING. The running marker leads the engine
+        // centre by the engine-to-visual front difference so its nose tracks
+        // the protection footprint, but a dwell parks the CENTRE on the
+        // platform. Switching that lead off the instant the dwell starts
+        // made the marker teleport BACK a cell at arrival (and forward again
+        // at departure) on any layout whose visual and operational
+        // half-lengths differ (JNG: 58 vs 32; Bekasi: equal, unaffected).
+        // Instead the lead ramps to zero around the dwell waypoint: the drawn
+        // marker glides onto the platform as the engine arrives and pulls
+        // ahead again as it departs. `easeX` is that waypoint while the train
+        // dwells at / is held at / departs the platform, or approaches one
+        // whose dwell anchor is still ahead of the expected arrival (latched
+        // per leg so a mid-approach speed change cannot flicker it off).
+        const easeState = dwellEaseRef.current[ti] ?? { leg: -1, x: 0 };
+        let easeX: number | null = null;
+        const dwellStopIdx = st.leg - 1 + (st.approach ? 0 : 1);
+        const arrivedBeforeAnchor =
+          st.leg > 0 &&
+          renderLeg.departAt !== undefined &&
+          st.actualArr[dwellStopIdx] != null &&
+          st.actualArr[dwellStopIdx] <= renderLeg.departAt;
+        if (arrivedBeforeAnchor) {
+          easeX = plan.legs[st.leg - 1].waypointX;
+        } else if (easeState.leg === st.leg) {
+          easeX = easeState.x; // approach latch: keep easing once engaged for this leg
+        } else {
+          const nextLeg = plan.legs[st.leg + 1];
+          if (nextLeg?.departAt !== undefined) {
+            const expectedArr =
+              st.time +
+              Math.abs(renderLeg.waypointX - st.x) / Math.max(1e-6, renderLeg.speed);
+            if (nextLeg.departAt > expectedArr) easeX = renderLeg.waypointX;
+          }
+        }
+        dwellEaseRef.current[ti] =
+          easeX === null ? { leg: -1, x: 0 } : { leg: st.leg, x: easeX };
+        const frontCompensation =
+          MOVEMENT_DEFINITION.trainHalfLen - VISUAL_HALF_LEN;
+        const leadFactor =
+          easeX === null || frontCompensation <= 0
+            ? 1
+            : Math.min(1, Math.abs(st.x - easeX) / frontCompensation);
         const horizontal = st.segFrom[1] === st.segTo[1];
+        const continuousMarker = IS_SCHEMATIC && PRESENTATION.continuousTrains;
+        const markerPitch = continuousMarker ? CELL : GRID_PITCH;
+        // Snap a horizontal marker's CENTRE to a vertical grid line, not a
+        // cell centre. Its 4-cell JNG body then fills whole cells instead of
+        // straddling five of them. Bekasi's origin is zero, so it retains its
+        // historical coordinates exactly.
+        const markerXOrigin = GRID_OFFSET[0];
         let rx = st.x;
         let ry = st.y;
         let ang = 0;
-        if (IS_SCHEMATIC && PRESENTATION.continuousTrains) {
+        if (continuousMarker) {
           const [fx, fy] = st.segFrom;
           const [tx, ty] = st.segTo;
           ang = (Math.atan2(ty - fy, tx - fx) * 180) / Math.PI;
         } else if (horizontal) {
-          // stopped trains snap BEHIND their raw position (floor eastbound /
-          // ceil westbound) so the 2-cell marker never protrudes past the
-          // signal or junction it is held at — a moving train rounds to the
-          // nearest 2-cell span for grid-aligned hops
-          const raw = (st.x + SHIFT) / CELL;
-          const col = st.stopped
-            ? (st.dir === "right" ? Math.floor(raw) : Math.ceil(raw)) - 1
-            : Math.round(raw) - 1;
-          rx = (col + 1) * CELL - SHIFT;
+          // The engine protects the signal using its own (possibly longer)
+          // footprint. A shorter drawn marker must always be shifted toward
+          // its direction of travel by the difference in half lengths — not
+          // only while stopped. Otherwise it correctly fills AU–AX while held
+          // at NE2, then jumps BACK one cell to AV–AY as soon as NE2 clears.
+          // Bekasi remains unchanged because its visual and operational
+          // half-lengths are equal. Near a platform dwell the shift EASES to
+          // zero (leadFactor) so the marker glides onto the platform instead
+          // of jumping back a cell when the dwell starts.
+          const engineToVisualFront = frontCompensation * leadFactor;
+          const visualCenter = st.x + (st.dir === "right" ? engineToVisualFront : -engineToVisualFront);
+          const raw = (visualCenter + SHIFT - markerXOrigin) / markerPitch;
+          const snapped = st.stopped
+            ? st.dir === "right"
+              ? Math.floor(raw)
+              : Math.ceil(raw)
+            : Math.round(raw);
+          rx = markerXOrigin + snapped * markerPitch - SHIFT;
         } else {
-          // diagonal: advance in discrete CELL steps along the segment, so the
-          // crossing is grid-based too (not a smooth slide)
+          // Diagonals advance by one DISPLAY CELL on their dominant axis. On
+          // JNG's 45-degree crossovers that is 16 in both x and y (rather than
+          // a 16-unit Euclidean step, which would land between grid cells).
           const [fx, fy] = st.segFrom;
           const [tx, ty] = st.segTo;
-          const len = Math.hypot(tx - fx, ty - fy) || 1;
-          const progress = Math.hypot(st.x - fx, st.y - fy);
-          const stepped = Math.min(len, Math.round(progress / CELL) * CELL);
+          const dx = tx - fx;
+          const dy = ty - fy;
+          const len = Math.hypot(dx, dy) || 1;
+          const dominantAxis = Math.max(Math.abs(dx), Math.abs(dy)) / len || 1;
+          const diagonalPitch = markerPitch / dominantAxis;
+          // Same visual-front compensation as the horizontal branch, eased
+          // near a platform dwell (leadFactor). Without it the marker shifts
+          // by the half-length difference at every straight/diagonal handover
+          // and appears to jump BACKWARD as it enters a crossover.
+          const progress =
+            Math.hypot(st.x - fx, st.y - fy) + frontCompensation * leadFactor;
+          const stepped = Math.min(len, Math.round(progress / diagonalPitch) * diagonalPitch);
           const t = stepped / len;
-          rx = fx + (tx - fx) * t;
-          ry = fy + (ty - fy) * t;
-          ang = (Math.atan2(ty - fy, tx - fx) * 180) / Math.PI;
+          rx = fx + dx * t;
+          ry = fy + dy * t;
+          ang = (Math.atan2(dy, dx) * 180) / Math.PI;
         }
+        // An articulated body is drawn in MAP space (it spans several segments
+        // at different bearings, so it cannot live in the marker's own rotated
+        // frame). The spine is an arc-length window on the train's own route,
+        // centred on the DRAWN centre — so the nose bends into a thrown point
+        // as soon as it reaches it, not a half-body later when the engine's
+        // centre does.
+        const rawSpine =
+          ARTICULATED_TRAINS && !continuousMarker
+            ? spineOf(st, [rx, ry], VISUAL_HALF_LEN, pathAhead(st, ctx, VISUAL_HALF_LEN))
+            : null;
+        const bendySpine = rawSpine ? withoutStraightJoints(rawSpine) : null;
+        // A bend is only worth drawing while the body actually spans one. On
+        // plain track the rigid box is identical and cheaper.
+        const bendy = bendySpine !== null && bendySpine.length > 2;
         if (g) {
-          g.setAttribute("transform", `translate(${rx}, ${ry}) rotate(${ang}) scale(${CONTROL_SCALE})`);
+          // The bendy path carries its own map-space geometry, so the group
+          // must not also rotate it; only the upright chrome is placed here.
+          g.setAttribute(
+            "transform",
+            bendy
+              ? `translate(${rx}, ${ry}) scale(${CONTROL_SCALE})`
+              : `translate(${rx}, ${ry}) rotate(${ang}) scale(${CONTROL_SCALE})`
+          );
           g.setAttribute("visibility", "visible");
           g.setAttribute("data-x", String(Math.round(rx)));
           g.setAttribute("data-y", String(Math.round(ry)));
+          g.setAttribute("data-bendy", bendy ? "true" : "false");
         }
         // Marker color clues the train's state: green = stopped at a station
         // (scheduled dwell), red = held at a red signal, amber = waiting at a
         // junction for the route, blue = running.
-        const leg = plan.legs[Math.min(st.leg, plan.legs.length - 1)];
-        const dwelling = !st.stopped && leg.departAt !== undefined && st.time < leg.departAt;
+        const leg = renderLeg;
+        const dwelling = atPlatformDwell;
         const stopState: TrainStopState = st.stopped
-          ? st.stopReason === "signal"
+          ? st.stationDepartureHold
+            ? "station"
+            : st.stopReason === "signal"
             ? "signal"
             : st.stopReason === "junction"
             ? "junction"
             : st.stopReason === "conflict"
             ? "conflict"
+            : st.stopReason === "queue"
+            ? "queue"
             : "moving"
           : dwelling
           ? "station"
           : "moving";
         const rect = trainRectRefs.current[ti];
+        const c = TRAIN_COLORS[stopState];
+        const stroke = selectedIdxRef.current === ti ? "#f59e0b" : c.stroke;
         if (rect) {
-          const c = TRAIN_COLORS[stopState];
           if (rect.getAttribute("fill") !== c.fill) rect.setAttribute("fill", c.fill);
-          const stroke = selectedIdxRef.current === ti ? "#f59e0b" : c.stroke;
           if (rect.getAttribute("stroke") !== stroke) rect.setAttribute("stroke", stroke);
+          // the straight box and the bendy body are alternatives, never both
+          rect.setAttribute("visibility", bendy ? "hidden" : "visible");
         }
-        if (txt) txt.setAttribute("transform", `rotate(${-ang})`);
-        // Arrow points along the track: on horizontals the marker stays upright,
-        // so it sits on the travel side (left for westbound, right for eastbound).
-        // On diagonals the marker rotates so local +x = travel direction — use the
-        // right-pointing shape there so it never points against the movement.
+        const bendyEl = trainBendyRefs.current[ti];
+        if (bendyEl) {
+          bendyEl.setAttribute("visibility", bendy ? "visible" : "hidden");
+          if (bendy) {
+            // The spine is map-space; the group already applies translate+scale,
+            // so express it in the group's own local frame.
+            const local = bendySpine!.map(
+              ([x, y]) => [(x - rx) / CONTROL_SCALE, (y - ry) / CONTROL_SCALE] as [number, number]
+            );
+            bendyEl.setAttribute("d", articulatedBodyPath(local, TRAIN_HALF_HEIGHT));
+            if (bendyEl.getAttribute("fill") !== c.fill) bendyEl.setAttribute("fill", c.fill);
+            if (bendyEl.getAttribute("stroke") !== stroke) bendyEl.setAttribute("stroke", stroke);
+          }
+        }
+        // The number stays UPRIGHT for legibility, but like the arrow it
+        // must stay ON the body while the marker bends: a rigid placement at
+        // the group origin stops riding the body once it curves away from the
+        // straight-through-centre chord. Anchor it on the spine's REAR
+        // segment (midpoint of its last two points — remember the spine runs
+        // nose-first BACKWARDS, so that is the tail end) in the group's local
+        // frame; the arrow holds the nose, the number rides the rear body.
+        if (txt) {
+          if (bendy && bendySpine && bendySpine.length >= 2) {
+            const [e1x, e1y] = bendySpine[bendySpine.length - 1];
+            const [e2x, e2y] = bendySpine[bendySpine.length - 2];
+            const mx = ((e1x + e2x) / 2 - rx) / CONTROL_SCALE;
+            const my = ((e1y + e2y) / 2 - ry) / CONTROL_SCALE;
+            txt.setAttribute("transform", `translate(${mx}, ${my})`);
+          } else {
+            txt.setAttribute("transform", bendy ? "" : `rotate(${-ang})`);
+          }
+        }
+        // Direction must be encoded ONCE. Whenever the group is rotated to face
+        // the travel direction, local +x already IS that direction, so the arrow
+        // must use the right-pointing shape; flipping it as well would cancel the
+        // rotation and point the arrow backwards. Only an unrotated marker needs
+        // the left-pointing shape to show a westbound train.
+        const rotatedToTravel = ang !== 0 || !horizontal;
         const arrow = trainArrowRefs.current[ti];
         if (arrow) {
-          arrow.setAttribute(
-            "d",
-            horizontal && st.dir === "left"
-              ? arrowLeft(TRAIN_HALF_LEN)
-              : arrowRight(TRAIN_HALF_LEN)
-          );
+          // A bendy marker rotates the ARROW ALONE, so it must follow the
+          // NOSE, not the centre: while the front is on a thrown crossover
+          // but the centre is still on the straight, `ang` is still 0 and a
+          // centre-derived rotation keeps the arrow pointing straight for up
+          // to half a body length. The glyph is authored hugging the LEADING
+          // EDGE (it spans +x only), so rotating it about the marker centre
+          // would swing it clean off the bent body. Instead ANCHOR it on the
+          // spine's leading segment so its TIP lands just inside the nose,
+          // oriented onto the travel direction. Everything happens in the
+          // group's LOCAL frame (map → local is a divide by CONTROL_SCALE,
+          // matching how the articulated body path is expressed); spineOf
+          // builds the spine nose-first but running BACKWARDS, so travel
+          // direction = spine[1] → spine[0].
+          let leadAng: number | null = null;
+          let anchorLX = 0;
+          let anchorLY = 0;
+          if (bendy && bendySpine && bendySpine.length >= 2) {
+            const [nx, ny] = bendySpine[0];
+            const [bx, by] = bendySpine[1];
+            const nlx = (nx - rx) / CONTROL_SCALE;
+            const nly = (ny - ry) / CONTROL_SCALE;
+            const blx = (bx - rx) / CONTROL_SCALE;
+            const bly = (by - ry) / CONTROL_SCALE;
+            const segLen = Math.hypot(nlx - blx, nly - bly);
+            if (segLen > 1e-9) {
+              leadAng = (Math.atan2(nly - bly, nlx - blx) * 180) / Math.PI;
+              const ux = (nlx - blx) / segLen;
+              const uy = (nly - bly) / segLen;
+              // how far the glyph reaches forward of its own origin
+              const axial = Math.min(TRAIN_ARROW_SCALE, ARROW_MAX_SCALE);
+              const tipDist = ARROW_TIP_FRAC * TRAIN_HALF_LEN * axial;
+              anchorLX = nlx - ux * tipDist;
+              anchorLY = nly - uy * tipDist;
+            }
+          }
+          if (leadAng !== null) {
+            arrow.setAttribute("d", arrowRight(TRAIN_HALF_LEN, TRAIN_ARROW_SCALE));
+            arrow.setAttribute(
+              "transform",
+              `translate(${anchorLX}, ${anchorLY}) rotate(${leadAng})`
+            );
+          } else {
+            arrow.setAttribute(
+              "d",
+              !rotatedToTravel && st.dir === "left"
+                ? arrowLeft(TRAIN_HALF_LEN, TRAIN_ARROW_SCALE)
+                : arrowRight(TRAIN_HALF_LEN, TRAIN_ARROW_SCALE)
+            );
+            arrow.setAttribute("transform", "");
+          }
         }
         // Conflict badge: "!" on every train involved in a live conflict
         const exclam = trainExclamRefs.current[ti];
@@ -1183,7 +1795,9 @@ export default function DispatchingTable({
           exclam.setAttribute("visibility", conflictIdx.has(st.idx) ? "visible" : "hidden");
           exclam.setAttribute(
             "transform",
-            `translate(${EXCLAM_OFFSET[0]}, ${EXCLAM_OFFSET[1]}) rotate(${-ang})`
+            bendy
+              ? `translate(${EXCLAM_OFFSET[0]}, ${EXCLAM_OFFSET[1]})`
+              : `translate(${EXCLAM_OFFSET[0]}, ${EXCLAM_OFFSET[1]}) rotate(${-ang})`
           );
         }
         return occupiedSections(st, SIGNAL_SECTIONS_PTS, CELL);
@@ -1228,7 +1842,7 @@ export default function DispatchingTable({
       const flanks = flankPoints(
         { pts: res.pts, nodePath: res.nodePath, requiredSwitches: {}, exitSignalId: "" },
         DISPATCH_MAP.nodes,
-        CELL / 3
+        FLANK_CLEARANCE
       );
       if (flanks.includes(swId)) return sig.id;
     }
@@ -1327,15 +1941,69 @@ export default function DispatchingTable({
       logClick(`${codeOf(sig.id)} × tidak bisa dibuka (tidak ada rute${exitId ? ` ke ${codeOf(exitId)}` : ""})`);
       return; // stay red
     }
+    // Out-of-service track: the road may be set correctly, but the line itself
+    // cannot carry traffic. Distinct from a wrongly-set point — no amount of
+    // point moving fixes it — so it keeps the "jalur tidak bisa dilewati"
+    // wording and names the reason.
+    const closed = closedSpanOnRoute(found, CLOSED_SPANS);
+    if (closed) {
+      setConflictNote(
+        `${codeOf(sig.id)} tidak bisa dibuka — jalur tidak bisa dilewati${closed.reason ? ` (${closed.reason})` : ""}.`
+      );
+      window.setTimeout(() => setConflictNote(null), 3000);
+      logClick(
+        `${codeOf(sig.id)} × rute tidak bisa terbentuk (jalur ${closed.groupId} tidak bisa dilewati)`
+      );
+      return; // stay red
+    }
     if (exitId && found.exitSignalId !== exitId) {
       setConflictNote(`${codeOf(sig.id)} tidak bisa dibuka — tidak ada rute ke ${codeOf(exitId)}.`);
       window.setTimeout(() => setConflictNote(null), 3000);
       logClick(`${codeOf(sig.id)} × tidak bisa dibuka (tidak ada rute ke ${codeOf(exitId)})`);
       return;
     }
-    // policy (a) — auto route set: throw the unlocked points the route needs,
-    // then clear. Coupled pairs move together.
+    // A route needs points that are not set the way the search wants. Which of
+    // the two standing policies applies is layout data, not a special case:
+    //   auto   — the interlocking throws them for you (Bekasi, the default);
+    //   manual — the signal is refused until the user sets them (JNG).
+    // "Inactive track" needs no authored flag: a track is unreachable exactly
+    // when the points as they stand do not lead there.
     const requiredSwitches = Object.keys(found.requiredSwitches);
+    if (requiredSwitches.length > 0 && ROUTE_SETTING === "manual") {
+      // Name the points that are set the wrong way, so the user knows what to
+      // move rather than hunting the throat. Derived from the route's own
+      // required moves, and reported by CONTROL (the thing on screen) — a
+      // coupled pair is one lever, so it must be named once.
+      // A control with no proper name falls back to a "sw NN" label; show it
+      // as "Wesel NN" so every entry reads the same way to the user.
+      const nameOf = (label: string): string =>
+        /^sw\s/i.test(label) ? label.replace(/^sw\s*/i, "Wesel ") : label;
+      const wrong = Array.from(
+        new Set(
+          requiredSwitches.map((id) => {
+            const swId = Number(id);
+            const control = POINT_CONTROLS.find((c) => c.ids.includes(swId));
+            return control?.label ?? `P${swId}`;
+          })
+        )
+      );
+      const wanted = (label: string): string => {
+        const control = POINT_CONTROLS.find((c) => c.label === label);
+        const swId = control
+          ? requiredSwitches.map(Number).find((id) => control.ids.includes(id))
+          : Number(label.replace(/^P/, ""));
+        return found.requiredSwitches[swId as number] === "reversed"
+          ? "BELOK"
+          : "LURUS";
+      };
+      const detail = wrong.map((w) => `${nameOf(w)} harus ${wanted(w)}`).join(", ");
+      setConflictNote(
+        `${codeOf(sig.id)} tidak bisa dibuka — posisi wesel salah: ${detail}.`
+      );
+      window.setTimeout(() => setConflictNote(null), 4000);
+      logClick(`${codeOf(sig.id)} × posisi wesel salah (${detail})`);
+      return; // stay red — the user must set the points
+    }
     if (requiredSwitches.length > 0) {
       const moves: Record<number, SwitchState> = {};
       for (const key of requiredSwitches) {
@@ -1351,7 +2019,7 @@ export default function DispatchingTable({
     }
     // flank protection — auto-set fouled flanks to the non-fouling position;
     // a flank locked against the route is refused
-    const flanks = flankPoints(found, DISPATCH_MAP.nodes, CELL / 3);
+    const flanks = flankPoints(found, DISPATCH_MAP.nodes, FLANK_CLEARANCE);
     for (const flank of flanks) {
       if (switches[flank] !== "reversed") continue;
       if (isLocked(flank)) {
@@ -1603,6 +2271,7 @@ export default function DispatchingTable({
       if (st.stopReason === "signal") status = `Ditahan sinyal ${codeOf(st.stopSignalId ?? "")}`;
       else if (st.stopReason === "junction") status = "Menunggu wesel";
       else if (st.stopReason === "conflict") status = "Konflik — kereta bertabrakan";
+      else if (st.stopReason === "queue") status = "Mengikuti — menunggu kereta di depan";
       else status = "Berhenti";
       // held past its scheduled departure at a station → late; otherwise the slip
       if (st.leg > 0 && leg.departAt !== undefined && st.time > leg.departAt) {
@@ -1961,6 +2630,14 @@ export default function DispatchingTable({
                 />
               </clipPath>
             ))}
+            {TRACK_CLIPS?.map((clip, ti) =>
+              clip ? (
+                <clipPath key={`track-clip-${ti}`} id={`track-clip-${ti}`}>
+                  {/* full-height band over the line's drawn extent only */}
+                  <rect x={clip.lo} y={-10000} width={clip.hi - clip.lo} height={20000} />
+                </clipPath>
+              ) : null
+            )}
           </defs>
 
           {/* Station platform cells — tinted footprint under the tracks (grid mode) */}
@@ -1994,6 +2671,42 @@ export default function DispatchingTable({
               <path key={i} d={d} />
             ))}
           </g>
+
+          {/* Out-of-service track: still drawn, because it physically exists
+              and the schematic should show it — but greyed, and crossed at the
+              end where traffic would enter it. Painted OVER the black track so
+              no compiled geometry has to be filtered. */}
+          {CLOSED_SPANS.map((span) => {
+            // the cross marks the open end — the side traffic approaches from
+            const crossX = span.toX;
+            const arm = 7;
+            return (
+              <g key={`closed-${span.groupId}-${span.fromX}`} aria-hidden="true">
+                <line
+                  x1={span.fromX}
+                  y1={span.lineY}
+                  x2={span.toX}
+                  y2={span.lineY}
+                  stroke="#ffffff"
+                  strokeWidth={TRACK_STROKE + 2}
+                  strokeLinecap="butt"
+                />
+                <line
+                  x1={span.fromX}
+                  y1={span.lineY}
+                  x2={span.toX}
+                  y2={span.lineY}
+                  stroke="#9ca3af"
+                  strokeWidth={TRACK_STROKE}
+                  strokeLinecap="butt"
+                />
+                <g stroke="#b91c1c" strokeWidth={2} strokeLinecap="round">
+                  <line x1={crossX - arm} y1={span.lineY - arm} x2={crossX + arm} y2={span.lineY + arm} />
+                  <line x1={crossX - arm} y1={span.lineY + arm} x2={crossX + arm} y2={span.lineY - arm} />
+                </g>
+              </g>
+            );
+          })}
 
           {/* Flyover crossings — the lower line is gapped and the upper track
               carries a bridge glyph (two piers). Level crossings only exist at
@@ -2087,7 +2800,7 @@ export default function DispatchingTable({
             The tick loop keeps the paths in sync with the train's progress. */}
         <g strokeLinecap="round" strokeLinejoin="round" fill="none">
           {Object.entries(reservations).map(([id, res]) => {
-            const ahead = unpassedOf(id, res);
+            const ahead = visibleOf(id, res);
             if (!ahead || ahead.length < 2) return null;
             const d = "M" + ahead.map(([x, y]) => `${x},${y}`).join(" ");
             return (
@@ -2115,11 +2828,11 @@ export default function DispatchingTable({
         {/* Stations — grid mode: merged-cell name plates (e.g. Bekasi Timur at
             E3–F3); schematic mode: authored platform shapes at their coordinates */}
         {STATIONS.map((st) => {
-          const shape = STATION_SHAPES.find((s) => s.code === st.code);
-          if (IS_SCHEMATIC && shape) {
-            const w = shape.length;
-            const h = shape.width ?? 10;
-            const barY = shape.side === "down" ? shape.y + 8 : shape.y - 8 - h;
+          // A station may own SEVERAL platform faces (an island between two
+          // tracks is one platform serving both), so every shape with this
+          // code is drawn — not just the first one found.
+          const shapes = STATION_SHAPES.filter((s) => s.code === st.code);
+          if (IS_SCHEMATIC && shapes.length > 0) {
             return (
               <g
                 key={st.code}
@@ -2127,27 +2840,44 @@ export default function DispatchingTable({
                 className="cursor-pointer"
                 aria-label={`Jadwal stasiun ${st.name}`}
               >
+                {shapes.map((shape, i) => {
+            const w = shape.length;
+            const h = shape.width ?? 10;
+            const gap = shape.offset ?? 8;
+            const barY = shape.side === "down" ? shape.y + gap : shape.y - gap - h;
+            // square corners are just a zero radius; the label detaches from
+            // the bar only when the layout asks it to
+            const radius = shape.corner === "square" ? 0 : h / 2;
+            const labelY =
+              shape.labelY ?? barY + (shape.side === "down" ? h + 14 : -6);
+            return (
+              <g key={i}>
                 <rect
                   x={shape.x - w / 2}
                   y={barY}
                   width={w}
                   height={h}
-                  rx={h / 2}
+                  rx={radius}
                   fill="#94a3b8"
                   stroke={selectedStation === st.code ? "#f59e0b" : "#334155"}
                   strokeWidth={selectedStation === st.code ? 3 : 2}
                 />
-                <text
-                  x={shape.x}
-                  y={barY + (shape.side === "down" ? h + 14 : -6)}
-                  textAnchor="middle"
-                  fontSize={13}
-                  fontWeight={700}
-                  fill="#334155"
-                  pointerEvents="none"
-                >
-                  {st.name}
-                </text>
+                {shape.label !== false && (
+                  <text
+                    x={shape.x}
+                    y={labelY}
+                    textAnchor="middle"
+                    fontSize={13}
+                    fontWeight={700}
+                    fill="#334155"
+                    pointerEvents="none"
+                  >
+                    {st.name}
+                  </text>
+                )}
+              </g>
+            );
+                })}
               </g>
             );
           }
@@ -2191,16 +2921,19 @@ export default function DispatchingTable({
           return (
             <g
               key={train.train_no}
-              data-train={train.train_no}
-              aria-label={`Train ${train.train_no} ${train.name}, ${right ? "eastbound" : "westbound"}`}
-              onClick={() => openTrain(ti)}
-              className="cursor-pointer"
-              ref={(el) => {
-                trainGroupRefs.current[ti] = el;
-              }}
-              transform="translate(-1000, -1000)"
-              visibility="hidden"
+              clipPath={TRACK_CLIPS ? `url(#track-clip-${ti})` : undefined}
             >
+              <g
+                data-train={train.train_no}
+                aria-label={`Train ${train.train_no} ${train.name}, ${right ? "eastbound" : "westbound"}`}
+                onClick={() => openTrain(ti)}
+                className="cursor-pointer"
+                ref={(el) => {
+                  trainGroupRefs.current[ti] = el;
+                }}
+                transform="translate(-1000, -1000)"
+                visibility="hidden"
+              >
               <rect
                 ref={(el) => {
                   trainRectRefs.current[ti] = el;
@@ -2214,15 +2947,36 @@ export default function DispatchingTable({
                 stroke="#2563eb"
                 strokeWidth={1.5 * CONTROL_SCALE}
               />
+              {/* Articulated body — used INSTEAD of the rect while the train
+                  spans a junction, so it bends along the rails it occupies.
+                  Mitred joints keep it pointy; the two are never both shown. */}
+              {ARTICULATED_TRAINS && (
+                <path
+                  ref={(el) => {
+                    trainBendyRefs.current[ti] = el;
+                  }}
+                  data-train-body="articulated"
+                  fill="#bfdbfe"
+                  stroke="#2563eb"
+                  strokeWidth={1.5 * CONTROL_SCALE}
+                  strokeLinejoin="round"
+                  visibility="hidden"
+                />
+              )}
               {/* direction arrow — rotates with the box on diagonals so it always
                   points along the track in the travel direction (updated per segment) */}
               <path
                 ref={(el) => {
                   trainArrowRefs.current[ti] = el;
                 }}
-                d={right ? arrowRight(TRAIN_HALF_LEN) : arrowLeft(TRAIN_HALF_LEN)}
+                d={
+                  right
+                    ? arrowRight(TRAIN_HALF_LEN, TRAIN_ARROW_SCALE)
+                    : arrowLeft(TRAIN_HALF_LEN, TRAIN_ARROW_SCALE)
+                }
                 stroke="#1e3a8a"
-                strokeWidth={2 * CONTROL_SCALE}
+                // the stroke grows with the glyph, else a bigger arrow reads thin
+                strokeWidth={2 * CONTROL_SCALE * TRAIN_ARROW_SCALE}
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 fill="none"
@@ -2259,15 +3013,17 @@ export default function DispatchingTable({
                   trainTextRefs.current[ti] = el;
                 }}
                 x={0}
-                y={4 * CONTROL_SCALE}
+                // baseline sits a third of the cap height below the centre
+                y={TRAIN_FONT_SIZE / 3}
                 textAnchor="middle"
-                fontSize={12 * CONTROL_SCALE}
+                fontSize={TRAIN_FONT_SIZE}
                 fontWeight={800}
                 fill="#1e3a8a"
                 pointerEvents="none"
               >
                 {train.train_no}
               </text>
+              </g>
             </g>
           );
         })}
@@ -2614,6 +3370,8 @@ export default function DispatchingTable({
                       className={`h-2.5 w-2.5 shrink-0 rounded-full ${
                         st.stopped && st.stopReason === "conflict"
                           ? "bg-red-600"
+                          : st.stopped && st.stopReason === "queue"
+                          ? "bg-amber-500"
                           : st.stopped
                           ? "bg-red-400"
                           : info.atStopIdx !== null

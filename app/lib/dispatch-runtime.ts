@@ -29,7 +29,7 @@ type JourneyPreparationMap = Pick<
 
 type JourneyPreparationScenario = Pick<
   DispatchScenarioDefinition,
-  "speed" | "dwell" | "priority" | "spawn" | "routing"
+  "speed" | "dwell" | "priority" | "spawn" | "routing" | "trackSpeeds"
 >;
 
 type MeetPreparationMap = Pick<
@@ -112,9 +112,10 @@ const firstLegSpeed = (
     speed.segmentKm[`${stops[0].trackmark}-${stops[1].trackmark}`] ??
     speed.segmentKm[`${stops[1].trackmark}-${stops[0].trackmark}`];
   const distUnits = Math.abs(to - from);
-  return km
-    ? (distUnits * speed.runKmh) / (km * 3600)
-    : distUnits / Math.max(1, stops[1].arr - stops[0].dep);
+  return Math.max(
+    speed.minUnitsPerSecond ?? 0,
+    km ? (distUnits * speed.runKmh) / (km * 3600) : distUnits / Math.max(1, stops[1].arr - stops[0].dep)
+  );
 };
 
 const spawnClearanceGap = (
@@ -206,6 +207,18 @@ const prepareJourneys = (
 
   return trains.map((train) => {
     const line = selectMainLine(train.stops, map, scenario);
+    // entryLine: the approach may spawn on a DIFFERENT line (e.g. enter on
+    // t6 and cross onto the journey's t5 through the throat). Resolve it the
+    // same way selectMainLine resolves an explicit `line`.
+    const entryLineId = train.stops.find((stop) => stop.entryLine !== undefined)
+      ?.entryLine;
+    const entryMain = entryLineId
+      ? map.lines.mains.find(
+          (main) => main.trackGroupId === entryLineId || main.name === entryLineId
+        )
+      : undefined;
+    if (entryLineId && !entryMain)
+      throw new Error(`Unknown entry line "${entryLineId}"`);
     // multi-length platforms: resolve each stop's X on the journey's own line
     const stopXFor = (code: string): number =>
       map.stations.stopXsByTrack?.[code]?.[line.trackGroupId] ??
@@ -218,8 +231,9 @@ const prepareJourneys = (
         line.lineY,
         map.nodes,
         journeyDir(train.stops, platformX),
-        { speed: scenario.speed, dwell: scenario.dwell },
-        stopXFor
+        { speed: scenario.speed, dwell: scenario.dwell, spawn: { atTrackEdge: scenario.spawn.atTrackEdge === true }, trackSpeeds: scenario.trackSpeeds },
+        stopXFor,
+        entryMain?.lineY
       ),
     };
   });

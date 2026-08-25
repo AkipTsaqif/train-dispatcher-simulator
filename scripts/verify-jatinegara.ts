@@ -13,7 +13,7 @@
 import { JATINEGARA_DISPATCH } from "../app/dispatching/jatinegara";
 import { compileTopology } from "../app/lib/topology";
 import { JATINEGARA_ASSEMBLED as JATINEGARA_TOPOLOGY } from "../app/pieces/jatinegara";
-import { findRoute, type RouteSearchSignal } from "../app/lib/route-search";
+import { findRoute, flankPoints, closedSpanOnRoute, type ClosedSpan, type RouteSearchSignal } from "../app/lib/route-search";
 
 let failures = 0;
 const check = (name: string, cond: boolean, detail = "") => {
@@ -46,13 +46,13 @@ check(
   `coupled=${compiled.switches.controls.filter((c) => c.coupled).length} singles=${compiled.switches.controls.filter((c) => !c.coupled).length}`
 );
 check(
-  "the stub ends are now plain joins (no switch at 592,368 / 640,336 / 592,272 / 688,304)",
-  compiled.nodes["s368x592"]?.sw === undefined && compiled.nodes["s336x640"]?.sw === undefined && compiled.nodes["s272x592"]?.sw === undefined && compiled.nodes["s304x688"]?.sw === undefined,
+  "the translated stub ends stay plain joins (no switch at Z8 / AC6 / Z2 / BF4)",
+  compiled.nodes["s368x400"]?.sw === undefined && compiled.nodes["s336x448"]?.sw === undefined && compiled.nodes["s272x400"]?.sw === undefined && compiled.nodes["s304x496"]?.sw === undefined,
   "stub-end node still has a switch"
 );
 check(
-  "stub tracks end at their drawn extents (t5 480..592, t6 32..640, t8 224..592)",
-  compiled.nodes["s368x480"] !== undefined && compiled.nodes["s368x592"] !== undefined && compiled.nodes["s336x640"] !== undefined && compiled.nodes["s272x592"] !== undefined,
+  "stub tracks end at their translated drawn extents (t5 288..400, t6 B6..AC6, t8 B2..Z2)",
+  compiled.nodes["s368x288"] !== undefined && compiled.nodes["s368x400"] !== undefined && compiled.nodes["s336x448"] !== undefined && compiled.nodes["s272x400"] !== undefined,
   "missing stub-end node"
 );
 check(
@@ -64,14 +64,14 @@ check(
 // 2. multi-length platforms
 const jngXs = compiled.stationStopXs["JNG"];
 check(
-  "JNG has per-track platform Xs (multi-length)",
-  jngXs?.t1 === 850 && jngXs?.t2 === 464 && jngXs?.t5 === 560 && jngXs?.t6 === 430 && jngXs?.t8 === 400,
+  "JNG has per-track platform Xs — all aligned to the drawn islands at 360",
+  jngXs?.t1 === 360 && jngXs?.t2 === 360 && jngXs?.t5 === 360 && jngXs?.t6 === 360 && jngXs?.t8 === 360,
   JSON.stringify(jngXs)
 );
 check(
-  "boundary stops sit at each line's reachable extent (t5 east 520, t8 west 232, t6 east 584)",
-  compiled.stationStopXs["JNG-E"]?.t5 === 520 && compiled.stationStopXs["JNG-W"]?.t8 === 232 && compiled.stationStopXs["JNG-E"]?.t6 === 584,
-  JSON.stringify(compiled.stationStopXs["JNG-E"])
+  "boundary stops translate with their reachable extent (t5 east 368, t8 west M2, t6 east 392, t1 west 72)",
+  compiled.stationStopXs["JNG-E"]?.t5 === 368 && compiled.stationStopXs["JNG-W"]?.t8 === 216 && compiled.stationStopXs["JNG-E"]?.t6 === 392 && compiled.stationStopXs["JNG-W"]?.t1 === 72,
+  JSON.stringify({ W: compiled.stationStopXs["JNG-W"], E: compiled.stationStopXs["JNG-E"] })
 );
 
 // 3. journeys stop at their own line's platform X (the dwell leg is the one
@@ -87,16 +87,22 @@ check(
     runtime.journeys.map((j) => [j.train.train_no, dwellX(j.train.train_no)])
   );
   check(
-    "J201 (t1) dwells at x=850, J102 (t2) at 464, J310 (t6) at 430, J410 (t5) at 560",
-    stops["J201"] === 850 && stops["J102"] === 464 && stops["J310"] === 430 && stops["J410"] === 560,
+    "J201/J102/J310/J410 all dwell at the drawn island X=360",
+    stops["J201"] === 360 && stops["J102"] === 360 && stops["J310"] === 360 && stops["J410"] === 360,
     JSON.stringify(stops)
   );
   check("J310 (eastbound) uses the bidirectional t6 line", runtime.journeys.find((j) => j.train.train_no === "J310")!.plan.start.y === 336);
-  check(
-    "J410 (t5 stub) runs within t5's extent (344..520)",
-    runtime.journeys.find((j) => j.train.train_no === "J410")!.plan.start.y === 368,
-    "t5 stub journey off-line"
-  );
+  {
+    const j410 = runtime.journeys.find((j) => j.train.train_no === "J410")!;
+    check(
+      "J410 enters on t6 from the west border (entryLine), crosses to t5 for its platform stops",
+      j410.plan.start.y === 336 &&
+        j410.plan.start.x <= 32 &&
+        j410.plan.legs[0].waypointX === 296 && // JNG-W stop stays on t5
+        j410.plan.legs[1].waypointX === 360, // JNG island on t5
+      `start=(${j410.plan.start.x},${j410.plan.start.y}) waypoints=${j410.plan.legs.map((l) => l.waypointX).join("/")}`
+    );
+  }
 }
 
 // 4. a route through the throat from an entry signal
@@ -142,7 +148,7 @@ check(
     r2 ? `lastX=${r2.pts[r2.pts.length - 1][0]}` : "no route"
   );
   // Phase 8: a stub exit must DIVE through the throat — XE5 (t5, y=368) ends
-  // at the terminating switch 528,368; its route throws V (to t6) then W (to
+  // at the terminating switch Z8; its route throws V (to t6) then W (to
   // t4) and reaches the east boundary — no invented straight continuation
   const xe5 = signals.find((s) => s.id === "XE5")!;
   const r3 = findRoute({
@@ -156,11 +162,11 @@ check(
   });
   check(
     "XE5 (t5 stub exit) routes THROUGH the throat to the east boundary (a dive via the fixed turns + P44/P29)",
-    r3 !== null && r3.pts[r3.pts.length - 1][0] > 1000 && r3.pts.some((p) => p[1] !== 368),
+    r3 !== null && r3.pts[r3.pts.length - 1][0] > 800 && r3.pts.some((p) => p[1] !== 368),
     r3 ? `lastX=${r3.pts[r3.pts.length - 1][0]} moves=${JSON.stringify(r3.requiredSwitches)}` : "no route"
   );
   check(
-    "the XE5 dive needs only the real switches (P44 at 560,336 + P29 at 656,400 — the stub ends are fixed turns)",
+    "the XE5 dive needs only the real switches (P44 at AB6 + P29 at AD10 — the stub ends are fixed turns)",
     r3 !== null &&
       Object.keys(r3.requiredSwitches).every((k) => ![39, 45].includes(Number(k))) &&
       r3.requiredSwitches[44] === "reversed" && r3.requiredSwitches[29] === "reversed",
@@ -180,8 +186,196 @@ check(
   });
   check(
     "XE5 with the throat switches locked cannot clear through the dive",
-    r4 === null || r4.pts[r4.pts.length - 1][0] < 1000,
+    r4 === null || r4.pts[r4.pts.length - 1][0] < 800,
     r4 ? `lastX=${r4.pts[r4.pts.length - 1][0]}` : "no route"
+  );
+
+  // A thrown PC13 turns NE2 onto the XW4 route. PC22's branch reaches AH10,
+  // adjacent to that route at AG10–AF10, but it does not foul it. JNG's
+  // layout-specific clearance must keep PC22 free; the old global CELL/3
+  // value incorrectly included both coupled ends as flanks.
+  const ne2 = signals.find((s) => s.id === "NE2")!;
+  const ne2Switches = { ...map.switches.initialState, 19: "reversed" as const, 30: "reversed" as const, 11: "reversed" as const, 20: "reversed" as const };
+  const ne2Route = findRoute({
+    entranceId: "NE2",
+    entrance: ne2,
+    signals,
+    graph,
+    switches: ne2Switches,
+    isLocked: () => false,
+    segmentLevels: map.segmentLevels,
+  });
+  const oldFlanks = ne2Route ? flankPoints(ne2Route, graph, map.grid.cellSize / 3) : [];
+  const jngFlanks = ne2Route ? flankPoints(ne2Route, graph, map.interlocking?.flankClearance ?? map.grid.cellSize / 3) : [];
+  check(
+    "NE2→XW4 excludes adjacent PC22 from its JNG flank clearance",
+    ne2Route?.exitSignalId === "XW4" && oldFlanks.includes(31) && oldFlanks.includes(50) && !jngFlanks.includes(31) && !jngFlanks.includes(50),
+    `exit=${ne2Route?.exitSignalId} old=${oldFlanks.join(",")} jng=${jngFlanks.join(",")}`
+  );
+  // NE4's candidate route passes through PC22 at AH10. The tighter JNG
+  // clearance must not turn that neighbouring geometry into a PC22 flank of
+  // either route; normal route/point locking still decides whether NE4 can be
+  // cleared while NE2 remains reserved.
+  const ne4 = signals.find((s) => s.id === "NE4")!;
+  const ne4Route = findRoute({
+    entranceId: "NE4",
+    entrance: ne4,
+    signals,
+    graph,
+    switches: ne2Switches,
+    isLocked: () => false,
+    segmentLevels: map.segmentLevels,
+  });
+  const ne4Flanks = ne4Route ? flankPoints(ne4Route, graph, map.interlocking?.flankClearance ?? map.grid.cellSize / 3) : [];
+  // Manual point setting (interlocking.routeSetting). "Inactive track" is NOT
+  // authored anywhere: a route is simply unformed while the points as they
+  // stand do not lead to it. NE5→XW4 needs P36 reversed, so with every point
+  // normal the signal must be refused; with P36 thrown the same route needs no
+  // moves and clears. If this ever reports requiredSwitches={} on the first
+  // call, the refusal has silently stopped happening.
+  check(
+    "JNG uses manual route setting",
+    map.interlocking?.routeSetting === "manual",
+    `routeSetting=${map.interlocking?.routeSetting}`
+  );
+  {
+    const ne5 = signals.find((s) => s.id === "NE5")!;
+    const routeWith = (switches: Record<number, "normal" | "reversed">) =>
+      findRoute({
+        entranceId: "NE5",
+        entrance: ne5,
+        signals,
+        graph,
+        switches,
+        isLocked: () => false,
+        segmentLevels: map.segmentLevels,
+      });
+    const unset = routeWith({ ...map.switches.initialState });
+    const set = routeWith({ ...map.switches.initialState, 36: "reversed" });
+    check(
+      "NE5 needs P36 thrown first (refused in manual mode), then forms with no moves",
+      unset?.requiredSwitches[36] === "reversed" &&
+        set !== null &&
+        Object.keys(set.requiredSwitches).length === 0 &&
+        set.exitSignalId === unset?.exitSignalId,
+      `unset=${JSON.stringify(unset?.requiredSwitches)} set=${JSON.stringify(set?.requiredSwitches)}`
+    );
+  }
+
+  // No route may double back on itself. A signal clears for ONE direction of
+  // travel, so every along-line step must make forward progress; a crossover
+  // diagonal may move laterally but never backwards. This caught a real bug:
+  // "dot > -0.8" accepted a backward 45-degree diagonal (-0.707), letting XE1
+  // clear eastbound over PC17 set against it, and NE4 reach XW3 by running
+  // east while signalled west.
+  {
+    const offenders: string[] = [];
+    const trials: Record<number, "normal" | "reversed">[] = [
+      {},
+      { 12: "reversed", 4: "reversed" },
+      { 10: "reversed", 18: "reversed" },
+      { 19: "reversed", 30: "reversed", 11: "reversed", 20: "reversed" },
+    ];
+    for (const entrance of signals) {
+      for (const over of trials) {
+        const route = findRoute({
+          entranceId: entrance.id,
+          entrance,
+          signals,
+          graph,
+          switches: { ...map.switches.initialState, ...over },
+          isLocked: () => false,
+          segmentLevels: map.segmentLevels,
+        });
+        if (!route) continue;
+        const forward = entrance.dir === "right" ? 1 : -1;
+        for (let i = 1; i < route.pts.length; i++) {
+          const step = (route.pts[i][0] - route.pts[i - 1][0]) * forward;
+          if (step < -1e-9) {
+            offenders.push(
+              `${entrance.id}(${entrance.dir}) ${route.pts[i - 1][0]}->${route.pts[i][0]}`
+            );
+          }
+        }
+      }
+    }
+    check(
+      "no route ever reverses against the direction its signal was cleared for",
+      offenders.length === 0,
+      `${offenders.length}: ${offenders.slice(0, 5).join(", ")}`
+    );
+  }
+
+  // Out-of-service track (map.outOfService). t4 and t3 are unbuilt west of H,
+  // so XW4 with every point normal runs into closed track and must be refused.
+  // The user's escapes are PC7 (to t6) or PC3+PC2 (to t2) — PC3 alone only
+  // reaches t3, which is closed as well. This is authored real-world data:
+  // no switch arrangement could imply it.
+  {
+    const spans: ClosedSpan[] = (map.outOfService ?? []).map((span) => {
+      const main = map.lines.mains.find((m) => m.trackGroupId === span.groupId)!;
+      return {
+        groupId: span.groupId,
+        lineY: main.lineY,
+        fromX: Math.min(span.fromX, span.toX),
+        toX: Math.max(span.fromX, span.toX),
+      };
+    });
+    check(
+      "t4 and t3 are authored out of service west of H",
+      spans.length === 2 && spans.every((s) => s.fromX === 32 && s.toX === 128) &&
+        spans.some((s) => s.groupId === "t4") && spans.some((s) => s.groupId === "t3"),
+      JSON.stringify(spans)
+    );
+    const xw4 = signals.find((s) => s.id === "XW4")!;
+    const routeVia = (over: Record<number, "normal" | "reversed">) =>
+      findRoute({
+        entranceId: "XW4",
+        entrance: xw4,
+        signals,
+        graph,
+        switches: { ...map.switches.initialState, ...over },
+        isLocked: () => false,
+        segmentLevels: map.segmentLevels,
+      });
+    const blockedOn = (over: Record<number, "normal" | "reversed">) => {
+      const route = routeVia(over);
+      return route ? closedSpanOnRoute(route, spans)?.groupId ?? null : "no-route";
+    };
+    check(
+      "XW4 all-normal runs into closed t4 and is refused",
+      blockedOn({}) === "t4",
+      `blocked=${blockedOn({})}`
+    );
+    check(
+      "PC3 alone only reaches t3, which is closed too",
+      blockedOn({ 16: "reversed", 26: "reversed" }) === "t3",
+      `blocked=${blockedOn({ 16: "reversed", 26: "reversed" })}`
+    );
+    check(
+      "PC7 gives XW4 a clear road to t6",
+      blockedOn({ 42: "reversed", 27: "reversed" }) === null,
+      `blocked=${blockedOn({ 42: "reversed", 27: "reversed" })}`
+    );
+    check(
+      "PC3+PC2 gives XW4 a clear road to t2",
+      blockedOn({ 16: "reversed", 26: "reversed", 7: "reversed", 15: "reversed" }) === null,
+      `blocked=${blockedOn({ 16: "reversed", 26: "reversed", 7: "reversed", 15: "reversed" })}`
+    );
+  }
+
+  // NE4 exits at XW4. It previously reported XW3 via a route that ran EAST
+  // from AG10 to AJ12 while signalled WEST — a reversal admitted by the old
+  // "dot > -0.8" bearing test, which a backward 45-degree diagonal (-0.707)
+  // passed. Routes are now required to make forward progress, so that
+  // candidate is gone; see the no-reversal check below.
+  check(
+    "NE2 and NE4 candidates do not spuriously flank-lock PC22",
+    ne4Route?.exitSignalId === "XW4" &&
+      ne4Route.pts.some(([x, y]) => x === 544 && y === 400) &&
+      !jngFlanks.includes(31) && !jngFlanks.includes(50) &&
+      !ne4Flanks.includes(31) && !ne4Flanks.includes(50),
+    `NE2=${ne2Route?.exitSignalId} flanks=${jngFlanks.join(",")} NE4=${ne4Route?.exitSignalId} flanks=${ne4Flanks.join(",")}`
   );
 }
 

@@ -54,3 +54,6 @@ next-env.d.ts
 
 # local notes
 notes.txt
+
+# scraped timetable data (regenerate via scripts/scrape-*.js)
+/data

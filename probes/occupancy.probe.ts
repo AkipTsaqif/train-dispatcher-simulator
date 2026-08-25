@@ -69,6 +69,8 @@ const train = (
     holdNotified: false,
     notificationId: null,
     susulWarned: false,
+    signalClearedAt: null,
+    segLimitU: null,
     idx: -1,
   } as TrainState);
 

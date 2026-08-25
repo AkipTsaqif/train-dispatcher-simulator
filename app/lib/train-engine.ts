@@ -19,6 +19,11 @@ export type TrainStop = {
   dep_actual: string;
   meets?: { type: string; with: string }[]; // planned overtake/crossing (susul)
   line?: string; // optional main-line assignment (trackGroupId or line name)
+  /** Line the train ENTERS the map on (approach), when it differs from the
+   *  journey's platform line — the approach spawn, entry extent, and first
+   *  junction come from this line; the train crosses onto the journey line
+   * through the throat under its own points. */
+  entryLine?: string;
 };
 
 export type Train = {
@@ -35,6 +40,10 @@ export type ScheduleStop = {
   meets?: { type: string; with: string }[];
   /** Optional main-line assignment: a trackGroupId or line name. */
   line?: string;
+  /** Optional ENTRY line: the approach spawns on this line's extent instead
+   *  of the journey's platform line (e.g. enter on t6, cross onto t5 through
+   *  a junction). Absent → spawn on the journey line (legacy behavior). */
+  entryLine?: string;
 };
 
 export type ScheduleEntry = {
@@ -52,11 +61,31 @@ export type JourneyRules = {
   speed: {
     runKmh: number;
     segmentKm: Record<string, number>;
+    /** Floor for derived leg speeds (units/second) — see
+     *  DispatchScenarioDefinition.speed.minUnitsPerSecond. */
+    minUnitsPerSecond?: number;
   };
   dwell: {
     holdUntilScheduledDepartureByStation: Record<string, boolean>;
     minimumStopSeconds: number;
+    /** Timetable anchors are absolute clock times but a spawned train's
+     *  internal clock (st.time) counts from its own materialization — rebase
+     *  anchors onto that clock. Absent → legacy absolute-anchor behavior
+     *  (Bekasi baseline unchanged). */
+    relativeAnchors?: boolean;
   };
+  /** Opt-in: clamp the approach spawn to the journey's OWN line extent
+   *  (nodes on the journey's lineY) instead of the global map edge, so a
+   *  train on a partial line enters at its track's edge. Absent → legacy
+   *  global-edge behavior (Bekasi baseline unchanged). */
+  spawn?: {
+    atTrackEdge?: boolean;
+  };
+  /** Track-class speed model. When present, leg plan speeds become the layout
+   *  maximum (so trains can actually reach the fast zones) and the REAL
+   *  running profile comes from per-segment caps applied by the engine via
+   *  MoveCtx.segmentSpeeds (built with buildSegmentLimits). */
+  trackSpeeds?: TrackSpeedConfig;
 };
 
 export const hmsToSeconds = (hms: string): number => {
@@ -83,6 +112,7 @@ export const createTrains = (
         dep_actual: stop.dep_actual,
         meets: stop.meets,
         ...(stop.line === undefined ? {} : { line: stop.line }),
+        ...(stop.entryLine === undefined ? {} : { entryLine: stop.entryLine }),
       })),
     }));
 
@@ -137,9 +167,24 @@ export type MoveCtx = {
   trainHalfLen: number; // half the train marker length (for stops + occupancy)
   ignoreSignals?: boolean; // placement pass: position per schedule, no red-signal stops
   meetsHold?: (st: TrainState, legs: LegPlan) => number; // absolute sim time the train must wait until at its current station (0 = none)
+  /** Absolute sim time NOW. While a train is stopped its own st.time is
+   *  frozen, so release delays (driver reaction) must be measured against the
+   *  simulation clock; absent → falls back to st.time. */
+  now?: number;
+  /** Driver reaction: after a held signal clears, wait this many seconds
+   *  before resuming. Absent/0 → resume instantly. */
+  driverReactionSeconds?: number;
+  /** End the current update at a station waypoint when a dwell is pending, so
+   * one rendered frame necessarily shows the exact platform arrival. */
+  stopFrameAtDwellArrival?: boolean;
   /** Grade level of every movement segment, keyed `${fromId}|${toId}` (both
    *  directions) — Phase 6 occupancy/conflict suppression. Absent → level 0. */
   segmentLevels?: Record<string, number>;
+  /** Speed limit per movement segment in map units/second, keyed
+   *  `${fromId}|${toId}` (either order). The effective running speed is
+   *  min(leg plan speed, this segment's limit) — lets layouts model track
+   *  classes (straight vs turnout vs fast zones). Absent → no cap. */
+  segmentSpeeds?: Record<string, number>;
 };
 
 export type TrainState = {
@@ -155,7 +200,7 @@ export type TrainState = {
   speed: number;
   leg: number;
   stopped: boolean;
-  stopReason: "signal" | "junction" | "conflict" | null;
+  stopReason: "signal" | "junction" | "conflict" | "queue" | null;
   stopSignalId: string | null;
   done: boolean;
   spawned: boolean; // has the train materialized at its origin yet
@@ -170,6 +215,10 @@ export type TrainState = {
   notificationId: number | null; // id of the fired notification (to resolve it)
   susulWarned: boolean; // the origin-departure susul warning was shown for this train
   idx: number; // journey index (the aspect's occupancy check skips the caller)
+  signalClearedAt: number | null; // sim time the held signal turned proceed (driver-reaction delay starts)
+  /** True when a red departure signal holds the centre at a station waypoint. */
+  stationDepartureHold?: boolean;
+  segLimitU: number | null; // current segment's speed cap (u/s) — null = uncapped
 };
 
 export type LegPlan = { waypointX: number; lineY: number; speed: number; departAt?: number; station?: string }[];
@@ -177,7 +226,11 @@ export type LegPlan = { waypointX: number; lineY: number; speed: number; departA
 export type JourneyPlan = {
   originArr: number;
   approach: boolean; // has an off-map approach leg (scheduled origin time > 0)
-  start: { x: number; y: number; dir: LineDir; firstNode: string | null };
+  start: { x: number; y: number; dir: LineDir; firstNode: string | null;
+    /** atTrackEdge only: the line-entry X the spawn is clamped to. Placement
+     *  uses it to cap schedule interpolation so a train never teleports
+     *  mid-throat at sim start — anything past the entry runs LIVE. */
+    entryX?: number };
   legs: LegPlan;
 };
 
@@ -195,25 +248,50 @@ export function buildJourney(
   rules: JourneyRules,
   /** Per-track platform X resolver (multi-length platforms) — defaults to
    *  platformX[station]. Resolves the stop X for the journey's own line. */
-  stopXFor?: (station: string) => number
+  stopXFor?: (station: string) => number,
+  /** Y of a DIFFERENT entry line for the approach (entryLine on the first
+   *  stop): the spawn, atTrackEdge extent, and first junction are taken from
+   * this line; the train crosses onto the journey line through the throat.
+   * Absent → spawn on the journey line itself (legacy). */
+  approachLineY?: number
 ): JourneyPlan {
   const stopX = (code: string): number => (stopXFor ? stopXFor(code) : platformX[code]);
+  const spawnY = approachLineY ?? lineY;
   const {
-    speed: { runKmh, segmentKm },
-    dwell: { holdUntilScheduledDepartureByStation, minimumStopSeconds },
+    speed: { runKmh, segmentKm, minUnitsPerSecond },
+    trackSpeeds,
+    dwell: { holdUntilScheduledDepartureByStation, minimumStopSeconds, relativeAnchors },
   } = rules;
+  const atTrackEdge = rules.spawn?.atTrackEdge === true;
   const originX = stopX(stops[0].trackmark);
   const originArr = hmsToSeconds(stops[0].arr_actual);
   const edgeXs = Object.values(nodes).map((n) => n.x);
   const maxX = Math.max(...edgeXs); // map right edge (pre-shift coords)
   const minX = Math.min(...edgeXs); // map left edge (pre-shift coords)
   const MARGIN = 2 * 58; // ~2 cells off the map, so the train starts/ends out of frame
+  // With spawn.atTrackEdge, clamp against THIS line's own extent instead of
+  // the global one: a partial line (fragmented/stub track) does not reach the
+  // map borders, and a train on it must enter where ITS track begins, not
+  // float before the grid edge in blank space. The spawn lands exactly on the
+  // line's first drawn point; the approach-leg speed is re-derived from the
+  // actual distance, so the scheduled platform arrival is unchanged.
+  const lineNodes = atTrackEdge
+    ? Object.values(nodes).filter((n) => n.y === spawnY)
+    : [];
+  const spawnMaxX = lineNodes.length ? Math.max(...lineNodes.map((n) => n.x)) : maxX;
+  const spawnMinX = lineNodes.length ? Math.min(...lineNodes.map((n) => n.x)) : minX;
 
   // Per-leg running speed: the configured speed converted via each leg's real
   // km (the map is schematic, so the same real speed maps to different
   // units/second per leg). Unknown station pairs fall back to the schedule
   // derived speed.
   const legInfo: { speed: number; travel: number }[] = [];
+  // With a track-speed model the plan speed is just the ceiling — the engine
+  // caps each segment, so give legs the layout maximum and let limits shape
+  // the actual run.
+  const maxU = trackSpeeds
+    ? Math.max(...Object.values(buildSegmentLimits(nodes, trackSpeeds)))
+    : null;
   for (let i = 0; i < stops.length - 1; i++) {
     const fromCode = stops[i].trackmark;
     const toCode = stops[i + 1].trackmark;
@@ -223,7 +301,10 @@ export function buildJourney(
     const distUnits = Math.abs(to - from); // platform spacing in map units
     const km =
       segmentKm[`${fromCode}-${toCode}`] ?? segmentKm[`${toCode}-${fromCode}`];
-    const speed = km ? (distUnits * runKmh) / (km * 3600) : distUnits / secs;
+    const speed = maxU ?? Math.max(
+      minUnitsPerSecond ?? 0,
+      km ? (distUnits * runKmh) / (km * 3600) : distUnits / secs
+    );
     legInfo.push({ speed, travel: distUnits / speed });
   }
   // Expected timeline (running at the configured speed and stop policy) so
@@ -243,6 +324,11 @@ export function buildJourney(
           ? s.dep
           : arr + minimumStopSeconds;
   }
+  // A spawned train's clock (st.time) counts from its materialization
+  // (sim − originArr), not from midnight. With mid-day origins the absolute
+  // anchors would park it at its first waypoint for hours (green "station"
+  // body, never departing). Rebase onto st.time's zero when opted in.
+  if (relativeAnchors) for (let i = 0; i < anchors.length; i++) anchors[i] -= originArr;
 
   const legs: LegPlan = [];
   for (let i = 0; i < stops.length - 1; i++) {
@@ -264,8 +350,22 @@ export function buildJourney(
   if (originArr > 0) {
     const firstSpeed = legs[0]?.speed ?? 0;
     const rawSpawn = dir === "left" ? originX + firstSpeed * originArr : originX - firstSpeed * originArr;
-    spawnX = dir === "left" ? Math.max(rawSpawn, maxX + MARGIN) : Math.min(rawSpawn, minX - MARGIN);
-    legs.unshift({ waypointX: originX, lineY, speed: Math.abs(spawnX - originX) / originArr, station: stops[0].trackmark });
+    if (atTrackEdge) {
+      // spawn just short of the line's own first drawn point (a full margin
+      // of lead-in room) so the marker SLIDES IN piece by piece once the
+      // renderer clips to the track extent. A schedule-derived spawn farther
+      // out than the entry (huge originArr ÷ fast leg) is pulled IN to the
+      // entry — the approach speed is re-derived below, so the scheduled
+      // platform arrival time is preserved — while a closer on-track spawn
+      // is kept as-is.
+      spawnX =
+        dir === "left"
+          ? Math.min(rawSpawn, spawnMaxX + MARGIN)
+          : Math.max(rawSpawn, spawnMinX - MARGIN);
+    } else {
+      spawnX = dir === "left" ? Math.max(rawSpawn, maxX + MARGIN) : Math.min(rawSpawn, minX - MARGIN);
+    }
+    legs.unshift({ waypointX: originX, lineY: spawnY, speed: maxU ?? Math.max(minUnitsPerSecond ?? 0, Math.abs(spawnX - originX) / originArr), station: stops[0].trackmark });
   } else {
     spawnX = originX; // departs at 00:00 — no approach time, start at the platform
   }
@@ -277,13 +377,21 @@ export function buildJourney(
   const exitX = dir === "left" ? minX - MARGIN : maxX + MARGIN;
   legs.push({ waypointX: exitX, lineY, speed: lastSpeed, departAt: anchors[stops.length - 1], station: stops[stops.length - 1].trackmark });
 
-  // First node ahead of the (off-map) spawn — nearest junction in the travel direction.
+  // First node ahead of the (off-map) spawn — nearest junction in the travel
+  // direction, on the line the spawn is actually on (spawnY, which with an
+  // entryLine differs from the journey's platform line).
   const first = Object.values(nodes)
-    .filter((n) => n.y === lineY && (dir === "left" ? n.x < spawnX : n.x > spawnX))
+    .filter((n) => n.y === spawnY && (dir === "left" ? n.x < spawnX : n.x > spawnX))
     .sort((a, b) => (dir === "left" ? b.x - a.x : a.x - b.x))[0];
   const firstNode = first ? (Object.keys(nodes).find((k) => nodes[k] === first) ?? null) : null;
   // originArr = 0 → the train becomes visible immediately, approaching from off-map
-  return { originArr: 0, approach: originArr > 0, start: { x: spawnX, y: lineY, dir, firstNode }, legs };
+  // atTrackEdge: expose the line entry so placement can cap interpolation
+  const entryX = atTrackEdge
+    ? dir === "left"
+      ? spawnMaxX + MARGIN
+      : spawnMinX - MARGIN
+    : undefined;
+  return { originArr: 0, approach: originArr > 0, start: { x: spawnX, y: spawnY, dir, firstNode, entryX }, legs };
 }
 
 export function initTrain(journey: JourneyPlan, nodes: Record<string, GraphNodeLike>, speed: number): TrainState {
@@ -304,6 +412,9 @@ export function initTrain(journey: JourneyPlan, nodes: Record<string, GraphNodeL
     stopped: false,
     stopReason: null,
     stopSignalId: null,
+    signalClearedAt: null,
+    stationDepartureHold: false,
+    segLimitU: null,
     done: false,
     spawned: false,
     originArr: journey.originArr,
@@ -377,6 +488,64 @@ const segmentLevelOf = (ctx: MoveCtx, fromId: string | null, toId: string | null
   return ctx.segmentLevels[`${fromId}|${toId}`] ?? ctx.segmentLevels[`${toId}|${fromId}`] ?? 0;
 };
 
+const segmentSpeedOf = (ctx: MoveCtx, fromId: string | null, toId: string | null): number | null => {
+  if (!fromId || !toId || !ctx.segmentSpeeds) return null;
+  return (
+    ctx.segmentSpeeds[`${fromId}|${toId}`] ?? ctx.segmentSpeeds[`${toId}|${fromId}`] ?? null
+  );
+};
+
+/** Real-world track-class speeds over a schematic layout. Distances convert
+ *  via metresPerUnit; a second zone (east) can rescale and re-limit everything
+ *  beyond a boundary x. */
+export type TrackSpeedConfig = {
+  /** metres per map unit in the base zone */
+  metresPerUnit: number;
+  /** limit for HORIZONTAL segments by their line y (km/h). A y missing from
+   *  the map falls back to turnoutKmh. */
+  straightKmhByY: Record<number, number>;
+  /** limit for any DIAGONAL segment (turnout/crossover), km/h */
+  turnoutKmh: number;
+  /** optional far zone: beyond this x, both scale and limits change */
+  east?: {
+    x: number;
+    metresPerUnit: number;
+    straightKmhByY: Record<number, number>; // ys absent here → turnoutKmh
+  };
+};
+
+/** Build the per-segment speed cap table (u/s) consumed via MoveCtx.
+ *  Segment keys are `${fromId}|${toId}` — either order resolves. */
+export function buildSegmentLimits(
+  nodes: Record<string, { x: number; y: number; exits: { neighbor: string }[] }>,
+  cfg: TrackSpeedConfig
+): Record<string, number> {
+  const out: Record<string, number> = {};
+  const uPerS = (kmh: number, mpu: number) => kmh / 3.6 / mpu;
+  for (const [id, node] of Object.entries(nodes)) {
+    for (const exit of node.exits) {
+      const other = nodes[exit.neighbor];
+      if (!other) continue;
+      const key = `${id}|${exit.neighbor}`;
+      if (key in out) continue;
+      out[key] = -1; // reserve to mark visited even before classification
+      const diagonal = other.y !== node.y;
+      const midX = (node.x + other.x) / 2;
+      let kmh: number;
+      let mpu: number;
+      if (cfg.east && midX > cfg.east.x) {
+        mpu = cfg.east.metresPerUnit;
+        kmh = diagonal ? cfg.turnoutKmh : cfg.east.straightKmhByY[node.y] ?? cfg.turnoutKmh;
+      } else {
+        mpu = cfg.metresPerUnit;
+        kmh = diagonal ? cfg.turnoutKmh : cfg.straightKmhByY[node.y] ?? cfg.turnoutKmh;
+      }
+      out[key] = uPerS(kmh, mpu);
+    }
+  }
+  return out;
+}
+
 const setSegment = (st: TrainState, res: { next: string }, ctx: MoveCtx): void => {
   const fromId = st.nxtNode; // the node being left
   const target = ctx.nodes[res.next];
@@ -385,6 +554,7 @@ const setSegment = (st: TrainState, res: { next: string }, ctx: MoveCtx): void =
   st.nxtNode = res.next;
   st.incoming = fromId;
   st.level = segmentLevelOf(ctx, fromId, res.next);
+  st.segLimitU = segmentSpeedOf(ctx, fromId, res.next);
   // trail the passed point — the center's path, bounded to the body length
   st.trail.push({ pt: [st.segFrom[0], st.segFrom[1]], level: st.level });
   trimTrail(st, ctx.trainHalfLen * 3);
@@ -419,9 +589,22 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
   if (st.stopped) {
     if (st.stopReason === "signal" && st.stopSignalId) {
       if (ctx.aspectOf(st.stopSignalId, st.idx) !== "red") {
-        st.stopped = false;
-        st.stopReason = null;
-        st.stopSignalId = null;
+        // Driver reaction: the wait starts when the signal CLEARS (not when
+        // the engine notices), measured against the sim clock — st.time is
+        // frozen while stopped. If it re-reddens before the driver departs,
+        // the reaction clock resets.
+        const now = ctx.now ?? st.time;
+        const reaction = ctx.driverReactionSeconds ?? 0;
+        if (now < (st.signalClearedAt ?? Infinity)) st.signalClearedAt = now;
+        if (now - (st.signalClearedAt ?? now) >= reaction) {
+          st.stopped = false;
+          st.stopReason = null;
+          st.stopSignalId = null;
+          st.signalClearedAt = null;
+          st.stationDepartureHold = false;
+        }
+      } else {
+        st.signalClearedAt = null;
       }
     } else if (st.stopReason === "junction" && st.nxtNode) {
       const res = resolveNode(st.nxtNode, bearingOf(st.segFrom, st.segTo), st.incoming, ctx);
@@ -430,9 +613,9 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
         st.stopReason = null;
         setSegment(st, res as { next: string }, ctx);
       }
-    } else if (st.stopReason === "conflict") {
-      // a collision stop — the tick loop releases it once the overlapping
-      // train has moved on or despawned
+    } else if (st.stopReason === "conflict" || st.stopReason === "queue") {
+      // a collision / following stop — the tick loop releases it once the
+      // overlapping or leading train has moved on or despawned
     } else {
       st.stopped = false;
       st.stopReason = null;
@@ -446,7 +629,10 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
   let guard = 0;
   while (tRemaining > 0 && !st.done && !st.stopped && guard++ < 200) {
     const leg = legs[Math.min(st.leg, legs.length - 1)];
-    st.speed = leg.speed;
+    // Track-class cap: never run a segment faster than its limit (straight /
+    // turnout / fast zone). The leg plan speed stays the upper bound.
+    const effSpeed = Math.min(leg.speed, st.segLimitU ?? Infinity);
+    st.speed = effSpeed;
 
     // closest limit ahead: red signal | junction node | leg waypoint
     type Limit = { kind: "signal" | "node" | "waypoint"; x: number; y: number; sigId?: string };
@@ -465,6 +651,37 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
       }
       st.time = departAt;
       tRemaining -= wait;
+    }
+
+    // A compact platform can put the train nose at its departure signal while
+    // its centre is still at the station waypoint. After the dwell, that signal
+    // must hold DEPARTURE at the platform rather than relocate the train to an
+    // approach stop or require the clear to be consumed before arrival.
+    const stationX = st.leg > 0 ? legs[st.leg - 1].waypointX : st.x;
+    const atStationStart =
+      st.leg > 0 && leg.station !== undefined && Math.abs(st.x - stationX) < 1e-6;
+    const departureSignal = atStationStart
+      ? ctx.signals
+          .filter(
+            (s) =>
+              !s.ai &&
+              s.dir === st.dir &&
+              s.y === st.y &&
+              (st.dir === "right"
+                ? s.x > st.x && s.x <= st.x + ctx.trainHalfLen
+                : s.x < st.x && s.x >= st.x - ctx.trainHalfLen)
+          )
+          .sort((a, b) => st.dir === "right" ? a.x - b.x : b.x - a.x)[0]
+      : undefined;
+    if (departureSignal) {
+      if (!ctx.ignoreSignals && ctx.aspectOf(departureSignal.id, st.idx) === "red") {
+        st.stopped = true;
+        st.stopReason = "signal";
+        st.stopSignalId = departureSignal.id;
+        st.stationDepartureHold = true;
+        return;
+      }
+      if (!ctx.ignoreSignals) st.passedSignals.push(departureSignal.id);
     }
 
     let limit: Limit | null = null;
@@ -505,7 +722,14 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
           .filter((s) => !s.ai && bearingDot(segBearing!, s.bearing) > 0 && tOf(s.x, s.y) > tFront)
           .sort((a, b) => tOf(b.x, b.y) - tOf(a.x, a.y));
       }
-      const red = ahead.find((s) => ctx.aspectOf(s.id, st.idx) === "red");
+      // An exit signal immediately beyond a station waypoint governs
+      // departure. Do not stop the final approach short of the platform; the
+      // station-start branch above checks it after the dwell is complete.
+      const beforeStationExit = (s: SignalLike) =>
+        st.dir === "right" ? s.x >= leg.waypointX : s.x <= leg.waypointX;
+      const red = ahead.find(
+        (s) => !beforeStationExit(s) && ctx.aspectOf(s.id, st.idx) === "red"
+      );
       if (red) {
         // stop so the train's LEADING edge sits at the signal — the marker must
         // never protrude past a red signal
@@ -566,20 +790,23 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
         // signal (front == signal x) re-detects the pass and consumes a clear
         // set while it was standing there — otherwise the signal would stay
         // lit like an automatic block signal
-        if (s.x >= lo && s.x <= hi && !st.passedSignals.includes(s.id)) st.passedSignals.push(s.id);
+        const beforeStationExit = st.dir === "right" ? s.x >= leg.waypointX : s.x <= leg.waypointX;
+        if (!beforeStationExit && s.x >= lo && s.x <= hi && !st.passedSignals.includes(s.id)) {
+          st.passedSignals.push(s.id);
+        }
       }
     };
 
     if (!limit) {
-      move(leg.speed * tRemaining);
+      move(effSpeed * tRemaining);
       st.time += tRemaining;
       checkPass();
       tRemaining = 0;
       continue;
     }
-    const tToLimit = near(limit) / leg.speed;
+    const tToLimit = near(limit) / effSpeed;
     if (tRemaining < tToLimit) {
-      move(leg.speed * tRemaining);
+      move(effSpeed * tRemaining);
       st.time += tRemaining;
       checkPass();
       tRemaining = 0;
@@ -594,6 +821,7 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
       st.stopped = true;
       st.stopReason = "signal";
       st.stopSignalId = limit.sigId ?? null;
+      st.stationDepartureHold = false;
       return;
     }
     if (limit.kind === "waypoint") {
@@ -605,8 +833,20 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
         st.done = true; // final destination reached
         return;
       }
-      st.leg += 1; // pass through — next leg's speed applies to the remaining time
-      continue;
+      st.leg += 1;
+      const nextLeg = legs[Math.min(st.leg, legs.length - 1)];
+      const nextMeets = ctx.meetsHold ? ctx.meetsHold(st, legs) : 0;
+      const nextDepartAt =
+        nextLeg.departAt !== undefined || nextMeets > 0
+          ? Math.max(nextLeg.departAt ?? 0, nextMeets)
+          : undefined;
+      // Live animation opts in to a hard frame boundary at a platform arrival.
+      // This prevents leftover frame budget moving the centre beyond the
+      // waypoint (and consuming the exit signal) before the dwell is visible.
+      if (ctx.stopFrameAtDwellArrival && nextDepartAt !== undefined && st.time < nextDepartAt) {
+        tRemaining = 0;
+      }
+      continue; // pass through — next leg's speed applies to remaining time
     }
     // junction node
     const res = resolveNode(st.nxtNode!, bearingOf(st.segFrom, st.segTo), st.incoming, ctx);
@@ -641,6 +881,47 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
  * the adjoining horizontals), so occupancy and conflict checks use these
  * polylines rather than an x-interval on one line.
  */
+/**
+ * The centre-line the train is ABOUT to run over: node positions from the end
+ * of the current segment forward, for `distance` map units, following the
+ * points exactly as `resolveNode` would.
+ *
+ * The engine only trails nodes the train's CENTRE has passed, so the geometry
+ * ahead of the centre is otherwise unknown. Anything that draws the whole BODY
+ * (rather than just its centre) needs this: a marker whose front has already
+ * entered a thrown point is bent NOW, not once its centre catches up.
+ *
+ * Read-only: it resolves points but mutates nothing, so calling it per frame
+ * cannot influence the simulation.
+ */
+export function pathAhead(st: TrainState, ctx: MoveCtx, distance: number): [number, number][] {
+  const ahead: [number, number][] = [];
+  if (distance <= 0) return ahead;
+  let fromPt: [number, number] = st.segTo;
+  let nodeId = st.nxtNode;
+  let incoming = st.incoming;
+  let bearing = bearingOf(st.segFrom, st.segTo);
+  let remaining = distance;
+  // Bounded: a body spans a handful of segments, and a mis-wired layout must
+  // never spin here.
+  for (let hop = 0; hop < 16 && remaining > 0 && nodeId; hop++) {
+    const res = resolveNode(nodeId, bearing, incoming, ctx);
+    if (!("next" in res)) break; // blocked or off-map: nothing further to draw
+    const next = ctx.nodes[res.next];
+    if (!next) break;
+    const to: [number, number] = [next.x, next.y];
+    const d = Math.hypot(to[0] - fromPt[0], to[1] - fromPt[1]);
+    if (!d) break;
+    ahead.push(to);
+    remaining -= d;
+    bearing = bearingOf(fromPt, to);
+    incoming = nodeId;
+    nodeId = res.next;
+    fromPt = to;
+  }
+  return ahead;
+}
+
 export function footprintOf(st: TrainState, halfLen: number): LeveledPoint[][] {
   const bodyLen = 2 * halfLen;
   const pieces: LeveledPoint[][] = [];

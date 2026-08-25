@@ -535,15 +535,17 @@ test.describe("dispatching table", () => {
     await expect(page.locator('svg[aria-label^="Meja pengatur perjalanan kereta"]')).toBeVisible();
     const marker = page.locator('[data-train="107B"]');
     const y = async () => await marker.evaluate((el) => parseFloat(el.getAttribute("data-y") ?? "NaN"));
-    // throw the crossovers FIRST — clearing J4 would lock P8 via its route, and
-    // the left crossover bounds J4's wrong-way route so it can be set while the
-    // eastbound trains hold the far-west line (a route into occupied track is
-    // refused)
+    // Throw the crossovers FIRST — clearing J4 would lock P8 via its route.
+    // P1+P2 keeps the far-west line clear of J4's route so J4 is not refused
+    // for occupancy. J5 is NOT cleared here: with the wrong-way route gone
+    // (it used to run east over P1 while signalled west), J5's remaining route
+    // is straight down the top line, and auto route setting would put P1 back
+    // to normal — re-blocking J4.
     await page.getByRole("button", { name: /P7\+P8 ·/ }).click();
     await expect(page.getByRole("button", { name: /P7\+P8 · BELOK/ })).toBeVisible();
     await page.getByRole("button", { name: /P1\+P2 ·/ }).click();
-    // then clear the signals so the train can run to the crossover
-    await page.getByRole("button", { name: /J5 ·/ }).click();
+    await expect(page.getByRole("button", { name: /P1\+P2 · BELOK/ })).toBeVisible();
+    // then clear J4 so the train can run to the crossover
     await page.getByRole("button", { name: /J4 ·/ }).click();
     await expect(page.getByRole("button", { name: /J4 · HIJAU/ })).toBeVisible();
     // ~2:30 — the train is down the crossover, running west on the bottom line
@@ -824,6 +826,236 @@ test.describe("dispatching table", () => {
     await expect(page.getByLabel(/Train F1 at 1300,89/)).toBeVisible();
   });
 
+  test("jatinegara train markers snap to its 16-unit grid lines", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/jng?start=06:00&controls=1");
+    const marker = page.locator('[data-train="J201"]');
+    await expect(marker).toBeVisible();
+
+    // The engine still moves at its continuous physical position, but every
+    // visible marker centre sits ON a JNG vertical grid line (x = 8 mod 16),
+    // so the 4-cell train body fills cells rather than straddling them.
+    const visible = async () => ({
+      x: Number(await marker.getAttribute("data-x")),
+      y: Number(await marker.getAttribute("data-y")),
+    });
+    const start = await visible();
+    // the train may still be west of the map edge (line entry), where the
+    // snapped column centre is negative — modulo flips sign there
+    expect(Math.abs(start.x % 16)).toBe(8);
+    expect(start.y % 16).toBe(0); // tracks remain at row centres
+    // Signals start red: set NW1's road (map signal click) so J201 runs.
+    await page.getByRole("button", { name: /Signal NW1 \(NW1\), aspect red/ }).click();
+    await page.clock.fastForward("00:00:20");
+    const moving = await visible();
+    expect(moving.x % 16).toBe(8);
+    expect(moving.y % 16).toBe(0);
+    expect(Math.abs(moving.x - start.x)).toBeGreaterThan(0);
+    expect(Math.abs(moving.x - start.x) % 16).toBe(0);
+  });
+
+  test("jatinegara platform dwell centres before the red exit signal", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/jng?start=06:00&controls=1");
+    const marker = page.locator('[data-train="J201"]');
+    const entry = page.locator('[role="button"][aria-label^="Signal NW1"]');
+    const exit = page.locator('[role="button"][aria-label^="Signal XE1"]');
+    await entry.click();
+
+    // The platform waypoint is the train centre at x=360. Arrival must end
+    // there even though the nose reaches XE1 at x=400 in the same frame: XE1
+    // governs departure, not the final cell of the station approach.
+    await expect
+      .poll(
+        async () => {
+          await page.clock.fastForward("00:00:01");
+          return marker.getAttribute("data-x");
+        },
+        { intervals: [10], timeout: 60000 }
+      )
+      .toBe("360");
+    await expect(entry).toHaveAttribute("aria-label", /aspect red/);
+    await expect(exit).toHaveAttribute("aria-label", /aspect red/);
+
+    // Crossing the arrival tick into the scheduled dwell must not overrun one
+    // grid cell and teleport back. The train remains at U–X while XE1 stays
+    // red; clearing NW1 earlier does not consume the station exit signal.
+    for (let second = 0; second < 20; second++) {
+      await page.clock.fastForward("00:00:01");
+      await expect(marker).toHaveAttribute("data-x", "360");
+    }
+    await expect(marker).toHaveAttribute("data-x", "360");
+    await expect(exit).toHaveAttribute("aria-label", /aspect red/);
+
+    // After the scheduled dwell, XE1 is still the governing signal. The train
+    // must remain centred at JNG rather than be moved to an approach hold in
+    // front of the platform.
+    await page.clock.fastForward("00:09:30");
+    await expect(marker).toHaveAttribute("data-x", "360");
+    await expect(exit).toHaveAttribute("aria-label", /aspect red/);
+  });
+
+  test("jatinegara J410 enters on t6 and crosses onto t5 through xov10", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/jng?start=06:00&controls=1");
+    const marker = page.locator('[data-train="J410"]');
+    const nw5 = page.locator('[role="button"][aria-label^="Signal NW5"]');
+    await expect(marker).toBeVisible();
+
+    // The entryLine (t6) stop puts the approach on row 336: J410 slides in
+    // from the west border on t6 — never materialising on the t5 stub.
+    await page.clock.fastForward("00:00:05");
+    await expect(marker).toHaveAttribute("data-y", "336");
+
+    // All signals red: the approach holds at NW5, short of the xov10
+    // junction — a realistic arrival waiting for its road.
+    await page.clock.fastForward("00:00:20");
+    await expect(marker).toHaveAttribute("data-y", "336");
+    const held = Number(await marker.getAttribute("data-x"));
+    expect(held).toBeGreaterThan(32); // past the west border
+    expect(held).toBeLessThan(256); // short of the sw 43 junction
+
+    // Throw sw 43 so the road bends through xov10, then clear NW5: the
+    // train crosses onto t5 and dwells at the JNG island before red XE5.
+    await page.locator('[role="button"][aria-label*="(sw 43)"]').first().click();
+    await nw5.click();
+    await expect
+      .poll(
+        async () => {
+          await page.clock.fastForward("00:00:01");
+          return marker.getAttribute("data-x");
+        },
+        { intervals: [10], timeout: 60000 }
+      )
+      .toBe("360");
+    await expect(marker).toHaveAttribute("data-y", "368");
+    await expect(marker).toHaveAttribute("data-x", "360");
+  });
+
+  test("jatinegara visual marker stops behind NE2 at AU, not AV", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/jng?start=06:00");
+    const marker = page.locator('[data-train="J102"]');
+    await expect(marker).toBeVisible();
+
+    // NE2 is at AT14. The engine stops J102 safely behind it using its
+    // operational footprint; the shorter, 4-cell drawn marker is then placed
+    // with its west end at AU's left grid line, so it reads as occupying AU–AX
+    // rather than needlessly starting at AV.
+    await page.clock.fastForward("00:02:00");
+    await expect(marker).toHaveAttribute("data-x", "776");
+    const transform = await marker.getAttribute("transform");
+    expect(transform).toContain("translate(776, 464)");
+
+    // Releasing NE2 must carry the same visual-front compensation into the
+    // running state. It may stay in AU for a moment or progress west, but it
+    // must never jump backward (east) into AV as the stopped flag flips off.
+    await page.getByRole("button", { name: /Signal NE2 \(NE2\), aspect red/ }).click();
+    await page.clock.fastForward("00:00:01");
+    expect(Number(await marker.getAttribute("data-x"))).toBeLessThanOrEqual(776);
+  });
+
+  test("jatinegara body bends as soon as the NOSE reaches a thrown point", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/jng?start=06:00");
+    const marker = page.locator('[data-train="J102"]');
+    await expect(marker).toBeVisible();
+
+    // The engine only records nodes its CENTRE has passed, so a naive spine
+    // bends half a body late — visibly "turning" only once the tail nears the
+    // point. Looking ahead down the set route must bend it while the marker is
+    // still centred well east of PC16's junction at AM12.
+    await page.locator('[role="button"][aria-label*="(PC16)"]').first().click();
+    await page.locator('[role="button"][aria-label^="Signal NE2"]').click();
+    // Step the fake clock 1s at a time until the nose reaches the thrown
+    // point — robust against leg-speed changes.
+    await expect
+      .poll(
+        async () => {
+          await page.clock.fastForward("00:00:01");
+          return marker.getAttribute("data-bendy");
+        },
+        { intervals: [10], timeout: 60000 }
+      )
+      .toBe("true");
+    await expect(marker).toHaveAttribute("data-bendy", "true");
+    // still centred on the straight, east of the junction it is bending into
+    await expect(marker).toHaveAttribute("data-y", "464");
+    expect(Number(await marker.getAttribute("data-x"))).toBeGreaterThan(640);
+  });
+
+  test("jatinegara train body bends through a thrown crossover", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/jng?start=06:00");
+    const marker = page.locator('[data-train="J102"]');
+    await expect(marker).toBeVisible();
+    const body = marker.locator('path[data-train-body="articulated"]');
+
+    // On plain track the marker is the historical rigid box: the articulated
+    // path stays hidden and the group carries the rotation.
+    await expect(marker).toHaveAttribute("data-bendy", "false");
+    await expect(body).toBeHidden();
+
+    // PC13 sends J102 down the 45° crossover. While it straddles the junction
+    // the body must BEND rather than rotate rigidly: the rect hides, the
+    // articulated path shows, and the group stops rotating.
+    await page.locator('[role="button"][aria-label*="(PC13)"]').first().click();
+    await page.locator('[role="button"][aria-label^="Signal NE2"]').click();
+    // Poll into the crossover at 1s steps so the body is caught mid-bend
+    // regardless of running speed.
+    await expect
+      .poll(
+        async () => {
+          await page.clock.fastForward("00:00:01");
+          return marker.getAttribute("data-bendy");
+        },
+        { intervals: [10], timeout: 60000 }
+      )
+      .toBe("true");
+    await expect(marker).toHaveAttribute("data-bendy", "true");
+    await expect(body).toBeVisible();
+    await expect(marker.locator("rect").first()).toBeHidden();
+    // A bendy marker carries its geometry in the path, so the GROUP must not
+    // also rotate — that would turn the bend twice.
+    await expect(marker).toHaveAttribute("transform", /scale\(/);
+    await expect(marker).not.toHaveAttribute("transform", /rotate\(-?[1-9]/);
+    // The body spans two bearings, so it reaches well beyond the depth a flat
+    // marker could ever occupy (half of the 14-unit body, before scaling).
+    const depth = await body.evaluate((el) => (el as SVGPathElement).getBBox().height);
+    expect(depth).toBeGreaterThan(14);
+
+
+
+    // The bent outline is a closed hexagon: two ends plus one mitred joint per
+    // side. A rigid box would only ever have four corners.
+    const d = (await body.getAttribute("d")) ?? "";
+    expect(d.endsWith("Z")).toBe(true);
+    expect(d.split("L").length - 1).toBe(5); // 6 vertices
+
+    // The bend is not sticky: once the whole body is back on plain track the
+    // cheap rigid box returns, rotated onto that track's own bearing. (JNG's
+    // crossover is shorter than the marker, so a train is never rigid mid-way
+    // across it — it bends from entry to exit.)
+    // The clock is faked, so time only moves when the test advances it: step
+    // it forward until the whole body is back on plain track. Polling alone
+    // would spin on a frozen simulation.
+    await expect
+      .poll(
+        async () => {
+          await page.clock.fastForward("00:00:10");
+          return await marker.getAttribute("data-bendy");
+        },
+        {
+          intervals: [50],
+          timeout: 15000,
+          message: "the marker never returned to the rigid box after the crossover",
+        }
+      )
+      .toBe("false");
+    await expect(body).toBeHidden();
+    await expect(marker.locator("rect").first()).toBeVisible();
+  });
+
   test("jatinegara point controls remain individually clickable", async ({ page }) => {
     // At 08:00 the two stub timetable trains are parked directly over P44/P29.
     // The test therefore proves both protections: scissors controls do not
@@ -846,8 +1078,10 @@ test.describe("dispatching table", () => {
     }
   });
 
-  test("jatinegara interactive table — 24 signal controls, auto route set works", async ({ page }) => {
-    await page.goto("/jng?start=06:00&controls=1");
+  test("jatinegara interactive table — 24 signal controls, manual route set works", async ({ page }) => {
+    // Start with an empty board: at realistic running speeds service trains
+    // would occupy the mains and block the NW1 route this test sets.
+    await page.goto("/jng?start=00:00&controls=1");
     // all 24 signals are clickable controls (schematic mode, no grid chrome)
     await expect(page.getByRole("button", { name: /^NW1 · MERAH/ })).toBeVisible();
     await expect(page.getByRole("button", { name: /^XE8 ·/ })).toBeVisible();
@@ -855,14 +1089,29 @@ test.describe("dispatching table", () => {
     // the point handles are present (35: 24 coupled groups, two of which draw
     // one handle per switch, + 8 singles)
     await expect(page.locator('[role="button"][aria-label^="Wesel"]')).toHaveCount(35);
-    // auto route set: clearing NW1 lights it (amber — next signal still red)
+    // a route already formed by the points as they stand still clears: NW1
+    // needs no point moves, so it lights amber (next signal still red)
     await page.getByRole("button", { name: /^NW1 · MERAH/ }).click();
     await expect(page.getByRole("button", { name: /^NW1 · KUNING/ })).toBeVisible();
     // its route locks the track-1 switches it passes
     await expect(page.locator('[role="button"][aria-label*="terkunci"]').first()).toBeVisible();
-    // Phase 8: a stub exit (XE5 on platform 5, y=368) clears GREEN by throwing
-    // the terminating branches (V/W) and diving through the throat
-    await page.getByRole("button", { name: /^XE5 · MERAH/ }).click();
-    await expect(page.getByRole("button", { name: /^XE5 · HIJAU/ })).toBeVisible();
+    // Manual route setting (interlocking.routeSetting = "manual"): NE5→XW4
+    // needs P36 reversed. The signal must REFUSE rather than throw the point
+    // itself — the road is not set, so the track is not reachable.
+    const p36 = page.locator('[role="button"][aria-label^="Wesel 36 "]');
+    await expect(p36).toHaveAttribute("aria-label", /lurus/);
+    await page.getByRole("button", { name: /^NE5 · MERAH/ }).click();
+    // the refusal names the point that is set the wrong way, and which way it
+    // must go — not just "the road is not passable"
+    await expect(page.getByText(/posisi wesel salah/i)).toBeVisible();
+    await expect(page.getByText(/Wesel 36 harus BELOK/i)).toBeVisible();
+    await expect(page.getByRole("button", { name: /^NE5 · MERAH/ })).toBeVisible();
+    // the refusal must not have moved the point on the user's behalf
+    await expect(p36).toHaveAttribute("aria-label", /lurus/);
+    // set the road by hand, and the very same click now succeeds
+    await p36.click();
+    await expect(p36).toHaveAttribute("aria-label", /belok/);
+    await page.getByRole("button", { name: /^NE5 · MERAH/ }).click();
+    await expect(page.getByRole("button", { name: /^NE5 · (KUNING|HIJAU)/ })).toBeVisible();
     await expect(page.locator('[role="button"][aria-label*="belok, terkunci"]').first()).toBeVisible();
   });
