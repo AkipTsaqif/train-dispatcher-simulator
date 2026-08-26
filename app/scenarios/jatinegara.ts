@@ -32,6 +32,16 @@ export const JATINEGARA_SCENARIO: DispatchScenarioDefinition = {
   spawn: { coincidenceWindowSeconds: 60, clearanceSignalCount: 1, clearanceFallbackSeconds: 30, atTrackEdge: true },
   meet: { clearanceSignalCount: 2, clearanceFallbackSeconds: 30 },
   driver: { reactionSeconds: 5 },
+  // Per-train-type speed ceilings (km/h). The track-class segment limits
+  // still apply on top, so a krl on a 60 km/h west-zone straight still runs
+  // at 60, but on a 120 km/h east-zone straight it is capped at 95.
+  trainTypeSpeedKmh: {
+    krl: 95,
+    freight: 80,
+    kirim_rangkaian: 90,
+    local: 90,
+    // null and intercity: no entry → run at track speed (120 km/h)
+  },
   routing: {
     defaultLineByDirection: { right: "t1", left: "t2" },
   },

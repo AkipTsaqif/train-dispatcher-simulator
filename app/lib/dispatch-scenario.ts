@@ -68,6 +68,10 @@ export type DispatchScenarioDefinition = {
   driver?: {
     reactionSeconds?: number;
   };
+  /** Per-train-type speed ceiling in km/h (e.g. { krl: 95, freight: 80 }).
+   *  Caps the leg plan speed for that train type; the track-class segment
+   *  limits still apply on top. Unmatched types run at track speed. */
+  trainTypeSpeedKmh?: Record<string, number>;
   notifications: {
     boardLimit: number;
     heldAtSignalThresholdSeconds: number;

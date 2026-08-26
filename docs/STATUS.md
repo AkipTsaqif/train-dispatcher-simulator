@@ -19,6 +19,16 @@
   a layout-specific flank clearance just under one grid interval so that PC22
   is not locked as a flank of NE2→XW4; connectivity, switch ids, and Bekasi
   stay frozen.
+- **Real timetable landed.** `scripts/build-jng-schedule.ts` converts the
+  168Railway working timetable (`data/timetable/stations/jatinegara.json`)
+  into `app/dispatching/jatinegara-schedule.ts` — 46 real trains in the
+  06:00–08:00 window, each a 3-stop ScheduleEntry (JNG-W/JNG/JNG-E or
+  JNG-E/JNG/JNG-W). Corridor direction is derived from the prev/next
+  neighbour (MTR/POK→eastbound/t1, KLD/BKS→westbound/t2); susul (overtake)
+  remarks are parsed into `meets`. `jatinegara.ts` now imports the generated
+  schedule instead of the hand-stubbed J201/J102/J310/J410. E2e tests updated
+  to reference real train numbers; the J410 entryLine test is skipped (no real
+  train uses entryLine). JNG baseline re-captured.
 - **Inverted points are shipped.** `switchMeta` takes `branch: "line"` to
   invert which leg diverges, and `link.splitAt` cuts a diagonal so a point can
   sit mid-span. After western compaction, P57 sits at AU8 (single lever `g53`)
@@ -961,6 +971,18 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   column count is `round(grid.width / gridCellSize)`, so 936 drew 59 columns
   (last BG) while the track ends at BD. 928 draws 58 (last BF), keeping one
   spare column past the map edge for the boundary marks.
+- 2026-08-26 — Real timetable converter landed.
+  `scripts/build-jng-schedule.ts` reads the 168Railway working timetable
+  (`data/timetable/`) and emits `app/dispatching/jatinegara-schedule.ts`.
+  Each train becomes a 3-stop `ScheduleEntry`: boundary (JNG-W or JNG-E,
+  arr==dep=neighbour dep time), JNG platform (real arr/dep), exit boundary
+  (arr==dep=next neighbour arr time). Direction is derived from the corridor:
+  prev neighbour MTR/POK→eastbound (t1), KLD/BKS→westbound (t2). Susul
+  remarks (`DISUSUL <KA>`) are parsed into `meets`. The old stub schedule
+  (J201/J102/J310/J410) is replaced; e2e tests reference real train numbers
+  (5024C, 5509B). The J410 entryLine test is `.skip` — no real train uses
+  entryLine, but the mechanism is still verifier-tested. JNG baseline
+  re-captured (the old stub schedule's journey waypoints changed).
 
 
 ## Notes for the next worker

@@ -86,21 +86,31 @@ check(
   const stops = Object.fromEntries(
     runtime.journeys.map((j) => [j.train.train_no, dwellX(j.train.train_no)])
   );
+  // Every journey dwells at the drawn island X=360 (all JNG platforms
+  // are at 360). Check all journeys, not just a few named stubs.
+  const allDwell = runtime.journeys.every((j) => dwellX(j.train.train_no) === 360);
   check(
-    "J201/J102/J310/J410 all dwell at the drawn island X=360",
-    stops["J201"] === 360 && stops["J102"] === 360 && stops["J310"] === 360 && stops["J410"] === 360,
+    `all ${runtime.journeys.length} journeys dwell at the drawn island X=360`,
+    allDwell,
     JSON.stringify(stops)
   );
-  check("J310 (eastbound) uses the bidirectional t6 line", runtime.journeys.find((j) => j.train.train_no === "J310")!.plan.start.y === 336);
-  {
-    const j410 = runtime.journeys.find((j) => j.train.train_no === "J410")!;
+  // Pick the first eastbound (from JNG-W) and first westbound (from JNG-E)
+  // to verify direction-to-line routing. Eastbound → t1 (y=496), westbound →
+  // t2 (y=464) per the scenario routing fallback.
+  const eb = runtime.journeys.find((j) => j.train.stops[0].trackmark === "JNG-W");
+  const wb = runtime.journeys.find((j) => j.train.stops[0].trackmark === "JNG-E");
+  if (eb) {
     check(
-      "J410 enters on t6 from the west border (entryLine), crosses to t5 for its platform stops",
-      j410.plan.start.y === 336 &&
-        j410.plan.start.x <= 32 &&
-        j410.plan.legs[0].waypointX === 296 && // JNG-W stop stays on t5
-        j410.plan.legs[1].waypointX === 360, // JNG island on t5
-      `start=(${j410.plan.start.x},${j410.plan.start.y}) waypoints=${j410.plan.legs.map((l) => l.waypointX).join("/")}`
+      `first eastbound (${eb.train.train_no}) uses t1 (y=496)`,
+      eb.plan.start.y === 496,
+      `y=${eb.plan.start.y}`
+    );
+  }
+  if (wb) {
+    check(
+      `first westbound (${wb.train.train_no}) uses t2 (y=464)`,
+      wb.plan.start.y === 464,
+      `y=${wb.plan.start.y}`
     );
   }
 }

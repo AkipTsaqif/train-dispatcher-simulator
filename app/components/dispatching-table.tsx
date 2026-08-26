@@ -1182,7 +1182,7 @@ export default function DispatchingTable({
       // the REAR train stops (the leader may be a dwelling queue head or
       // simply ahead). Stopping both would deadlock them — each waits for the
       // other to clear, and two co-moving trains at track speed (e.g. spawned
-      // together at a shared entry edge, like J310+J410 on t6) would freeze
+      // together at a shared entry edge, like two EB trains on t1) would freeze
       // forever. The follower releases via the loop below once the leader
       // moves on. The leader is the frontmost in the travel direction; at a
       // spawn-coincidence tie (identical x) the earlier scheduled origin
@@ -1535,8 +1535,8 @@ export default function DispatchingTable({
         // 16-unit graph-paper cells rather than the engine's 58-unit CELL.
         // A scheduled platform dwell is different from a signal hold: the
         // platform is authored for the TRAIN CENTRE, so do not apply the
-        // operational-front compensation there. Otherwise J201/J310 drift
-        // east to W–Z and J102 drifts west to S–V instead of occupying the
+        // operational-front compensation there. Otherwise EB trains drift
+        // east to W–Z and WB trains drift west to S–V instead of occupying the
         // U–X platform.
         const renderLeg = plan.legs[Math.min(st.leg, plan.legs.length - 1)];
         const atPlatformDwell =
@@ -2238,8 +2238,9 @@ export default function DispatchingTable({
       actual: st.actualArr[i],
       meets: s.meets,
     }));
-    const dest = stationName(train.stops[train.stops.length - 1].trackmark);
-    const dirLabel = plan.start.dir === "right" ? `ke timur · menuju ${dest}` : `ke barat · menuju ${dest}`;
+    const dest = train.destination ?? stationName(train.stops[train.stops.length - 1].trackmark);
+    const origin = train.origin ?? stationName(train.stops[0].trackmark);
+    const dirLabel = plan.start.dir === "right" ? `ke timur · ${origin} → ${dest}` : `ke barat · ${origin} → ${dest}`;
     const leg = plan.legs[Math.min(st.leg, plan.legs.length - 1)];
     // slip at the most recent reached stop
     let slip = 0;
@@ -2271,7 +2272,12 @@ export default function DispatchingTable({
       if (st.stopReason === "signal") status = `Ditahan sinyal ${codeOf(st.stopSignalId ?? "")}`;
       else if (st.stopReason === "junction") status = "Menunggu wesel";
       else if (st.stopReason === "conflict") status = "Konflik — kereta bertabrakan";
-      else if (st.stopReason === "queue") status = "Mengikuti — menunggu kereta di depan";
+      else if (st.stopReason === "queue") {
+        // Show the train's current location: between which two stations it is.
+        const nextStation = stationName(train.stops[Math.min(st.leg, train.stops.length - 1)].trackmark);
+        const prevStation = st.leg > 0 ? stationName(train.stops[st.leg - 1].trackmark) : stationName(train.stops[0].trackmark);
+        status = `Mengikuti — antara ${prevStation} dan ${nextStation}`;
+      }
       else status = "Berhenti";
       // held past its scheduled departure at a station → late; otherwise the slip
       if (st.leg > 0 && leg.departAt !== undefined && st.time > leg.departAt) {

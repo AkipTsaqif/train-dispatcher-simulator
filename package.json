@@ -27,6 +27,7 @@
     "grid": "bun scripts/grid-ref.ts",
     "snapshot:bekasi": "bun scripts/snapshot-layout.ts",
     "snapshot:jatinegara": "bun scripts/snapshot-layout.ts jatinegara",
+    "build:schedule": "bun scripts/build-jng-schedule.ts",
     "verify:jatinegara:baseline": "bun scripts/verify-layout.ts jatinegara",
     "verify:bekasi": "bun scripts/verify-layout.ts bekasi-tambun-cibitung"
   },

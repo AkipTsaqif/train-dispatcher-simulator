@@ -4119,6 +4119,170 @@
         "approach": true,
         "legs": [
           {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 465,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 499.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5509B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 225,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 271.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "5024C"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 225,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 271.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "5026"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 299,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 333.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5037B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
             "lineY": 496,
             "speed": 14.2222222222,
             "station": "JNG-W",
@@ -4132,14 +4296,14 @@
             "waypointX": 360
           },
           {
-            "departAt": 600,
+            "departAt": 60,
             "lineY": 496,
             "speed": 14.2222222222,
             "station": "JNG",
             "waypointX": 888
           },
           {
-            "departAt": 637.125,
+            "departAt": 97.125,
             "lineY": 496,
             "speed": 14.2222222222,
             "station": "JNG-E",
@@ -4154,7 +4318,7 @@
           "x": -84,
           "y": 496
         },
-        "trainNo": "J201"
+        "trainNo": "26"
       },
       {
         "approach": true,
@@ -4173,14 +4337,14 @@
             "waypointX": 360
           },
           {
-            "departAt": 600,
+            "departAt": 840,
             "lineY": 464,
             "speed": 14.2222222222,
             "station": "JNG",
             "waypointX": 72
           },
           {
-            "departAt": 620.25,
+            "departAt": 860.25,
             "lineY": 464,
             "speed": 14.2222222222,
             "station": "JNG-W",
@@ -4195,34 +4359,362 @@
           "x": 1012,
           "y": 464
         },
-        "trainNo": "J102"
+        "trainNo": "63B"
       },
       {
         "approach": true,
         "legs": [
           {
-            "lineY": 336,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 405,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 451.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "5506"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 705,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 739.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5511C"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 179,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 213.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "6005"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 345,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 379.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5039C"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 225,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 271.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "6002B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 780,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 800.25,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "245B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 465,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 499.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5041C"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 405,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 451.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "5508"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": 72
           },
           {
             "departAt": 0,
-            "lineY": 336,
+            "lineY": 496,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": 360
           },
           {
-            "departAt": 600,
-            "lineY": 336,
+            "departAt": 60,
+            "lineY": 496,
             "speed": 14.2222222222,
             "station": "JNG",
-            "waypointX": 392
+            "waypointX": 888
           },
           {
-            "departAt": 602.25,
-            "lineY": 336,
+            "departAt": 97.125,
+            "lineY": 496,
             "speed": 14.2222222222,
             "station": "JNG-E",
             "waypointX": 1012
@@ -4232,38 +4724,202 @@
         "start": {
           "dir": "right",
           "entryX": -84,
-          "firstNode": "n9",
+          "firstNode": "n1",
           "x": -84,
-          "y": 336
+          "y": 496
         },
-        "trainNo": "J310"
+        "trainNo": "114C"
       },
       {
         "approach": true,
         "legs": [
           {
-            "lineY": 336,
-            "speed": 14.2222222222,
-            "station": "JNG-W",
-            "waypointX": 296
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
           },
           {
             "departAt": 0,
-            "lineY": 368,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 405,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 439.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5043C"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 49,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 95.8947368421,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "5028B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 1080,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 1100.25,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "PLB 7005"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 405,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 439.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "6007"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 14.2222222222,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": 360
           },
           {
-            "departAt": 589,
-            "lineY": 368,
+            "departAt": 60,
+            "lineY": 496,
             "speed": 14.2222222222,
             "station": "JNG",
-            "waypointX": 368
+            "waypointX": 888
           },
           {
-            "departAt": 589.5625,
-            "lineY": 368,
+            "departAt": 97.125,
+            "lineY": 496,
             "speed": 14.2222222222,
             "station": "JNG-E",
             "waypointX": 1012
@@ -4273,14 +4929,1096 @@
         "start": {
           "dir": "right",
           "entryX": -84,
-          "firstNode": "n9",
+          "firstNode": "n1",
           "x": -84,
-          "y": 336
+          "y": 496
         },
-        "trainNo": "J410"
+        "trainNo": "130B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 345,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 379.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5045B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 225,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 271.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "6004C"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 14.2222222222,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 14.2222222222,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 60,
+            "lineY": 496,
+            "speed": 14.2222222222,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 97.125,
+            "lineY": 496,
+            "speed": 14.2222222222,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "178B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 109,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 155.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "5030C"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 465,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 499.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5049B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 225,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 271.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "5034C"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 405,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 439.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5515B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 334,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 380.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "5510"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 525,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 559.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5051B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 225,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 259.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "6009"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 225,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 271.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "5036C"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 10.6666666667,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 10.6666666667,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 840,
+            "lineY": 464,
+            "speed": 8,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 876,
+            "lineY": 464,
+            "speed": 8,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "281"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 285,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 319.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5053B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 225,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 271.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "6006B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 14.2222222222,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 14.2222222222,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 60,
+            "lineY": 496,
+            "speed": 14.2222222222,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 97.125,
+            "lineY": 496,
+            "speed": 14.2222222222,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "20A"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 405,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 439.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5517B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 720,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 740.25,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "255B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 525,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 571.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "5512"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 239,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 273.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "6011"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 405,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 451.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "5038C"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 780,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 800.25,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "131B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 359,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 393.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5055C"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 165,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 211.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "5044D"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 405,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 439.105263158,
+            "lineY": 464,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "5057B"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 72
+          },
+          {
+            "departAt": 0,
+            "lineY": 496,
+            "speed": 8.44444444444,
+            "station": "JNG-W",
+            "waypointX": 360
+          },
+          {
+            "departAt": 525,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG",
+            "waypointX": 888
+          },
+          {
+            "departAt": 571.894736842,
+            "lineY": 496,
+            "speed": 11.2592592593,
+            "station": "JNG-E",
+            "waypointX": 1012
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "right",
+          "entryX": -84,
+          "firstNode": "n1",
+          "x": -84,
+          "y": 496
+        },
+        "trainNo": "5514A"
+      },
+      {
+        "approach": true,
+        "legs": [
+          {
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-E",
+            "waypointX": 888
+          },
+          {
+            "departAt": 0,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-E",
+            "waypointX": 360
+          },
+          {
+            "departAt": 840,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG",
+            "waypointX": 72
+          },
+          {
+            "departAt": 860.25,
+            "lineY": 464,
+            "speed": 14.2222222222,
+            "station": "JNG-W",
+            "waypointX": -84
+          }
+        ],
+        "originArr": 0,
+        "start": {
+          "dir": "left",
+          "entryX": 1012,
+          "firstNode": "n4",
+          "x": 1012,
+          "y": 464
+        },
+        "trainNo": "PLB 7001A"
       }
     ],
-    "meetsByTrain": [],
+    "meetsByTrain": [
+      [
+        45,
+        [
+          [
+            "JNG",
+            [
+              {
+                "meetStopIdx": 1,
+                "partnerIdx": 45,
+                "releaseOffset": 30
+              }
+            ]
+          ]
+        ]
+      ]
+    ],
     "movement": {
       "nodes": {
         "n1": {

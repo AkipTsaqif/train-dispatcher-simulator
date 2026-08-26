@@ -29,7 +29,7 @@ type JourneyPreparationMap = Pick<
 
 type JourneyPreparationScenario = Pick<
   DispatchScenarioDefinition,
-  "speed" | "dwell" | "priority" | "spawn" | "routing" | "trackSpeeds"
+  "speed" | "dwell" | "priority" | "spawn" | "routing" | "trackSpeeds" | "trainTypeSpeedKmh"
 >;
 
 type MeetPreparationMap = Pick<
@@ -231,9 +231,10 @@ const prepareJourneys = (
         line.lineY,
         map.nodes,
         journeyDir(train.stops, platformX),
-        { speed: scenario.speed, dwell: scenario.dwell, spawn: { atTrackEdge: scenario.spawn.atTrackEdge === true }, trackSpeeds: scenario.trackSpeeds },
+        { speed: scenario.speed, dwell: scenario.dwell, spawn: { atTrackEdge: scenario.spawn.atTrackEdge === true }, trackSpeeds: scenario.trackSpeeds, trainTypeSpeedKmh: scenario.trainTypeSpeedKmh },
         stopXFor,
-        entryMain?.lineY
+        entryMain?.lineY,
+        train.trainType
       ),
     };
   });

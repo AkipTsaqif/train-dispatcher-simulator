@@ -30,6 +30,9 @@ export type Train = {
   train_no: string;
   name: string;
   consist: string;
+  origin?: string;
+  destination?: string;
+  trainType?: string | null;
   stops: TrainStop[];
 };
 
@@ -49,6 +52,9 @@ export type ScheduleStop = {
 export type ScheduleEntry = {
   train_no: string;
   train_name: string;
+  origin?: string;
+  destination?: string;
+  trainType?: string | null;
   stops: ScheduleStop[];
 };
 
@@ -86,6 +92,11 @@ export type JourneyRules = {
    *  running profile comes from per-segment caps applied by the engine via
    *  MoveCtx.segmentSpeeds (built with buildSegmentLimits). */
   trackSpeeds?: TrackSpeedConfig;
+  /** Per-train-type speed ceiling in km/h, keyed by train_type (e.g.
+   *  "krl", "freight"). The cap is converted to map units/second per leg
+   *  using that leg's zone metresPerUnit, then clamps the leg plan speed.
+   *  Absent or unmatched types → no cap (track speed governs). */
+  trainTypeSpeedKmh?: Record<string, number>;
 };
 
 export const hmsToSeconds = (hms: string): number => {
@@ -104,6 +115,9 @@ export const createTrains = (
       train_no: train.train_no,
       name: train.train_name,
       consist: "eksekutif",
+      origin: train.origin,
+      destination: train.destination,
+      trainType: train.trainType,
       stops: train.stops.map((stop) => ({
         trackmark: stop.station,
         arr: hmsToSeconds(stop.arr_actual),
@@ -253,13 +267,17 @@ export function buildJourney(
    *  stop): the spawn, atTrackEdge extent, and first junction are taken from
    * this line; the train crosses onto the journey line through the throat.
    * Absent → spawn on the journey line itself (legacy). */
-  approachLineY?: number
+  approachLineY?: number,
+  /** Train type for per-train-type speed caps (see JourneyRules.
+   *  trainTypeSpeedKmh). Absent → no train-type cap. */
+  trainType?: string | null
 ): JourneyPlan {
   const stopX = (code: string): number => (stopXFor ? stopXFor(code) : platformX[code]);
   const spawnY = approachLineY ?? lineY;
   const {
     speed: { runKmh, segmentKm, minUnitsPerSecond },
     trackSpeeds,
+    trainTypeSpeedKmh,
     dwell: { holdUntilScheduledDepartureByStation, minimumStopSeconds, relativeAnchors },
   } = rules;
   const atTrackEdge = rules.spawn?.atTrackEdge === true;
@@ -292,6 +310,17 @@ export function buildJourney(
   const maxU = trackSpeeds
     ? Math.max(...Object.values(buildSegmentLimits(nodes, trackSpeeds)))
     : null;
+  // Per-train-type speed ceiling (km/h → u/s per leg's zone). The cap is
+  // applied to the leg PLAN speed — the engine's per-segment track-class
+  // limits still apply on top via min(leg.speed, segLimitU).
+  const typeCapKmh =
+    trainTypeSpeedKmh && trainType ? trainTypeSpeedKmh[trainType] : undefined;
+  const mpuFor = (midX: number): number => {
+    if (!trackSpeeds) return 1;
+    return trackSpeeds.east && midX > trackSpeeds.east.x
+      ? trackSpeeds.east.metresPerUnit
+      : trackSpeeds.metresPerUnit;
+  };
   for (let i = 0; i < stops.length - 1; i++) {
     const fromCode = stops[i].trackmark;
     const toCode = stops[i + 1].trackmark;
@@ -301,10 +330,17 @@ export function buildJourney(
     const distUnits = Math.abs(to - from); // platform spacing in map units
     const km =
       segmentKm[`${fromCode}-${toCode}`] ?? segmentKm[`${toCode}-${fromCode}`];
-    const speed = maxU ?? Math.max(
+    let speed = maxU ?? Math.max(
       minUnitsPerSecond ?? 0,
       km ? (distUnits * runKmh) / (km * 3600) : distUnits / secs
     );
+    // Clamp the plan speed to the train-type ceiling (converted via this
+    // leg's zone metresPerUnit so the km/h cap is correct per zone scale).
+    if (typeCapKmh !== undefined) {
+      const midX = (from + to) / 2;
+      const typeCapU = typeCapKmh / 3.6 / mpuFor(midX);
+      speed = Math.min(speed, typeCapU);
+    }
     legInfo.push({ speed, travel: distUnits / speed });
   }
   // Expected timeline (running at the configured speed and stop policy) so
@@ -365,7 +401,14 @@ export function buildJourney(
     } else {
       spawnX = dir === "left" ? Math.max(rawSpawn, maxX + MARGIN) : Math.min(rawSpawn, minX - MARGIN);
     }
-    legs.unshift({ waypointX: originX, lineY: spawnY, speed: maxU ?? Math.max(minUnitsPerSecond ?? 0, Math.abs(spawnX - originX) / originArr), station: stops[0].trackmark });
+    // Approach speed ceiling: layout max capped by train-type limit (using
+    // the spawn zone's metresPerUnit — the approach is off-map on the entry
+    // line, whose X is always in the base zone unless the line is entirely
+    // east of the boundary).
+    const spawnMidX = spawnX;
+    const approachMaxU = maxU ?? Math.max(minUnitsPerSecond ?? 0, Math.abs(spawnX - originX) / originArr);
+    const approachCapU = typeCapKmh !== undefined ? typeCapKmh / 3.6 / mpuFor(spawnMidX) : Infinity;
+    legs.unshift({ waypointX: originX, lineY: spawnY, speed: Math.min(approachMaxU, approachCapU), station: stops[0].trackmark });
   } else {
     spawnX = originX; // departs at 00:00 — no approach time, start at the platform
   }
