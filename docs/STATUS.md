@@ -967,6 +967,49 @@ Phases 2, 3, 4 are mutually independent (all need Phase 1) — can run in any or
   One-shot placement and meets probes deliberately keep carrying their budget.
   E2E checks arrival at U–X, 20 consecutive dwell seconds with no overrun, and
   a continued platform hold after booked departure while XE1 remains red.
+- 2026-08-27 — JNG markers glitched one cell at the corridor BOUNDARY (not the
+  platform). Cause: a pass-through stop (schedule `arr == dep`, e.g. JNG-W /
+  JNG-E) gets `anchor = expected arrival`, so its `departAt` EQUALS the arrival
+  time and the engine runs straight through on a strict `st.time < departAt`.
+  The renderer instead compared times (`<=`, and a separate `<` for
+  `atPlatformDwell`), so at the boundary the comparison was a floating-point
+  tie: it read as a dwell, dropped the front compensation, and snapped the
+  marker back one visual half-body (-32) with zero engine movement, then
+  pushed it forward again. Fixed structurally — `LegPlan.passThrough` is set
+  from `stops[i].arr === stops[i].dep` at journey build time, and both
+  `atPlatformDwell` and the ease test exclude pass-through legs instead of
+  comparing clocks. Real platform dwell/ease behaviour is unchanged (arrival
+  still eases onto x=360, departure still ramps back out). Verified by A/B:
+  toggling only this guard makes the -32 step appear/disappear, on an
+  otherwise byte-identical build. E2E `"...never steps backward at a
+  pass-through boundary"` sweeps the whole journey and fails without the fix.
+  Note `probe:bearing` is RED on this tree and is PRE-EXISTING (it fails
+  identically with all session changes stashed) — unrelated to this fix.
+- 2026-08-27 — Fixed amber reservation line re-lighting when train passed
+  short route: when 5024C ran past `NW1A` (x=240), `NW1`'s reservation
+  (`[[64, 496], [96, 496], [240, 496]]`) was still active awaiting rear-based
+  release at x=282. `reservationAhead` used `bestDist > 58` cutoff to detect
+  when no train was on a route; once the train's front was >58 units past the
+  endpoint x=240, `bestDist > 58` falsely treated the route as having no
+  train on it and returned the entire route in full amber. Fixed in
+  `reservationAhead`: when the nearest train's front is past the route endpoint
+  along the running direction, the remaining route ahead is collapsed to empty
+  (`[[end, end]]`) instead of triggering the `bestDist > 58` full-route fallback.
+  New E2E `"jatinegara NW1 reservation never re-lights after train passes"` passes.
+- 2026-08-27 — Added two new signals in JNG layout: entry signal `NW1A` at
+  O16 ([240, 496], on t1 facing eastbound) and exit signal `XW2A` at L14
+  ([192, 464], on t2 facing westbound). Total signals are now 26 (4 NW, 5 NE,
+  9 XW, 8 XE). Re-routed `NW1` to intermediate `NW1A` -> `XE1`, and `XW2` to
+  `XW2A` -> west boundary. JNG baseline re-captured and verifiers updated.
+- 2026-08-27 — Fixed `P8+P3 × terkunci oleh NW1` during platform 1 dwell:
+  reduced the trailing reservation release offset on dense schematic layouts
+  by one cell wide (`GRID_PITCH`, 16 units on JNG). `RESERVATION_REAR_OFFSET`
+  keeps a trailing buffer behind running trains so turnouts cannot be clicked
+  the moment the tail crosses them, but does not extend 58 units back onto
+  approach crossovers during a 64-unit platform dwell. 5024C dwelling at
+  platform 1 (x=360) now frees P3 at S16 (x=304), making PC11 clickable and
+  reversable while maintaining proper approach locking during the run. New E2E
+  `"jatinegara PC11 unlocks while 5024C dwells at platform 1"` passes.
 - 2026-08-21 — Grid chrome trimmed to end at BF: `grid.width` 936→928. The
   column count is `round(grid.width / gridCellSize)`, so 936 drew 59 columns
   (last BG) while the track ends at BD. 928 draws 58 (last BF), keeping one

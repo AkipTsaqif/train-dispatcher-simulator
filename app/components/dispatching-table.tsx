@@ -628,6 +628,18 @@ export default function DispatchingTable({
   // between the two consistently — a mismatch shows up as the marker jumping
   // when it changes segment.
   const VISUAL_HALF_LEN = TRAIN_HALF_LEN * CONTROL_SCALE;
+  // the visual grid pitch may differ from the sim CELL (a dense layout aligns
+  // its grid with its own track pitch); labels every GRID_LABEL_STEP-th cell
+  const GRID_PITCH = PRESENTATION.gridCellSize ?? DISPATCH_MAP.grid.cellSize;
+  // Reservation trimming and release offset behind the train centre.
+  // TRAIN_HALF_LEN includes a trailing safety buffer to prevent clicking a
+  // turnout right as a train clears it; on dense schematic layouts (JNG)
+  // reducing it by one cell wide (GRID_PITCH) keeps that buffer without
+  // locking approach crossovers during a station dwell.
+  const RESERVATION_REAR_OFFSET =
+    IS_SCHEMATIC && PRESENTATION.trainLength !== undefined
+      ? Math.max(VISUAL_HALF_LEN, TRAIN_HALF_LEN - GRID_PITCH)
+      : TRAIN_HALF_LEN;
   // conflict "!" badge sits just past the marker's leading corner
   const EXCLAM_OFFSET: [number, number] = [
     TRAIN_HALF_LEN - 10 * CONTROL_SCALE,
@@ -636,9 +648,6 @@ export default function DispatchingTable({
   // the graph-paper chrome draws in grid mode, and in schematic mode when the
   // layout asks for it (presentation.grid)
   const SHOW_GRID = !IS_SCHEMATIC || PRESENTATION.grid === true;
-  // the visual grid pitch may differ from the sim CELL (a dense layout aligns
-  // its grid with its own track pitch); labels every GRID_LABEL_STEP-th cell
-  const GRID_PITCH = PRESENTATION.gridCellSize ?? DISPATCH_MAP.grid.cellSize;
   const GRID_LABEL_STEP = PRESENTATION.gridLabelStep ?? 1;
   const GRID_OFFSET = PRESENTATION.gridOffset ?? [0, 0];
   const GRID_LABEL_SIZE = PRESENTATION.gridLabelSize ?? 11;
@@ -946,7 +955,7 @@ export default function DispatchingTable({
     let fronts: { lineY: number; front: number }[] = [];
     if (owner && owner.spawned) {
       fronts = [
-        { lineY: owner.y, front: owner.dir === "left" ? owner.x + TRAIN_HALF_LEN : owner.x - TRAIN_HALF_LEN },
+        { lineY: owner.y, front: owner.dir === "left" ? owner.x + RESERVATION_REAR_OFFSET : owner.x - RESERVATION_REAR_OFFSET },
       ];
     } else {
       // No claimed owner yet. A freshly set reservation must render IN FULL —
@@ -1486,7 +1495,7 @@ export default function DispatchingTable({
           // "Fully passed" is judged at the train's REAR — releasing at the
           // nose would free cells the body still occupies. The offset is the
           // DRAWN half-length so the highlight hugs the visible tail.
-          const rear = user ? (ownerDir === "left" ? user.x + TRAIN_HALF_LEN : user.x - TRAIN_HALF_LEN) : 0;
+          const rear = user ? (ownerDir === "left" ? user.x + RESERVATION_REAR_OFFSET : user.x - RESERVATION_REAR_OFFSET) : 0;
           const passedEnd = user
             ? ownerDir === "left"
               ? rear <= end[0]
@@ -1538,10 +1547,17 @@ export default function DispatchingTable({
         // operational-front compensation there. Otherwise EB trains drift
         // east to W–Z and WB trains drift west to S–V instead of occupying the
         // U–X platform.
+        // A pass-through leg (corridor boundary) is never a dwell, however the
+        // clock compares: its anchor IS the expected arrival, so the test is a
+        // floating-point tie. Excluding it structurally keeps the boundary
+        // from being treated as a platform stop.
         const renderLeg = plan.legs[Math.min(st.leg, plan.legs.length - 1)];
         const atPlatformDwell =
           st.stationDepartureHold ||
-          (!st.stopped && renderLeg.departAt !== undefined && st.time < renderLeg.departAt);
+          (!st.stopped &&
+            !renderLeg.passThrough &&
+            renderLeg.departAt !== undefined &&
+            st.time < renderLeg.departAt);
         // Platform-dwell marker EASING. The running marker leads the engine
         // centre by the engine-to-visual front difference so its nose tracks
         // the protection footprint, but a dwell parks the CENTRE on the
@@ -1555,26 +1571,33 @@ export default function DispatchingTable({
         // dwells at / is held at / departs the platform, or approaches one
         // whose dwell anchor is still ahead of the expected arrival (latched
         // per leg so a mid-approach speed change cannot flicker it off).
+        // Ease ONLY where the engine will really stand still. `advanceTrain`
+        // dwells on a strict `st.time < departAt`, so a waypoint whose anchor
+        // equals the arrival (every pass-through boundary: `anchor = arr`)
+        // is run straight through. Testing `<=` here engaged the ease on
+        // those too, pulling the marker back by the full front compensation
+        // at the boundary and then pushing it forward again — the one-cell
+        // "glitch" at JNG-E/JNG-W. `dwellsAt` is the single source of truth.
         const easeState = dwellEaseRef.current[ti] ?? { leg: -1, x: 0 };
         let easeX: number | null = null;
         const dwellStopIdx = st.leg - 1 + (st.approach ? 0 : 1);
+        const dwellsAt = (legIdx: number, arrival: number): boolean => {
+          const l = plan.legs[legIdx];
+          return !!l && !l.passThrough && l.departAt !== undefined && arrival < l.departAt;
+        };
         const arrivedBeforeAnchor =
           st.leg > 0 &&
-          renderLeg.departAt !== undefined &&
           st.actualArr[dwellStopIdx] != null &&
-          st.actualArr[dwellStopIdx] <= renderLeg.departAt;
+          dwellsAt(st.leg, st.actualArr[dwellStopIdx]!);
         if (arrivedBeforeAnchor) {
           easeX = plan.legs[st.leg - 1].waypointX;
         } else if (easeState.leg === st.leg) {
           easeX = easeState.x; // approach latch: keep easing once engaged for this leg
         } else {
-          const nextLeg = plan.legs[st.leg + 1];
-          if (nextLeg?.departAt !== undefined) {
-            const expectedArr =
-              st.time +
-              Math.abs(renderLeg.waypointX - st.x) / Math.max(1e-6, renderLeg.speed);
-            if (nextLeg.departAt > expectedArr) easeX = renderLeg.waypointX;
-          }
+          const expectedArr =
+            st.time +
+            Math.abs(renderLeg.waypointX - st.x) / Math.max(1e-6, renderLeg.speed);
+          if (dwellsAt(st.leg + 1, expectedArr)) easeX = renderLeg.waypointX;
         }
         dwellEaseRef.current[ti] =
           easeX === null ? { leg: -1, x: 0 } : { leg: st.leg, x: easeX };

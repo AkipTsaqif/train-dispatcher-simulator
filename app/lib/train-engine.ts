@@ -249,7 +249,20 @@ export type TrainState = {
   segLimitU: number | null; // current segment's speed cap (u/s) — null = uncapped
 };
 
-export type LegPlan = { waypointX: number; lineY: number; speed: number; departAt?: number; station?: string }[];
+export type LegPlan = {
+  waypointX: number;
+  lineY: number;
+  speed: number;
+  departAt?: number;
+  station?: string;
+  /** True when this leg starts at a PASS-THROUGH stop (schedule arr == dep,
+   *  e.g. a virtual corridor boundary). Its `departAt` anchor equals the
+   *  expected arrival, so the engine never actually waits there. Presentation
+   *  code must test this instead of comparing times: at a pass-through the
+   *  anchor-vs-arrival comparison is a floating-point tie and can read as a
+   *  dwell on one frame and not the next. */
+  passThrough?: boolean;
+}[];
 
 export type JourneyPlan = {
   originArr: number;
@@ -401,6 +414,7 @@ export function buildJourney(
       // the train arrives at the anchor, so it does not wait)
       departAt: anchors[i],
       station: stops[i].trackmark,
+      passThrough: stops[i].arr === stops[i].dep,
     });
   }
 
@@ -443,7 +457,15 @@ export function buildJourney(
   // stop's configured minimum dwell anchor applies here.
   const lastSpeed = legs[legs.length - 1].speed;
   const exitX = dir === "left" ? minX - MARGIN : maxX + MARGIN;
-  legs.push({ waypointX: exitX, lineY, speed: lastSpeed, departAt: anchors[stops.length - 1], station: stops[stops.length - 1].trackmark });
+  const lastStop = stops[stops.length - 1];
+  legs.push({
+    waypointX: exitX,
+    lineY,
+    speed: lastSpeed,
+    departAt: anchors[stops.length - 1],
+    station: lastStop.trackmark,
+    passThrough: lastStop.arr === lastStop.dep,
+  });
 
   // First node ahead of the (off-map) spawn — nearest junction in the travel
   // direction, on the line the spawn is actually on (spawnY, which with an
@@ -1111,6 +1133,13 @@ export function reservationAhead(
   pts: LeveledPoint[],
   fronts: { lineY: number; front: number }[]
 ): LeveledPoint[] | null {
+  if (!pts || pts.length < 2) return null;
+  const end = pts[pts.length - 1];
+  const lastSegStart = pts[pts.length - 2];
+  const lastDx = end[0] - lastSegStart[0];
+  const lastDy = end[1] - lastSegStart[1];
+  const lastLen = Math.hypot(lastDx, lastDy) || 1;
+
   const distTo = (p: [number, number]) => {
     let best = Infinity;
     for (let i = 0; i + 1 < pts.length; i++) {
@@ -1138,7 +1167,19 @@ export function reservationAhead(
       bestTrain = f;
     }
   }
-  if (!bestTrain || bestDist > 58) return pts; // no train on this route — full route
+  if (!bestTrain) return pts;
+  // If the nearest train's front has passed the end of the route along the last
+  // segment's running direction, the route is completely behind it (0 remaining).
+  // Checking this before the `bestDist > 58` cutoff prevents a train that has
+  // run past the route end from causing the full reservation to re-light.
+  const pastEndAlongRoute =
+    ((bestTrain.front - end[0]) * lastDx + (bestTrain.lineY - end[1]) * lastDy) / lastLen;
+  const lateralFromEnd =
+    Math.abs((bestTrain.lineY - end[1]) * lastDx - (bestTrain.front - end[0]) * lastDy) / lastLen;
+  if (pastEndAlongRoute >= 0 && lateralFromEnd < 58) {
+    return [[end[0], end[1]], [end[0], end[1]]];
+  }
+  if (bestDist > 58) return pts; // no train on this route — full route
   // split the polyline at the train's front; keep the far end
   const front: [number, number] = [bestTrain.front, bestTrain.lineY];
   let best = { d: Infinity, idx: 0, t: 0 };

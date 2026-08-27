@@ -29,7 +29,7 @@ const map = runtime.map;
 // fragments; the stubs end at junctions, 6 tracks per map boundary)
 check("compiles with 13 main lines", compiled.lines.mains.length === 13, `mains=${compiled.lines.mains.length}`);
 check("56 switches (10 stub ends are fixed turns; P58/P63/P65/P67 are inverted points)", compiled.switches.items.length === 56, `switches=${compiled.switches.items.length}`);
-check("24 signals (NW/NE/XW/XE)", compiled.signals.items.length === 24, `signals=${compiled.signals.items.length}`);
+check("26 signals (NW/NE/XW/XE)", compiled.signals.items.length === 26, `signals=${compiled.signals.items.length}`);
 check(
   "24 coupled point pairs (PC1..PC24) + 8 singles",
   (() => {
@@ -136,9 +136,24 @@ check(
     segmentLevels: map.segmentLevels,
   });
   check(
-    "NW1 (track 1 west entry) routes to the east boundary/XE1",
-    r !== null && (r.exitSignalId === "XE1" || r.pts[r.pts.length - 1][0] > 1000),
+    "NW1 (track 1 west outer entry) routes to NW1A",
+    r !== null && r.exitSignalId === "NW1A",
     r ? `exit=${r.exitSignalId} lastX=${r.pts[r.pts.length - 1][0]}` : "no route"
+  );
+  const nw1a = signals.find((s) => s.id === "NW1A")!;
+  const r1a = findRoute({
+    entranceId: "NW1A",
+    entrance: nw1a,
+    signals,
+    graph,
+    switches: { ...map.switches.initialState },
+    isLocked: () => false,
+    segmentLevels: map.segmentLevels,
+  });
+  check(
+    "NW1A (track 1 intermediate entry) routes to XE1",
+    r1a !== null && (r1a.exitSignalId === "XE1" || r1a.pts[r1a.pts.length - 1][0] > 1000),
+    r1a ? `exit=${r1a.exitSignalId} lastX=${r1a.pts[r1a.pts.length - 1][0]}` : "no route"
   );
   // a bidirectional wrong-way move: XW2 (west exit on t2) — the train may enter
   // from the east on t2 and leave west; the search must find the west route
@@ -153,9 +168,24 @@ check(
     segmentLevels: map.segmentLevels,
   });
   check(
-    "XW2 (west exit, t2) routes west to the boundary",
-    r2 !== null && r2.pts[r2.pts.length - 1][0] < 100,
-    r2 ? `lastX=${r2.pts[r2.pts.length - 1][0]}` : "no route"
+    "XW2 (platform 2 west exit) routes to XW2A",
+    r2 !== null && r2.exitSignalId === "XW2A",
+    r2 ? `exit=${r2.exitSignalId} lastX=${r2.pts[r2.pts.length - 1][0]}` : "no route"
+  );
+  const xw2a = signals.find((s) => s.id === "XW2A")!;
+  const r2a = findRoute({
+    entranceId: "XW2A",
+    entrance: xw2a,
+    signals,
+    graph,
+    switches: { ...map.switches.initialState },
+    isLocked: () => false,
+    segmentLevels: map.segmentLevels,
+  });
+  check(
+    "XW2A (t2 outer west exit) routes west to the boundary",
+    r2a !== null && r2a.pts[r2a.pts.length - 1][0] < 100,
+    r2a ? `lastX=${r2a.pts[r2a.pts.length - 1][0]}` : "no route"
   );
   // Phase 8: a stub exit must DIVE through the throat — XE5 (t5, y=368) ends
   // at the terminating switch Z8; its route throws V (to t6) then W (to

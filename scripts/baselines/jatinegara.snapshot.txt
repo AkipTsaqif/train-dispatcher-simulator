@@ -2431,10 +2431,16 @@
     },
     "signalSections": [
       {
-        "hi": 400,
+        "hi": 240,
         "lineY": 496,
         "lo": 64,
         "sig": "NW1"
+      },
+      {
+        "hi": 400,
+        "lineY": 496,
+        "lo": 240,
+        "sig": "NW1A"
       },
       {
         "hi": 400,
@@ -2487,8 +2493,14 @@
       {
         "hi": 320,
         "lineY": 464,
-        "lo": 32,
+        "lo": 192,
         "sig": "XW2"
+      },
+      {
+        "hi": 192,
+        "lineY": 464,
+        "lo": 32,
+        "sig": "XW2A"
       },
       {
         "hi": 320,
@@ -2593,6 +2605,23 @@
           "lineY": 496,
           "mount": "up",
           "x": 64,
+          "y": 496
+        },
+        {
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
+          "edge": [
+            "s496x96",
+            "s496x272"
+          ],
+          "id": "NW1A",
+          "label": "NW1A",
+          "lineY": 496,
+          "mount": "up",
+          "x": 240,
           "y": 496
         },
         {
@@ -2746,6 +2775,23 @@
           "lineY": 464,
           "mount": "up",
           "x": 320,
+          "y": 464
+        },
+        {
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "edge": [
+            "s464x272",
+            "s464x144"
+          ],
+          "id": "XW2A",
+          "label": "XW2A",
+          "lineY": 464,
+          "mount": "up",
+          "x": 192,
           "y": 464
         },
         {
@@ -4127,6 +4173,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -4134,6 +4181,7 @@
           {
             "departAt": 465,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -4141,6 +4189,7 @@
           {
             "departAt": 499.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -4168,6 +4217,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
@@ -4175,6 +4225,7 @@
           {
             "departAt": 225,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
@@ -4182,6 +4233,7 @@
           {
             "departAt": 271.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -4209,6 +4261,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
@@ -4216,6 +4269,7 @@
           {
             "departAt": 225,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
@@ -4223,6 +4277,7 @@
           {
             "departAt": 271.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -4250,6 +4305,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -4257,6 +4313,7 @@
           {
             "departAt": 299,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -4264,6 +4321,7 @@
           {
             "departAt": 333.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -4291,6 +4349,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": 360
@@ -4298,6 +4357,7 @@
           {
             "departAt": 60,
             "lineY": 496,
+            "passThrough": false,
             "speed": 14.2222222222,
             "station": "JNG",
             "waypointX": 888
@@ -4305,6 +4365,7 @@
           {
             "departAt": 97.125,
             "lineY": 496,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-E",
             "waypointX": 1012
@@ -4332,6 +4393,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-E",
             "waypointX": 360
@@ -4339,6 +4401,7 @@
           {
             "departAt": 840,
             "lineY": 464,
+            "passThrough": false,
             "speed": 14.2222222222,
             "station": "JNG",
             "waypointX": 72
@@ -4346,6 +4409,7 @@
           {
             "departAt": 860.25,
             "lineY": 464,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": -84
@@ -4373,6 +4437,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
@@ -4380,6 +4445,7 @@
           {
             "departAt": 405,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
@@ -4387,6 +4453,7 @@
           {
             "departAt": 451.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -4414,6 +4481,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -4421,6 +4489,7 @@
           {
             "departAt": 705,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -4428,6 +4497,7 @@
           {
             "departAt": 739.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -4455,6 +4525,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -4462,6 +4533,7 @@
           {
             "departAt": 179,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -4469,6 +4541,7 @@
           {
             "departAt": 213.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -4496,6 +4569,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -4503,6 +4577,7 @@
           {
             "departAt": 345,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -4510,6 +4585,7 @@
           {
             "departAt": 379.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -4537,6 +4613,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
@@ -4544,6 +4621,7 @@
           {
             "departAt": 225,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
@@ -4551,6 +4629,7 @@
           {
             "departAt": 271.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -4578,6 +4657,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-E",
             "waypointX": 360
@@ -4585,6 +4665,7 @@
           {
             "departAt": 780,
             "lineY": 464,
+            "passThrough": false,
             "speed": 14.2222222222,
             "station": "JNG",
             "waypointX": 72
@@ -4592,6 +4673,7 @@
           {
             "departAt": 800.25,
             "lineY": 464,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": -84
@@ -4619,6 +4701,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -4626,6 +4709,7 @@
           {
             "departAt": 465,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -4633,6 +4717,7 @@
           {
             "departAt": 499.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -4660,6 +4745,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
@@ -4667,6 +4753,7 @@
           {
             "departAt": 405,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
@@ -4674,6 +4761,7 @@
           {
             "departAt": 451.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -4701,6 +4789,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": 360
@@ -4708,6 +4797,7 @@
           {
             "departAt": 60,
             "lineY": 496,
+            "passThrough": false,
             "speed": 14.2222222222,
             "station": "JNG",
             "waypointX": 888
@@ -4715,6 +4805,7 @@
           {
             "departAt": 97.125,
             "lineY": 496,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-E",
             "waypointX": 1012
@@ -4742,6 +4833,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -4749,6 +4841,7 @@
           {
             "departAt": 405,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -4756,6 +4849,7 @@
           {
             "departAt": 439.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -4783,20 +4877,23 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
           },
           {
-            "departAt": 49,
+            "departAt": 113,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
           },
           {
-            "departAt": 95.8947368421,
+            "departAt": 159.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -4824,6 +4921,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-E",
             "waypointX": 360
@@ -4831,6 +4929,7 @@
           {
             "departAt": 1080,
             "lineY": 464,
+            "passThrough": false,
             "speed": 14.2222222222,
             "station": "JNG",
             "waypointX": 72
@@ -4838,6 +4937,7 @@
           {
             "departAt": 1100.25,
             "lineY": 464,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": -84
@@ -4865,6 +4965,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -4872,6 +4973,7 @@
           {
             "departAt": 405,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -4879,6 +4981,7 @@
           {
             "departAt": 439.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -4906,6 +5009,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": 360
@@ -4913,6 +5017,7 @@
           {
             "departAt": 60,
             "lineY": 496,
+            "passThrough": false,
             "speed": 14.2222222222,
             "station": "JNG",
             "waypointX": 888
@@ -4920,6 +5025,7 @@
           {
             "departAt": 97.125,
             "lineY": 496,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-E",
             "waypointX": 1012
@@ -4947,6 +5053,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -4954,6 +5061,7 @@
           {
             "departAt": 345,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -4961,6 +5069,7 @@
           {
             "departAt": 379.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -4988,6 +5097,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
@@ -4995,6 +5105,7 @@
           {
             "departAt": 225,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
@@ -5002,6 +5113,7 @@
           {
             "departAt": 271.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -5029,6 +5141,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": 360
@@ -5036,6 +5149,7 @@
           {
             "departAt": 60,
             "lineY": 496,
+            "passThrough": false,
             "speed": 14.2222222222,
             "station": "JNG",
             "waypointX": 888
@@ -5043,6 +5157,7 @@
           {
             "departAt": 97.125,
             "lineY": 496,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-E",
             "waypointX": 1012
@@ -5070,20 +5185,23 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
           },
           {
-            "departAt": 109,
+            "departAt": 173,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
           },
           {
-            "departAt": 155.894736842,
+            "departAt": 219.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -5111,6 +5229,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -5118,6 +5237,7 @@
           {
             "departAt": 465,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -5125,6 +5245,7 @@
           {
             "departAt": 499.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -5152,6 +5273,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
@@ -5159,6 +5281,7 @@
           {
             "departAt": 225,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
@@ -5166,6 +5289,7 @@
           {
             "departAt": 271.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -5193,6 +5317,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -5200,6 +5325,7 @@
           {
             "departAt": 405,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -5207,6 +5333,7 @@
           {
             "departAt": 439.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -5234,20 +5361,23 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
           },
           {
-            "departAt": 334,
+            "departAt": 398,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
           },
           {
-            "departAt": 380.894736842,
+            "departAt": 444.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -5275,6 +5405,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -5282,6 +5413,7 @@
           {
             "departAt": 525,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -5289,6 +5421,7 @@
           {
             "departAt": 559.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -5316,6 +5449,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -5323,6 +5457,7 @@
           {
             "departAt": 225,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -5330,6 +5465,7 @@
           {
             "departAt": 259.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -5357,6 +5493,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
@@ -5364,6 +5501,7 @@
           {
             "departAt": 225,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
@@ -5371,6 +5509,7 @@
           {
             "departAt": 271.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -5398,6 +5537,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 10.6666666667,
             "station": "JNG-E",
             "waypointX": 360
@@ -5405,6 +5545,7 @@
           {
             "departAt": 840,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8,
             "station": "JNG",
             "waypointX": 72
@@ -5412,6 +5553,7 @@
           {
             "departAt": 876,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8,
             "station": "JNG-W",
             "waypointX": -84
@@ -5439,6 +5581,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -5446,6 +5589,7 @@
           {
             "departAt": 285,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -5453,6 +5597,7 @@
           {
             "departAt": 319.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -5480,6 +5625,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
@@ -5487,6 +5633,7 @@
           {
             "departAt": 225,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
@@ -5494,6 +5641,7 @@
           {
             "departAt": 271.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -5521,6 +5669,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": 360
@@ -5528,6 +5677,7 @@
           {
             "departAt": 60,
             "lineY": 496,
+            "passThrough": false,
             "speed": 14.2222222222,
             "station": "JNG",
             "waypointX": 888
@@ -5535,6 +5685,7 @@
           {
             "departAt": 97.125,
             "lineY": 496,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-E",
             "waypointX": 1012
@@ -5562,6 +5713,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -5569,6 +5721,7 @@
           {
             "departAt": 405,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -5576,6 +5729,7 @@
           {
             "departAt": 439.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -5603,6 +5757,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-E",
             "waypointX": 360
@@ -5610,6 +5765,7 @@
           {
             "departAt": 720,
             "lineY": 464,
+            "passThrough": false,
             "speed": 14.2222222222,
             "station": "JNG",
             "waypointX": 72
@@ -5617,6 +5773,7 @@
           {
             "departAt": 740.25,
             "lineY": 464,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": -84
@@ -5644,6 +5801,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
@@ -5651,6 +5809,7 @@
           {
             "departAt": 525,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
@@ -5658,6 +5817,7 @@
           {
             "departAt": 571.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -5685,6 +5845,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -5692,6 +5853,7 @@
           {
             "departAt": 239,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -5699,6 +5861,7 @@
           {
             "departAt": 273.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -5726,6 +5889,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
@@ -5733,6 +5897,7 @@
           {
             "departAt": 405,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
@@ -5740,6 +5905,7 @@
           {
             "departAt": 451.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -5767,6 +5933,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-E",
             "waypointX": 360
@@ -5774,6 +5941,7 @@
           {
             "departAt": 780,
             "lineY": 464,
+            "passThrough": false,
             "speed": 14.2222222222,
             "station": "JNG",
             "waypointX": 72
@@ -5781,6 +5949,7 @@
           {
             "departAt": 800.25,
             "lineY": 464,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": -84
@@ -5808,6 +5977,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -5815,6 +5985,7 @@
           {
             "departAt": 359,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -5822,6 +5993,7 @@
           {
             "departAt": 393.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -5849,6 +6021,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
@@ -5856,6 +6029,7 @@
           {
             "departAt": 165,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
@@ -5863,6 +6037,7 @@
           {
             "departAt": 211.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -5890,6 +6065,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 360
@@ -5897,6 +6073,7 @@
           {
             "departAt": 405,
             "lineY": 464,
+            "passThrough": false,
             "speed": 8.44444444444,
             "station": "JNG",
             "waypointX": 72
@@ -5904,6 +6081,7 @@
           {
             "departAt": 439.105263158,
             "lineY": 464,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": -84
@@ -5931,6 +6109,7 @@
           {
             "departAt": 0,
             "lineY": 496,
+            "passThrough": true,
             "speed": 8.44444444444,
             "station": "JNG-W",
             "waypointX": 360
@@ -5938,6 +6117,7 @@
           {
             "departAt": 525,
             "lineY": 496,
+            "passThrough": false,
             "speed": 11.2592592593,
             "station": "JNG",
             "waypointX": 888
@@ -5945,6 +6125,7 @@
           {
             "departAt": 571.894736842,
             "lineY": 496,
+            "passThrough": true,
             "speed": 11.2592592593,
             "station": "JNG-E",
             "waypointX": 1012
@@ -5972,6 +6153,7 @@
           {
             "departAt": 0,
             "lineY": 464,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-E",
             "waypointX": 360
@@ -5979,6 +6161,7 @@
           {
             "departAt": 840,
             "lineY": 464,
+            "passThrough": false,
             "speed": 14.2222222222,
             "station": "JNG",
             "waypointX": 72
@@ -5986,6 +6169,7 @@
           {
             "departAt": 860.25,
             "lineY": 464,
+            "passThrough": true,
             "speed": 14.2222222222,
             "station": "JNG-W",
             "waypointX": -84
@@ -6012,7 +6196,7 @@
               {
                 "meetStopIdx": 1,
                 "partnerIdx": 45,
-                "releaseOffset": 30
+                "releaseOffset": 11.8125
               }
             ]
           ]
@@ -8287,6 +8471,19 @@
             "dy": 0
           },
           "dir": "right",
+          "id": "NW1A",
+          "x": 240,
+          "y": 496
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": 1,
+            "dy": 0
+          },
+          "dir": "right",
           "id": "NW3",
           "x": 112,
           "y": 432
@@ -8393,6 +8590,19 @@
           "dir": "left",
           "id": "XW2",
           "x": 320,
+          "y": 464
+        },
+        {
+          "ai": {
+            "$undefined": true
+          },
+          "bearing": {
+            "dx": -1,
+            "dy": 0
+          },
+          "dir": "left",
+          "id": "XW2A",
+          "x": 192,
           "y": 464
         },
         {
@@ -8593,10 +8803,16 @@
     },
     "signalSections": [
       {
-        "hi": 400,
+        "hi": 240,
         "lineY": 496,
         "lo": 64,
         "sig": "NW1"
+      },
+      {
+        "hi": 400,
+        "lineY": 496,
+        "lo": 240,
+        "sig": "NW1A"
       },
       {
         "hi": 400,
@@ -8649,8 +8865,14 @@
       {
         "hi": 320,
         "lineY": 464,
-        "lo": 32,
+        "lo": 192,
         "sig": "XW2"
+      },
+      {
+        "hi": 192,
+        "lineY": 464,
+        "lo": 32,
+        "sig": "XW2A"
       },
       {
         "hi": 320,

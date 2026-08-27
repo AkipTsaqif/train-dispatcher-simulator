@@ -858,25 +858,25 @@ test.describe("dispatching table", () => {
 
   test("jatinegara platform dwell centres before the red exit signal", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/jng?start=06:04&controls=1");
-    // 5024C is an eastbound KRL on t1 (boundary 06:00:15, JNG arr 06:04, dep 06:05).
+    await page.goto("/jng?start=06:00");
+    // 5024C is an eastbound KRL on t1 (boundary 06:01:15, JNG arr 06:04, dep 06:05).
     const marker = page.locator('[data-train="5024C"]');
-    const entry = page.locator('[role="button"][aria-label^="Signal NW1"]');
-    const exit = page.locator('[role="button"][aria-label^="Signal XE1"]');
-    await entry.click();
+    const entry = page.locator('[role="button"][aria-label^="Signal NW1 ("]');
+    const entryA = page.locator('[role="button"][aria-label^="Signal NW1A ("]');
+    const exit = page.locator('[role="button"][aria-label^="Signal XE1 ("]');
+    await entry.dispatchEvent("click");
+    await page.clock.fastForward("00:00:01");
+    await entryA.dispatchEvent("click");
+    await page.clock.fastForward("00:00:01");
+    await expect(entry).toHaveAttribute("aria-label", /aspect (amber|green)/);
+    await expect(entryA).toHaveAttribute("aria-label", /aspect (amber|green)/);
 
-    // The platform waypoint is the train centre at x=360. Arrival must end
-    // there even though the nose reaches XE1 at x=400 in the same frame: XE1
-    // governs departure, not the final cell of the station approach.
-    await expect
-      .poll(
-        async () => {
-          await page.clock.fastForward("00:00:01");
-          return marker.getAttribute("data-x");
-        },
-        { intervals: [10], timeout: 60000 }
-      )
-      .toBe("360");
+    // Advance to platform arrival at 06:04 (t=112s in the sim clock from 06:00)
+    for (let s = 0; s < 75; s++) {
+      await page.clock.fastForward("00:00:02");
+      if ((await marker.getAttribute("data-x")) === "360") break;
+    }
+    await expect(marker).toHaveAttribute("data-x", "360");
     await expect(entry).toHaveAttribute("aria-label", /aspect red/);
     await expect(exit).toHaveAttribute("aria-label", /aspect red/);
 
@@ -896,6 +896,42 @@ test.describe("dispatching table", () => {
     await page.clock.fastForward("00:09:30");
     await expect(marker).toHaveAttribute("data-x", "360");
     await expect(exit).toHaveAttribute("aria-label", /aspect red/);
+  });
+
+  test("jatinegara marker never steps backward at a pass-through boundary", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/jng?start=06:00");
+    // 5024C runs JNG-W -> JNG -> JNG-E. The two boundaries are PASS-THROUGH
+    // stops (schedule arr == dep), so their dwell anchor equals the expected
+    // arrival and the engine runs straight through. Presentation code that
+    // compared those times instead of testing the pass-through flag treated
+    // the boundary as a platform dwell, dropped the front compensation, and
+    // snapped the marker back by one visual half-body (-32) before pushing it
+    // forward again — a visible one-cell glitch with no engine movement.
+    const marker = page.locator('[data-train="5024C"]');
+    for (const name of ["NW1 (", "NW1A (", "XE1 ("]) {
+      await page.locator(`[role="button"][aria-label^="Signal ${name}"]`).dispatchEvent("click");
+      await page.clock.fastForward("00:00:01");
+    }
+
+    let prev: number | null = null;
+    let backward: string | null = null;
+    for (let step = 0; step < 180 && backward === null; step++) {
+      await page.clock.fastForward("00:00:02");
+      const raw = await marker.getAttribute("data-x").catch(() => null);
+      if (raw === null) {
+        if (prev !== null && prev > 360) break; // train finished its journey and despawned
+        continue;
+      }
+      const x = Number(raw);
+      // Eastbound: the drawn x must never decrease. Any decrease is the glitch.
+      if (prev !== null && x < prev) backward = `x went ${prev} -> ${x} at step ${step}`;
+      prev = x;
+    }
+    expect(backward).toBeNull();
+    // Sanity: the train really did traverse the station, so the sweep above
+    // actually covered the arrival, the dwell, and the exit boundary.
+    expect(prev === null ? -Infinity : prev).toBeGreaterThan(360);
   });
 
   test.skip("jatinegara J410 enters on t6 and crosses onto t5 through xov10", async ({ page }) => {
@@ -1088,12 +1124,14 @@ test.describe("dispatching table", () => {
     }
   });
 
-  test("jatinegara interactive table — 24 signal controls, manual route set works", async ({ page }) => {
+  test("jatinegara interactive table — 26 signal controls, manual route set works", async ({ page }) => {
     // Start with an empty board: at realistic running speeds service trains
     // would occupy the mains and block the NW1 route this test sets.
     await page.goto("/jng?start=00:00&controls=1");
-    // all 24 signals are clickable controls (schematic mode, no grid chrome)
+    // all 26 signals are clickable controls (schematic mode, no grid chrome)
     await expect(page.getByRole("button", { name: /^NW1 · MERAH/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /^NW1A · MERAH/ })).toBeVisible();
+    await expect(page.getByRole("button", { name: /^XW2A · MERAH/ })).toBeVisible();
     await expect(page.getByRole("button", { name: /^XE8 ·/ })).toBeVisible();
     await expect(page.getByText("A", { exact: true })).toHaveCount(2); // the graph-paper grid chrome is shown (top + bottom letters)
     // the point handles are present (35: 24 coupled groups, two of which draw
@@ -1124,4 +1162,32 @@ test.describe("dispatching table", () => {
     await page.getByRole("button", { name: /^NE5 · MERAH/ }).click();
     await expect(page.getByRole("button", { name: /^NE5 · (KUNING|HIJAU)/ })).toBeVisible();
     await expect(page.locator('[role="button"][aria-label*="belok, terkunci"]').first()).toBeVisible();
+  });
+
+  test("jatinegara NW1 reservation never re-lights after train passes", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/jng?start=06:00");
+    await page.locator('[role="button"][aria-label^="Signal NW1 ("]').click({ force: true });
+    await page.locator('[role="button"][aria-label^="Signal NW1A ("]').click({ force: true });
+    await page.clock.fastForward("00:00:08");
+    await page.locator('[role="button"][aria-label^="Signal NE2 ("]').click({ force: true });
+
+    let glitchDetected = false;
+    const marker = page.locator('[data-train="5024C"]');
+    for (let step = 0; step < 60; step++) {
+      await page.clock.fastForward("00:00:02");
+      const rawX = await marker.getAttribute("data-x").catch(() => null);
+      if (rawX === null) continue;
+      const x = Number(rawX);
+      const paths = await page.evaluate(() =>
+        [...document.querySelectorAll('path[stroke="#f59e0b"]')].map((p) => p.getAttribute("d") ?? "")
+      );
+      // NW1 reservation starts at 64,496 and ends at 240,496. Once 5024C has passed
+      // x=240, NW1 reservation must NEVER re-appear in full (64,496 -> 240,496).
+      if (x > 250 && paths.some((d) => d.includes("64,496") && d.includes("240,496"))) {
+        glitchDetected = true;
+        break;
+      }
+    }
+    expect(glitchDetected).toBe(false);
   });

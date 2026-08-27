@@ -197,6 +197,7 @@ export const JATINEGARA_PIECES: PieceSet = {
 		// edge+segment+offset by assemblePieces. NOT an edge-id reference, so a
 		// switch move that re-cuts the line does not invalidate them.
 		{ kind: "signal", id: "NW1", groupId: "t1", x: 64, facing: "toward-to", mount: "up", label: "NW1", protectedBlockSectionId: "section-NW1" },
+		{ kind: "signal", id: "NW1A", groupId: "t1", x: 240, facing: "toward-to", mount: "up", label: "NW1A", protectedBlockSectionId: "section-NW1A" },
 		{ kind: "signal", id: "NW3", groupId: "t3", x: 112, facing: "toward-to", mount: "up", label: "NW3", protectedBlockSectionId: "section-NW3" },
 		{ kind: "signal", id: "NW5", groupId: "t6", x: 112, facing: "toward-to", mount: "up", label: "NW5", protectedBlockSectionId: "section-NW5" },
 		{ kind: "signal", id: "NW7", groupId: "t8", x: 240, facing: "toward-to", mount: "up", label: "NW7", protectedBlockSectionId: "section-NW7" },
@@ -208,6 +209,7 @@ export const JATINEGARA_PIECES: PieceSet = {
 		// positional "at" escape because an x does not identify a point on it.
 		{ kind: "signal", id: "NE8", groupId: "xov30", at: { edgeIndex: 0, segmentIndex: 0, offset: 45.25 }, facing: "toward-to", mount: "up", label: "NE8", protectedBlockSectionId: "section-NE8" },
 		{ kind: "signal", id: "XW2", groupId: "t2", x: 320, facing: "toward-from", mount: "up", label: "XW2", protectedBlockSectionId: "section-XW2" },
+		{ kind: "signal", id: "XW2A", groupId: "t2", x: 192, facing: "toward-from", mount: "up", label: "XW2A", protectedBlockSectionId: "section-XW2A" },
 		{ kind: "signal", id: "XW3", groupId: "t3", x: 320, facing: "toward-from", mount: "up", label: "XW3", protectedBlockSectionId: "section-XW3" },
 		{ kind: "signal", id: "XW4", groupId: "t4", x: 320, facing: "toward-from", mount: "up", label: "XW4", protectedBlockSectionId: "section-XW4" },
 		{ kind: "signal", id: "XW5", groupId: "t5", x: 320, facing: "toward-from", mount: "up", label: "XW5", protectedBlockSectionId: "section-XW5" },
