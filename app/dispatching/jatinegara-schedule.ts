@@ -13,6 +13,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Cikarang",
 		"destination": "Kampung Bandan",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -37,6 +39,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Angke",
 		"destination": "Bekasi",
 		"trainType": "krl",
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -61,6 +65,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Manggarai",
 		"destination": "Cikarang",
 		"trainType": "krl",
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -85,6 +91,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Bekasi",
 		"destination": "Angke",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -109,6 +117,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Semarang Tawang",
 		"trainType": null,
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -133,6 +143,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Solo Balapan",
 		"destination": "Gambir",
 		"trainType": null,
+		"neighborBefore": "Bekasi",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -157,6 +169,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Kampung Bandan",
 		"destination": "Bekasi",
 		"trainType": "krl",
+		"neighborBefore": "Pondok Jati",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -181,6 +195,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Cikarang",
 		"destination": "Kampung Bandan",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -205,6 +221,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Bekasi",
 		"destination": "Kampung Bandan",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Pondok Jati",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -229,6 +247,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Cikarang",
 		"destination": "Angke",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -253,6 +273,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Kampung Bandan",
 		"destination": "Cikarang",
 		"trainType": "krl",
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -277,6 +299,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Malang",
 		"destination": "Pasar Senen",
 		"trainType": null,
+		"neighborBefore": "Bekasi",
+		"neighborAfter": "Pondok Jati",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -301,6 +325,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Bekasi",
 		"destination": "Angke",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -325,6 +351,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Kampung Bandan",
 		"destination": "Bekasi",
 		"trainType": "krl",
+		"neighborBefore": "Pondok Jati",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -349,6 +377,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Kutoarjo",
 		"trainType": null,
+		"neighborBefore": "Pondok Jati",
+		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -373,6 +403,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Cikarang",
 		"destination": "Angke",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -397,6 +429,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Angke",
 		"destination": "Bekasi",
 		"trainType": "krl",
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -421,6 +455,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Solo Balapan",
 		"destination": "Gambir",
 		"trainType": "intercity",
+		"neighborBefore": "Bekasi",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -445,6 +481,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Cikarang",
 		"destination": "Kampung Bandan",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Pondok Jati",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -469,6 +507,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Garut",
 		"trainType": null,
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -493,6 +533,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Bekasi",
 		"destination": "Angke",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -517,6 +559,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Kampung Bandan",
 		"destination": "Cikarang",
 		"trainType": "krl",
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -541,6 +585,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Semarang Tawang",
 		"trainType": null,
+		"neighborBefore": "Pondok Jati",
+		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -565,6 +611,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Angke",
 		"destination": "Bekasi",
 		"trainType": "krl",
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -589,6 +637,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Cikarang",
 		"destination": "Angke",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -613,6 +663,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Angke",
 		"destination": "Cikarang",
 		"trainType": "krl",
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -637,6 +689,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Tambun",
 		"destination": "Kampung Bandan",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -661,6 +715,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Kampung Bandan",
 		"destination": "Cikarang",
 		"trainType": "krl",
+		"neighborBefore": "Pondok Jati",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -685,6 +741,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Bekasi",
 		"destination": "Angke",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -709,6 +767,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Cikarang",
 		"destination": "Kampung Bandan",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Pondok Jati",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -733,6 +793,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Angke",
 		"destination": "Bekasi",
 		"trainType": "krl",
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -757,6 +819,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Purwosari",
 		"destination": "Pasar Senen",
 		"trainType": "local",
+		"neighborBefore": "Bekasi",
+		"neighborAfter": "Pondok Jati",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -781,6 +845,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Bekasi",
 		"destination": "Angke",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -805,6 +871,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Kampung Bandan",
 		"destination": "Bekasi",
 		"trainType": "krl",
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -829,6 +897,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Semarang Tawang",
 		"trainType": "intercity",
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -853,6 +923,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Cikarang",
 		"destination": "Kampung Bandan",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -877,6 +949,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Solo Balapan",
 		"destination": "Pasar Senen",
 		"trainType": null,
+		"neighborBefore": "Bekasi",
+		"neighborAfter": "Pondok Jati",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -901,6 +975,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Kampung Bandan",
 		"destination": "Bekasi",
 		"trainType": "krl",
+		"neighborBefore": "Pondok Jati",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -925,6 +1001,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Bekasi",
 		"destination": "Kampung Bandan",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Pondok Jati",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -949,6 +1027,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Angke",
 		"destination": "Cikarang",
 		"trainType": "krl",
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -973,6 +1053,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Bandung",
 		"destination": "Gambir",
 		"trainType": null,
+		"neighborBefore": "Bekasi",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -997,6 +1079,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Cikarang",
 		"destination": "Angke",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -1021,6 +1105,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Angke",
 		"destination": "Cikarang",
 		"trainType": "krl",
+		"neighborBefore": "Matraman",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -1045,6 +1131,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Bekasi",
 		"destination": "Angke",
 		"trainType": "krl",
+		"neighborBefore": "Klender",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",
@@ -1069,6 +1157,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Kampung Bandan",
 		"destination": "Cikarang",
 		"trainType": "krl",
+		"neighborBefore": "Pondok Jati",
+		"neighborAfter": "Klender",
 		"stops": [
 			{
 				"station": "JNG-W",
@@ -1093,6 +1183,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Malang",
 		"destination": "Gambir",
 		"trainType": "intercity",
+		"neighborBefore": "Bekasi",
+		"neighborAfter": "Matraman",
 		"stops": [
 			{
 				"station": "JNG-E",

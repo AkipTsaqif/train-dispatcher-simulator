@@ -156,6 +156,7 @@ check(
         { waypointX: 1600, lineY: 89, speed: 5 },
         { waypointX: 1650, lineY: 89, speed: 5 },
       ],
+      schedArr: [0, 30, 40],
     },
     graph,
     5

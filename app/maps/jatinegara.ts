@@ -212,7 +212,7 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
 	// Manual point setting: a signal is refused while the points as they stand
 	// do not form its route, so the user must set the road first. "Inactive
 	// track" is emergent from the current point positions, never authored.
-	interlocking: { flankClearance: 11, routeSetting: "manual" },
+	interlocking: { flankClearance: 6, routeSetting: "manual" },
 	// Track 4 and track 3 are not yet built west of H: the rails are on the
 	// schematic, but no train may run there. XW4 with every point normal runs
 	// straight into t4's closed length, so the user must set a road that avoids

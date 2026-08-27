@@ -56,6 +56,7 @@ type StationCall = {
 
 type TrainStop = {
   station_code: string;
+  station_name: string;
   arrival: string | null;
   departure: string | null;
   remarks?: string | null;
@@ -83,6 +84,8 @@ type ScheduleEntry = {
   train_name: string;
   origin?: string;
   destination?: string;
+  neighborBefore?: string | null;
+  neighborAfter?: string | null;
   trainType?: string | null;
   stops: ScheduleStop[];
 };
@@ -207,6 +210,10 @@ for (const call of stationData.calls) {
   // Clean train number: strip "KA " prefix from train_code
   const trainNo = train.train_code.replace(/^KA\s+/, "");
 
+  // Neighbour station names for display: the real station before/after JNG.
+  const neighborBefore = prev?.station_name ?? null;
+  const neighborAfter = next?.station_name ?? null;
+
   const stops: ScheduleStop[] = [
     {
       station: boundary,
@@ -232,6 +239,8 @@ for (const call of stationData.calls) {
     origin: train.origin,
     destination: train.destination,
     trainType: train.train_type,
+    neighborBefore,
+    neighborAfter,
     stops,
   });
 }

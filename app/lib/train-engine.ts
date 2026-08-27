@@ -32,6 +32,12 @@ export type Train = {
   consist: string;
   origin?: string;
   destination?: string;
+  /** Real station name before JNG (the neighbour the train came from).
+   *  For display in the infobox, not simulation logic. */
+  neighborBefore?: string | null;
+  /** Real station name after JNG (the neighbour the train goes to).
+   *  For display in the infobox, not simulation logic. */
+  neighborAfter?: string | null;
   trainType?: string | null;
   stops: TrainStop[];
 };
@@ -54,6 +60,12 @@ export type ScheduleEntry = {
   train_name: string;
   origin?: string;
   destination?: string;
+  /** Real station name before JNG (the neighbour the train came from).
+   *  For display in the infobox, not simulation logic. */
+  neighborBefore?: string | null;
+  /** Real station name after JNG (the neighbour the train goes to).
+   *  For display in the infobox, not simulation logic. */
+  neighborAfter?: string | null;
   trainType?: string | null;
   stops: ScheduleStop[];
 };
@@ -117,6 +129,8 @@ export const createTrains = (
       consist: "eksekutif",
       origin: train.origin,
       destination: train.destination,
+      neighborBefore: train.neighborBefore,
+      neighborAfter: train.neighborAfter,
       trainType: train.trainType,
       stops: train.stops.map((stop) => ({
         trackmark: stop.station,
@@ -246,6 +260,12 @@ export type JourneyPlan = {
      *  mid-throat at sim start — anything past the entry runs LIVE. */
     entryX?: number };
   legs: LegPlan;
+  /** Scheduled arrival at each stop, IN THE ENGINE'S OWN CLOCK. With
+   *  relativeAnchors this is rebased (stops[0] = 0, stops[i] = anchor[i]);
+   *  without it, it's the absolute midnight time (= stops[i].arr). The
+   *  component uses this for slip/delay so actualArr (always engine clock)
+   *  compares against the right scale. */
+  schedArr: number[];
 };
 
 /**
@@ -350,8 +370,10 @@ export function buildJourney(
   //     arrival is recovered there)
   //   • any other station: anchor = expected arrival + configured minimum stop
   const anchors: number[] = [];
+  const schedArr: number[] = []; // expected arrival at each stop, in engine clock
   for (let i = 0; i < stops.length; i++) {
     const arr = i === 0 ? stops[0].arr : anchors[i - 1] + legInfo[i - 1].travel;
+    schedArr.push(arr);
     const s = stops[i];
     anchors[i] =
       s.arr === s.dep
@@ -364,7 +386,10 @@ export function buildJourney(
   // (sim − originArr), not from midnight. With mid-day origins the absolute
   // anchors would park it at its first waypoint for hours (green "station"
   // body, never departing). Rebase onto st.time's zero when opted in.
-  if (relativeAnchors) for (let i = 0; i < anchors.length; i++) anchors[i] -= originArr;
+  if (relativeAnchors) {
+    for (let i = 0; i < anchors.length; i++) anchors[i] -= originArr;
+    for (let i = 0; i < schedArr.length; i++) schedArr[i] -= originArr;
+  }
 
   const legs: LegPlan = [];
   for (let i = 0; i < stops.length - 1; i++) {
@@ -434,7 +459,7 @@ export function buildJourney(
       ? spawnMaxX + MARGIN
       : spawnMinX - MARGIN
     : undefined;
-  return { originArr: 0, approach: originArr > 0, start: { x: spawnX, y: spawnY, dir, firstNode, entryX }, legs };
+  return { originArr: 0, approach: originArr > 0, start: { x: spawnX, y: spawnY, dir, firstNode, entryX }, legs, schedArr };
 }
 
 export function initTrain(journey: JourneyPlan, nodes: Record<string, GraphNodeLike>, speed: number): TrainState {
@@ -871,7 +896,11 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
       // record the actual arrival at the scheduled stop this leg serves — with an
       // approach leg, leg k ends at stop k; without one, leg k ends at stop k+1
       const stopIdx = st.leg + (st.approach ? 0 : 1);
-      if (stopIdx < st.actualArr.length) st.actualArr[stopIdx] = st.time;
+      // Record the actual arrival at the scheduled stop this leg serves.
+      // The first stop (origin boundary) is pre-populated at init; all
+      // others get set here when the train physically arrives.
+      if (stopIdx < st.actualArr.length && st.actualArr[stopIdx] === null)
+        st.actualArr[stopIdx] = st.time;
       if (st.leg >= legs.length - 1) {
         st.done = true; // final destination reached
         return;

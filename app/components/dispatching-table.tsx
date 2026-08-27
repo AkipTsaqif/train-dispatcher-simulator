@@ -2214,6 +2214,16 @@ export default function DispatchingTable({
   // ---- timetable awareness: per-train info for the card + roster (Indonesian) ----
   const stationName = (code: string) =>
     DISPATCH_MAP.stations.namesByCode[code] ?? code;
+  /** Resolve a virtual boundary code (JNG-W/JNG-E) to the real neighbour
+   *  station name from the train's own neighbourBefore/neighbourAfter. */
+  const stopName = (train: { neighborBefore?: string | null; neighborAfter?: string | null; stops: { trackmark: string }[] }, idx: number) => {
+    const s = train.stops[idx];
+    if ((s.trackmark === "JNG-W" || s.trackmark === "JNG-E") && idx === 0 && train.neighborBefore)
+      return train.neighborBefore;
+    if ((s.trackmark === "JNG-W" || s.trackmark === "JNG-E") && idx === train.stops.length - 1 && train.neighborAfter)
+      return train.neighborAfter;
+    return stationName(s.trackmark);
+  };
   const fmtDur = (sec: number) => {
     const a = Math.abs(sec);
     const m = Math.floor(a / 60);
@@ -2231,24 +2241,38 @@ export default function DispatchingTable({
     const j = JOURNEYS[ti];
     if (!st || !j) return null;
     const { train, plan } = j;
-    const stops = train.stops.map((s, i) => ({
-      name: stationName(s.trackmark),
-      arrLabel: s.arr_actual,
-      depLabel: s.dep_actual,
-      actual: st.actualArr[i],
-      meets: s.meets,
-    }));
-    const dest = train.destination ?? stationName(train.stops[train.stops.length - 1].trackmark);
-    const origin = train.origin ?? stationName(train.stops[0].trackmark);
-    const dirLabel = plan.start.dir === "right" ? `ke timur · ${origin} → ${dest}` : `ke barat · ${origin} → ${dest}`;
+    const stops = train.stops.map((s, i) => {
+      // For pass-through boundary stops (arr == dep), show the scheduled time
+      // as the actual — these are virtual markers, the train passes through
+      // on schedule. For real platform stops, show the engine-clock arrival.
+      const isPass = s.arr_actual === s.dep_actual;
+      return {
+        name: stopName(train, i),
+        arrLabel: s.arr_actual,
+        depLabel: s.dep_actual,
+        actual: isPass ? s.arr_actual : st.actualArr[i],
+        meets: s.meets,
+      };
+    });
+    const dirOrigin = stopName(train, 0);
+    const dirDest = stopName(train, train.stops.length - 1);
+    const dirLabel = plan.start.dir === "right" ? `ke timur · ${dirOrigin} → ${dirDest}` : `ke barat · ${dirOrigin} → ${dirDest}`;
     const leg = plan.legs[Math.min(st.leg, plan.legs.length - 1)];
     // slip at the most recent reached stop
+    // Use plan.schedArr (engine-clock arrival) so relativeAnchors scenarios
+    // compare actualArr (engine clock) against the rebased schedule, not the
+    // absolute midnight time.
     let slip = 0;
     let lastReached = -1;
     let atStopIdx: number | null = null;
     for (let i = st.actualArr.length - 1; i >= 0; i--) {
       if (st.actualArr[i] != null) {
-        slip = st.actualArr[i]! - train.stops[i].arr;
+        // Skip pass-through boundary stops (arr == dep): their actualArr is
+        // the approach travel time, not a real arrival. Counting it as slip
+        // would show every freshly-spawned train as "terlambat".
+        const isPassThrough = train.stops[i].arr === train.stops[i].dep;
+        if (isPassThrough) continue;
+        slip = st.actualArr[i]! - (plan.schedArr[i] ?? train.stops[i].arr);
         lastReached = i;
         break;
       }
@@ -2274,13 +2298,18 @@ export default function DispatchingTable({
       else if (st.stopReason === "conflict") status = "Konflik — kereta bertabrakan";
       else if (st.stopReason === "queue") {
         // Show the train's current location: between which two stations it is.
-        const nextStation = stationName(train.stops[Math.min(st.leg, train.stops.length - 1)].trackmark);
-        const prevStation = st.leg > 0 ? stationName(train.stops[st.leg - 1].trackmark) : stationName(train.stops[0].trackmark);
+        const nextStation = stopName(train, Math.min(st.leg, train.stops.length - 1));
+        const prevStation = st.leg > 0 ? stopName(train, st.leg - 1) : stopName(train, 0);
         status = `Mengikuti — antara ${prevStation} dan ${nextStation}`;
       }
       else status = "Berhenti";
       // held past its scheduled departure at a station → late; otherwise the slip
-      if (st.leg > 0 && leg.departAt !== undefined && st.time > leg.departAt) {
+      // Only applies when the train has reached a real (non-pass-through) stop
+      // — a pass-through boundary has departAt=0, so st.time>0 is always true,
+      // which would show every approaching train as "terlambat".
+      const reachedPlatform =
+        lastReached >= 0 && train.stops[lastReached].arr !== train.stops[lastReached].dep;
+      if (reachedPlatform && st.leg > 0 && leg.departAt !== undefined && st.time > leg.departAt) {
         delaySec = Math.max(slip, st.time - leg.departAt);
         delay = `terlambat ${fmtDur(delaySec)}`;
       } else {
@@ -2305,14 +2334,14 @@ export default function DispatchingTable({
         const meetDeps = dwellStation ? (MEETS_BY_TRAIN.get(ti)?.get(dwellStation) ?? null) : null;
         const partners = meetDeps ? meetDeps.map((d) => JOURNEYS[d.partnerIdx].train.train_no).join(", ") : "";
         status = partners
-          ? `Berhenti di ${stationName(train.stops[st.leg - 1].trackmark)} · susul ${partners}`
-          : `Berhenti di ${stationName(train.stops[st.leg - 1].trackmark)}`;
+          ? `Berhenti di ${stopName(train, st.leg - 1)} · susul ${partners}`
+          : `Berhenti di ${stopName(train, st.leg - 1)}`;
         delay = "tepat waktu";
         delaySec = 0;
       }
     } else {
       status = "Berjalan";
-      const nextName = stationName(train.stops[Math.min(st.leg, train.stops.length - 1)].trackmark);
+      const nextName = stopName(train, Math.min(st.leg, train.stops.length - 1));
       delay =
         !reached || slip === 0
           ? "tepat waktu"
@@ -2320,7 +2349,7 @@ export default function DispatchingTable({
           ? `awal ${fmtDur(slip)} · menunggu jadwal di ${nextName}`
           : `terlambat ${fmtDur(slip)}`;
     }
-    return { no: train.train_no, name: train.name, dirLabel, stops, status, delay, delaySec, atStopIdx, dest };
+    return { no: train.train_no, name: train.name, dirLabel, stops, status, delay, delaySec, atStopIdx, dest: dirDest };
   };
 
   /** Trains calling at a station, sorted by scheduled arrival — the station timetable. */
@@ -3464,7 +3493,11 @@ export default function DispatchingTable({
                       <td className="py-1 text-right tabular-nums">{s.arrLabel}</td>
                       <td className="py-1 text-right tabular-nums">{s.depLabel}</td>
                       <td className="py-1 text-right tabular-nums">
-                        {s.actual != null ? fmtTime(s.actual) : "—"}
+                        {s.actual != null
+                          ? typeof s.actual === "number"
+                            ? fmtTime(s.actual)
+                            : s.actual
+                          : "—"}
                       </td>
                     </tr>
                   ))}
