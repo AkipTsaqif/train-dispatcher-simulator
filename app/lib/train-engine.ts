@@ -266,6 +266,16 @@ export type LegPlan = {
 
 export type JourneyPlan = {
   originArr: number;
+  /** The train's OWN schedule zero: the absolute clock time of its first stop
+   *  (stops[0].arr_actual, i.e. the corridor boundary). `originArr` is forced
+   *  to 0 so the off-map approach runs from tick one, which throws away the
+   *  boundary time the relative clock needs: with `relativeAnchors` every
+   *  anchor in `legs[].departAt` and every entry in `schedArr` is expressed
+   *  RELATIVE to this instant, not to midnight and not to the sim start.
+   *  Presentation/placement must spawn the train at this time and measure its
+   *  clock from here, or a train whose boundary differs from the sim start
+   *  departs off by exactly that difference. */
+  boundaryArr: number;
   approach: boolean; // has an off-map approach leg (scheduled origin time > 0)
   start: { x: number; y: number; dir: LineDir; firstNode: string | null;
     /** atTrackEdge only: the line-entry X the spawn is clamped to. Placement
@@ -481,7 +491,7 @@ export function buildJourney(
       ? spawnMaxX + MARGIN
       : spawnMinX - MARGIN
     : undefined;
-  return { originArr: 0, approach: originArr > 0, start: { x: spawnX, y: spawnY, dir, firstNode, entryX }, legs, schedArr };
+  return { originArr: 0, boundaryArr: originArr, approach: originArr > 0, start: { x: spawnX, y: spawnY, dir, firstNode, entryX }, legs, schedArr };
 }
 
 export function initTrain(journey: JourneyPlan, nodes: Record<string, GraphNodeLike>, speed: number): TrainState {
@@ -544,10 +554,10 @@ const resolveNode = (
     const cameFromBranch =
       incoming !== null && branchExit !== undefined && incoming === branchExit.neighbor;
     if (cameFromBranch) {
-      if (!reversed) return { blocked: true };
+      if (!reversed && !ctx.ignoreSignals) return { blocked: true };
     } else if (branchAhead && reversed) {
       return { next: branchExit!.neighbor };
-    } else if (reversed) {
+    } else if (reversed && !ctx.ignoreSignals) {
       return { blocked: true };
     }
   }
@@ -568,7 +578,7 @@ const resolveNode = (
   // here and only the branch continues) — with the branch closed the train
   // WAITS at the junction; `offmap` stays reserved for the genuine map edge.
   if (node.sw !== undefined && !node.exits.some((exit) => exit.viaSwitchPort === "normal")) {
-    return { blocked: true };
+    if (!ctx.ignoreSignals) return { blocked: true };
   }
   return { offmap: true };
 };
@@ -757,6 +767,7 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
               !s.ai &&
               s.dir === st.dir &&
               s.y === st.y &&
+              !st.passedSignals.includes(s.id) &&
               (st.dir === "right"
                 ? s.x > st.x && s.x <= st.x + ctx.trainHalfLen
                 : s.x < st.x && s.x >= st.x - ctx.trainHalfLen)
@@ -769,6 +780,7 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
         st.stopReason = "signal";
         st.stopSignalId = departureSignal.id;
         st.stationDepartureHold = true;
+        st.x = departureSignal.x - (st.dir === "left" ? -ctx.trainHalfLen : ctx.trainHalfLen);
         return;
       }
       if (!ctx.ignoreSignals) st.passedSignals.push(departureSignal.id);
@@ -848,10 +860,14 @@ export function advanceTrain(st: TrainState, dt: number, ctx: MoveCtx, legs: Leg
     // AHEAD of the train counts — after a divert the leg can lag behind (the
     // diverted-away stations were skipped), and a behind waypoint must never
     // pull the train backward.
+    // A waypoint at the same position as a signal stop point (e.g. an exit
+    // signal standing one train-length past the platform centre) must take
+    // precedence (<=) so the train arrives at the station and processes its
+    // dwell before the exit signal holds it.
     const ahead = st.dir === "right" ? leg.waypointX > st.x : leg.waypointX < st.x;
     if (ahead) {
       const l: Limit = { kind: "waypoint", x: leg.waypointX, y: st.y };
-      if (!limit || near(l) < near(limit)) limit = l;
+      if (!limit || near(l) <= near(limit)) limit = l;
     }
 
     const move = (dist: number) => {

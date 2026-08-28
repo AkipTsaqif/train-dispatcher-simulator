@@ -34,7 +34,7 @@ export type {
 const COMPILED = compileTopology(JATINEGARA_TOPOLOGY);
 
 const STATIONS: Station[] = [
-	{ code: "JNG", name: "Jatinegara", x: 138, y: 248, w: 130, h: 58 },
+	{ code: "JNG", name: "Jatinegara", x: 202, y: 248, w: 130, h: 58 },
 ];
 
 // Traffic-flow arrows at the map boundaries, authored as grid cells. The
@@ -48,12 +48,12 @@ const ARROW_CELLS: { x: number; group: string }[] = [
 	{ x: 32, group: "t7" }, // B4
 	{ x: 32, group: "t4" }, // B10
 	{ x: 32, group: "t2" }, // B14
-	{ x: 208, group: "t8" }, // M2
-	{ x: 832, group: "t8am" }, // AZ2
-	{ x: 896, group: "t6am" }, // BD6
-	{ x: 896, group: "t5ap" }, // BD8
-	{ x: 896, group: "t3" }, // BD12
-	{ x: 896, group: "t1" }, // BD16
+	{ x: 272, group: "t8" },
+	{ x: 896, group: "t8am" },
+	{ x: 960, group: "t6am" },
+	{ x: 960, group: "t5ap" },
+	{ x: 960, group: "t3" },
+	{ x: 960, group: "t1" },
 ];
 
 /**
@@ -116,10 +116,10 @@ const islandPlatform = (
 // the row-15 bar carries the station name; the rest are the same platform seen
 // at other faces, so they stay unlabelled.
 const ISLAND_PLATFORMS: StationShape[] = [
-	islandPlatform("t7", "t8", { x: 360, length: 64 }), // row 3
-	islandPlatform("t5", "t6", { x: 360, length: 64 }), // row 7
-	islandPlatform("t3", "t4", { x: 360, length: 64 }), // row 11
-	islandPlatform("t1", "t2", { x: 360, length: 64, labelY: 517 }), // row 15, named
+	islandPlatform("t7", "t8", { x: 424, length: 64 }), // row 3
+	islandPlatform("t5", "t6", { x: 424, length: 64 }), // row 7
+	islandPlatform("t3", "t4", { x: 424, length: 64 }), // row 11
+	islandPlatform("t1", "t2", { x: 424, length: 64, labelY: 517 }), // row 15, named
 ];
 
 export const JATINEGARA_MAP: DispatchMapDefinition = {
@@ -131,7 +131,7 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
 		extensionCells: 2,
 		cutLeftColumns: 0,
 		shift: 0,
-		width: 928,
+		width: 992,
 		rowCount: 10,
 		gridBottomY: 540,
 		viewBox: { minX: -20, minY: 230, widthPadding: 60, height: 300 },
@@ -170,7 +170,7 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
 		kind: "schematic",
 		// margins around the diagram for the grid reference (letters above/below
 		// the grid, numbers left/right — outside, like the Tambun grid)
-		viewBox: { minX: -40, minY: 222, width: 1016, height: 330 },
+		viewBox: { minX: -40, minY: 222, width: 1080, height: 330 },
 		// Keep engine movement continuous, but snap the DRAWN markers to this
 		// 16-unit graph-paper lattice, like Bekasi. This is presentation only:
 		// stops, occupancy, conflicts, and route release retain their true
@@ -222,13 +222,13 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
 		{
 			groupId: "t4",
 			fromX: 32,
-			toX: 128,
+			toX: 192,
 			reason: "jalur dalam pembangunan",
 		},
 		{
 			groupId: "t3",
 			fromX: 32,
-			toX: 128,
+			toX: 192,
 			reason: "jalur dalam pembangunan",
 		},
 	],

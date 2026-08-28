@@ -150,6 +150,7 @@ check(
   const st: TrainState = initTrain(
     {
       originArr: 0,
+      boundaryArr: 0,
       approach: false,
       start: { x: 1450, y: 89, dir: "right", firstNode: "aR" },
       legs: [

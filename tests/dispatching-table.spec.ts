@@ -828,9 +828,9 @@ test.describe("dispatching table", () => {
 
   test("jatinegara train markers snap to its 16-unit grid lines", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/jng?start=06:04&controls=1");
-    // 5024C is an eastbound KRL on t1 (boundary 06:00:15, JNG arr 06:04).
-    // At start=06:04 it has just arrived at the platform.
+    await page.goto("/jng?start=06:02:45&controls=1");
+    // 5024C is an eastbound KRL on t1 (boundary 06:02:45, JNG arr 06:04).
+    // At start=06:02:45 it is entering from the west boundary.
     const marker = page.locator('[data-train="5024C"]');
     await expect(marker).toBeVisible();
 
@@ -858,8 +858,8 @@ test.describe("dispatching table", () => {
 
   test("jatinegara platform dwell centres before the red exit signal", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/jng?start=06:00");
-    // 5024C is an eastbound KRL on t1 (boundary 06:01:15, JNG arr 06:04, dep 06:05).
+    await page.goto("/jng?start=06:02");
+    // 5024C is an eastbound KRL on t1 (boundary 06:02:45, JNG arr 06:04, dep 06:05).
     const marker = page.locator('[data-train="5024C"]');
     const entry = page.locator('[role="button"][aria-label^="Signal NW1 ("]');
     const entryA = page.locator('[role="button"][aria-label^="Signal NW1A ("]');
@@ -871,36 +871,34 @@ test.describe("dispatching table", () => {
     await expect(entry).toHaveAttribute("aria-label", /aspect (amber|green)/);
     await expect(entryA).toHaveAttribute("aria-label", /aspect (amber|green)/);
 
-    // Advance to platform arrival at 06:04 (t=112s in the sim clock from 06:00)
-    for (let s = 0; s < 75; s++) {
+    // Advance to platform arrival and wait past booked departure (06:05:00).
+    // 5024C spawns at 06:02:45 (t=45s from 06:02) and arrives around 06:03:10 (t=70s).
+    for (let s = 0; s < 60; s++) {
       await page.clock.fastForward("00:00:02");
-      if ((await marker.getAttribute("data-x")) === "360") break;
+      if ((await marker.getAttribute("data-x")) === "424") break;
     }
-    await expect(marker).toHaveAttribute("data-x", "360");
+    await expect(marker).toHaveAttribute("data-x", "424");
     await expect(entry).toHaveAttribute("aria-label", /aspect red/);
     await expect(exit).toHaveAttribute("aria-label", /aspect red/);
 
-    // Crossing the arrival tick into the scheduled dwell must not overrun one
-    // grid cell and teleport back. The train remains at U–X while XE1 stays
-    // red; clearing NW1 earlier does not consume the station exit signal.
-    for (let second = 0; second < 20; second++) {
-      await page.clock.fastForward("00:00:01");
-      await expect(marker).toHaveAttribute("data-x", "360");
-    }
-    await expect(marker).toHaveAttribute("data-x", "360");
+    // Fast-forward past booked departure (to 06:05:30, 2m10s from 06:03:20). XE1
+    // is still red, so the train must remain centred at JNG (424) rather than depart.
+    await page.clock.fastForward("00:02:10");
+    await expect(marker).toHaveAttribute("data-x", "424");
     await expect(exit).toHaveAttribute("aria-label", /aspect red/);
 
-    // After the scheduled dwell, XE1 is still the governing signal. The train
-    // must remain centred at JNG rather than be moved to an approach hold in
-    // front of the platform.
-    await page.clock.fastForward("00:09:30");
-    await expect(marker).toHaveAttribute("data-x", "360");
-    await expect(exit).toHaveAttribute("aria-label", /aspect red/);
+    // When XE1 is cleared, the train departs after driver reaction (5s).
+    await exit.dispatchEvent("click");
+    for (let s = 0; s < 20; s++) {
+      await page.clock.fastForward("00:00:01");
+      if (Number(await marker.getAttribute("data-x")) > 424) break;
+    }
+    expect(Number(await marker.getAttribute("data-x"))).toBeGreaterThan(424);
   });
 
   test("jatinegara marker never steps backward at a pass-through boundary", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/jng?start=06:00");
+    await page.goto("/jng?start=06:02");
     // 5024C runs JNG-W -> JNG -> JNG-E. The two boundaries are PASS-THROUGH
     // stops (schedule arr == dep), so their dwell anchor equals the expected
     // arrival and the engine runs straight through. Presentation code that
@@ -920,7 +918,7 @@ test.describe("dispatching table", () => {
       await page.clock.fastForward("00:00:02");
       const raw = await marker.getAttribute("data-x").catch(() => null);
       if (raw === null) {
-        if (prev !== null && prev > 360) break; // train finished its journey and despawned
+        if (prev !== null && prev > 424) break; // train finished its journey and despawned
         continue;
       }
       const x = Number(raw);
@@ -931,7 +929,7 @@ test.describe("dispatching table", () => {
     expect(backward).toBeNull();
     // Sanity: the train really did traverse the station, so the sweep above
     // actually covered the arrival, the dwell, and the exit boundary.
-    expect(prev === null ? -Infinity : prev).toBeGreaterThan(360);
+    expect(prev === null ? -Infinity : prev).toBeGreaterThan(424);
   });
 
   test.skip("jatinegara J410 enters on t6 and crosses onto t5 through xov10", async ({ page }) => {
@@ -976,9 +974,9 @@ test.describe("dispatching table", () => {
 
   test("jatinegara visual marker stops behind NE2 at AU, not AV", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/jng?start=06:04");
-    // 5509B is a westbound KRL on t2 (boundary 05:55:15, JNG arr 06:03/dep 06:04).
-    // At start=06:04 it is departing JNG westbound on t2 toward NE2.
+    await page.goto("/jng?start=06:01:45");
+    // 5509B is a westbound KRL on t2 (boundary 06:01:45, JNG arr 06:03/dep 06:04).
+    // At start=06:01:45 it is entering JNG westbound on t2 toward NE2.
     const marker = page.locator('[data-train="5509B"]');
     await expect(marker).toBeVisible();
 
@@ -986,23 +984,23 @@ test.describe("dispatching table", () => {
     // operational footprint; the shorter, 4-cell drawn marker is then placed
     // with its west end at AU's left grid line, so it reads as occupying AU–AX
     // rather than needlessly starting at AV.
-    await page.clock.fastForward("00:02:00");
-    await expect(marker).toHaveAttribute("data-x", "776");
+    await page.clock.fastForward("00:01:00");
+    await expect(marker).toHaveAttribute("data-x", "840");
     const transform = await marker.getAttribute("transform");
-    expect(transform).toContain("translate(776, 464)");
+    expect(transform).toContain("translate(840, 464)");
 
     // Releasing NE2 must carry the same visual-front compensation into the
     // running state. It may stay in AU for a moment or progress west, but it
     // must never jump backward (east) into AV as the stopped flag flips off.
     await page.getByRole("button", { name: /Signal NE2 \(NE2\), aspect red/ }).click();
     await page.clock.fastForward("00:00:01");
-    expect(Number(await marker.getAttribute("data-x"))).toBeLessThanOrEqual(776);
+    expect(Number(await marker.getAttribute("data-x"))).toBeLessThanOrEqual(840);
   });
 
   test("jatinegara body bends as soon as the NOSE reaches a thrown point", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/jng?start=06:04");
-    // 5509B is a westbound KRL on t2 (y=464), departing JNG at 06:04.
+    await page.goto("/jng?start=06:01:45");
+    // 5509B is a westbound KRL on t2 (y=464), entering JNG at 06:01:45.
     const marker = page.locator('[data-train="5509B"]');
     await expect(marker).toBeVisible();
 
@@ -1026,13 +1024,13 @@ test.describe("dispatching table", () => {
     await expect(marker).toHaveAttribute("data-bendy", "true");
     // still centred on the straight, east of the junction it is bending into
     await expect(marker).toHaveAttribute("data-y", "464");
-    expect(Number(await marker.getAttribute("data-x"))).toBeGreaterThan(640);
+    expect(Number(await marker.getAttribute("data-x"))).toBeGreaterThan(704);
   });
 
   test("jatinegara train body bends through a thrown crossover", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/jng?start=06:04");
-    // 5509B is a westbound KRL on t2 (y=464), departing JNG at 06:04.
+    await page.goto("/jng?start=06:01:45");
+    // 5509B is a westbound KRL on t2 (y=464), entering JNG at 06:01:45.
     const marker = page.locator('[data-train="5509B"]');
     await expect(marker).toBeVisible();
     const body = marker.locator('path[data-train-body="articulated"]');
@@ -1182,9 +1180,9 @@ test.describe("dispatching table", () => {
       const paths = await page.evaluate(() =>
         [...document.querySelectorAll('path[stroke="#f59e0b"]')].map((p) => p.getAttribute("d") ?? "")
       );
-      // NW1 reservation starts at 64,496 and ends at 240,496. Once 5024C has passed
-      // x=240, NW1 reservation must NEVER re-appear in full (64,496 -> 240,496).
-      if (x > 250 && paths.some((d) => d.includes("64,496") && d.includes("240,496"))) {
+      // NW1 reservation starts at 128,496 and ends at 304,496. Once 5024C has passed
+      // x=304, NW1 reservation must NEVER re-appear in full (128,496 -> 304,496).
+      if (x > 314 && paths.some((d) => d.includes("128,496") && d.includes("304,496"))) {
         glitchDetected = true;
         break;
       }

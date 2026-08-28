@@ -13,10 +13,11 @@
  * the approach leg runs live at the scheduled travel speed. With the scenario's
  * relativeAnchors, all dwell anchors are rebased onto the train's own clock.
  *
- * Direction is derived from the corridor: west neighbour (MTR/POK) → eastbound
- * (right, line t1); east neighbour (KLD/BKS) → westbound (left, line t2). The
- * line assignment is left for selectMainLine's fallback (scenario routing:
- * right→t1, left→t2) unless the timetable explicitly overrides.
+ * Direction is derived from train-number parity: odd-numbered trains are
+ * westbound (spawn from JNG-E/right), even-numbered trains are eastbound.
+ * Westbound KRL use t2 (row 14); westbound non-KRL use t4 (row 10).
+ * Eastbound POK trains use t6 (row 6), while other eastbound trains use t1
+ * (row 16).
  *
  * Usage:
  *   bun scripts/build-jng-schedule.ts              # 06:00–08:00 window
@@ -76,6 +77,7 @@ type ScheduleStop = {
   arr_actual: string;
   dep_actual: string;
   line?: string;
+  entryLine?: string;
   meets?: { type: string; with: string }[];
 };
 
@@ -126,14 +128,21 @@ const secToHms = (sec: number): string => {
   return [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
 };
 
+/** Last numeric run in a railway train code; suffix letters do not affect parity. */
+const trainNumber = (code: string): number => {
+  const match = code.match(/(\d+)(?!.*\d)/);
+  if (!match) throw new Error(`Train code has no numeric number: "${code}"`);
+  return Number(match[1]);
+};
+
 // ─── main ──────────────────────────────────────────────────────────────────
 
 const args = process.argv.slice(2);
-const useAll = args.includes("--all");
-let windowStart = 6 * 3600; // 06:00:00
-let windowEnd = 8 * 3600; // 08:00:00
+const hasWindow = args.length >= 2 && !args[0].startsWith("--");
+let windowStart = 0; // 00:00:00 (full day default)
+let windowEnd = 24 * 3600; // 24:00:00
 
-if (!useAll && args.length >= 2 && !args[0].startsWith("--")) {
+if (hasWindow) {
   const [sh, sm] = args[0].split(":").map(Number);
   const [eh, em] = args[1].split(":").map(Number);
   windowStart = (sh || 0) * 3600 + (sm || 0) * 60;
@@ -153,7 +162,7 @@ for (const call of stationData.calls) {
   if (call.is_pass_through) continue;
 
   const arrSec = hmsToSec(call.arrival);
-  if (!useAll && (arrSec < windowStart || arrSec >= windowEnd)) continue;
+  if (hasWindow && (arrSec < windowStart || arrSec >= windowEnd)) continue;
 
   const trainPath = path.join(ROOT, "data/timetable", call.train_file);
   if (!fs.existsSync(trainPath)) {
@@ -173,7 +182,10 @@ for (const call of stationData.calls) {
   const prevCode = prev?.station_code ?? null;
   const nextCode = next?.station_code ?? null;
 
-  // Determine direction from corridor
+  // Validate the timetable corridor, but derive direction from railway train
+  // number parity: odd = westbound; even = eastbound. This also handles cases
+  // where the neighbour field is ambiguous while preserving the operational
+  // numbering convention.
   const fromWest = prevCode && WEST_NEIGHBORS.has(prevCode);
   const fromEast = prevCode && EAST_NEIGHBORS.has(prevCode);
   const toWest = nextCode && WEST_NEIGHBORS.has(nextCode);
@@ -185,51 +197,62 @@ for (const call of stationData.calls) {
     continue;
   }
 
-  // Eastbound (from west, going east) or westbound (from east, going west)
-  const eastbound = fromWest;
+  const trainNo = train.train_code.replace(/^KA\s+/, "");
+  const eastbound = trainNumber(trainNo) % 2 === 0;
   const boundary = eastbound ? "JNG-W" : "JNG-E";
 
-  // Boundary stop time = the neighbour's departure + 1 minute buffer.
-  // The +60s push makes the train spawn a bit later so it slides in closer
-  // to its scheduled platform arrival, instead of arriving far too early
-  // and sitting at the platform. The origin/exit times stay real.
-  const rawBoundary: string =
-    prev?.departure ?? prev?.arrival ?? call.arrival!;
-  const boundarySec = hmsToSec(rawBoundary) + 60; // +1 minute
+  // Boundary stop time: the train should cross the corridor boundary shortly
+  // before its scheduled JNG arrival (allowing ~60-90s approach travel), rather
+  // than at the previous station's departure which could be 5-10 minutes earlier.
+  const prevSec = prev?.departure ? hmsToSec(prev.departure) : arrSec - 90;
+  const boundarySec = Math.max(prevSec, arrSec - 75);
   const boundaryTime: string = secToHms(boundarySec);
 
   // Exit boundary: the next neighbour's arrival (or JNG dep + approach)
-  const exitNeighborArr = next?.arrival ?? next?.departure ?? call.departure;
-  const exitTime: string = exitNeighborArr ?? call.departure ?? call.arrival!;
+  const depSec = hmsToSec(call.departure ?? call.arrival!);
+  const nextSec = next?.arrival ? hmsToSec(next.arrival) : depSec + 60;
+  const exitSec = Math.min(nextSec, depSec + 60);
+  const exitTime: string = secToHms(exitSec);
 
   // Parse susul (overtake) from remarks — try the train file's JNG stop
   // first, then the station call's remarks (same text, duplicated).
   const jngStop = train.stops[jngIdx];
   const meets = parseSusul(jngStop?.remarks ?? call.remarks);
 
-  // Clean train number: strip "KA " prefix from train_code
-  const trainNo = train.train_code.replace(/^KA\s+/, "");
-
   // Neighbour station names for display: the real station before/after JNG.
   const neighborBefore = prev?.station_name ?? null;
   const neighborAfter = next?.station_name ?? null;
+
+  // Line assignment:
+  // - odd westbound non-KRL: t4 (row 10)
+  // - westbound KRL: t2 (row 14)
+  // - eastbound from Pondok Jati: t6 (row 6)
+  // - all other eastbound trains: t1 (row 16)
+  const fromPondokJati = eastbound && prevCode === "POK";
+  const line = !eastbound
+    ? train.train_type === "krl" ? "t2" : "t4"
+    : fromPondokJati ? "t6" : "t1";
 
   const stops: ScheduleStop[] = [
     {
       station: boundary,
       arr_actual: boundaryTime,
       dep_actual: boundaryTime, // pass-through — originArr = boundaryTime
+      line,
+      entryLine: line,
     },
     {
       station: "JNG",
       arr_actual: call.arrival,
       dep_actual: call.departure ?? call.arrival,
+      line,
       ...(meets.length > 0 ? { meets } : {}),
     },
     {
       station: eastbound ? "JNG-E" : "JNG-W",
       arr_actual: exitTime,
       dep_actual: exitTime, // pass-through exit
+      line,
     },
   ];
 
@@ -255,7 +278,7 @@ entries.sort((a, b) => {
 // ─── emit ──────────────────────────────────────────────────────────────────
 
 const ts = (new Date().toISOString().slice(0, 10));
-const windowLabel = useAll ? "full day" : `${secToHms(windowStart)}–${secToHms(windowEnd)}`;
+const windowLabel = hasWindow ? `${secToHms(windowStart)}–${secToHms(windowEnd)}` : "full day";
 
 const output = `// Jatinegara dispatch schedule — generated from the real 168Railway
 // working timetable (${stationData.calls.length} JNG calls, ${entries.length} stops in

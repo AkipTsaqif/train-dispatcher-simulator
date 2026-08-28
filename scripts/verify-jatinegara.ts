@@ -46,13 +46,13 @@ check(
   `coupled=${compiled.switches.controls.filter((c) => c.coupled).length} singles=${compiled.switches.controls.filter((c) => !c.coupled).length}`
 );
 check(
-  "the translated stub ends stay plain joins (no switch at Z8 / AC6 / Z2 / BF4)",
-  compiled.nodes["s368x400"]?.sw === undefined && compiled.nodes["s336x448"]?.sw === undefined && compiled.nodes["s272x400"]?.sw === undefined && compiled.nodes["s304x496"]?.sw === undefined,
+  "the translated stub ends stay plain joins (no switch at AC8 / AG6 / AC2 / BJ4)",
+  compiled.nodes["s368x464"]?.sw === undefined && compiled.nodes["s336x512"]?.sw === undefined && compiled.nodes["s272x464"]?.sw === undefined && compiled.nodes["s304x560"]?.sw === undefined,
   "stub-end node still has a switch"
 );
 check(
-  "stub tracks end at their translated drawn extents (t5 288..400, t6 B6..AC6, t8 B2..Z2)",
-  compiled.nodes["s368x288"] !== undefined && compiled.nodes["s368x400"] !== undefined && compiled.nodes["s336x448"] !== undefined && compiled.nodes["s272x400"] !== undefined,
+  "stub tracks end at their translated drawn extents (t5 352..464, t6 B6..AG6, t8 B2..AD2)",
+  compiled.nodes["s368x352"] !== undefined && compiled.nodes["s368x464"] !== undefined && compiled.nodes["s336x512"] !== undefined && compiled.nodes["s272x464"] !== undefined,
   "missing stub-end node"
 );
 check(
@@ -64,13 +64,13 @@ check(
 // 2. multi-length platforms
 const jngXs = compiled.stationStopXs["JNG"];
 check(
-  "JNG has per-track platform Xs — all aligned to the drawn islands at 360",
-  jngXs?.t1 === 360 && jngXs?.t2 === 360 && jngXs?.t5 === 360 && jngXs?.t6 === 360 && jngXs?.t8 === 360,
+  "JNG has per-track platform Xs — all aligned to the drawn islands at 424",
+  jngXs?.t1 === 424 && jngXs?.t2 === 424 && jngXs?.t5 === 424 && jngXs?.t6 === 424 && jngXs?.t8 === 424,
   JSON.stringify(jngXs)
 );
 check(
-  "boundary stops translate with their reachable extent (t5 east 368, t8 west M2, t6 east 392, t1 west 72)",
-  compiled.stationStopXs["JNG-E"]?.t5 === 368 && compiled.stationStopXs["JNG-W"]?.t8 === 216 && compiled.stationStopXs["JNG-E"]?.t6 === 392 && compiled.stationStopXs["JNG-W"]?.t1 === 72,
+  "boundary stops translate with their reachable extent (t5 east 432, t8 west R2, t1 west 136)",
+  compiled.stationStopXs["JNG-E"]?.t5 === 432 && compiled.stationStopXs["JNG-W"]?.t8 === 280 && compiled.stationStopXs["JNG-W"]?.t1 === 136,
   JSON.stringify({ W: compiled.stationStopXs["JNG-W"], E: compiled.stationStopXs["JNG-E"] })
 );
 
@@ -86,31 +86,50 @@ check(
   const stops = Object.fromEntries(
     runtime.journeys.map((j) => [j.train.train_no, dwellX(j.train.train_no)])
   );
-  // Every journey dwells at the drawn island X=360 (all JNG platforms
-  // are at 360). Check all journeys, not just a few named stubs.
-  const allDwell = runtime.journeys.every((j) => dwellX(j.train.train_no) === 360);
+  // Every journey dwells at the drawn island X=424 (all JNG platforms
+  // are at 424). Check all journeys, not just a few named stubs.
+  const allDwell = runtime.journeys.every((j) => dwellX(j.train.train_no) === 424);
   check(
-    `all ${runtime.journeys.length} journeys dwell at the drawn island X=360`,
+    `all ${runtime.journeys.length} journeys dwell at the drawn island X=424`,
     allDwell,
     JSON.stringify(stops)
   );
-  // Pick the first eastbound (from JNG-W) and first westbound (from JNG-E)
-  // to verify direction-to-line routing. Eastbound → t1 (y=496), westbound →
-  // t2 (y=464) per the scenario routing fallback.
-  const eb = runtime.journeys.find((j) => j.train.stops[0].trackmark === "JNG-W");
-  const wb = runtime.journeys.find((j) => j.train.stops[0].trackmark === "JNG-E");
-  if (eb) {
+  // Verify line assignment policy across the full timetable:
+  // - odd-numbered westbound non-KRL: t4 (row 10, y=400)
+  // - westbound KRL: t2 (row 14, y=464)
+  // - eastbound POK: t6 (row 6, y=336)
+  // - other eastbound: t1 (row 16, y=496)
+  const lastTrainNumber = (code: string): number =>
+    Number(code.match(/(\d+)(?!.*\d)/)?.[1]);
+  const expectedY = (j: (typeof runtime.journeys)[number]): number => {
+    const odd = lastTrainNumber(j.train.train_no) % 2 === 1;
+    if (odd) return j.train.trainType === "krl" ? 464 : 400;
+    return j.train.neighborBefore === "Pondok Jati" ? 336 : 496;
+  };
+  const wrongLine = runtime.journeys.filter((j) => j.plan.start.y !== expectedY(j));
+  check(
+    "all 410 journeys obey parity/type/corridor line assignment",
+    wrongLine.length === 0,
+    wrongLine.slice(0, 8).map((j) => `${j.train.train_no}:${j.plan.start.y}->${expectedY(j)}`).join(",")
+  );
+  const oddNonKrl = runtime.journeys.find(
+    (j) => lastTrainNumber(j.train.train_no) % 2 === 1 && j.train.trainType !== "krl"
+  );
+  const oddKrl = runtime.journeys.find(
+    (j) => lastTrainNumber(j.train.train_no) % 2 === 1 && j.train.trainType === "krl"
+  );
+  if (oddNonKrl) {
     check(
-      `first eastbound (${eb.train.train_no}) uses t1 (y=496)`,
-      eb.plan.start.y === 496,
-      `y=${eb.plan.start.y}`
+      `odd non-KRL ${oddNonKrl.train.train_no} spawns east on t4 (row 10)`,
+      oddNonKrl.plan.start.dir === "left" && oddNonKrl.plan.start.y === 400,
+      JSON.stringify(oddNonKrl.plan.start)
     );
   }
-  if (wb) {
+  if (oddKrl) {
     check(
-      `first westbound (${wb.train.train_no}) uses t2 (y=464)`,
-      wb.plan.start.y === 464,
-      `y=${wb.plan.start.y}`
+      `odd KRL ${oddKrl.train.train_no} spawns east on t2 (row 14)`,
+      oddKrl.plan.start.dir === "left" && oddKrl.plan.start.y === 464,
+      JSON.stringify(oddKrl.plan.start)
     );
   }
 }
@@ -362,8 +381,8 @@ check(
       };
     });
     check(
-      "t4 and t3 are authored out of service west of H",
-      spans.length === 2 && spans.every((s) => s.fromX === 32 && s.toX === 128) &&
+      "t4 and t3 are authored out of service west of L",
+      spans.length === 2 && spans.every((s) => s.fromX === 32 && s.toX === 192) &&
         spans.some((s) => s.groupId === "t4") && spans.some((s) => s.groupId === "t3"),
       JSON.stringify(spans)
     );
@@ -412,7 +431,7 @@ check(
   check(
     "NE2 and NE4 candidates do not spuriously flank-lock PC22",
     ne4Route?.exitSignalId === "XW4" &&
-      ne4Route.pts.some(([x, y]) => x === 544 && y === 400) &&
+      ne4Route.pts.some(([x, y]) => x === 608 && y === 400) &&
       !jngFlanks.includes(31) && !jngFlanks.includes(50) &&
       !ne4Flanks.includes(31) && !ne4Flanks.includes(50),
     `NE2=${ne2Route?.exitSignalId} flanks=${jngFlanks.join(",")} NE4=${ne4Route?.exitSignalId} flanks=${ne4Flanks.join(",")}`

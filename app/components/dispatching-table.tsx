@@ -297,6 +297,15 @@ const fmtTime = (sec: number): string => {
   return [h, m, s].map((n) => String(n).padStart(2, "0")).join(":") + "." + String(cs).padStart(2, "0");
 };
 
+/** Clock time display in HH:MM:SS without centiseconds. */
+const fmtHms = (sec: number): string => {
+  const total = Math.floor(sec);
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const s = total % 60;
+  return [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
+};
+
 // Column letter → 0-based index (A=0, Z=25, AA=26, ...).
 const colIdx = (letters: string): number => {
   let n = 0;
@@ -825,8 +834,6 @@ export default function DispatchingTable({
       stationScrollRef.current?.querySelector<HTMLElement>("[data-now]")?.scrollIntoView({ block: "center" });
     }
   }, [selectedStation]);
-  const [rosterTick, setRosterTick] = useState(0); // periodic refresh for the roster/card
-  const frameCountRef = useRef(0);
   const selectedIdxRef = useRef<number | null>(null);
   selectedIdxRef.current = selectedTrain;
   // held-at-signal notification board (configured-duration holds) + susul warnings
@@ -1047,16 +1054,33 @@ export default function DispatchingTable({
       JOURNEYS.forEach((j, ti) => {
         const st = trainStatesRef.current[ti];
         const plan = j.plan;
-        if (sec < plan.originArr) {
+        // Under the relative clock every anchor is measured from the train's
+        // OWN boundary time, so that instant — not the sim start — is its
+        // schedule zero. Spawning it early (or late) shifts its whole
+        // timetable by the difference.
+        const spawnAt = RELATIVE_CLOCK ? plan.boundaryArr : plan.originArr;
+        if (sec < spawnAt) {
           st.spawned = false;
           return;
         }
         st.spawned = true;
-        spawnSimRef.current[ti] = sec;
-        lastTickRef.current[ti] = sec;
+        spawnSimRef.current[ti] = RELATIVE_CLOCK ? spawnAt : sec;
+        lastTickRef.current[ti] = RELATIVE_CLOCK ? spawnAt : sec;
         if (RELATIVE_CLOCK) {
-          // fresh at the spawn edge with a zeroed clock — the approach runs
-          // LIVE from tick one (no schedule interpolation, no teleport)
+          // Fresh at the spawn edge with a zeroed clock — the approach runs
+          // from its boundary time. A train whose boundary is already in the
+          // past at the chosen start catches up via the placement pass;
+          // crucially, placement must RESPECT red signals so a train whose
+          // scheduled dwell has elapsed does not run through the map ignoring
+          // the red exit signal and despawn before the player sees it.
+          const elapsed = sec - spawnAt;
+          const placeCtx: MoveCtx = {
+            ...ctx,
+            ignoreSignals: true,
+            stopFrameAtDwellArrival: false,
+          };
+          if (elapsed > 0 && !st.done) advanceTrain(st, elapsed, placeCtx, plan.legs);
+          lastTickRef.current[ti] = sec;
           return;
         }
         const travel = sec - st.originArr;
@@ -1119,8 +1143,8 @@ export default function DispatchingTable({
     const q = new URLSearchParams(window.location.search);
     const start = q.get("start");
     if (start) {
-      const [h, m] = start.split(":").map(Number);
-      initializeSim((h || 0) * 3600 + (m || 0) * 60);
+      const [h, m, s] = start.split(":").map(Number);
+      initializeSim((h || 0) * 3600 + (m || 0) * 60 + (s || 0));
     }
     if (q.get("controls") === "1") setShowControls(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1272,7 +1296,9 @@ export default function DispatchingTable({
           g?.setAttribute("visibility", "hidden");
           return "";
         }
-        if (simRef.current < plan.originArr) {
+        // Under the relative clock the train's schedule zero is its own
+        // boundary time, so it must not appear before then.
+        if (simRef.current < (RELATIVE_CLOCK ? plan.boundaryArr : plan.originArr)) {
           g?.setAttribute("visibility", "hidden");
           return "";
         }
@@ -1283,14 +1309,22 @@ export default function DispatchingTable({
           // from the spawn edge and its station dwells last their scheduled
           // DURATION — no first-tick mega-budget teleporting it to its hold
           // point. While stopped, time is frozen (no schedule consumed).
-          const spawnedAt = spawnSimRef.current[ti];
+          // A train that first becomes due mid-run was never placed, so fall
+          // back to its boundary time as the clock origin.
+          const spawnedAt = spawnSimRef.current[ti] ?? plan.boundaryArr;
           const last = Math.max(lastTickRef.current[ti] ?? spawnedAt, spawnedAt);
           if (st.stopped || st.done) {
             advanceTrain(st, 0, ctx, plan.legs);
             if (!st.stopped && !st.done) lastTickRef.current[ti] = simRef.current; // resume without a jump
           } else if (simRef.current > last) {
+            const timeBefore = st.time;
             advanceTrain(st, simRef.current - last, ctx, plan.legs);
-            lastTickRef.current[ti] = simRef.current;
+            const consumed = st.time - timeBefore;
+            // Advance lastTick only by the schedule time actually processed.
+            // If stopFrameAtDwellArrival capped the frame at the platform, the
+            // leftover sim budget remains to be processed on subsequent ticks
+            // rather than being permanently discarded.
+            lastTickRef.current[ti] = Math.min(simRef.current, last + consumed);
           }
         } else {
         // advance only the travel time since the origin (big sim jumps must not
@@ -1553,11 +1587,10 @@ export default function DispatchingTable({
         // from being treated as a platform stop.
         const renderLeg = plan.legs[Math.min(st.leg, plan.legs.length - 1)];
         const atPlatformDwell =
-          st.stationDepartureHold ||
-          (!st.stopped &&
-            !renderLeg.passThrough &&
-            renderLeg.departAt !== undefined &&
-            st.time < renderLeg.departAt);
+          !st.stopped &&
+          !renderLeg.passThrough &&
+          renderLeg.departAt !== undefined &&
+          st.time < renderLeg.departAt;
         // Platform-dwell marker EASING. The running marker leads the engine
         // centre by the engine-to-visual front difference so its nose tracks
         // the protection footprint, but a dwell parks the CENTRE on the
@@ -1583,7 +1616,13 @@ export default function DispatchingTable({
         const dwellStopIdx = st.leg - 1 + (st.approach ? 0 : 1);
         const dwellsAt = (legIdx: number, arrival: number): boolean => {
           const l = plan.legs[legIdx];
-          return !!l && !l.passThrough && l.departAt !== undefined && arrival < l.departAt;
+          return (
+            !!l &&
+            !l.passThrough &&
+            l.departAt !== undefined &&
+            arrival < l.departAt &&
+            st.time < l.departAt
+          );
         };
         const arrivedBeforeAnchor =
           st.leg > 0 &&
@@ -1592,7 +1631,11 @@ export default function DispatchingTable({
         if (arrivedBeforeAnchor) {
           easeX = plan.legs[st.leg - 1].waypointX;
         } else if (easeState.leg === st.leg) {
-          easeX = easeState.x; // approach latch: keep easing once engaged for this leg
+          // Keep the platform anchor for the rest of this leg. leadFactor below
+          // ramps from 0→1 over frontCompensation as the engine leaves, so the
+          // drawn marker advances one grid cell at a time instead of jumping
+          // two cells when the dwell ends.
+          easeX = easeState.x;
         } else {
           const expectedArr =
             st.time +
@@ -1698,9 +1741,7 @@ export default function DispatchingTable({
         const leg = renderLeg;
         const dwelling = atPlatformDwell;
         const stopState: TrainStopState = st.stopped
-          ? st.stationDepartureHold
-            ? "station"
-            : st.stopReason === "signal"
+          ? st.stopReason === "signal"
             ? "signal"
             : st.stopReason === "junction"
             ? "junction"
@@ -1830,8 +1871,6 @@ export default function DispatchingTable({
         trainSectionKeyRef.current = key;
         setOccupancyTick((t) => t + 1);
       }
-      // periodic refresh for the roster/timetable panel (~2×/s)
-      if (++frameCountRef.current % 30 === 0) setRosterTick((t) => t + 1);
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -2267,13 +2306,18 @@ export default function DispatchingTable({
     const stops = train.stops.map((s, i) => {
       // For pass-through boundary stops (arr == dep), show the scheduled time
       // as the actual — these are virtual markers, the train passes through
-      // on schedule. For real platform stops, show the engine-clock arrival.
+      // on schedule. For real platform stops, convert the engine clock arrival
+      // to 24-hour simulation clock time.
       const isPass = s.arr_actual === s.dep_actual;
+      const actualSec =
+        st.actualArr[i] != null
+          ? (RELATIVE_CLOCK ? plan.boundaryArr : 0) + st.actualArr[i]!
+          : null;
       return {
         name: stopName(train, i),
         arrLabel: s.arr_actual,
         depLabel: s.dep_actual,
-        actual: isPass ? s.arr_actual : st.actualArr[i],
+        actual: isPass ? s.arr_actual : actualSec != null ? fmtHms(actualSec) : null,
         meets: s.meets,
       };
     });
@@ -2383,13 +2427,17 @@ export default function DispatchingTable({
       const stop = j.train.stops[idx];
       const st = trainStatesRef.current[ti];
       const info = st && st.spawned && !st.done ? trainInfo(ti) : null;
+      const actualSec =
+        st?.actualArr[idx] != null
+          ? (RELATIVE_CLOCK ? j.plan.boundaryArr : 0) + st.actualArr[idx]!
+          : null;
       return {
         no: j.train.train_no,
         name: j.train.name,
         arr: stop.arr,
         arrLabel: stop.arr_actual,
         depLabel: stop.dep_actual,
-        actual: st?.actualArr[idx] ?? null,
+        actual: actualSec != null ? fmtHms(actualSec) : null,
         meets: stop.meets,
         active: !!info,
         atStation: info?.atStopIdx === idx,
@@ -3516,11 +3564,7 @@ export default function DispatchingTable({
                       <td className="py-1 text-right tabular-nums">{s.arrLabel}</td>
                       <td className="py-1 text-right tabular-nums">{s.depLabel}</td>
                       <td className="py-1 text-right tabular-nums">
-                        {s.actual != null
-                          ? typeof s.actual === "number"
-                            ? fmtTime(s.actual)
-                            : s.actual
-                          : "—"}
+                        {s.actual != null ? s.actual : "—"}
                       </td>
                     </tr>
                   ))}
@@ -3590,7 +3634,7 @@ export default function DispatchingTable({
                           {r.atStation ? (
                             <span className="font-semibold text-green-700">{r.delay}</span>
                           ) : r.actual != null ? (
-                            <span className="tabular-nums text-slate-500">{fmtTime(r.actual)}</span>
+                            <span className="tabular-nums text-slate-500">{r.actual}</span>
                           ) : r.active ? (
                             <span className="text-blue-600">{r.status}</span>
                           ) : r.arr < now ? (
