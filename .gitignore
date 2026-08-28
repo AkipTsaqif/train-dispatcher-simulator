@@ -57,3 +57,4 @@ notes.txt
 
 # scraped timetable data (regenerate via scripts/scrape-*.js)
 /data
+data.zip

@@ -907,6 +907,12 @@ export default function DispatchingTable({
 		useState<Record<number, SwitchState>>(INITIAL_SWITCHES);
 	const [signalOn, setSignalOn] =
 		useState<Record<string, boolean>>(INITIAL_SIGNALS);
+
+	useEffect(() => {
+		setSwitches(currentDispatch.map.switches.initialState);
+		setSignalOn(currentDispatch.map.signals.initialState);
+		setReservations({});
+	}, [currentDispatch]);
 	const [conflictNote, setConflictNote] = useState<string | null>(null);
 	const [showControls, setShowControls] = useState(false); // bottom point & signal buttons hidden by default
 	const [clickLog, setClickLog] = useState<string[]>([]); // debug click history
@@ -1002,6 +1008,14 @@ export default function DispatchingTable({
 	const RELATIVE_CLOCK = DISPATCH_SCENARIO.dwell?.relativeAnchors === true;
 	const spawnSimRef = useRef<(number | undefined)[]>([]);
 	const lastTickRef = useRef<(number | undefined)[]>([]);
+	/**
+	 * Actual edge-admission time for each train. A due train may wait outside
+	 * the diagram while the approach block is occupied; once admitted, its
+	 * relative engine clock starts HERE rather than at the booked boundary time.
+	 * This preserves every dwell duration and prevents a late admission from
+	 * teleporting through the approach to catch up.
+	 */
+	const admittedSimRef = useRef<(number | undefined)[]>([]);
 	// Per-train platform-dwell marker easing: which leg the ease was engaged on
 	// and the waypoint it eases toward (leg −1 = none). See the marker
 	// placement in the tick loop for why the lead must ramp, not toggle.
@@ -1025,6 +1039,70 @@ export default function DispatchingTable({
 			return st;
 		}),
 	);
+
+	/**
+	 * The first facing signal reached from each train's spawn edge. This is the
+	 * entrance-block boundary: a following train may materialize only after the
+	 * preceding train's OPERATIONAL tail is beyond it. Derived from the compiled
+	 * map (line, direction, signal placement); no JNG signal id is hard-coded.
+	 */
+	const edgeGateSignal = (ti: number): SignalDef | undefined => {
+		const plan = JOURNEYS[ti]?.plan;
+		if (!plan || plan.start.entryX === undefined) return undefined;
+		const entryX = plan.start.entryX;
+		const candidates = SIGNALS.filter(
+			(sig) =>
+				!sig.ai &&
+				sig.dir === plan.start.dir &&
+				Math.abs(sig.y - plan.start.y) < 1e-6 &&
+				(plan.start.dir === "right"
+					? sig.x > entryX
+					: sig.x < entryX),
+		);
+		return candidates.sort((a, b) =>
+			plan.start.dir === "right" ? a.x - b.x : b.x - a.x,
+		)[0];
+	};
+
+	/** True while another train from the same edge still occupies this entry block. */
+	const edgeBlockOccupied = (ti: number): boolean => {
+		if (DISPATCH_SCENARIO.spawn?.atTrackEdge !== true) return false;
+		const plan = JOURNEYS[ti]?.plan;
+		const gate = edgeGateSignal(ti);
+		if (!plan || !gate) return false;
+		return trainStatesRef.current.some((other) => {
+			if (
+				other.idx === ti ||
+				!other.spawned ||
+				other.done ||
+				other.dir !== plan.start.dir
+			) {
+				return false;
+			}
+			const sameEntry =
+				Math.abs(other.y - plan.start.y) < 1e-6 ||
+				Math.abs(other.segFrom[1] - plan.start.y) < 1e-6 ||
+				Math.abs(other.segTo[1] - plan.start.y) < 1e-6 ||
+				other.trail.some(
+					(segment) => Math.abs(segment.pt[1] - plan.start.y) < 1e-6,
+				);
+			// Before the gate, the train owns the entry block even if its centre has
+			// just diverted off the entry row. After the centre passes the gate, keep
+			// ownership only while the body still traces that entry and the operational
+			// tail has not cleared the signal.
+			const rear =
+				other.dir === "left"
+					? other.x + MOVEMENT_DEFINITION.trainHalfLen
+					: other.x - MOVEMENT_DEFINITION.trainHalfLen;
+			const spawnSide =
+				other.dir === "left"
+					? other.x >= gate.x
+					: other.x <= gate.x;
+			const tailNotClear =
+				other.dir === "left" ? rear >= gate.x : rear <= gate.x;
+			return spawnSide || (sameEntry && tailNotClear);
+		});
+	};
 	// Where the meets hold reads a partner's crossing time from — the live train
 	// states during the tick, the pass-1 placement snapshot during initializeSim.
 	const meetsReadRef = useRef<
@@ -1283,6 +1361,11 @@ export default function DispatchingTable({
 					return;
 				}
 				st.spawned = true;
+				// A train already in service at the selected start time is historical
+				// state, not a new admission request. Mark it admitted so the first live
+				// frame preserves schedule placement; only trains becoming due AFTER the
+				// simulation starts are held outside by edge-block occupancy.
+				admittedSimRef.current[ti] = spawnAt;
 				spawnSimRef.current[ti] = targetDispatch.scenario.dwell
 					.relativeAnchors
 					? spawnAt
@@ -1346,6 +1429,7 @@ export default function DispatchingTable({
 		dwellEaseRef.current = journeysList.map(() => ({ leg: -1, x: 0 }));
 		spawnSimRef.current = journeysList.map(() => undefined);
 		lastTickRef.current = journeysList.map(() => undefined);
+		admittedSimRef.current = journeysList.map(() => undefined);
 		// pass 1 — place with meets holds OFF so every partner's crossing time is
 		// recorded; pass 2 re-places from scratch with the holds active, reading
 		// the pass-1 crossings (a held train must sit at the meet station even
@@ -1542,6 +1626,9 @@ export default function DispatchingTable({
 				const plan = j.plan;
 				const g = trainGroupRefs.current[ti];
 				const txt = trainTextRefs.current[ti];
+				const dueAt = RELATIVE_CLOCK
+					? plan.boundaryArr
+					: plan.originArr;
 				// nothing is spawned until the player picks a start time
 				if (startModalOpenRef.current) {
 					g?.setAttribute("visibility", "hidden");
@@ -1552,14 +1639,24 @@ export default function DispatchingTable({
 					g?.setAttribute("visibility", "hidden");
 					return "";
 				}
-				// Under the relative clock the train's schedule zero is its own
-				// boundary time, so it must not appear before then.
-				if (
-					simRef.current <
-					(RELATIVE_CLOCK ? plan.boundaryArr : plan.originArr)
-				) {
+				// A train first becomes eligible at its booked boundary time. In
+				// atTrackEdge scenarios it still waits OFF-DIAGRAM while the approach
+				// block is occupied. Admission is one-shot: once its predecessor's tail
+				// clears the first facing signal, it starts from the edge and remains
+				// admitted even if another train later enters that block.
+				if (simRef.current < dueAt) {
 					g?.setAttribute("visibility", "hidden");
 					return "";
+				}
+				if (admittedSimRef.current[ti] === undefined) {
+					if (edgeBlockOccupied(ti)) {
+						st.spawned = false;
+						g?.setAttribute("visibility", "hidden");
+						return "";
+					}
+					admittedSimRef.current[ti] = simRef.current;
+					spawnSimRef.current[ti] = simRef.current;
+					lastTickRef.current[ti] = simRef.current;
 				}
 				st.spawned = true;
 				if (RELATIVE_CLOCK) {
@@ -1568,13 +1665,11 @@ export default function DispatchingTable({
 					// from the spawn edge and its station dwells last their scheduled
 					// DURATION — no first-tick mega-budget teleporting it to its hold
 					// point. While stopped, time is frozen (no schedule consumed).
-					// A train that first becomes due mid-run was never placed, so fall
-					// back to its boundary time as the clock origin.
+					// A train that first becomes due mid-run was never placed. Its clock
+					// therefore starts at its actual edge-admission time, which may be later
+					// than the booked boundary while the preceding tail clears the block.
 					const spawnedAt =
-						spawnSimRef.current[ti] ??
-						(RELATIVE_CLOCK
-							? plan.boundaryArr
-							: plan.originArr);
+						spawnSimRef.current[ti] ?? admittedSimRef.current[ti] ?? dueAt;
 					const last = Math.max(
 						lastTickRef.current[ti] ?? spawnedAt,
 						spawnedAt,
@@ -2381,7 +2476,8 @@ export default function DispatchingTable({
 			logClick(`${name} × terkunci oleh ${codeOf(owner)}`);
 			return; // locked under a route
 		}
-		const newState = switches[id] === "normal" ? "reversed" : "normal";
+		const current = switches[id] ?? "normal";
+		const newState = current === "reversed" ? "normal" : "reversed";
 		setSwitches((s) => {
 			const next = { ...s };
 			for (const gid of group) next[gid] = newState; // coupled ends move together
@@ -2826,11 +2922,10 @@ export default function DispatchingTable({
 		if (!st || !j) return null;
 		const { train, plan } = j;
 		const stops = train.stops.map((s, i) => {
-			// For pass-through boundary stops (arr == dep), show the scheduled time
-			// as the actual — these are virtual markers, the train passes through
-			// on schedule. For real platform stops, convert the engine clock arrival
-			// to 24-hour simulation clock time.
-			const isPass = s.arr_actual === s.dep_actual;
+			const isBoundary =
+				s.trackmark === "JNG-W" ||
+				s.trackmark === "JNG-E" ||
+				s.spawn_time !== undefined;
 			const actualSec =
 				st.actualArr[i] != null
 					? (RELATIVE_CLOCK ? plan.boundaryArr : 0) + st.actualArr[i]!
@@ -2839,11 +2934,16 @@ export default function DispatchingTable({
 				name: stopName(train, i),
 				arrLabel: s.arr_actual,
 				depLabel: s.dep_actual,
-				actual: isPass
-					? s.arr_actual
-					: actualSec != null
+				actual:
+					i === 0 && isBoundary
+						? s.dep_actual // previous station: departed on schedule
+						: i === train.stops.length - 1 && isBoundary
+						? actualSec != null
+							? fmtHms(actualSec)
+							: "—" // next station: not yet reached
+						: actualSec != null
 						? fmtHms(actualSec)
-						: null,
+						: "—",
 				meets: s.meets,
 			};
 		});
@@ -2863,11 +2963,15 @@ export default function DispatchingTable({
 		let atStopIdx: number | null = null;
 		for (let i = st.actualArr.length - 1; i >= 0; i--) {
 			if (st.actualArr[i] != null) {
-				// Skip pass-through boundary stops (arr == dep): their actualArr is
-				// the approach travel time, not a real arrival. Counting it as slip
-				// would show every freshly-spawned train as "terlambat".
-				const isPassThrough = train.stops[i].arr === train.stops[i].dep;
-				if (isPassThrough) continue;
+				// Skip boundary stops so slip only compares real platform arrivals
+				const isBoundary =
+					i === 0 ||
+					i === train.stops.length - 1 ||
+					train.stops[i].trackmark === "JNG-W" ||
+					train.stops[i].trackmark === "JNG-E" ||
+					train.stops[i].arr === train.stops[i].dep ||
+					train.stops[i].spawn_time !== undefined;
+				if (isBoundary && (i === 0 || i === train.stops.length - 1)) continue;
 				slip =
 					st.actualArr[i]! - (plan.schedArr[i] ?? train.stops[i].arr);
 				lastReached = i;
@@ -3208,7 +3312,7 @@ export default function DispatchingTable({
 	return (
 		<div className="w-full max-w-[2000px]">
 			{/* Time controls — fixed top-left: simulation clock + speed scale */}
-			<div className="fixed top-4 left-4 z-50 flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1.5 shadow-sm">
+			<div className="fixed top-4 left-4 z-[55] flex items-center gap-2 rounded-full border border-slate-300 bg-white px-3 py-1.5 shadow-sm">
 				<span
 					ref={clockRef}
 					role="timer"
@@ -3837,6 +3941,7 @@ export default function DispatchingTable({
 							<g key={sw.id} clipPath={`url(#cell-${sw.id})`}>
 								<path
 									d={d}
+									data-track="eraser"
 									stroke="#ffffff"
 									strokeWidth={3.5 * ERASER_SCALE}
 									strokeLinecap="round"
@@ -3844,6 +3949,7 @@ export default function DispatchingTable({
 								/>
 								<path
 									d={d}
+									data-track="ghost"
 									stroke="#cbd5e1"
 									strokeWidth={2 * DASH_SCALE}
 									strokeDasharray={`${5 * DASH_SCALE} ${4 * DASH_SCALE}`}
@@ -3853,6 +3959,7 @@ export default function DispatchingTable({
 								{/* Restore the active physical leg over the inactive ghost. */}
 								<path
 									d={activeD}
+									data-track="active"
 									stroke="#000"
 									strokeWidth={TRACK_STROKE}
 									strokeLinecap="round"
@@ -4193,6 +4300,11 @@ export default function DispatchingTable({
 								/>
 								<circle
 									r={r}
+									className={
+										reversed
+											? "point-btn-reversed"
+											: "point-btn-normal"
+									}
 									fill={reversed ? "#16a34a" : "#ffffff"}
 									stroke={reversed ? "#15803d" : "#94a3b8"}
 									strokeWidth={2 * cs}
@@ -4213,6 +4325,11 @@ export default function DispatchingTable({
 									fontSize={fitFont * cs}
 									fontWeight={700}
 									fill={reversed ? "#ffffff" : "#475569"}
+									className={
+										reversed
+											? "point-text-reversed"
+											: "point-text-normal"
+									}
 									pointerEvents="none"
 								>
 									{labelText}
@@ -4858,7 +4975,7 @@ export default function DispatchingTable({
 				{notices.length > 0 && (
 					<div
 						data-board="notifications"
-						className="fixed left-1/2 top-4 z-50 w-80 -translate-x-1/2 overflow-hidden rounded-xl border border-slate-200 bg-white/90 shadow-lg backdrop-blur-sm dark:bg-slate-800/90"
+						className="fixed left-1/2 top-16 z-40 w-80 -translate-x-1/2 overflow-hidden rounded-xl border border-slate-200 bg-white/90 shadow-lg backdrop-blur-sm dark:bg-slate-800/90"
 					>
 						<div className="flex items-center justify-between border-b border-slate-100 px-4 py-2">
 							<p className="text-sm font-semibold text-slate-700">

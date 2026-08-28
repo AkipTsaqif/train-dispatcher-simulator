@@ -24,6 +24,7 @@ export type TrainStop = {
    *  junction come from this line; the train crosses onto the journey line
    * through the throat under its own points. */
   entryLine?: string;
+  spawn_time?: string;
 };
 
 export type Train = {
@@ -53,6 +54,8 @@ export type ScheduleStop = {
    *  of the journey's platform line (e.g. enter on t6, cross onto t5 through
    *  a junction). Absent → spawn on the journey line (legacy behavior). */
   entryLine?: string;
+  /** Optional approach spawn timestamp (HH:MM:SS) for virtual boundary stops. */
+  spawn_time?: string;
 };
 
 export type ScheduleEntry = {
@@ -139,6 +142,7 @@ export const createTrains = (
         dep: hmsToSeconds(stop.dep_actual),
         dep_actual: stop.dep_actual,
         meets: stop.meets,
+        ...(stop.spawn_time ? { spawn_time: stop.spawn_time } : {}),
         ...(stop.line === undefined ? {} : { line: stop.line }),
         ...(stop.entryLine === undefined ? {} : { entryLine: stop.entryLine }),
       })),
@@ -325,7 +329,7 @@ export function buildJourney(
   } = rules;
   const atTrackEdge = rules.spawn?.atTrackEdge === true;
   const originX = stopX(stops[0].trackmark);
-  const originArr = hmsToSeconds(stops[0].arr_actual);
+  const originArr = hmsToSeconds(stops[0].spawn_time ?? stops[0].arr_actual);
   const edgeXs = Object.values(nodes).map((n) => n.x);
   const maxX = Math.max(...edgeXs); // map right edge (pre-shift coords)
   const minX = Math.min(...edgeXs); // map left edge (pre-shift coords)
@@ -395,11 +399,15 @@ export function buildJourney(
   const anchors: number[] = [];
   const schedArr: number[] = []; // expected arrival at each stop, in engine clock
   for (let i = 0; i < stops.length; i++) {
-    const arr = i === 0 ? stops[0].arr : anchors[i - 1] + legInfo[i - 1].travel;
+    const arr = i === 0 ? originArr : anchors[i - 1] + legInfo[i - 1].travel;
     schedArr.push(arr);
     const s = stops[i];
+    const isVirtualBoundary =
+      s.trackmark === "JNG-W" ||
+      s.trackmark === "JNG-E" ||
+      s.spawn_time !== undefined;
     anchors[i] =
-      s.arr === s.dep
+      isVirtualBoundary || s.arr === s.dep
         ? arr
         : holdUntilScheduledDepartureByStation[s.trackmark]
           ? s.dep
@@ -424,7 +432,11 @@ export function buildJourney(
       // the train arrives at the anchor, so it does not wait)
       departAt: anchors[i],
       station: stops[i].trackmark,
-      passThrough: stops[i].arr === stops[i].dep,
+      passThrough:
+        stops[i].arr === stops[i].dep ||
+        stops[i].trackmark === "JNG-W" ||
+        stops[i].trackmark === "JNG-E" ||
+        stops[i].spawn_time !== undefined,
     });
   }
 
@@ -474,7 +486,7 @@ export function buildJourney(
     speed: lastSpeed,
     departAt: anchors[stops.length - 1],
     station: lastStop.trackmark,
-    passThrough: lastStop.arr === lastStop.dep,
+    passThrough: true,
   });
 
   // First node ahead of the (off-map) spawn — nearest junction in the travel

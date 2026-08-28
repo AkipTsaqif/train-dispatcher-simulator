@@ -73,16 +73,13 @@
 /* The track diagram — recolor the hardcoded SVG values for a dark background.
    Signal lamps, train markers and reservation highlights keep their colours. */
 .dark svg [stroke="#000"] {
-  stroke: #94a3b8;
+  stroke: #cbd5e1;
 }
 .dark svg [fill="#000"] {
-  fill: #e2e8f0;
+  fill: #f1f5f9;
 }
 .dark svg g[stroke="#e7e7e7"] {
   stroke: #1e293b;
-}
-.dark svg g[stroke="#cbd5e1"] {
-  stroke: #334155;
 }
 .dark svg g[fill="#64748b"] {
   fill: #cbd5e1;
@@ -93,12 +90,42 @@
 .dark svg [fill="#94a3b8"] {
   fill: #64748b;
 }
-.dark svg [fill="#ffffff"] {
-  fill: #e2e8f0;
-}
-.dark svg [stroke="#ffffff"] {
-  stroke: #94a3b8;
-}
 .dark svg [stroke="#334155"] {
   stroke: #64748b;
+}
+
+/* Inactive turnout eraser — MUST match the dark canvas background (#0f172a)
+   so it properly erases the solid track under the inactive leg. */
+.dark svg [data-track="eraser"],
+.dark svg path[stroke="#ffffff"] {
+  stroke: #0f172a;
+}
+
+/* Inactive turnout dashed ghost in dark mode — subtle dashed slate so the
+   disconnected branch is visibly faint/dashed and distinct from the active track. */
+.dark svg [data-track="ghost"],
+.dark svg [stroke="#cbd5e1"] {
+  stroke: #334155;
+}
+
+/* Point control buttons in dark mode:
+   Normal (lurus) = dark slate circle with bright text.
+   Reversed (belok) = glowing emerald green with crisp border. */
+.dark svg .point-btn-normal,
+.dark svg circle[fill="#ffffff"] {
+  fill: #1e293b;
+  stroke: #64748b;
+}
+.dark svg .point-text-normal,
+.dark svg text[fill="#475569"] {
+  fill: #e2e8f0;
+}
+.dark svg .point-btn-reversed,
+.dark svg circle[fill="#16a34a"] {
+  fill: #16a34a;
+  stroke: #4ade80;
+}
+.dark svg .point-text-reversed,
+.dark svg text[fill="#ffffff"] {
+  fill: #ffffff;
 }

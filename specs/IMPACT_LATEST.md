@@ -1,28 +1,22 @@
 ## Target
-
-Jatinegara train-marker presentation: switch `/jng` from continuous marker placement to visual grid-cell snapping, without changing engine movement, stops, occupancy, or routing.
+Edge-block spawn gating for `app/components/dispatching-table.tsx`: do not materialize a scheduled train at a Jatinegara track edge while the preceding train still occupies that entry block; preserve generic movement and queue behavior after materialization.
 
 ## Dependents (4)
-
-- `app/components/dispatching-table.tsx`: chooses continuous vs snapped marker coordinates on every animation frame.
-- `app/lib/dispatch-map.ts`: owns the shared `Presentation` contract.
-- `app/maps/jatinegara.ts`: will opt into snapping at its 16-unit display-grid pitch.
-- `app/maps/flyover-fixture.ts`: uses continuous placement and must remain so.
+- `app/page.tsx`: renders the shared `DispatchingTable`.
+- `app/jng/page.tsx`: renders the shared `DispatchingTable` with Jatinegara runtime.
+- `tests/dispatching-table.spec.ts`: browser-level coverage for both layouts and JNG spawning.
+- `app/lib/train-engine.ts` / `app/lib/dispatch-runtime.ts`: provide journey plans, line coordinates, and train state fields consumed by the component.
 
 ## Affected Stories
-
-No `specs/release-plan.yaml` exists. This is user-directed Jatinegara presentation work, outside a numbered release story.
+- No `specs/release-plan.yaml` or epic capsules exist in this repository. This is a user-directed Phase 10 JNG operational refinement.
 
 ## Test Coverage
+- `tests/dispatching-table.spec.ts`: covers delayed JNG edge spawn, NE2 holding, signal release, and existing queue conflict behavior.
+- `scripts/verify-jatinegara.ts`: covers compiled JNG topology and schedule invariants.
+- Added: deterministic JNG E2E regression proving 5037B remains hidden while 5509B occupies the t2 east approach, then enters from the edge only after 5509B's operational tail clears NE2.
 
-- `tests/dispatching-table.spec.ts`: JNG control and interaction coverage; add a marker-coordinate assertion for 16-unit snapping.
-- `tests/dispatching-table.spec.ts`: flyover fixture checks continuous marker coordinates.
-- `verify:jatinegara`, `verify:bekasi`, `probe:occupancy`, and `probe:meets`: guard topology, Bekasi equivalence, and unchanged operational movement.
-
-## Risk: Medium
-
-The component is shared by Bekasi, Jatinegara, and the flyover fixture, but the behavior can be selected entirely through optional presentation data and verified by existing fixtures.
+## Risk: High
+The shared dispatching table owns the live animation loop and the change affects materialization timing, occupancy, signal aspects, and both Bekasi and Jatinegara paths. Keep the rule opt-in through layout/scenario data so Bekasi remains behavior- and snapshot-compatible.
 
 ## Recommended action
-
-Add an optional visual snap-pitch to `Presentation`; JNG opts in at its 16-unit grid pitch. Keep `continuousTrains: true` authoritative for the flyover fixture and preserve the existing Bekasi branch verbatim.
+Implemented through the existing opt-in `spawn.atTrackEdge` policy, deriving each entry gate from compiled line/direction/signal geometry. Retain the regression test and run the full layout/E2E gates before release.

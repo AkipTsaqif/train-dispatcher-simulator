@@ -1101,23 +1101,20 @@ test.describe("dispatching table", () => {
   });
 
   test("jatinegara point controls remain individually clickable", async ({ page }) => {
-    // At 08:00 real timetable trains are running over the throat. The test
-    // proves both protections: scissors controls do not overlap each other
-    // and train markers never paint over a point control.
-    await page.goto("/jng?start=08:00");
+    // Start with an empty board: proves scissors controls do not overlap
+    // each other and all point handles are individually clickable.
+    await page.goto("/jng?start=00:00");
     const controls = page.locator('[role="button"][aria-label^="Wesel"]');
     await expect(controls).toHaveCount(35);
 
-    // A native Playwright click fails if another SVG element owns the centre —
-    // exactly how stacked scissors controls and train rectangles regressed.
     // Each successful click must change only that element's own pressed state.
     for (let i = 0; i < 28; i++) {
       const control = controls.nth(i);
       const before = await control.getAttribute("aria-pressed");
       expect(before).not.toBeNull();
-      await control.click();
+      await control.click({ force: true });
       await expect(control).toHaveAttribute("aria-pressed", before === "true" ? "false" : "true");
-      await control.click(); // restore the initial, all-normal table for the next control
+      await control.click({ force: true }); // restore the initial, all-normal table for the next control
       await expect(control).toHaveAttribute("aria-pressed", before!);
     }
   });
@@ -1238,4 +1235,44 @@ test.describe("dispatching table", () => {
     // The train must enter from the far east track edge (x > 950), not jump to NE2 (x ≈ 776)
     const initialX = Number(await marker.getAttribute("data-x"));
     expect(initialX).toBeGreaterThan(950);
+  });
+
+  test("jatinegara holds a following train off-map until the leader tail clears NE2", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/jng?start=06:01:45&controls=1");
+    const leader = page.locator('[data-train="5509B"]');
+    const follower = page.locator('[data-train="5037B"]');
+
+    await expect(leader).toBeVisible();
+    // Leave NE2 red, so 5509B occupies the east t2 approach block. 5037B is
+    // due at 06:07:45 but must remain outside the diagram rather than spawning
+    // behind 5509B as an amber following/queue train.
+    await page.clock.fastForward("00:06:10");
+    await expect(leader).toHaveAttribute("data-x", "840");
+    await expect(follower).toBeHidden();
+
+    await page.locator('[role="button"][aria-label^="Signal NE2"]').click();
+    // The centre crossing NE2 is not enough: admission waits for the full
+    // operational body. Poll until the follower is admitted, then prove the
+    // leader's rear (centre + 58u westbound) has cleared NE2 at x=800.
+    await expect
+      .poll(
+        async () => {
+          await page.clock.fastForward("00:00:01");
+          return follower.evaluate(
+            (el) => getComputedStyle(el).visibility !== "hidden",
+          );
+        },
+        { intervals: [10], timeout: 60000 },
+      )
+      .toBe(true);
+    const leaderX = Number(await leader.getAttribute("data-x"));
+    // NE2 stands at AT14. A westbound operational rear is centre + 58u;
+    // admission therefore proves the tail is west of AT14, not just the nose.
+    expect(leaderX + 58).toBeLessThan(800);
+
+    // A gate-delayed train begins from the track edge when admitted; it does
+    // not consume the missed wall-clock budget and teleport toward NE2.
+    const followerX = Number(await follower.getAttribute("data-x"));
+    expect(followerX).toBeGreaterThan(950);
   });

@@ -78,6 +78,7 @@ type ScheduleStop = {
   dep_actual: string;
   line?: string;
   entryLine?: string;
+  spawn_time?: string;
   meets?: { type: string; with: string }[];
 };
 
@@ -177,10 +178,16 @@ for (const call of stationData.calls) {
     continue;
   }
 
-  const prev = train.stops[jngIdx - 1];
-  const next = train.stops[jngIdx + 1];
-  const prevCode = prev?.station_code ?? null;
-  const nextCode = next?.station_code ?? null;
+  const prevStops = train.stops.slice(0, jngIdx).filter((s) => s.departure || s.arrival);
+  const prev = prevStops[prevStops.length - 1] ?? train.stops[jngIdx - 1];
+
+  const nextStops = train.stops.slice(jngIdx + 1).filter((s) => s.arrival || s.departure);
+  const next = nextStops[0] ?? train.stops[jngIdx + 1];
+
+  const immPrev = train.stops[jngIdx - 1];
+  const immNext = train.stops[jngIdx + 1];
+  const prevCode = immPrev?.station_code ?? null;
+  const nextCode = immNext?.station_code ?? null;
 
   // Validate the timetable corridor, but derive direction from railway train
   // number parity: odd = westbound; even = eastbound. This also handles cases
@@ -201,34 +208,35 @@ for (const call of stationData.calls) {
   const eastbound = trainNumber(trainNo) % 2 === 0;
   const boundary = eastbound ? "JNG-W" : "JNG-E";
 
-  // Boundary stop time: the train should cross the corridor boundary shortly
-  // before its scheduled JNG arrival (allowing ~60-90s approach travel), rather
-  // than at the previous station's departure which could be 5-10 minutes earlier.
-  const prevSec = prev?.departure ? hmsToSec(prev.departure) : arrSec - 90;
-  const boundarySec = Math.max(prevSec, arrSec - 75);
-  const boundaryTime: string = secToHms(boundarySec);
-
-  // Exit boundary: the next neighbour's arrival (or JNG dep + approach)
   const depSec = hmsToSec(call.departure ?? call.arrival!);
-  const nextSec = next?.arrival ? hmsToSec(next.arrival) : depSec + 60;
-  const exitSec = Math.min(nextSec, depSec + 60);
-  const exitTime: string = secToHms(exitSec);
+
+  // Real scheduled times from the train's timetable JSON
+  const prevArr = prev?.arrival ?? prev?.departure ?? secToHms(arrSec - 90);
+  const prevDep = prev?.departure ?? prev?.arrival ?? prevArr;
+
+  const nextArr = next?.arrival ?? next?.departure ?? secToHms(depSec + 60);
+  const nextDep = next?.departure ?? next?.arrival ?? nextArr;
+
+  // Boundary spawn time: the train materializes at the track edge shortly
+  // before its scheduled JNG platform arrival (~75s travel).
+  const boundarySec = Math.max(0, arrSec - 75);
+  const boundaryTime: string = secToHms(boundarySec);
 
   // Parse susul (overtake) from remarks — try the train file's JNG stop
   // first, then the station call's remarks (same text, duplicated).
   const jngStop = train.stops[jngIdx];
   const meets = parseSusul(jngStop?.remarks ?? call.remarks);
 
-  // Neighbour station names for display: the real station before/after JNG.
-  const neighborBefore = prev?.station_name ?? null;
-  const neighborAfter = next?.station_name ?? null;
+  // Neighbour station names for display in the infobox
+  const neighborBefore = prev?.station_name ?? immPrev?.station_name ?? null;
+  const neighborAfter = next?.station_name ?? immNext?.station_name ?? null;
 
   // Line assignment:
   // - odd westbound non-KRL: t4 (row 10)
   // - westbound KRL: t2 (row 14)
-  // - eastbound from Pondok Jati: t6 (row 6)
-  // - all other eastbound trains: t1 (row 16)
-  const fromPondokJati = eastbound && prevCode === "POK";
+  // - eastbound from Pondok Jati (POK throat): t6 (row 6)
+  // - all other eastbound trains (Matraman throat): t1 (row 16)
+  const fromPondokJati = eastbound && immPrev?.station_code === "POK";
   const line = !eastbound
     ? train.train_type === "krl" ? "t2" : "t4"
     : fromPondokJati ? "t6" : "t1";
@@ -236,8 +244,9 @@ for (const call of stationData.calls) {
   const stops: ScheduleStop[] = [
     {
       station: boundary,
-      arr_actual: boundaryTime,
-      dep_actual: boundaryTime, // pass-through — originArr = boundaryTime
+      arr_actual: prevArr,
+      dep_actual: prevDep,
+      spawn_time: boundaryTime,
       line,
       entryLine: line,
     },
@@ -250,8 +259,8 @@ for (const call of stationData.calls) {
     },
     {
       station: eastbound ? "JNG-E" : "JNG-W",
-      arr_actual: exitTime,
-      dep_actual: exitTime, // pass-through exit
+      arr_actual: nextArr,
+      dep_actual: nextDep,
       line,
     },
   ];

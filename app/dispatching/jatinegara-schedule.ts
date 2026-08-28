@@ -14,12 +14,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:50:00",
+				"arr_actual": "23:48:00",
 				"dep_actual": "23:50:00",
+				"spawn_time": "00:00:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -31,8 +32,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "00:05:00",
-				"dep_actual": "00:05:00",
+				"arr_actual": "00:10:00",
+				"dep_actual": "00:10:00",
 				"line": "t4"
 			}
 		]
@@ -48,8 +49,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "00:02:45",
-				"dep_actual": "00:02:45",
+				"arr_actual": "00:00:00",
+				"dep_actual": "00:00:15",
+				"spawn_time": "00:02:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -61,8 +63,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "00:06:00",
-				"dep_actual": "00:06:00",
+				"arr_actual": "00:09:00",
+				"dep_actual": "00:09:15",
 				"line": "t1"
 			}
 		]
@@ -78,8 +80,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:57:15",
+				"arr_actual": "23:57:00",
 				"dep_actual": "23:57:15",
+				"spawn_time": "00:04:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -92,7 +95,7 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			{
 				"station": "JNG-W",
 				"arr_actual": "00:08:00",
-				"dep_actual": "00:08:00",
+				"dep_actual": "00:08:15",
 				"line": "t2"
 			}
 		]
@@ -104,12 +107,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "00:19:45",
-				"dep_actual": "00:19:45",
+				"arr_actual": "00:07:00",
+				"dep_actual": "00:09:00",
+				"spawn_time": "00:19:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -121,8 +125,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "00:24:00",
-				"dep_actual": "00:24:00",
+				"arr_actual": "00:32:00",
+				"dep_actual": "00:32:00",
 				"line": "t4"
 			}
 		]
@@ -138,8 +142,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "00:19:45",
-				"dep_actual": "00:19:45",
+				"arr_actual": "00:17:00",
+				"dep_actual": "00:17:15",
+				"spawn_time": "00:19:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -151,8 +156,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "00:23:00",
-				"dep_actual": "00:23:00",
+				"arr_actual": "00:26:00",
+				"dep_actual": "00:26:15",
 				"line": "t1"
 			}
 		]
@@ -168,8 +173,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "00:19:45",
-				"dep_actual": "00:19:45",
+				"arr_actual": "00:15:00",
+				"dep_actual": "00:15:15",
+				"spawn_time": "00:19:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -181,8 +187,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "00:23:00",
-				"dep_actual": "00:23:00",
+				"arr_actual": "00:24:00",
+				"dep_actual": "00:24:15",
 				"line": "t2"
 			}
 		]
@@ -194,12 +200,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "00:44:45",
-				"dep_actual": "00:44:45",
+				"arr_actual": "00:31:00",
+				"dep_actual": "00:33:00",
+				"spawn_time": "00:44:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -211,8 +218,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "00:49:00",
-				"dep_actual": "00:49:00",
+				"arr_actual": "00:58:00",
+				"dep_actual": "00:58:00",
 				"line": "t4"
 			}
 		]
@@ -224,12 +231,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "00:52:45",
-				"dep_actual": "00:52:45",
+				"arr_actual": "00:39:00",
+				"dep_actual": "00:41:00",
+				"spawn_time": "00:52:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -241,8 +249,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "00:57:00",
-				"dep_actual": "00:57:00",
+				"arr_actual": "01:01:00",
+				"dep_actual": "01:01:00",
 				"line": "t4"
 			}
 		]
@@ -253,13 +261,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Kampung Bandan",
 		"destination": "Solo Balapan",
 		"trainType": "freight",
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "01:17:45",
-				"dep_actual": "01:17:45",
+				"arr_actual": "01:09:00",
+				"dep_actual": "01:09:00",
+				"spawn_time": "01:17:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -271,8 +280,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "01:25:00",
-				"dep_actual": "01:25:00",
+				"arr_actual": "01:38:30",
+				"dep_actual": "01:39:00",
 				"line": "t6"
 			}
 		]
@@ -284,12 +293,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "01:26:45",
-				"dep_actual": "01:26:45",
+				"arr_actual": "01:13:00",
+				"dep_actual": "01:15:00",
+				"spawn_time": "01:26:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -301,8 +311,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "01:31:00",
-				"dep_actual": "01:31:00",
+				"arr_actual": "01:40:00",
+				"dep_actual": "01:40:00",
 				"line": "t4"
 			}
 		]
@@ -314,12 +324,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "01:44:45",
-				"dep_actual": "01:44:45",
+				"arr_actual": "01:32:00",
+				"dep_actual": "01:34:00",
+				"spawn_time": "01:44:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -331,8 +342,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "01:49:00",
-				"dep_actual": "01:49:00",
+				"arr_actual": "01:58:00",
+				"dep_actual": "01:58:00",
 				"line": "t4"
 			}
 		]
@@ -344,12 +355,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "01:52:45",
-				"dep_actual": "01:52:45",
+				"arr_actual": "01:40:00",
+				"dep_actual": "01:42:00",
+				"spawn_time": "01:52:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -361,8 +373,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "01:57:00",
-				"dep_actual": "01:57:00",
+				"arr_actual": "02:01:00",
+				"dep_actual": "02:01:00",
 				"line": "t4"
 			}
 		]
@@ -374,12 +386,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "02:13:45",
-				"dep_actual": "02:13:45",
+				"arr_actual": "02:01:00",
+				"dep_actual": "02:03:00",
+				"spawn_time": "02:13:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -391,8 +404,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "02:18:00",
-				"dep_actual": "02:18:00",
+				"arr_actual": "02:27:00",
+				"dep_actual": "02:27:00",
 				"line": "t4"
 			}
 		]
@@ -404,12 +417,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "02:21:45",
-				"dep_actual": "02:21:45",
+				"arr_actual": "02:09:00",
+				"dep_actual": "02:11:00",
+				"spawn_time": "02:21:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -421,8 +435,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "02:26:00",
-				"dep_actual": "02:26:00",
+				"arr_actual": "02:36:00",
+				"dep_actual": "02:36:00",
 				"line": "t4"
 			}
 		]
@@ -434,12 +448,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "02:37:45",
-				"dep_actual": "02:37:45",
+				"arr_actual": "02:25:00",
+				"dep_actual": "02:27:00",
+				"spawn_time": "02:37:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -451,8 +466,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "02:42:00",
-				"dep_actual": "02:42:00",
+				"arr_actual": "02:51:00",
+				"dep_actual": "02:51:00",
 				"line": "t4"
 			}
 		]
@@ -464,12 +479,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "02:46:45",
-				"dep_actual": "02:46:45",
+				"arr_actual": "02:34:00",
+				"dep_actual": "02:36:00",
+				"spawn_time": "02:46:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -481,8 +497,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "02:51:00",
-				"dep_actual": "02:51:00",
+				"arr_actual": "02:55:00",
+				"dep_actual": "02:55:00",
 				"line": "t4"
 			}
 		]
@@ -494,12 +510,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "03:31:45",
-				"dep_actual": "03:31:45",
+				"arr_actual": "03:19:00",
+				"dep_actual": "03:21:00",
+				"spawn_time": "03:31:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -511,8 +528,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "03:36:00",
-				"dep_actual": "03:36:00",
+				"arr_actual": "03:40:00",
+				"dep_actual": "03:40:00",
 				"line": "t4"
 			}
 		]
@@ -524,12 +541,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "03:51:45",
-				"dep_actual": "03:51:45",
+				"arr_actual": "03:40:00",
+				"dep_actual": "03:42:00",
+				"spawn_time": "03:51:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -541,8 +559,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "03:56:00",
-				"dep_actual": "03:56:00",
+				"arr_actual": "04:00:00",
+				"dep_actual": "04:00:00",
 				"line": "t4"
 			}
 		]
@@ -554,12 +572,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "04:03:45",
-				"dep_actual": "04:03:45",
+				"arr_actual": "03:50:00",
+				"dep_actual": "03:52:00",
+				"spawn_time": "04:03:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -571,8 +590,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "04:08:00",
-				"dep_actual": "04:08:00",
+				"arr_actual": "04:17:00",
+				"dep_actual": "04:17:00",
 				"line": "t4"
 			}
 		]
@@ -584,12 +603,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "04:10:45",
-				"dep_actual": "04:10:45",
+				"arr_actual": "04:00:00",
+				"dep_actual": "04:00:00",
+				"spawn_time": "04:10:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -601,8 +621,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "04:15:00",
-				"dep_actual": "04:15:00",
+				"arr_actual": "04:20:00",
+				"dep_actual": "04:20:00",
 				"line": "t4"
 			}
 		]
@@ -618,8 +638,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "04:19:45",
-				"dep_actual": "04:19:45",
+				"arr_actual": "04:17:00",
+				"dep_actual": "04:17:15",
+				"spawn_time": "04:19:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -631,8 +652,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "04:23:00",
-				"dep_actual": "04:23:00",
+				"arr_actual": "04:25:00",
+				"dep_actual": "04:25:15",
 				"line": "t1"
 			}
 		]
@@ -644,12 +665,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "04:26:45",
-				"dep_actual": "04:26:45",
+				"arr_actual": "04:14:00",
+				"dep_actual": "04:16:00",
+				"spawn_time": "04:26:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -661,8 +683,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "04:31:00",
-				"dep_actual": "04:31:00",
+				"arr_actual": "04:35:00",
+				"dep_actual": "04:35:00",
 				"line": "t4"
 			}
 		]
@@ -678,8 +700,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "04:30:45",
-				"dep_actual": "04:30:45",
+				"arr_actual": "04:28:00",
+				"dep_actual": "04:28:15",
+				"spawn_time": "04:30:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -691,8 +714,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "04:34:00",
-				"dep_actual": "04:34:00",
+				"arr_actual": "04:36:00",
+				"dep_actual": "04:36:15",
 				"line": "t1"
 			}
 		]
@@ -708,8 +731,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "04:39:45",
-				"dep_actual": "04:39:45",
+				"arr_actual": "04:37:00",
+				"dep_actual": "04:37:15",
+				"spawn_time": "04:39:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -721,8 +745,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "04:43:00",
-				"dep_actual": "04:43:00",
+				"arr_actual": "04:45:00",
+				"dep_actual": "04:45:15",
 				"line": "t1"
 			}
 		]
@@ -738,8 +762,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "04:46:45",
-				"dep_actual": "04:46:45",
+				"arr_actual": "04:41:00",
+				"dep_actual": "04:41:15",
+				"spawn_time": "04:46:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -751,8 +776,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "04:50:00",
-				"dep_actual": "04:50:00",
+				"arr_actual": "04:51:00",
+				"dep_actual": "04:51:15",
 				"line": "t2"
 			}
 		]
@@ -768,8 +793,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "04:46:45",
-				"dep_actual": "04:46:45",
+				"arr_actual": "04:41:00",
+				"dep_actual": "04:41:15",
+				"spawn_time": "04:46:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -781,8 +807,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "04:50:00",
-				"dep_actual": "04:50:00",
+				"arr_actual": "04:52:00",
+				"dep_actual": "04:52:15",
 				"line": "t6"
 			}
 		]
@@ -798,8 +824,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "04:52:45",
-				"dep_actual": "04:52:45",
+				"arr_actual": "04:50:00",
+				"dep_actual": "04:50:15",
+				"spawn_time": "04:52:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -811,8 +838,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "04:56:00",
-				"dep_actual": "04:56:00",
+				"arr_actual": "04:58:00",
+				"dep_actual": "04:58:15",
 				"line": "t1"
 			}
 		]
@@ -828,8 +855,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "04:54:45",
-				"dep_actual": "04:54:45",
+				"arr_actual": "04:49:00",
+				"dep_actual": "04:49:15",
+				"spawn_time": "04:54:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -841,8 +869,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "04:58:00",
-				"dep_actual": "04:58:00",
+				"arr_actual": "04:59:00",
+				"dep_actual": "04:59:15",
 				"line": "t2"
 			}
 		]
@@ -858,8 +886,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:00:45",
-				"dep_actual": "05:00:45",
+				"arr_actual": "04:55:00",
+				"dep_actual": "04:55:15",
+				"spawn_time": "05:00:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -871,8 +900,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:04:00",
-				"dep_actual": "05:04:00",
+				"arr_actual": "05:05:00",
+				"dep_actual": "05:05:15",
 				"line": "t2"
 			}
 		]
@@ -888,8 +917,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:01:45",
-				"dep_actual": "05:01:45",
+				"arr_actual": "04:59:00",
+				"dep_actual": "04:59:15",
+				"spawn_time": "05:01:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -901,8 +931,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:05:00",
-				"dep_actual": "05:05:00",
+				"arr_actual": "05:07:00",
+				"dep_actual": "05:07:15",
 				"line": "t1"
 			}
 		]
@@ -918,8 +948,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:08:45",
-				"dep_actual": "05:08:45",
+				"arr_actual": "05:03:00",
+				"dep_actual": "05:03:15",
+				"spawn_time": "05:08:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -931,8 +962,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:12:00",
-				"dep_actual": "05:12:00",
+				"arr_actual": "05:13:00",
+				"dep_actual": "05:13:15",
 				"line": "t2"
 			}
 		]
@@ -948,8 +979,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:14:45",
-				"dep_actual": "05:14:45",
+				"arr_actual": "05:12:00",
+				"dep_actual": "05:12:15",
+				"spawn_time": "05:14:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -961,8 +993,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:18:00",
-				"dep_actual": "05:18:00",
+				"arr_actual": "05:20:00",
+				"dep_actual": "05:20:15",
 				"line": "t1"
 			}
 		]
@@ -978,8 +1010,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:14:45",
-				"dep_actual": "05:14:45",
+				"arr_actual": "05:09:00",
+				"dep_actual": "05:09:15",
+				"spawn_time": "05:14:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -991,8 +1024,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:18:00",
-				"dep_actual": "05:18:00",
+				"arr_actual": "05:19:00",
+				"dep_actual": "05:19:15",
 				"line": "t2"
 			}
 		]
@@ -1004,12 +1037,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Kampung Bandan",
 		"trainType": "freight",
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:17:45",
-				"dep_actual": "05:17:45",
+				"arr_actual": "04:54:00",
+				"dep_actual": "04:54:00",
+				"spawn_time": "05:17:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -1021,8 +1055,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:31:00",
-				"dep_actual": "05:31:00",
+				"arr_actual": "05:42:00",
+				"dep_actual": "05:42:00",
 				"line": "t4"
 			}
 		]
@@ -1034,12 +1068,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:19:45",
-				"dep_actual": "05:19:45",
+				"arr_actual": "05:06:00",
+				"dep_actual": "05:08:00",
+				"spawn_time": "05:19:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -1051,8 +1086,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:24:00",
-				"dep_actual": "05:24:00",
+				"arr_actual": "05:33:00",
+				"dep_actual": "05:33:00",
 				"line": "t4"
 			}
 		]
@@ -1068,8 +1103,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:20:45",
-				"dep_actual": "05:20:45",
+				"arr_actual": "05:18:00",
+				"dep_actual": "05:18:15",
+				"spawn_time": "05:20:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -1081,8 +1117,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:24:00",
-				"dep_actual": "05:24:00",
+				"arr_actual": "05:26:00",
+				"dep_actual": "05:26:15",
 				"line": "t1"
 			}
 		]
@@ -1098,8 +1134,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:23:45",
-				"dep_actual": "05:23:45",
+				"arr_actual": "05:19:00",
+				"dep_actual": "05:19:15",
+				"spawn_time": "05:23:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -1111,8 +1148,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:27:00",
-				"dep_actual": "05:27:00",
+				"arr_actual": "05:28:00",
+				"dep_actual": "05:28:15",
 				"line": "t2"
 			}
 		]
@@ -1128,8 +1165,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:26:45",
-				"dep_actual": "05:26:45",
+				"arr_actual": "05:24:00",
+				"dep_actual": "05:24:15",
+				"spawn_time": "05:26:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -1141,8 +1179,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:30:00",
-				"dep_actual": "05:30:00",
+				"arr_actual": "05:33:00",
+				"dep_actual": "05:33:15",
 				"line": "t1"
 			}
 		]
@@ -1154,12 +1192,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:26:45",
-				"dep_actual": "05:26:45",
+				"arr_actual": "05:16:00",
+				"dep_actual": "05:16:00",
+				"spawn_time": "05:26:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -1171,8 +1210,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:31:00",
-				"dep_actual": "05:31:00",
+				"arr_actual": "05:35:00",
+				"dep_actual": "05:35:00",
 				"line": "t4"
 			}
 		]
@@ -1188,8 +1227,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:31:45",
-				"dep_actual": "05:31:45",
+				"arr_actual": "05:26:00",
+				"dep_actual": "05:26:15",
+				"spawn_time": "05:31:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -1201,8 +1241,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:35:00",
-				"dep_actual": "05:35:00",
+				"arr_actual": "05:36:00",
+				"dep_actual": "05:36:15",
 				"line": "t2"
 			}
 		]
@@ -1218,8 +1258,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:33:45",
-				"dep_actual": "05:33:45",
+				"arr_actual": "05:31:00",
+				"dep_actual": "05:31:15",
+				"spawn_time": "05:33:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -1231,8 +1272,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:37:00",
-				"dep_actual": "05:37:00",
+				"arr_actual": "05:40:00",
+				"dep_actual": "05:40:15",
 				"line": "t1"
 			}
 		]
@@ -1244,12 +1285,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:35:45",
-				"dep_actual": "05:35:45",
+				"arr_actual": "05:23:00",
+				"dep_actual": "05:25:00",
+				"spawn_time": "05:35:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -1261,8 +1303,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:40:00",
-				"dep_actual": "05:40:00",
+				"arr_actual": "05:51:00",
+				"dep_actual": "05:51:00",
 				"line": "t4"
 			}
 		]
@@ -1278,8 +1320,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:37:45",
-				"dep_actual": "05:37:45",
+				"arr_actual": "05:34:00",
+				"dep_actual": "05:34:15",
+				"spawn_time": "05:37:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -1291,8 +1334,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:41:00",
-				"dep_actual": "05:41:00",
+				"arr_actual": "05:43:00",
+				"dep_actual": "05:43:15",
 				"line": "t6"
 			}
 		]
@@ -1308,8 +1351,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:42:45",
-				"dep_actual": "05:42:45",
+				"arr_actual": "05:36:00",
+				"dep_actual": "05:36:15",
+				"spawn_time": "05:42:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -1321,8 +1365,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:46:00",
-				"dep_actual": "05:46:00",
+				"arr_actual": "05:47:00",
+				"dep_actual": "05:47:15",
 				"line": "t2"
 			}
 		]
@@ -1338,8 +1382,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:44:45",
-				"dep_actual": "05:44:45",
+				"arr_actual": "05:43:00",
+				"dep_actual": "05:43:15",
+				"spawn_time": "05:44:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -1351,8 +1396,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:48:00",
-				"dep_actual": "05:48:00",
+				"arr_actual": "05:51:00",
+				"dep_actual": "05:51:15",
 				"line": "t1"
 			}
 		]
@@ -1368,8 +1413,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:48:45",
-				"dep_actual": "05:48:45",
+				"arr_actual": "05:43:00",
+				"dep_actual": "05:43:15",
+				"spawn_time": "05:48:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -1381,8 +1427,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:52:00",
-				"dep_actual": "05:52:00",
+				"arr_actual": "05:53:00",
+				"dep_actual": "05:53:15",
 				"line": "t2"
 			}
 		]
@@ -1393,13 +1439,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Solo Balapan",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:48:45",
-				"dep_actual": "05:48:45",
+				"arr_actual": "05:40:00",
+				"dep_actual": "05:40:00",
+				"spawn_time": "05:48:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -1411,8 +1458,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:53:00",
-				"dep_actual": "05:53:00",
+				"arr_actual": "06:03:00",
+				"dep_actual": "06:05:00",
 				"line": "t6"
 			}
 		]
@@ -1428,8 +1475,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:53:45",
-				"dep_actual": "05:53:45",
+				"arr_actual": "05:47:00",
+				"dep_actual": "05:47:15",
+				"spawn_time": "05:53:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -1441,8 +1489,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:57:00",
-				"dep_actual": "05:57:00",
+				"arr_actual": "05:58:00",
+				"dep_actual": "05:58:15",
 				"line": "t2"
 			}
 		]
@@ -1458,8 +1506,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:53:45",
-				"dep_actual": "05:53:45",
+				"arr_actual": "05:50:00",
+				"dep_actual": "05:50:15",
+				"spawn_time": "05:53:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -1471,8 +1520,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "05:57:00",
-				"dep_actual": "05:57:00",
+				"arr_actual": "05:59:00",
+				"dep_actual": "05:59:15",
 				"line": "t6"
 			}
 		]
@@ -1488,8 +1537,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "05:57:45",
-				"dep_actual": "05:57:45",
+				"arr_actual": "05:54:00",
+				"dep_actual": "05:54:15",
+				"spawn_time": "05:57:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -1501,8 +1551,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:01:00",
-				"dep_actual": "06:01:00",
+				"arr_actual": "06:04:00",
+				"dep_actual": "06:04:15",
 				"line": "t1"
 			}
 		]
@@ -1518,8 +1568,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:01:45",
-				"dep_actual": "06:01:45",
+				"arr_actual": "05:55:00",
+				"dep_actual": "05:55:15",
+				"spawn_time": "06:01:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -1531,8 +1582,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:05:00",
-				"dep_actual": "06:05:00",
+				"arr_actual": "06:06:00",
+				"dep_actual": "06:06:15",
 				"line": "t2"
 			}
 		]
@@ -1548,8 +1599,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:02:45",
-				"dep_actual": "06:02:45",
+				"arr_actual": "06:00:00",
+				"dep_actual": "06:00:15",
+				"spawn_time": "06:02:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -1561,8 +1613,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:06:00",
-				"dep_actual": "06:06:00",
+				"arr_actual": "06:09:00",
+				"dep_actual": "06:09:15",
 				"line": "t1"
 			}
 		]
@@ -1578,8 +1630,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:07:45",
-				"dep_actual": "06:07:45",
+				"arr_actual": "06:05:00",
+				"dep_actual": "06:05:15",
+				"spawn_time": "06:07:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -1591,8 +1644,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:11:00",
-				"dep_actual": "06:11:00",
+				"arr_actual": "06:13:00",
+				"dep_actual": "06:13:15",
 				"line": "t1"
 			}
 		]
@@ -1608,8 +1661,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:07:45",
-				"dep_actual": "06:07:45",
+				"arr_actual": "06:02:00",
+				"dep_actual": "06:02:15",
+				"spawn_time": "06:07:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -1621,8 +1675,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:11:00",
-				"dep_actual": "06:11:00",
+				"arr_actual": "06:12:00",
+				"dep_actual": "06:12:15",
 				"line": "t2"
 			}
 		]
@@ -1633,13 +1687,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Semarang Tawang",
 		"trainType": null,
-		"neighborBefore": "Matraman",
+		"neighborBefore": "Manggarai",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:12:45",
-				"dep_actual": "06:12:45",
+				"arr_actual": "06:09:00",
+				"dep_actual": "06:09:00",
+				"spawn_time": "06:12:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -1651,8 +1706,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:17:00",
-				"dep_actual": "06:17:00",
+				"arr_actual": "06:27:00",
+				"dep_actual": "06:29:00",
 				"line": "t1"
 			}
 		]
@@ -1664,12 +1719,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:14:45",
-				"dep_actual": "06:14:45",
+				"arr_actual": "06:01:00",
+				"dep_actual": "06:03:00",
+				"spawn_time": "06:14:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -1681,8 +1737,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:19:00",
-				"dep_actual": "06:19:00",
+				"arr_actual": "06:24:00",
+				"dep_actual": "06:24:00",
 				"line": "t4"
 			}
 		]
@@ -1698,8 +1754,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:16:45",
-				"dep_actual": "06:16:45",
+				"arr_actual": "06:11:00",
+				"dep_actual": "06:11:15",
+				"spawn_time": "06:16:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -1711,8 +1768,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:20:00",
-				"dep_actual": "06:20:00",
+				"arr_actual": "06:22:00",
+				"dep_actual": "06:22:15",
 				"line": "t6"
 			}
 		]
@@ -1728,8 +1785,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:20:45",
-				"dep_actual": "06:20:45",
+				"arr_actual": "06:10:00",
+				"dep_actual": "06:10:15",
+				"spawn_time": "06:20:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -1741,8 +1799,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:24:00",
-				"dep_actual": "06:24:00",
+				"arr_actual": "06:25:00",
+				"dep_actual": "06:25:15",
 				"line": "t2"
 			}
 		]
@@ -1758,8 +1816,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:21:45",
-				"dep_actual": "06:21:45",
+				"arr_actual": "06:18:00",
+				"dep_actual": "06:18:15",
+				"spawn_time": "06:21:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -1771,8 +1830,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:25:00",
-				"dep_actual": "06:25:00",
+				"arr_actual": "06:26:00",
+				"dep_actual": "06:26:15",
 				"line": "t2"
 			}
 		]
@@ -1788,8 +1847,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:27:45",
-				"dep_actual": "06:27:45",
+				"arr_actual": "06:23:00",
+				"dep_actual": "06:23:15",
+				"spawn_time": "06:27:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -1801,8 +1861,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:31:00",
-				"dep_actual": "06:31:00",
+				"arr_actual": "06:32:00",
+				"dep_actual": "06:32:15",
 				"line": "t2"
 			}
 		]
@@ -1818,8 +1878,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:27:45",
-				"dep_actual": "06:27:45",
+				"arr_actual": "06:25:00",
+				"dep_actual": "06:25:15",
+				"spawn_time": "06:27:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -1831,8 +1892,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:31:00",
-				"dep_actual": "06:31:00",
+				"arr_actual": "06:34:00",
+				"dep_actual": "06:34:15",
 				"line": "t1"
 			}
 		]
@@ -1844,12 +1905,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:29:45",
-				"dep_actual": "06:29:45",
+				"arr_actual": "06:17:00",
+				"dep_actual": "06:19:00",
+				"spawn_time": "06:29:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -1861,8 +1923,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:34:00",
-				"dep_actual": "06:34:00",
+				"arr_actual": "06:43:00",
+				"dep_actual": "06:43:00",
 				"line": "t4"
 			}
 		]
@@ -1878,8 +1940,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:34:45",
-				"dep_actual": "06:34:45",
+				"arr_actual": "06:28:00",
+				"dep_actual": "06:28:15",
+				"spawn_time": "06:34:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -1891,8 +1954,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:38:00",
-				"dep_actual": "06:38:00",
+				"arr_actual": "06:39:00",
+				"dep_actual": "06:39:15",
 				"line": "t2"
 			}
 		]
@@ -1908,8 +1971,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:34:45",
-				"dep_actual": "06:34:45",
+				"arr_actual": "06:29:00",
+				"dep_actual": "06:29:15",
+				"spawn_time": "06:34:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -1921,8 +1985,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:38:00",
-				"dep_actual": "06:38:00",
+				"arr_actual": "06:40:00",
+				"dep_actual": "06:40:15",
 				"line": "t6"
 			}
 		]
@@ -1933,13 +1997,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Kutoarjo",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:38:45",
-				"dep_actual": "06:38:45",
+				"arr_actual": "06:30:00",
+				"dep_actual": "06:30:00",
+				"spawn_time": "06:38:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -1951,8 +2016,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:43:00",
-				"dep_actual": "06:43:00",
+				"arr_actual": "06:54:00",
+				"dep_actual": "06:56:00",
 				"line": "t6"
 			}
 		]
@@ -1968,8 +2033,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:40:45",
-				"dep_actual": "06:40:45",
+				"arr_actual": "06:35:00",
+				"dep_actual": "06:35:15",
+				"spawn_time": "06:40:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -1981,8 +2047,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:44:00",
-				"dep_actual": "06:44:00",
+				"arr_actual": "06:45:00",
+				"dep_actual": "06:45:15",
 				"line": "t2"
 			}
 		]
@@ -1998,8 +2064,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:41:45",
-				"dep_actual": "06:41:45",
+				"arr_actual": "06:39:00",
+				"dep_actual": "06:39:15",
+				"spawn_time": "06:41:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -2011,8 +2078,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:45:00",
-				"dep_actual": "06:45:00",
+				"arr_actual": "06:48:00",
+				"dep_actual": "06:48:15",
 				"line": "t1"
 			}
 		]
@@ -2024,12 +2091,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": "intercity",
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:46:45",
-				"dep_actual": "06:46:45",
+				"arr_actual": "06:31:00",
+				"dep_actual": "06:31:00",
+				"spawn_time": "06:46:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -2041,8 +2109,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:51:00",
-				"dep_actual": "06:51:00",
+				"arr_actual": "06:56:00",
+				"dep_actual": "06:56:00",
 				"line": "t4"
 			}
 		]
@@ -2058,8 +2126,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:48:45",
-				"dep_actual": "06:48:45",
+				"arr_actual": "06:43:00",
+				"dep_actual": "06:43:15",
+				"spawn_time": "06:48:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -2071,8 +2140,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:52:00",
-				"dep_actual": "06:52:00",
+				"arr_actual": "06:53:00",
+				"dep_actual": "06:53:15",
 				"line": "t2"
 			}
 		]
@@ -2083,13 +2152,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Garut",
 		"trainType": null,
-		"neighborBefore": "Matraman",
+		"neighborBefore": "Manggarai",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:48:45",
-				"dep_actual": "06:48:45",
+				"arr_actual": "06:44:00",
+				"dep_actual": "06:44:00",
+				"spawn_time": "06:48:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -2101,8 +2171,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:53:00",
-				"dep_actual": "06:53:00",
+				"arr_actual": "07:04:00",
+				"dep_actual": "07:06:00",
 				"line": "t1"
 			}
 		]
@@ -2118,8 +2188,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:51:45",
-				"dep_actual": "06:51:45",
+				"arr_actual": "06:47:00",
+				"dep_actual": "06:47:15",
+				"spawn_time": "06:51:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -2131,8 +2202,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:55:00",
-				"dep_actual": "06:55:00",
+				"arr_actual": "06:56:00",
+				"dep_actual": "06:56:15",
 				"line": "t2"
 			}
 		]
@@ -2148,8 +2219,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:54:45",
-				"dep_actual": "06:54:45",
+				"arr_actual": "06:52:00",
+				"dep_actual": "06:52:15",
+				"spawn_time": "06:54:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -2161,8 +2233,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:58:00",
-				"dep_actual": "06:58:00",
+				"arr_actual": "07:00:00",
+				"dep_actual": "07:00:15",
 				"line": "t1"
 			}
 		]
@@ -2173,13 +2245,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Semarang Tawang",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:54:45",
-				"dep_actual": "06:54:45",
+				"arr_actual": "06:45:00",
+				"dep_actual": "06:45:00",
+				"spawn_time": "06:54:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -2191,8 +2264,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "06:59:00",
-				"dep_actual": "06:59:00",
+				"arr_actual": "07:10:00",
+				"dep_actual": "07:12:00",
 				"line": "t6"
 			}
 		]
@@ -2208,8 +2281,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "06:58:45",
-				"dep_actual": "06:58:45",
+				"arr_actual": "06:56:00",
+				"dep_actual": "06:56:15",
+				"spawn_time": "06:58:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -2221,8 +2295,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:02:00",
-				"dep_actual": "07:02:00",
+				"arr_actual": "07:05:00",
+				"dep_actual": "07:05:15",
 				"line": "t1"
 			}
 		]
@@ -2238,8 +2312,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:00:45",
-				"dep_actual": "07:00:45",
+				"arr_actual": "06:54:00",
+				"dep_actual": "06:54:15",
+				"spawn_time": "07:00:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -2251,8 +2326,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:04:00",
-				"dep_actual": "07:04:00",
+				"arr_actual": "07:05:00",
+				"dep_actual": "07:05:15",
 				"line": "t2"
 			}
 		]
@@ -2268,8 +2343,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:03:45",
-				"dep_actual": "07:03:45",
+				"arr_actual": "07:01:00",
+				"dep_actual": "07:01:15",
+				"spawn_time": "07:03:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -2281,8 +2357,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:07:00",
-				"dep_actual": "07:07:00",
+				"arr_actual": "07:10:00",
+				"dep_actual": "07:10:15",
 				"line": "t1"
 			}
 		]
@@ -2298,8 +2374,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:05:45",
-				"dep_actual": "07:05:45",
+				"arr_actual": "07:00:00",
+				"dep_actual": "07:00:15",
+				"spawn_time": "07:05:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -2311,8 +2388,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:09:00",
-				"dep_actual": "07:09:00",
+				"arr_actual": "07:10:00",
+				"dep_actual": "07:10:15",
 				"line": "t2"
 			}
 		]
@@ -2328,8 +2405,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:07:45",
-				"dep_actual": "07:07:45",
+				"arr_actual": "07:00:00",
+				"dep_actual": "07:00:15",
+				"spawn_time": "07:07:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -2341,8 +2419,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:11:00",
-				"dep_actual": "07:11:00",
+				"arr_actual": "07:13:00",
+				"dep_actual": "07:13:15",
 				"line": "t6"
 			}
 		]
@@ -2358,8 +2436,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:14:45",
-				"dep_actual": "07:14:45",
+				"arr_actual": "07:07:00",
+				"dep_actual": "07:07:15",
+				"spawn_time": "07:14:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -2371,8 +2450,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:18:00",
-				"dep_actual": "07:18:00",
+				"arr_actual": "07:19:00",
+				"dep_actual": "07:19:15",
 				"line": "t2"
 			}
 		]
@@ -2388,8 +2467,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:17:45",
-				"dep_actual": "07:17:45",
+				"arr_actual": "07:15:00",
+				"dep_actual": "07:15:15",
+				"spawn_time": "07:17:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -2401,8 +2481,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:21:00",
-				"dep_actual": "07:21:00",
+				"arr_actual": "07:22:00",
+				"dep_actual": "07:22:15",
 				"line": "t2"
 			}
 		]
@@ -2418,8 +2498,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:18:45",
-				"dep_actual": "07:18:45",
+				"arr_actual": "07:16:00",
+				"dep_actual": "07:16:15",
+				"spawn_time": "07:18:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -2431,8 +2512,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:22:00",
-				"dep_actual": "07:22:00",
+				"arr_actual": "07:25:00",
+				"dep_actual": "07:25:15",
 				"line": "t1"
 			}
 		]
@@ -2444,12 +2525,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": "local",
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:20:45",
-				"dep_actual": "07:20:45",
+				"arr_actual": "07:07:00",
+				"dep_actual": "07:09:00",
+				"spawn_time": "07:20:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -2461,8 +2543,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:25:00",
-				"dep_actual": "07:25:00",
+				"arr_actual": "07:34:00",
+				"dep_actual": "07:34:00",
 				"line": "t4"
 			}
 		]
@@ -2478,8 +2560,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:21:45",
-				"dep_actual": "07:21:45",
+				"arr_actual": "07:18:00",
+				"dep_actual": "07:18:15",
+				"spawn_time": "07:21:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -2491,8 +2574,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:25:00",
-				"dep_actual": "07:25:00",
+				"arr_actual": "07:26:00",
+				"dep_actual": "07:26:15",
 				"line": "t2"
 			}
 		]
@@ -2508,8 +2591,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:23:45",
-				"dep_actual": "07:23:45",
+				"arr_actual": "07:21:00",
+				"dep_actual": "07:21:15",
+				"spawn_time": "07:23:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -2521,8 +2605,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:27:00",
-				"dep_actual": "07:27:00",
+				"arr_actual": "07:30:00",
+				"dep_actual": "07:30:15",
 				"line": "t1"
 			}
 		]
@@ -2533,13 +2617,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Semarang Tawang",
 		"trainType": "intercity",
-		"neighborBefore": "Matraman",
+		"neighborBefore": "Manggarai",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:28:45",
-				"dep_actual": "07:28:45",
+				"arr_actual": "07:24:00",
+				"dep_actual": "07:24:00",
+				"spawn_time": "07:28:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -2551,8 +2636,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:33:00",
-				"dep_actual": "07:33:00",
+				"arr_actual": "07:43:00",
+				"dep_actual": "07:45:00",
 				"line": "t1"
 			}
 		]
@@ -2568,8 +2653,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:30:45",
-				"dep_actual": "07:30:45",
+				"arr_actual": "07:25:00",
+				"dep_actual": "07:25:15",
+				"spawn_time": "07:30:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -2581,8 +2667,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:34:00",
-				"dep_actual": "07:34:00",
+				"arr_actual": "07:35:00",
+				"dep_actual": "07:35:15",
 				"line": "t2"
 			}
 		]
@@ -2594,12 +2680,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:30:45",
-				"dep_actual": "07:30:45",
+				"arr_actual": "07:21:00",
+				"dep_actual": "07:21:00",
+				"spawn_time": "07:30:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -2611,8 +2698,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:35:00",
-				"dep_actual": "07:35:00",
+				"arr_actual": "07:44:00",
+				"dep_actual": "07:44:00",
 				"line": "t4"
 			}
 		]
@@ -2628,8 +2715,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:32:45",
-				"dep_actual": "07:32:45",
+				"arr_actual": "07:25:00",
+				"dep_actual": "07:25:15",
+				"spawn_time": "07:32:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -2641,8 +2729,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:36:00",
-				"dep_actual": "07:36:00",
+				"arr_actual": "07:38:00",
+				"dep_actual": "07:38:15",
 				"line": "t6"
 			}
 		]
@@ -2658,8 +2746,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:37:45",
-				"dep_actual": "07:37:45",
+				"arr_actual": "07:34:00",
+				"dep_actual": "07:34:15",
+				"spawn_time": "07:37:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -2671,8 +2760,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:41:00",
-				"dep_actual": "07:41:00",
+				"arr_actual": "07:42:00",
+				"dep_actual": "07:42:15",
 				"line": "t2"
 			}
 		]
@@ -2688,8 +2777,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:39:45",
-				"dep_actual": "07:39:45",
+				"arr_actual": "07:34:00",
+				"dep_actual": "07:34:15",
+				"spawn_time": "07:39:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -2701,8 +2791,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:43:00",
-				"dep_actual": "07:43:00",
+				"arr_actual": "07:46:00",
+				"dep_actual": "07:46:15",
 				"line": "t1"
 			}
 		]
@@ -2714,12 +2804,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:43:45",
-				"dep_actual": "07:43:45",
+				"arr_actual": "07:32:00",
+				"dep_actual": "07:34:00",
+				"spawn_time": "07:43:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -2731,8 +2822,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:49:00",
-				"dep_actual": "07:49:00",
+				"arr_actual": "07:52:00",
+				"dep_actual": "07:52:00",
 				"line": "t4"
 			}
 		]
@@ -2748,8 +2839,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:47:45",
-				"dep_actual": "07:47:45",
+				"arr_actual": "07:41:00",
+				"dep_actual": "07:41:15",
+				"spawn_time": "07:47:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -2761,8 +2853,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:51:00",
-				"dep_actual": "07:51:00",
+				"arr_actual": "07:52:00",
+				"dep_actual": "07:52:15",
 				"line": "t2"
 			}
 		]
@@ -2778,8 +2870,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:51:45",
-				"dep_actual": "07:51:45",
+				"arr_actual": "07:50:00",
+				"dep_actual": "07:50:15",
+				"spawn_time": "07:51:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -2791,8 +2884,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:55:00",
-				"dep_actual": "07:55:00",
+				"arr_actual": "07:56:00",
+				"dep_actual": "07:56:15",
 				"line": "t1"
 			}
 		]
@@ -2808,8 +2901,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:52:45",
-				"dep_actual": "07:52:45",
+				"arr_actual": "07:47:00",
+				"dep_actual": "07:47:15",
+				"spawn_time": "07:52:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -2821,8 +2915,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:56:00",
-				"dep_actual": "07:56:00",
+				"arr_actual": "07:57:00",
+				"dep_actual": "07:57:15",
 				"line": "t2"
 			}
 		]
@@ -2838,8 +2932,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:52:45",
-				"dep_actual": "07:52:45",
+				"arr_actual": "07:45:00",
+				"dep_actual": "07:45:15",
+				"spawn_time": "07:52:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -2851,8 +2946,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:56:00",
-				"dep_actual": "07:56:00",
+				"arr_actual": "07:59:00",
+				"dep_actual": "07:59:15",
 				"line": "t6"
 			}
 		]
@@ -2864,12 +2959,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": "intercity",
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "07:53:45",
-				"dep_actual": "07:53:45",
+				"arr_actual": "07:40:00",
+				"dep_actual": "07:42:00",
+				"spawn_time": "07:53:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -2887,8 +2983,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:58:00",
-				"dep_actual": "07:58:00",
+				"arr_actual": "08:03:00",
+				"dep_actual": "08:03:00",
 				"line": "t4"
 			}
 		]
@@ -2904,8 +3000,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "07:58:45",
-				"dep_actual": "07:58:45",
+				"arr_actual": "07:51:00",
+				"dep_actual": "07:51:15",
+				"spawn_time": "07:58:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -2917,8 +3014,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:02:00",
-				"dep_actual": "08:02:00",
+				"arr_actual": "08:05:00",
+				"dep_actual": "08:05:15",
 				"line": "t1"
 			}
 		]
@@ -2934,8 +3031,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:02:45",
-				"dep_actual": "08:02:45",
+				"arr_actual": "07:55:00",
+				"dep_actual": "07:55:15",
+				"spawn_time": "08:02:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -2947,8 +3045,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:06:00",
-				"dep_actual": "08:06:00",
+				"arr_actual": "08:07:00",
+				"dep_actual": "08:07:15",
 				"line": "t2"
 			}
 		]
@@ -2960,12 +3058,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:02:45",
-				"dep_actual": "08:02:45",
+				"arr_actual": "07:49:00",
+				"dep_actual": "07:51:00",
+				"spawn_time": "08:02:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -2977,8 +3076,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:07:00",
-				"dep_actual": "08:07:00",
+				"arr_actual": "08:16:00",
+				"dep_actual": "08:16:00",
 				"line": "t4"
 			}
 		]
@@ -2989,13 +3088,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Lempuyangan",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:03:45",
-				"dep_actual": "08:03:45",
+				"arr_actual": "07:55:00",
+				"dep_actual": "07:55:00",
+				"spawn_time": "08:03:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -3007,8 +3107,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:08:00",
-				"dep_actual": "08:08:00",
+				"arr_actual": "08:21:00",
+				"dep_actual": "08:23:00",
 				"line": "t6"
 			}
 		]
@@ -3024,8 +3124,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:04:45",
-				"dep_actual": "08:04:45",
+				"arr_actual": "08:01:00",
+				"dep_actual": "08:01:15",
+				"spawn_time": "08:04:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -3037,8 +3138,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:08:00",
-				"dep_actual": "08:08:00",
+				"arr_actual": "08:11:00",
+				"dep_actual": "08:11:15",
 				"line": "t1"
 			}
 		]
@@ -3050,12 +3151,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:09:45",
-				"dep_actual": "08:09:45",
+				"arr_actual": "07:58:00",
+				"dep_actual": "08:00:00",
+				"spawn_time": "08:09:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -3067,8 +3169,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:14:00",
-				"dep_actual": "08:14:00",
+				"arr_actual": "08:18:00",
+				"dep_actual": "08:18:00",
 				"line": "t4"
 			}
 		]
@@ -3084,8 +3186,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:10:45",
-				"dep_actual": "08:10:45",
+				"arr_actual": "08:06:00",
+				"dep_actual": "08:06:15",
+				"spawn_time": "08:10:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -3097,8 +3200,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:14:00",
-				"dep_actual": "08:14:00",
+				"arr_actual": "08:16:00",
+				"dep_actual": "08:16:15",
 				"line": "t6"
 			}
 		]
@@ -3114,8 +3217,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:14:45",
-				"dep_actual": "08:14:45",
+				"arr_actual": "08:02:00",
+				"dep_actual": "08:02:15",
+				"spawn_time": "08:14:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -3127,8 +3231,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:18:00",
-				"dep_actual": "08:18:00",
+				"arr_actual": "08:19:00",
+				"dep_actual": "08:19:15",
 				"line": "t2"
 			}
 		]
@@ -3144,8 +3248,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:17:45",
-				"dep_actual": "08:17:45",
+				"arr_actual": "08:11:00",
+				"dep_actual": "08:11:15",
+				"spawn_time": "08:17:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -3157,8 +3262,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:21:00",
-				"dep_actual": "08:21:00",
+				"arr_actual": "08:22:00",
+				"dep_actual": "08:22:15",
 				"line": "t2"
 			}
 		]
@@ -3169,13 +3274,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Surabaya Pasarturi",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:17:45",
-				"dep_actual": "08:17:45",
+				"arr_actual": "08:10:00",
+				"dep_actual": "08:10:00",
+				"spawn_time": "08:17:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -3187,8 +3293,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:22:00",
-				"dep_actual": "08:22:00",
+				"arr_actual": "08:33:00",
+				"dep_actual": "08:35:00",
 				"line": "t6"
 			}
 		]
@@ -3204,8 +3310,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:20:45",
-				"dep_actual": "08:20:45",
+				"arr_actual": "08:16:00",
+				"dep_actual": "08:16:15",
+				"spawn_time": "08:20:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -3217,8 +3324,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:24:00",
-				"dep_actual": "08:24:00",
+				"arr_actual": "08:27:00",
+				"dep_actual": "08:27:15",
 				"line": "t1"
 			}
 		]
@@ -3234,8 +3341,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:21:45",
-				"dep_actual": "08:21:45",
+				"arr_actual": "08:16:00",
+				"dep_actual": "08:16:15",
+				"spawn_time": "08:21:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -3247,8 +3355,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:25:00",
-				"dep_actual": "08:25:00",
+				"arr_actual": "08:26:00",
+				"dep_actual": "08:26:15",
 				"line": "t2"
 			}
 		]
@@ -3264,8 +3372,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:27:45",
-				"dep_actual": "08:27:45",
+				"arr_actual": "08:25:00",
+				"dep_actual": "08:25:15",
+				"spawn_time": "08:27:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -3277,8 +3386,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:31:00",
-				"dep_actual": "08:31:00",
+				"arr_actual": "08:34:00",
+				"dep_actual": "08:34:15",
 				"line": "t1"
 			}
 		]
@@ -3294,8 +3403,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:32:45",
-				"dep_actual": "08:32:45",
+				"arr_actual": "08:27:00",
+				"dep_actual": "08:27:15",
+				"spawn_time": "08:32:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -3307,8 +3417,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:36:00",
-				"dep_actual": "08:36:00",
+				"arr_actual": "08:37:00",
+				"dep_actual": "08:37:15",
 				"line": "t2"
 			}
 		]
@@ -3324,8 +3434,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:36:45",
-				"dep_actual": "08:36:45",
+				"arr_actual": "08:29:00",
+				"dep_actual": "08:29:15",
+				"spawn_time": "08:36:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -3337,8 +3448,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:40:00",
-				"dep_actual": "08:40:00",
+				"arr_actual": "08:42:00",
+				"dep_actual": "08:42:15",
 				"line": "t6"
 			}
 		]
@@ -3354,8 +3465,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:36:45",
-				"dep_actual": "08:36:45",
+				"arr_actual": "08:34:00",
+				"dep_actual": "08:34:15",
+				"spawn_time": "08:36:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -3367,8 +3479,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:40:00",
-				"dep_actual": "08:40:00",
+				"arr_actual": "08:41:00",
+				"dep_actual": "08:41:15",
 				"line": "t2"
 			}
 		]
@@ -3379,13 +3491,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Banjar",
 		"trainType": null,
-		"neighborBefore": "Matraman",
+		"neighborBefore": "Manggarai",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:42:45",
-				"dep_actual": "08:42:45",
+				"arr_actual": "08:39:00",
+				"dep_actual": "08:39:00",
+				"spawn_time": "08:42:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -3397,8 +3510,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:47:00",
-				"dep_actual": "08:47:00",
+				"arr_actual": "08:57:00",
+				"dep_actual": "08:59:00",
 				"line": "t1"
 			}
 		]
@@ -3414,8 +3527,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:43:45",
-				"dep_actual": "08:43:45",
+				"arr_actual": "08:38:00",
+				"dep_actual": "08:38:15",
+				"spawn_time": "08:43:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -3427,8 +3541,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:47:00",
-				"dep_actual": "08:47:00",
+				"arr_actual": "08:48:00",
+				"dep_actual": "08:48:15",
 				"line": "t2"
 			}
 		]
@@ -3444,8 +3558,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:45:45",
-				"dep_actual": "08:45:45",
+				"arr_actual": "08:44:00",
+				"dep_actual": "08:44:15",
+				"spawn_time": "08:45:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -3457,8 +3572,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:49:00",
-				"dep_actual": "08:49:00",
+				"arr_actual": "08:50:00",
+				"dep_actual": "08:50:15",
 				"line": "t1"
 			}
 		]
@@ -3470,12 +3585,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:48:45",
-				"dep_actual": "08:48:45",
+				"arr_actual": "08:35:00",
+				"dep_actual": "08:37:00",
+				"spawn_time": "08:48:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -3487,8 +3603,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:53:00",
-				"dep_actual": "08:53:00",
+				"arr_actual": "09:03:00",
+				"dep_actual": "09:03:00",
 				"line": "t4"
 			}
 		]
@@ -3504,8 +3620,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:49:45",
-				"dep_actual": "08:49:45",
+				"arr_actual": "08:47:00",
+				"dep_actual": "08:47:15",
+				"spawn_time": "08:49:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -3517,8 +3634,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:53:00",
-				"dep_actual": "08:53:00",
+				"arr_actual": "08:56:00",
+				"dep_actual": "08:56:15",
 				"line": "t1"
 			}
 		]
@@ -3534,8 +3651,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "08:51:45",
-				"dep_actual": "08:51:45",
+				"arr_actual": "08:45:00",
+				"dep_actual": "08:45:15",
+				"spawn_time": "08:51:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -3547,8 +3665,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:55:00",
-				"dep_actual": "08:55:00",
+				"arr_actual": "08:56:00",
+				"dep_actual": "08:56:15",
 				"line": "t2"
 			}
 		]
@@ -3564,8 +3682,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "08:57:45",
-				"dep_actual": "08:57:45",
+				"arr_actual": "08:56:00",
+				"dep_actual": "08:56:15",
+				"spawn_time": "08:57:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -3577,8 +3696,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:01:00",
-				"dep_actual": "09:01:00",
+				"arr_actual": "09:04:00",
+				"dep_actual": "09:04:15",
 				"line": "t1"
 			}
 		]
@@ -3589,13 +3708,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Kampung Bandan",
 		"destination": "Jatinegara",
 		"trainType": "kirim_rangkaian",
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": null,
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:00:45",
-				"dep_actual": "09:00:45",
+				"arr_actual": "08:52:00",
+				"dep_actual": "08:52:00",
+				"spawn_time": "09:00:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -3624,8 +3744,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:02:45",
-				"dep_actual": "09:02:45",
+				"arr_actual": "08:57:00",
+				"dep_actual": "08:57:15",
+				"spawn_time": "09:02:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -3637,8 +3758,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:06:00",
-				"dep_actual": "09:06:00",
+				"arr_actual": "09:07:00",
+				"dep_actual": "09:07:15",
 				"line": "t2"
 			}
 		]
@@ -3649,13 +3770,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Purwosari",
 		"trainType": "local",
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:04:45",
-				"dep_actual": "09:04:45",
+				"arr_actual": "08:55:00",
+				"dep_actual": "08:55:00",
+				"spawn_time": "09:04:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -3667,8 +3789,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:09:00",
-				"dep_actual": "09:09:00",
+				"arr_actual": "09:20:00",
+				"dep_actual": "09:22:00",
 				"line": "t6"
 			}
 		]
@@ -3680,12 +3802,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:06:45",
-				"dep_actual": "09:06:45",
+				"arr_actual": "08:53:00",
+				"dep_actual": "08:55:00",
+				"spawn_time": "09:06:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -3697,8 +3820,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:11:00",
-				"dep_actual": "09:11:00",
+				"arr_actual": "09:20:00",
+				"dep_actual": "09:20:00",
 				"line": "t4"
 			}
 		]
@@ -3714,8 +3837,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:07:45",
-				"dep_actual": "09:07:45",
+				"arr_actual": "09:02:00",
+				"dep_actual": "09:02:15",
+				"spawn_time": "09:07:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -3727,8 +3851,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:11:00",
-				"dep_actual": "09:11:00",
+				"arr_actual": "09:12:00",
+				"dep_actual": "09:12:15",
 				"line": "t2"
 			}
 		]
@@ -3744,8 +3868,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:08:45",
-				"dep_actual": "09:08:45",
+				"arr_actual": "09:04:00",
+				"dep_actual": "09:04:15",
+				"spawn_time": "09:08:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -3757,8 +3882,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:12:00",
-				"dep_actual": "09:12:00",
+				"arr_actual": "09:14:00",
+				"dep_actual": "09:14:15",
 				"line": "t6"
 			}
 		]
@@ -3774,8 +3899,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:17:45",
-				"dep_actual": "09:17:45",
+				"arr_actual": "09:15:00",
+				"dep_actual": "09:15:15",
+				"spawn_time": "09:17:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -3787,8 +3913,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:21:00",
-				"dep_actual": "09:21:00",
+				"arr_actual": "09:22:00",
+				"dep_actual": "09:22:15",
 				"line": "t2"
 			}
 		]
@@ -3804,8 +3930,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:19:45",
-				"dep_actual": "09:19:45",
+				"arr_actual": "09:17:00",
+				"dep_actual": "09:17:15",
+				"spawn_time": "09:19:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -3817,8 +3944,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:23:00",
-				"dep_actual": "09:23:00",
+				"arr_actual": "09:26:00",
+				"dep_actual": "09:26:15",
 				"line": "t1"
 			}
 		]
@@ -3830,12 +3957,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:22:45",
-				"dep_actual": "09:22:45",
+				"arr_actual": "09:11:00",
+				"dep_actual": "09:13:00",
+				"spawn_time": "09:22:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -3847,8 +3975,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:27:00",
-				"dep_actual": "09:27:00",
+				"arr_actual": "09:31:00",
+				"dep_actual": "09:31:00",
 				"line": "t4"
 			}
 		]
@@ -3864,8 +3992,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:26:45",
-				"dep_actual": "09:26:45",
+				"arr_actual": "09:23:00",
+				"dep_actual": "09:23:15",
+				"spawn_time": "09:26:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -3877,8 +4006,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:30:00",
-				"dep_actual": "09:30:00",
+				"arr_actual": "09:33:00",
+				"dep_actual": "09:33:15",
 				"line": "t6"
 			}
 		]
@@ -3894,8 +4023,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:28:45",
-				"dep_actual": "09:28:45",
+				"arr_actual": "09:20:00",
+				"dep_actual": "09:20:15",
+				"spawn_time": "09:28:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -3907,8 +4037,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:32:00",
-				"dep_actual": "09:32:00",
+				"arr_actual": "09:33:00",
+				"dep_actual": "09:33:15",
 				"line": "t2"
 			}
 		]
@@ -3919,13 +4049,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Bandung",
 		"trainType": null,
-		"neighborBefore": "Matraman",
+		"neighborBefore": "Manggarai",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:28:45",
-				"dep_actual": "09:28:45",
+				"arr_actual": "09:24:00",
+				"dep_actual": "09:24:00",
+				"spawn_time": "09:28:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -3937,8 +4068,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:33:00",
-				"dep_actual": "09:33:00",
+				"arr_actual": "09:44:00",
+				"dep_actual": "09:46:00",
 				"line": "t1"
 			}
 		]
@@ -3954,8 +4085,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:33:45",
-				"dep_actual": "09:33:45",
+				"arr_actual": "09:27:00",
+				"dep_actual": "09:27:15",
+				"spawn_time": "09:33:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -3967,8 +4099,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:37:00",
-				"dep_actual": "09:37:00",
+				"arr_actual": "09:38:00",
+				"dep_actual": "09:38:15",
 				"line": "t2"
 			}
 		]
@@ -3984,8 +4116,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:34:45",
-				"dep_actual": "09:34:45",
+				"arr_actual": "09:32:00",
+				"dep_actual": "09:32:15",
+				"spawn_time": "09:34:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -3997,8 +4130,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:38:00",
-				"dep_actual": "09:38:00",
+				"arr_actual": "09:41:00",
+				"dep_actual": "09:41:15",
 				"line": "t1"
 			}
 		]
@@ -4014,8 +4147,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:40:45",
-				"dep_actual": "09:40:45",
+				"arr_actual": "09:35:00",
+				"dep_actual": "09:35:15",
+				"spawn_time": "09:40:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4027,8 +4161,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:44:00",
-				"dep_actual": "09:44:00",
+				"arr_actual": "09:45:00",
+				"dep_actual": "09:45:15",
 				"line": "t2"
 			}
 		]
@@ -4044,8 +4178,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:40:45",
-				"dep_actual": "09:40:45",
+				"arr_actual": "09:38:00",
+				"dep_actual": "09:38:15",
+				"spawn_time": "09:40:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -4057,8 +4192,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:44:00",
-				"dep_actual": "09:44:00",
+				"arr_actual": "09:47:00",
+				"dep_actual": "09:47:15",
 				"line": "t1"
 			}
 		]
@@ -4074,8 +4209,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:45:45",
-				"dep_actual": "09:45:45",
+				"arr_actual": "09:40:00",
+				"dep_actual": "09:40:15",
+				"spawn_time": "09:45:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4087,8 +4223,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:49:00",
-				"dep_actual": "09:49:00",
+				"arr_actual": "09:50:00",
+				"dep_actual": "09:50:15",
 				"line": "t2"
 			}
 		]
@@ -4104,8 +4240,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:45:45",
-				"dep_actual": "09:45:45",
+				"arr_actual": "09:38:00",
+				"dep_actual": "09:38:15",
+				"spawn_time": "09:45:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -4117,8 +4254,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:49:00",
-				"dep_actual": "09:49:00",
+				"arr_actual": "09:51:00",
+				"dep_actual": "09:51:15",
 				"line": "t6"
 			}
 		]
@@ -4134,8 +4271,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:50:45",
-				"dep_actual": "09:50:45",
+				"arr_actual": "09:47:00",
+				"dep_actual": "09:47:15",
+				"spawn_time": "09:50:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -4147,8 +4285,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:54:00",
-				"dep_actual": "09:54:00",
+				"arr_actual": "09:57:00",
+				"dep_actual": "09:57:15",
 				"line": "t1"
 			}
 		]
@@ -4164,8 +4302,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:50:45",
-				"dep_actual": "09:50:45",
+				"arr_actual": "09:47:00",
+				"dep_actual": "09:47:15",
+				"spawn_time": "09:50:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4177,8 +4316,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:54:00",
-				"dep_actual": "09:54:00",
+				"arr_actual": "09:55:00",
+				"dep_actual": "09:55:15",
 				"line": "t2"
 			}
 		]
@@ -4194,8 +4333,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "09:55:45",
-				"dep_actual": "09:55:45",
+				"arr_actual": "09:50:00",
+				"dep_actual": "09:50:15",
+				"spawn_time": "09:55:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4207,8 +4347,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:59:00",
-				"dep_actual": "09:59:00",
+				"arr_actual": "10:00:00",
+				"dep_actual": "10:00:15",
 				"line": "t2"
 			}
 		]
@@ -4224,8 +4364,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "09:57:45",
-				"dep_actual": "09:57:45",
+				"arr_actual": "09:54:00",
+				"dep_actual": "09:54:15",
+				"spawn_time": "09:57:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -4237,8 +4378,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:01:00",
-				"dep_actual": "10:01:00",
+				"arr_actual": "10:04:00",
+				"dep_actual": "10:04:15",
 				"line": "t1"
 			}
 		]
@@ -4254,8 +4395,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:00:45",
-				"dep_actual": "10:00:45",
+				"arr_actual": "09:56:00",
+				"dep_actual": "09:56:15",
+				"spawn_time": "10:00:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4267,8 +4409,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:04:00",
-				"dep_actual": "10:04:00",
+				"arr_actual": "10:05:00",
+				"dep_actual": "10:05:15",
 				"line": "t2"
 			}
 		]
@@ -4284,8 +4426,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:06:45",
-				"dep_actual": "10:06:45",
+				"arr_actual": "10:01:00",
+				"dep_actual": "10:01:15",
+				"spawn_time": "10:06:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -4297,8 +4440,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:10:00",
-				"dep_actual": "10:10:00",
+				"arr_actual": "10:12:00",
+				"dep_actual": "10:12:15",
 				"line": "t6"
 			}
 		]
@@ -4314,8 +4457,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:11:45",
-				"dep_actual": "10:11:45",
+				"arr_actual": "10:08:00",
+				"dep_actual": "10:08:15",
+				"spawn_time": "10:11:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -4327,8 +4471,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:15:00",
-				"dep_actual": "10:15:00",
+				"arr_actual": "10:18:00",
+				"dep_actual": "10:18:15",
 				"line": "t1"
 			}
 		]
@@ -4344,8 +4488,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:12:45",
-				"dep_actual": "10:12:45",
+				"arr_actual": "10:06:00",
+				"dep_actual": "10:06:15",
+				"spawn_time": "10:12:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4357,8 +4502,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:16:00",
-				"dep_actual": "10:16:00",
+				"arr_actual": "10:17:00",
+				"dep_actual": "10:17:15",
 				"line": "t2"
 			}
 		]
@@ -4374,8 +4519,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:15:45",
-				"dep_actual": "10:15:45",
+				"arr_actual": "10:13:00",
+				"dep_actual": "10:13:15",
+				"spawn_time": "10:15:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4387,8 +4533,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:19:00",
-				"dep_actual": "10:19:00",
+				"arr_actual": "10:20:00",
+				"dep_actual": "10:20:15",
 				"line": "t2"
 			}
 		]
@@ -4399,13 +4545,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Bandung",
 		"trainType": null,
-		"neighborBefore": "Matraman",
+		"neighborBefore": "Manggarai",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:17:45",
-				"dep_actual": "10:17:45",
+				"arr_actual": "10:14:00",
+				"dep_actual": "10:14:00",
+				"spawn_time": "10:17:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -4417,8 +4564,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:22:00",
-				"dep_actual": "10:22:00",
+				"arr_actual": "10:33:00",
+				"dep_actual": "10:35:00",
 				"line": "t1"
 			}
 		]
@@ -4434,8 +4581,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:23:45",
-				"dep_actual": "10:23:45",
+				"arr_actual": "10:21:00",
+				"dep_actual": "10:21:15",
+				"spawn_time": "10:23:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -4447,8 +4595,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:27:00",
-				"dep_actual": "10:27:00",
+				"arr_actual": "10:30:00",
+				"dep_actual": "10:30:15",
 				"line": "t1"
 			}
 		]
@@ -4464,8 +4612,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:26:45",
-				"dep_actual": "10:26:45",
+				"arr_actual": "10:22:00",
+				"dep_actual": "10:22:15",
+				"spawn_time": "10:26:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4477,8 +4626,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:30:00",
-				"dep_actual": "10:30:00",
+				"arr_actual": "10:31:00",
+				"dep_actual": "10:31:15",
 				"line": "t2"
 			}
 		]
@@ -4494,8 +4643,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:28:45",
-				"dep_actual": "10:28:45",
+				"arr_actual": "10:26:00",
+				"dep_actual": "10:26:15",
+				"spawn_time": "10:28:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -4507,8 +4657,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:32:00",
-				"dep_actual": "10:32:00",
+				"arr_actual": "10:35:00",
+				"dep_actual": "10:35:15",
 				"line": "t1"
 			}
 		]
@@ -4524,8 +4674,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:32:45",
-				"dep_actual": "10:32:45",
+				"arr_actual": "10:26:00",
+				"dep_actual": "10:26:15",
+				"spawn_time": "10:32:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4537,8 +4688,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:36:00",
-				"dep_actual": "10:36:00",
+				"arr_actual": "10:37:00",
+				"dep_actual": "10:37:15",
 				"line": "t2"
 			}
 		]
@@ -4554,8 +4705,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:33:45",
-				"dep_actual": "10:33:45",
+				"arr_actual": "10:26:00",
+				"dep_actual": "10:26:15",
+				"spawn_time": "10:33:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -4567,8 +4719,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:37:00",
-				"dep_actual": "10:37:00",
+				"arr_actual": "10:39:00",
+				"dep_actual": "10:39:15",
 				"line": "t6"
 			}
 		]
@@ -4584,8 +4736,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:39:45",
-				"dep_actual": "10:39:45",
+				"arr_actual": "10:37:00",
+				"dep_actual": "10:37:15",
+				"spawn_time": "10:39:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -4597,8 +4750,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:43:00",
-				"dep_actual": "10:43:00",
+				"arr_actual": "10:46:00",
+				"dep_actual": "10:46:15",
 				"line": "t1"
 			}
 		]
@@ -4614,8 +4767,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:42:45",
-				"dep_actual": "10:42:45",
+				"arr_actual": "10:36:00",
+				"dep_actual": "10:36:15",
+				"spawn_time": "10:42:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4627,8 +4781,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:46:00",
-				"dep_actual": "10:46:00",
+				"arr_actual": "10:47:00",
+				"dep_actual": "10:47:15",
 				"line": "t2"
 			}
 		]
@@ -4644,8 +4798,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:48:45",
-				"dep_actual": "10:48:45",
+				"arr_actual": "10:46:00",
+				"dep_actual": "10:46:15",
+				"spawn_time": "10:48:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -4657,8 +4812,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:52:00",
-				"dep_actual": "10:52:00",
+				"arr_actual": "10:55:00",
+				"dep_actual": "10:55:15",
 				"line": "t1"
 			}
 		]
@@ -4674,8 +4829,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:48:45",
-				"dep_actual": "10:48:45",
+				"arr_actual": "10:40:00",
+				"dep_actual": "10:40:15",
+				"spawn_time": "10:48:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4687,8 +4843,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:52:00",
-				"dep_actual": "10:52:00",
+				"arr_actual": "10:53:00",
+				"dep_actual": "10:53:15",
 				"line": "t2"
 			}
 		]
@@ -4700,12 +4856,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:51:45",
-				"dep_actual": "10:51:45",
+				"arr_actual": "10:40:00",
+				"dep_actual": "10:42:00",
+				"spawn_time": "10:51:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -4717,8 +4874,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:56:00",
-				"dep_actual": "10:56:00",
+				"arr_actual": "11:00:00",
+				"dep_actual": "11:00:00",
 				"line": "t4"
 			}
 		]
@@ -4734,8 +4891,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:54:45",
-				"dep_actual": "10:54:45",
+				"arr_actual": "10:52:00",
+				"dep_actual": "10:52:15",
+				"spawn_time": "10:54:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -4747,8 +4905,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:58:00",
-				"dep_actual": "10:58:00",
+				"arr_actual": "11:01:00",
+				"dep_actual": "11:01:15",
 				"line": "t1"
 			}
 		]
@@ -4764,8 +4922,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "10:55:45",
-				"dep_actual": "10:55:45",
+				"arr_actual": "10:50:00",
+				"dep_actual": "10:50:15",
+				"spawn_time": "10:55:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4777,8 +4936,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "10:59:00",
-				"dep_actual": "10:59:00",
+				"arr_actual": "11:00:00",
+				"dep_actual": "11:00:15",
 				"line": "t2"
 			}
 		]
@@ -4794,8 +4953,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:05:45",
-				"dep_actual": "11:05:45",
+				"arr_actual": "11:01:00",
+				"dep_actual": "11:01:15",
+				"spawn_time": "11:05:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -4807,8 +4967,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:09:00",
-				"dep_actual": "11:09:00",
+				"arr_actual": "11:11:00",
+				"dep_actual": "11:11:15",
 				"line": "t6"
 			}
 		]
@@ -4824,8 +4984,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:07:45",
-				"dep_actual": "11:07:45",
+				"arr_actual": "11:00:00",
+				"dep_actual": "11:00:15",
+				"spawn_time": "11:07:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4837,8 +4998,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:11:00",
-				"dep_actual": "11:11:00",
+				"arr_actual": "11:12:00",
+				"dep_actual": "11:12:15",
 				"line": "t2"
 			}
 		]
@@ -4854,8 +5015,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:10:45",
-				"dep_actual": "11:10:45",
+				"arr_actual": "11:08:00",
+				"dep_actual": "11:08:15",
+				"spawn_time": "11:10:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -4867,8 +5029,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:14:00",
-				"dep_actual": "11:14:00",
+				"arr_actual": "11:17:00",
+				"dep_actual": "11:17:15",
 				"line": "t1"
 			}
 		]
@@ -4884,8 +5046,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:11:45",
-				"dep_actual": "11:11:45",
+				"arr_actual": "11:06:00",
+				"dep_actual": "11:06:15",
+				"spawn_time": "11:11:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4897,8 +5060,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:15:00",
-				"dep_actual": "11:15:00",
+				"arr_actual": "11:16:00",
+				"dep_actual": "11:16:15",
 				"line": "t2"
 			}
 		]
@@ -4914,8 +5077,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:15:45",
-				"dep_actual": "11:15:45",
+				"arr_actual": "11:11:00",
+				"dep_actual": "11:11:15",
+				"spawn_time": "11:15:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -4927,8 +5091,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:19:00",
-				"dep_actual": "11:19:00",
+				"arr_actual": "11:20:00",
+				"dep_actual": "11:20:15",
 				"line": "t2"
 			}
 		]
@@ -4944,8 +5108,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:18:45",
-				"dep_actual": "11:18:45",
+				"arr_actual": "11:16:00",
+				"dep_actual": "11:16:15",
+				"spawn_time": "11:18:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -4957,8 +5122,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:22:00",
-				"dep_actual": "11:22:00",
+				"arr_actual": "11:25:00",
+				"dep_actual": "11:25:15",
 				"line": "t1"
 			}
 		]
@@ -4970,12 +5135,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:21:45",
-				"dep_actual": "11:21:45",
+				"arr_actual": "11:08:00",
+				"dep_actual": "11:10:00",
+				"spawn_time": "11:21:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -4987,8 +5153,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:26:00",
-				"dep_actual": "11:26:00",
+				"arr_actual": "11:35:00",
+				"dep_actual": "11:35:00",
 				"line": "t4"
 			}
 		]
@@ -5004,8 +5170,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:22:45",
-				"dep_actual": "11:22:45",
+				"arr_actual": "11:17:00",
+				"dep_actual": "11:17:15",
+				"spawn_time": "11:22:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -5017,8 +5184,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:26:00",
-				"dep_actual": "11:26:00",
+				"arr_actual": "11:27:00",
+				"dep_actual": "11:27:15",
 				"line": "t2"
 			}
 		]
@@ -5034,8 +5201,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:24:45",
-				"dep_actual": "11:24:45",
+				"arr_actual": "11:22:00",
+				"dep_actual": "11:22:15",
+				"spawn_time": "11:24:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -5047,8 +5215,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:28:00",
-				"dep_actual": "11:28:00",
+				"arr_actual": "11:31:00",
+				"dep_actual": "11:31:15",
 				"line": "t1"
 			}
 		]
@@ -5064,8 +5232,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:28:45",
-				"dep_actual": "11:28:45",
+				"arr_actual": "11:25:00",
+				"dep_actual": "11:25:15",
+				"spawn_time": "11:28:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -5077,8 +5246,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:32:00",
-				"dep_actual": "11:32:00",
+				"arr_actual": "11:34:00",
+				"dep_actual": "11:34:15",
 				"line": "t6"
 			}
 		]
@@ -5094,8 +5263,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:31:45",
-				"dep_actual": "11:31:45",
+				"arr_actual": "11:25:00",
+				"dep_actual": "11:25:15",
+				"spawn_time": "11:31:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -5107,8 +5277,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:35:00",
-				"dep_actual": "11:35:00",
+				"arr_actual": "11:36:00",
+				"dep_actual": "11:36:15",
 				"line": "t2"
 			}
 		]
@@ -5124,8 +5294,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:33:45",
-				"dep_actual": "11:33:45",
+				"arr_actual": "11:28:00",
+				"dep_actual": "11:28:15",
+				"spawn_time": "11:33:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -5137,8 +5308,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:37:00",
-				"dep_actual": "11:37:00",
+				"arr_actual": "11:40:00",
+				"dep_actual": "11:40:15",
 				"line": "t1"
 			}
 		]
@@ -5154,8 +5325,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:36:45",
-				"dep_actual": "11:36:45",
+				"arr_actual": "11:30:00",
+				"dep_actual": "11:30:15",
+				"spawn_time": "11:36:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -5168,7 +5340,7 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			{
 				"station": "JNG-W",
 				"arr_actual": "11:40:00",
-				"dep_actual": "11:40:00",
+				"dep_actual": "11:40:15",
 				"line": "t2"
 			}
 		]
@@ -5184,8 +5356,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:44:45",
-				"dep_actual": "11:44:45",
+				"arr_actual": "11:43:00",
+				"dep_actual": "11:43:15",
+				"spawn_time": "11:44:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -5197,8 +5370,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:48:00",
-				"dep_actual": "11:48:00",
+				"arr_actual": "11:49:00",
+				"dep_actual": "11:49:15",
 				"line": "t1"
 			}
 		]
@@ -5214,8 +5387,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:45:45",
-				"dep_actual": "11:45:45",
+				"arr_actual": "11:40:00",
+				"dep_actual": "11:40:15",
+				"spawn_time": "11:45:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -5227,8 +5401,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:49:00",
-				"dep_actual": "11:49:00",
+				"arr_actual": "11:51:00",
+				"dep_actual": "11:51:15",
 				"line": "t2"
 			}
 		]
@@ -5244,8 +5418,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:45:45",
-				"dep_actual": "11:45:45",
+				"arr_actual": "11:41:00",
+				"dep_actual": "11:41:15",
+				"spawn_time": "11:45:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -5257,8 +5432,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:49:00",
-				"dep_actual": "11:49:00",
+				"arr_actual": "11:51:00",
+				"dep_actual": "11:51:15",
 				"line": "t6"
 			}
 		]
@@ -5274,8 +5449,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:45:45",
-				"dep_actual": "11:45:45",
+				"arr_actual": "11:37:00",
+				"dep_actual": "11:37:15",
+				"spawn_time": "11:45:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -5287,8 +5463,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:49:00",
-				"dep_actual": "11:49:00",
+				"arr_actual": "11:50:00",
+				"dep_actual": "11:50:15",
 				"line": "t2"
 			}
 		]
@@ -5300,12 +5476,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:50:45",
-				"dep_actual": "11:50:45",
+				"arr_actual": "11:39:00",
+				"dep_actual": "11:41:00",
+				"spawn_time": "11:50:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -5317,8 +5494,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:55:00",
-				"dep_actual": "11:55:00",
+				"arr_actual": "12:00:00",
+				"dep_actual": "12:00:00",
 				"line": "t4"
 			}
 		]
@@ -5334,8 +5511,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:54:45",
-				"dep_actual": "11:54:45",
+				"arr_actual": "11:53:00",
+				"dep_actual": "11:53:15",
+				"spawn_time": "11:54:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -5347,8 +5525,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:58:00",
-				"dep_actual": "11:58:00",
+				"arr_actual": "11:59:00",
+				"dep_actual": "11:59:15",
 				"line": "t1"
 			}
 		]
@@ -5364,8 +5542,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "11:56:45",
-				"dep_actual": "11:56:45",
+				"arr_actual": "11:50:00",
+				"dep_actual": "11:50:15",
+				"spawn_time": "11:56:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -5377,8 +5556,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:00:00",
-				"dep_actual": "12:00:00",
+				"arr_actual": "12:01:00",
+				"dep_actual": "12:01:15",
 				"line": "t2"
 			}
 		]
@@ -5389,13 +5568,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Solo Balapan",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "11:58:45",
-				"dep_actual": "11:58:45",
+				"arr_actual": "11:50:00",
+				"dep_actual": "11:50:00",
+				"spawn_time": "11:58:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -5407,8 +5587,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:03:00",
-				"dep_actual": "12:03:00",
+				"arr_actual": "12:12:30",
+				"dep_actual": "12:13:00",
 				"line": "t6"
 			}
 		]
@@ -5424,8 +5604,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:00:45",
-				"dep_actual": "12:00:45",
+				"arr_actual": "11:59:00",
+				"dep_actual": "11:59:15",
+				"spawn_time": "12:00:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -5437,8 +5618,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:04:00",
-				"dep_actual": "12:04:00",
+				"arr_actual": "12:05:00",
+				"dep_actual": "12:05:15",
 				"line": "t1"
 			}
 		]
@@ -5454,8 +5635,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:04:45",
-				"dep_actual": "12:04:45",
+				"arr_actual": "12:01:00",
+				"dep_actual": "12:01:15",
+				"spawn_time": "12:04:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -5467,8 +5649,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:08:00",
-				"dep_actual": "12:08:00",
+				"arr_actual": "12:11:00",
+				"dep_actual": "12:11:15",
 				"line": "t1"
 			}
 		]
@@ -5484,8 +5666,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:05:45",
-				"dep_actual": "12:05:45",
+				"arr_actual": "11:59:00",
+				"dep_actual": "11:59:15",
+				"spawn_time": "12:05:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -5497,8 +5680,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:09:00",
-				"dep_actual": "12:09:00",
+				"arr_actual": "12:10:00",
+				"dep_actual": "12:10:15",
 				"line": "t2"
 			}
 		]
@@ -5514,8 +5697,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:09:45",
-				"dep_actual": "12:09:45",
+				"arr_actual": "12:01:00",
+				"dep_actual": "12:01:15",
+				"spawn_time": "12:09:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -5527,8 +5711,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:13:00",
-				"dep_actual": "12:13:00",
+				"arr_actual": "12:15:00",
+				"dep_actual": "12:15:15",
 				"line": "t6"
 			}
 		]
@@ -5544,8 +5728,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:09:45",
-				"dep_actual": "12:09:45",
+				"arr_actual": "12:06:00",
+				"dep_actual": "12:06:15",
+				"spawn_time": "12:09:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -5557,8 +5742,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:13:00",
-				"dep_actual": "12:13:00",
+				"arr_actual": "12:14:00",
+				"dep_actual": "12:14:15",
 				"line": "t2"
 			}
 		]
@@ -5569,13 +5754,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Semarang Tawang",
 		"trainType": null,
-		"neighborBefore": "Matraman",
+		"neighborBefore": "Manggarai",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:12:45",
-				"dep_actual": "12:12:45",
+				"arr_actual": "12:09:00",
+				"dep_actual": "12:09:00",
+				"spawn_time": "12:12:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -5587,8 +5773,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:17:00",
-				"dep_actual": "12:17:00",
+				"arr_actual": "12:27:00",
+				"dep_actual": "12:29:00",
 				"line": "t1"
 			}
 		]
@@ -5604,8 +5790,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:15:45",
-				"dep_actual": "12:15:45",
+				"arr_actual": "12:09:00",
+				"dep_actual": "12:09:15",
+				"spawn_time": "12:15:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -5617,8 +5804,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:19:00",
-				"dep_actual": "12:19:00",
+				"arr_actual": "12:20:00",
+				"dep_actual": "12:20:15",
 				"line": "t2"
 			}
 		]
@@ -5634,8 +5821,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:18:45",
-				"dep_actual": "12:18:45",
+				"arr_actual": "12:16:00",
+				"dep_actual": "12:16:15",
+				"spawn_time": "12:18:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -5647,8 +5835,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:22:00",
-				"dep_actual": "12:22:00",
+				"arr_actual": "12:25:00",
+				"dep_actual": "12:25:15",
 				"line": "t1"
 			}
 		]
@@ -5659,13 +5847,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Surabaya Pasarturi",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:19:45",
-				"dep_actual": "12:19:45",
+				"arr_actual": "12:10:00",
+				"dep_actual": "12:10:00",
+				"spawn_time": "12:19:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -5677,8 +5866,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:24:00",
-				"dep_actual": "12:24:00",
+				"arr_actual": "12:36:00",
+				"dep_actual": "12:38:00",
 				"line": "t6"
 			}
 		]
@@ -5694,8 +5883,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:22:45",
-				"dep_actual": "12:22:45",
+				"arr_actual": "12:15:00",
+				"dep_actual": "12:15:15",
+				"spawn_time": "12:22:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -5707,8 +5897,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:26:00",
-				"dep_actual": "12:26:00",
+				"arr_actual": "12:27:00",
+				"dep_actual": "12:27:15",
 				"line": "t2"
 			}
 		]
@@ -5724,8 +5914,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:25:45",
-				"dep_actual": "12:25:45",
+				"arr_actual": "12:23:00",
+				"dep_actual": "12:23:15",
+				"spawn_time": "12:25:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -5737,8 +5928,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:29:00",
-				"dep_actual": "12:29:00",
+				"arr_actual": "12:32:00",
+				"dep_actual": "12:32:15",
 				"line": "t1"
 			}
 		]
@@ -5750,12 +5941,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:27:45",
-				"dep_actual": "12:27:45",
+				"arr_actual": "12:15:00",
+				"dep_actual": "12:17:00",
+				"spawn_time": "12:27:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -5767,8 +5959,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:32:00",
-				"dep_actual": "12:32:00",
+				"arr_actual": "12:41:00",
+				"dep_actual": "12:41:00",
 				"line": "t4"
 			}
 		]
@@ -5784,8 +5976,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:30:45",
-				"dep_actual": "12:30:45",
+				"arr_actual": "12:24:00",
+				"dep_actual": "12:24:15",
+				"spawn_time": "12:30:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -5797,8 +5990,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:34:00",
-				"dep_actual": "12:34:00",
+				"arr_actual": "12:35:00",
+				"dep_actual": "12:35:15",
 				"line": "t2"
 			}
 		]
@@ -5809,13 +6002,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Jombang",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:33:45",
-				"dep_actual": "12:33:45",
+				"arr_actual": "12:25:00",
+				"dep_actual": "12:25:00",
+				"spawn_time": "12:33:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -5827,8 +6021,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:38:00",
-				"dep_actual": "12:38:00",
+				"arr_actual": "12:49:30",
+				"dep_actual": "12:50:00",
 				"line": "t6"
 			}
 		]
@@ -5844,8 +6038,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:34:45",
-				"dep_actual": "12:34:45",
+				"arr_actual": "12:32:00",
+				"dep_actual": "12:32:15",
+				"spawn_time": "12:34:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -5857,8 +6052,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:38:00",
-				"dep_actual": "12:38:00",
+				"arr_actual": "12:41:00",
+				"dep_actual": "12:41:15",
 				"line": "t1"
 			}
 		]
@@ -5874,8 +6069,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:39:45",
-				"dep_actual": "12:39:45",
+				"arr_actual": "12:36:00",
+				"dep_actual": "12:36:15",
+				"spawn_time": "12:39:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -5887,8 +6083,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:43:00",
-				"dep_actual": "12:43:00",
+				"arr_actual": "12:45:00",
+				"dep_actual": "12:45:15",
 				"line": "t6"
 			}
 		]
@@ -5904,8 +6100,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:41:45",
-				"dep_actual": "12:41:45",
+				"arr_actual": "12:33:00",
+				"dep_actual": "12:33:15",
+				"spawn_time": "12:41:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -5917,8 +6114,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:45:00",
-				"dep_actual": "12:45:00",
+				"arr_actual": "12:46:00",
+				"dep_actual": "12:46:15",
 				"line": "t2"
 			}
 		]
@@ -5934,8 +6131,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:44:45",
-				"dep_actual": "12:44:45",
+				"arr_actual": "12:41:00",
+				"dep_actual": "12:41:15",
+				"spawn_time": "12:44:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -5947,8 +6145,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:48:00",
-				"dep_actual": "12:48:00",
+				"arr_actual": "12:49:00",
+				"dep_actual": "12:49:15",
 				"line": "t2"
 			}
 		]
@@ -5964,8 +6162,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:52:45",
-				"dep_actual": "12:52:45",
+				"arr_actual": "12:51:00",
+				"dep_actual": "12:51:15",
+				"spawn_time": "12:52:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -5977,8 +6176,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:56:00",
-				"dep_actual": "12:56:00",
+				"arr_actual": "12:57:00",
+				"dep_actual": "12:57:15",
 				"line": "t1"
 			}
 		]
@@ -5994,8 +6193,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:52:45",
-				"dep_actual": "12:52:45",
+				"arr_actual": "12:49:00",
+				"dep_actual": "12:49:15",
+				"spawn_time": "12:52:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6007,8 +6207,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:56:00",
-				"dep_actual": "12:56:00",
+				"arr_actual": "12:57:00",
+				"dep_actual": "12:57:15",
 				"line": "t2"
 			}
 		]
@@ -6024,8 +6224,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:53:45",
-				"dep_actual": "12:53:45",
+				"arr_actual": "12:51:00",
+				"dep_actual": "12:51:15",
+				"spawn_time": "12:53:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -6037,8 +6238,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "12:57:00",
-				"dep_actual": "12:57:00",
+				"arr_actual": "13:00:00",
+				"dep_actual": "13:00:15",
 				"line": "t1"
 			}
 		]
@@ -6054,8 +6255,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "12:59:45",
-				"dep_actual": "12:59:45",
+				"arr_actual": "12:57:00",
+				"dep_actual": "12:57:15",
+				"spawn_time": "12:59:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -6067,8 +6269,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:03:00",
-				"dep_actual": "13:03:00",
+				"arr_actual": "13:06:00",
+				"dep_actual": "13:06:15",
 				"line": "t1"
 			}
 		]
@@ -6084,8 +6286,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:01:45",
-				"dep_actual": "13:01:45",
+				"arr_actual": "12:56:00",
+				"dep_actual": "12:56:15",
+				"spawn_time": "13:01:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6097,8 +6300,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:05:00",
-				"dep_actual": "13:05:00",
+				"arr_actual": "13:06:00",
+				"dep_actual": "13:06:15",
 				"line": "t2"
 			}
 		]
@@ -6114,8 +6317,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:06:45",
-				"dep_actual": "13:06:45",
+				"arr_actual": "13:02:00",
+				"dep_actual": "13:02:15",
+				"spawn_time": "13:06:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6127,8 +6331,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:10:00",
-				"dep_actual": "13:10:00",
+				"arr_actual": "13:11:00",
+				"dep_actual": "13:11:15",
 				"line": "t2"
 			}
 		]
@@ -6144,8 +6348,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:06:45",
-				"dep_actual": "13:06:45",
+				"arr_actual": "13:03:00",
+				"dep_actual": "13:03:15",
+				"spawn_time": "13:06:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -6157,8 +6362,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:10:00",
-				"dep_actual": "13:10:00",
+				"arr_actual": "13:12:00",
+				"dep_actual": "13:12:15",
 				"line": "t6"
 			}
 		]
@@ -6174,8 +6379,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:11:45",
-				"dep_actual": "13:11:45",
+				"arr_actual": "13:07:00",
+				"dep_actual": "13:07:15",
+				"spawn_time": "13:11:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6187,8 +6393,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:15:00",
-				"dep_actual": "13:15:00",
+				"arr_actual": "13:16:00",
+				"dep_actual": "13:16:15",
 				"line": "t2"
 			}
 		]
@@ -6204,8 +6410,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:22:45",
-				"dep_actual": "13:22:45",
+				"arr_actual": "13:21:00",
+				"dep_actual": "13:21:15",
+				"spawn_time": "13:22:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -6217,8 +6424,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:26:00",
-				"dep_actual": "13:26:00",
+				"arr_actual": "13:29:00",
+				"dep_actual": "13:29:15",
 				"line": "t1"
 			}
 		]
@@ -6234,8 +6441,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:22:45",
-				"dep_actual": "13:22:45",
+				"arr_actual": "13:17:00",
+				"dep_actual": "13:17:15",
+				"spawn_time": "13:22:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6247,8 +6455,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:26:00",
-				"dep_actual": "13:26:00",
+				"arr_actual": "13:27:00",
+				"dep_actual": "13:27:15",
 				"line": "t2"
 			}
 		]
@@ -6264,8 +6472,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:27:45",
-				"dep_actual": "13:27:45",
+				"arr_actual": "13:24:00",
+				"dep_actual": "13:24:15",
+				"spawn_time": "13:27:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6277,8 +6486,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:31:00",
-				"dep_actual": "13:31:00",
+				"arr_actual": "13:32:00",
+				"dep_actual": "13:32:15",
 				"line": "t2"
 			}
 		]
@@ -6294,8 +6503,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:31:45",
-				"dep_actual": "13:31:45",
+				"arr_actual": "13:30:00",
+				"dep_actual": "13:30:15",
+				"spawn_time": "13:31:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -6307,8 +6517,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:35:00",
-				"dep_actual": "13:35:00",
+				"arr_actual": "13:36:00",
+				"dep_actual": "13:36:15",
 				"line": "t1"
 			}
 		]
@@ -6324,8 +6534,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:31:45",
-				"dep_actual": "13:31:45",
+				"arr_actual": "13:28:00",
+				"dep_actual": "13:28:15",
+				"spawn_time": "13:31:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -6337,8 +6548,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:35:00",
-				"dep_actual": "13:35:00",
+				"arr_actual": "13:38:00",
+				"dep_actual": "13:38:15",
 				"line": "t6"
 			}
 		]
@@ -6354,8 +6565,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:34:45",
-				"dep_actual": "13:34:45",
+				"arr_actual": "13:30:00",
+				"dep_actual": "13:30:15",
+				"spawn_time": "13:34:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6367,8 +6579,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:38:00",
-				"dep_actual": "13:38:00",
+				"arr_actual": "13:39:00",
+				"dep_actual": "13:39:15",
 				"line": "t2"
 			}
 		]
@@ -6384,8 +6596,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:40:45",
-				"dep_actual": "13:40:45",
+				"arr_actual": "13:36:00",
+				"dep_actual": "13:36:15",
+				"spawn_time": "13:40:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6397,8 +6610,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:44:00",
-				"dep_actual": "13:44:00",
+				"arr_actual": "13:45:00",
+				"dep_actual": "13:45:15",
 				"line": "t2"
 			}
 		]
@@ -6414,8 +6627,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:42:45",
-				"dep_actual": "13:42:45",
+				"arr_actual": "13:40:00",
+				"dep_actual": "13:40:15",
+				"spawn_time": "13:42:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -6427,8 +6641,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:46:00",
-				"dep_actual": "13:46:00",
+				"arr_actual": "13:49:00",
+				"dep_actual": "13:49:15",
 				"line": "t1"
 			}
 		]
@@ -6439,13 +6653,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Semarang Tawang",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:42:45",
-				"dep_actual": "13:42:45",
+				"arr_actual": "13:35:00",
+				"dep_actual": "13:35:00",
+				"spawn_time": "13:42:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -6457,8 +6672,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:47:00",
-				"dep_actual": "13:47:00",
+				"arr_actual": "13:58:00",
+				"dep_actual": "14:00:00",
 				"line": "t6"
 			}
 		]
@@ -6474,8 +6689,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:47:45",
-				"dep_actual": "13:47:45",
+				"arr_actual": "13:45:00",
+				"dep_actual": "13:45:15",
+				"spawn_time": "13:47:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -6487,8 +6703,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:51:00",
-				"dep_actual": "13:51:00",
+				"arr_actual": "13:54:00",
+				"dep_actual": "13:54:15",
 				"line": "t1"
 			}
 		]
@@ -6499,13 +6715,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Bandung",
 		"trainType": null,
-		"neighborBefore": "Matraman",
+		"neighborBefore": "Manggarai",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:52:45",
-				"dep_actual": "13:52:45",
+				"arr_actual": "13:49:00",
+				"dep_actual": "13:49:00",
+				"spawn_time": "13:52:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -6517,8 +6734,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:57:00",
-				"dep_actual": "13:57:00",
+				"arr_actual": "14:08:00",
+				"dep_actual": "14:11:00",
 				"line": "t1"
 			}
 		]
@@ -6530,12 +6747,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:55:45",
-				"dep_actual": "13:55:45",
+				"arr_actual": "13:43:00",
+				"dep_actual": "13:45:00",
+				"spawn_time": "13:55:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -6547,8 +6765,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:00:00",
-				"dep_actual": "14:00:00",
+				"arr_actual": "14:04:00",
+				"dep_actual": "14:04:00",
 				"line": "t4"
 			}
 		]
@@ -6564,8 +6782,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "13:58:45",
-				"dep_actual": "13:58:45",
+				"arr_actual": "13:56:00",
+				"dep_actual": "13:56:15",
+				"spawn_time": "13:58:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -6577,8 +6796,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:02:00",
-				"dep_actual": "14:02:00",
+				"arr_actual": "14:05:00",
+				"dep_actual": "14:05:15",
 				"line": "t1"
 			}
 		]
@@ -6594,8 +6813,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "13:59:45",
-				"dep_actual": "13:59:45",
+				"arr_actual": "13:50:00",
+				"dep_actual": "13:50:15",
+				"spawn_time": "13:59:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6607,8 +6827,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:03:00",
-				"dep_actual": "14:03:00",
+				"arr_actual": "14:04:00",
+				"dep_actual": "14:04:15",
 				"line": "t2"
 			}
 		]
@@ -6624,8 +6844,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:00:45",
-				"dep_actual": "14:00:45",
+				"arr_actual": "13:57:00",
+				"dep_actual": "13:57:15",
+				"spawn_time": "14:00:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6637,8 +6858,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:04:00",
-				"dep_actual": "14:04:00",
+				"arr_actual": "14:05:00",
+				"dep_actual": "14:05:15",
 				"line": "t2"
 			}
 		]
@@ -6654,8 +6875,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:06:45",
-				"dep_actual": "14:06:45",
+				"arr_actual": "14:01:00",
+				"dep_actual": "14:01:15",
+				"spawn_time": "14:06:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6667,8 +6889,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:10:00",
-				"dep_actual": "14:10:00",
+				"arr_actual": "14:11:00",
+				"dep_actual": "14:11:15",
 				"line": "t2"
 			}
 		]
@@ -6684,8 +6906,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:07:45",
-				"dep_actual": "14:07:45",
+				"arr_actual": "14:06:00",
+				"dep_actual": "14:06:15",
+				"spawn_time": "14:07:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -6697,8 +6920,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:11:00",
-				"dep_actual": "14:11:00",
+				"arr_actual": "14:12:00",
+				"dep_actual": "14:12:15",
 				"line": "t1"
 			}
 		]
@@ -6714,8 +6937,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:07:45",
-				"dep_actual": "14:07:45",
+				"arr_actual": "14:01:00",
+				"dep_actual": "14:01:15",
+				"spawn_time": "14:07:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -6727,8 +6951,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:11:00",
-				"dep_actual": "14:11:00",
+				"arr_actual": "14:13:00",
+				"dep_actual": "14:13:15",
 				"line": "t6"
 			}
 		]
@@ -6744,8 +6968,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:12:45",
-				"dep_actual": "14:12:45",
+				"arr_actual": "14:07:00",
+				"dep_actual": "14:07:15",
+				"spawn_time": "14:12:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6757,8 +6982,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:16:00",
-				"dep_actual": "14:16:00",
+				"arr_actual": "14:17:00",
+				"dep_actual": "14:17:15",
 				"line": "t2"
 			}
 		]
@@ -6770,12 +6995,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:12:45",
-				"dep_actual": "14:12:45",
+				"arr_actual": "13:58:00",
+				"dep_actual": "14:01:00",
+				"spawn_time": "14:12:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -6787,8 +7013,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:17:00",
-				"dep_actual": "14:17:00",
+				"arr_actual": "14:26:00",
+				"dep_actual": "14:26:00",
 				"line": "t4"
 			}
 		]
@@ -6804,8 +7030,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:18:45",
-				"dep_actual": "14:18:45",
+				"arr_actual": "14:16:00",
+				"dep_actual": "14:16:15",
+				"spawn_time": "14:18:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -6817,8 +7044,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:22:00",
-				"dep_actual": "14:22:00",
+				"arr_actual": "14:25:00",
+				"dep_actual": "14:25:15",
 				"line": "t1"
 			}
 		]
@@ -6834,8 +7061,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:20:45",
-				"dep_actual": "14:20:45",
+				"arr_actual": "14:13:00",
+				"dep_actual": "14:13:15",
+				"spawn_time": "14:20:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6847,8 +7075,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:24:00",
-				"dep_actual": "14:24:00",
+				"arr_actual": "14:25:00",
+				"dep_actual": "14:25:15",
 				"line": "t2"
 			}
 		]
@@ -6864,8 +7092,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:23:45",
-				"dep_actual": "14:23:45",
+				"arr_actual": "14:18:00",
+				"dep_actual": "14:18:15",
+				"spawn_time": "14:23:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6877,8 +7106,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:27:00",
-				"dep_actual": "14:27:00",
+				"arr_actual": "14:28:00",
+				"dep_actual": "14:28:15",
 				"line": "t2"
 			}
 		]
@@ -6894,8 +7123,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:25:45",
-				"dep_actual": "14:25:45",
+				"arr_actual": "14:23:00",
+				"dep_actual": "14:23:15",
+				"spawn_time": "14:25:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -6907,8 +7137,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:29:00",
-				"dep_actual": "14:29:00",
+				"arr_actual": "14:32:00",
+				"dep_actual": "14:32:15",
 				"line": "t1"
 			}
 		]
@@ -6924,8 +7154,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:29:45",
-				"dep_actual": "14:29:45",
+				"arr_actual": "14:24:00",
+				"dep_actual": "14:24:15",
+				"spawn_time": "14:29:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6937,8 +7168,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:33:00",
-				"dep_actual": "14:33:00",
+				"arr_actual": "14:34:00",
+				"dep_actual": "14:34:15",
 				"line": "t2"
 			}
 		]
@@ -6954,8 +7185,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:33:45",
-				"dep_actual": "14:33:45",
+				"arr_actual": "14:30:00",
+				"dep_actual": "14:30:15",
+				"spawn_time": "14:33:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -6967,8 +7199,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:37:00",
-				"dep_actual": "14:37:00",
+				"arr_actual": "14:40:00",
+				"dep_actual": "14:40:15",
 				"line": "t1"
 			}
 		]
@@ -6984,8 +7216,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:34:45",
-				"dep_actual": "14:34:45",
+				"arr_actual": "14:29:00",
+				"dep_actual": "14:29:15",
+				"spawn_time": "14:34:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -6997,8 +7230,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:38:00",
-				"dep_actual": "14:38:00",
+				"arr_actual": "14:40:00",
+				"dep_actual": "14:40:15",
 				"line": "t2"
 			}
 		]
@@ -7009,13 +7242,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Surabaya Pasarturi",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:38:45",
-				"dep_actual": "14:38:45",
+				"arr_actual": "14:30:00",
+				"dep_actual": "14:30:00",
+				"spawn_time": "14:38:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -7027,8 +7261,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:43:00",
-				"dep_actual": "14:43:00",
+				"arr_actual": "14:54:00",
+				"dep_actual": "14:56:00",
 				"line": "t6"
 			}
 		]
@@ -7044,8 +7278,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:39:45",
-				"dep_actual": "14:39:45",
+				"arr_actual": "14:37:00",
+				"dep_actual": "14:37:15",
+				"spawn_time": "14:39:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -7057,8 +7292,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:43:00",
-				"dep_actual": "14:43:00",
+				"arr_actual": "14:46:00",
+				"dep_actual": "14:46:15",
 				"line": "t1"
 			}
 		]
@@ -7074,8 +7309,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:42:45",
-				"dep_actual": "14:42:45",
+				"arr_actual": "14:36:00",
+				"dep_actual": "14:36:15",
+				"spawn_time": "14:42:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7087,8 +7323,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:46:00",
-				"dep_actual": "14:46:00",
+				"arr_actual": "14:47:00",
+				"dep_actual": "14:47:15",
 				"line": "t2"
 			}
 		]
@@ -7104,8 +7340,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:43:45",
-				"dep_actual": "14:43:45",
+				"arr_actual": "14:40:00",
+				"dep_actual": "14:40:15",
+				"spawn_time": "14:43:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -7117,8 +7354,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:47:00",
-				"dep_actual": "14:47:00",
+				"arr_actual": "14:49:00",
+				"dep_actual": "14:49:15",
 				"line": "t6"
 			}
 		]
@@ -7134,8 +7371,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:48:45",
-				"dep_actual": "14:48:45",
+				"arr_actual": "14:42:00",
+				"dep_actual": "14:42:15",
+				"spawn_time": "14:48:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7147,8 +7385,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:52:00",
-				"dep_actual": "14:52:00",
+				"arr_actual": "14:53:00",
+				"dep_actual": "14:53:15",
 				"line": "t2"
 			}
 		]
@@ -7164,8 +7402,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:49:45",
-				"dep_actual": "14:49:45",
+				"arr_actual": "14:47:00",
+				"dep_actual": "14:47:15",
+				"spawn_time": "14:49:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -7177,8 +7416,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:53:00",
-				"dep_actual": "14:53:00",
+				"arr_actual": "14:56:00",
+				"dep_actual": "14:56:15",
 				"line": "t1"
 			}
 		]
@@ -7194,8 +7433,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:52:45",
-				"dep_actual": "14:52:45",
+				"arr_actual": "14:47:00",
+				"dep_actual": "14:47:15",
+				"spawn_time": "14:52:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7207,8 +7447,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:56:00",
-				"dep_actual": "14:56:00",
+				"arr_actual": "14:57:00",
+				"dep_actual": "14:57:15",
 				"line": "t2"
 			}
 		]
@@ -7224,8 +7464,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "14:55:45",
-				"dep_actual": "14:55:45",
+				"arr_actual": "14:53:00",
+				"dep_actual": "14:53:15",
+				"spawn_time": "14:55:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -7237,8 +7478,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:59:00",
-				"dep_actual": "14:59:00",
+				"arr_actual": "15:02:00",
+				"dep_actual": "15:02:15",
 				"line": "t1"
 			}
 		]
@@ -7254,8 +7495,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "14:57:45",
-				"dep_actual": "14:57:45",
+				"arr_actual": "14:54:00",
+				"dep_actual": "14:54:15",
+				"spawn_time": "14:57:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7267,8 +7509,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:01:00",
-				"dep_actual": "15:01:00",
+				"arr_actual": "15:02:00",
+				"dep_actual": "15:02:15",
 				"line": "t2"
 			}
 		]
@@ -7284,8 +7526,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:01:45",
-				"dep_actual": "15:01:45",
+				"arr_actual": "14:57:00",
+				"dep_actual": "14:57:15",
+				"spawn_time": "15:01:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7297,8 +7540,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:05:00",
-				"dep_actual": "15:05:00",
+				"arr_actual": "15:06:00",
+				"dep_actual": "15:06:15",
 				"line": "t2"
 			}
 		]
@@ -7314,8 +7557,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:03:45",
-				"dep_actual": "15:03:45",
+				"arr_actual": "15:01:00",
+				"dep_actual": "15:01:15",
+				"spawn_time": "15:03:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -7327,8 +7571,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:07:00",
-				"dep_actual": "15:07:00",
+				"arr_actual": "15:10:00",
+				"dep_actual": "15:10:15",
 				"line": "t1"
 			}
 		]
@@ -7344,8 +7588,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:09:45",
-				"dep_actual": "15:09:45",
+				"arr_actual": "15:07:00",
+				"dep_actual": "15:07:15",
+				"spawn_time": "15:09:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -7357,8 +7602,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:13:00",
-				"dep_actual": "15:13:00",
+				"arr_actual": "15:16:00",
+				"dep_actual": "15:16:15",
 				"line": "t1"
 			}
 		]
@@ -7374,8 +7619,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:16:45",
-				"dep_actual": "15:16:45",
+				"arr_actual": "15:08:00",
+				"dep_actual": "15:08:15",
+				"spawn_time": "15:16:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -7387,8 +7633,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:20:00",
-				"dep_actual": "15:20:00",
+				"arr_actual": "15:22:00",
+				"dep_actual": "15:22:15",
 				"line": "t6"
 			}
 		]
@@ -7404,8 +7650,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:16:45",
-				"dep_actual": "15:16:45",
+				"arr_actual": "15:11:00",
+				"dep_actual": "15:11:15",
+				"spawn_time": "15:16:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7417,8 +7664,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:20:00",
-				"dep_actual": "15:20:00",
+				"arr_actual": "15:21:00",
+				"dep_actual": "15:21:15",
 				"line": "t2"
 			}
 		]
@@ -7434,8 +7681,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:23:45",
-				"dep_actual": "15:23:45",
+				"arr_actual": "15:21:00",
+				"dep_actual": "15:21:15",
+				"spawn_time": "15:23:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -7447,8 +7695,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:27:00",
-				"dep_actual": "15:27:00",
+				"arr_actual": "15:30:00",
+				"dep_actual": "15:30:15",
 				"line": "t1"
 			}
 		]
@@ -7464,8 +7712,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:24:45",
-				"dep_actual": "15:24:45",
+				"arr_actual": "15:19:00",
+				"dep_actual": "15:19:15",
+				"spawn_time": "15:24:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7477,8 +7726,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:28:00",
-				"dep_actual": "15:28:00",
+				"arr_actual": "15:30:00",
+				"dep_actual": "15:30:15",
 				"line": "t2"
 			}
 		]
@@ -7494,8 +7743,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:29:45",
-				"dep_actual": "15:29:45",
+				"arr_actual": "15:27:00",
+				"dep_actual": "15:27:15",
+				"spawn_time": "15:29:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -7507,8 +7757,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:33:00",
-				"dep_actual": "15:33:00",
+				"arr_actual": "15:36:00",
+				"dep_actual": "15:36:15",
 				"line": "t1"
 			}
 		]
@@ -7524,8 +7774,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:34:45",
-				"dep_actual": "15:34:45",
+				"arr_actual": "15:30:00",
+				"dep_actual": "15:30:15",
+				"spawn_time": "15:34:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7537,8 +7788,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:38:00",
-				"dep_actual": "15:38:00",
+				"arr_actual": "15:39:00",
+				"dep_actual": "15:39:15",
 				"line": "t2"
 			}
 		]
@@ -7554,8 +7805,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:39:45",
-				"dep_actual": "15:39:45",
+				"arr_actual": "15:34:00",
+				"dep_actual": "15:34:15",
+				"spawn_time": "15:39:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7567,8 +7819,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:43:00",
-				"dep_actual": "15:43:00",
+				"arr_actual": "15:44:00",
+				"dep_actual": "15:44:15",
 				"line": "t2"
 			}
 		]
@@ -7584,8 +7836,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:39:45",
-				"dep_actual": "15:39:45",
+				"arr_actual": "15:34:00",
+				"dep_actual": "15:34:15",
+				"spawn_time": "15:39:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -7597,8 +7850,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:43:00",
-				"dep_actual": "15:43:00",
+				"arr_actual": "15:45:00",
+				"dep_actual": "15:45:15",
 				"line": "t6"
 			}
 		]
@@ -7614,8 +7867,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:45:45",
-				"dep_actual": "15:45:45",
+				"arr_actual": "15:39:00",
+				"dep_actual": "15:39:15",
+				"spawn_time": "15:45:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -7627,8 +7881,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:49:00",
-				"dep_actual": "15:49:00",
+				"arr_actual": "15:52:00",
+				"dep_actual": "15:52:15",
 				"line": "t1"
 			}
 		]
@@ -7644,8 +7898,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:50:45",
-				"dep_actual": "15:50:45",
+				"arr_actual": "15:47:00",
+				"dep_actual": "15:47:15",
+				"spawn_time": "15:50:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -7657,8 +7912,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:54:00",
-				"dep_actual": "15:54:00",
+				"arr_actual": "15:57:00",
+				"dep_actual": "15:57:15",
 				"line": "t1"
 			}
 		]
@@ -7674,8 +7929,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:50:45",
-				"dep_actual": "15:50:45",
+				"arr_actual": "15:45:00",
+				"dep_actual": "15:45:15",
+				"spawn_time": "15:50:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7687,8 +7943,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "15:54:00",
-				"dep_actual": "15:54:00",
+				"arr_actual": "15:55:00",
+				"dep_actual": "15:55:15",
 				"line": "t2"
 			}
 		]
@@ -7704,8 +7960,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "15:56:45",
-				"dep_actual": "15:56:45",
+				"arr_actual": "15:51:00",
+				"dep_actual": "15:51:15",
+				"spawn_time": "15:56:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7717,8 +7974,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:00:00",
-				"dep_actual": "16:00:00",
+				"arr_actual": "16:01:00",
+				"dep_actual": "16:01:15",
 				"line": "t2"
 			}
 		]
@@ -7734,8 +7991,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:00:45",
-				"dep_actual": "16:00:45",
+				"arr_actual": "15:55:00",
+				"dep_actual": "15:55:15",
+				"spawn_time": "16:00:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -7747,8 +8005,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:04:00",
-				"dep_actual": "16:04:00",
+				"arr_actual": "16:06:00",
+				"dep_actual": "16:06:15",
 				"line": "t6"
 			}
 		]
@@ -7760,12 +8018,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:00:45",
-				"dep_actual": "16:00:45",
+				"arr_actual": "15:49:00",
+				"dep_actual": "15:51:00",
+				"spawn_time": "16:00:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -7777,8 +8036,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:05:00",
-				"dep_actual": "16:05:00",
+				"arr_actual": "16:10:00",
+				"dep_actual": "16:10:00",
 				"line": "t4"
 			}
 		]
@@ -7794,8 +8053,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:05:45",
-				"dep_actual": "16:05:45",
+				"arr_actual": "16:01:00",
+				"dep_actual": "16:01:15",
+				"spawn_time": "16:05:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -7807,8 +8067,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:09:00",
-				"dep_actual": "16:09:00",
+				"arr_actual": "16:12:00",
+				"dep_actual": "16:12:15",
 				"line": "t1"
 			}
 		]
@@ -7824,8 +8084,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:06:45",
-				"dep_actual": "16:06:45",
+				"arr_actual": "16:01:00",
+				"dep_actual": "16:01:15",
+				"spawn_time": "16:06:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7837,8 +8098,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:10:00",
-				"dep_actual": "16:10:00",
+				"arr_actual": "16:11:00",
+				"dep_actual": "16:11:15",
 				"line": "t2"
 			}
 		]
@@ -7854,8 +8115,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:11:45",
-				"dep_actual": "16:11:45",
+				"arr_actual": "16:08:00",
+				"dep_actual": "16:08:15",
+				"spawn_time": "16:11:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -7867,8 +8129,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:15:00",
-				"dep_actual": "16:15:00",
+				"arr_actual": "16:18:00",
+				"dep_actual": "16:18:15",
 				"line": "t1"
 			}
 		]
@@ -7884,8 +8146,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:11:45",
-				"dep_actual": "16:11:45",
+				"arr_actual": "16:07:00",
+				"dep_actual": "16:07:15",
+				"spawn_time": "16:11:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7897,8 +8160,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:15:00",
-				"dep_actual": "16:15:00",
+				"arr_actual": "16:16:00",
+				"dep_actual": "16:16:15",
 				"line": "t2"
 			}
 		]
@@ -7914,8 +8177,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:16:45",
-				"dep_actual": "16:16:45",
+				"arr_actual": "16:13:00",
+				"dep_actual": "16:13:15",
+				"spawn_time": "16:16:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -7927,8 +8191,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:20:00",
-				"dep_actual": "16:20:00",
+				"arr_actual": "16:21:00",
+				"dep_actual": "16:21:15",
 				"line": "t2"
 			}
 		]
@@ -7944,8 +8208,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:20:45",
-				"dep_actual": "16:20:45",
+				"arr_actual": "16:18:00",
+				"dep_actual": "16:18:15",
+				"spawn_time": "16:20:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -7957,8 +8222,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:24:00",
-				"dep_actual": "16:24:00",
+				"arr_actual": "16:27:00",
+				"dep_actual": "16:27:15",
 				"line": "t1"
 			}
 		]
@@ -7970,12 +8235,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:20:45",
-				"dep_actual": "16:20:45",
+				"arr_actual": "16:08:00",
+				"dep_actual": "16:10:00",
+				"spawn_time": "16:20:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -7987,8 +8253,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:25:00",
-				"dep_actual": "16:25:00",
+				"arr_actual": "16:34:00",
+				"dep_actual": "16:34:00",
 				"line": "t4"
 			}
 		]
@@ -8004,8 +8270,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:23:45",
-				"dep_actual": "16:23:45",
+				"arr_actual": "16:18:00",
+				"dep_actual": "16:18:15",
+				"spawn_time": "16:23:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -8017,8 +8284,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:27:00",
-				"dep_actual": "16:27:00",
+				"arr_actual": "16:28:00",
+				"dep_actual": "16:28:15",
 				"line": "t2"
 			}
 		]
@@ -8034,8 +8301,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:28:45",
-				"dep_actual": "16:28:45",
+				"arr_actual": "16:24:00",
+				"dep_actual": "16:24:15",
+				"spawn_time": "16:28:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -8047,8 +8315,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:32:00",
-				"dep_actual": "16:32:00",
+				"arr_actual": "16:34:00",
+				"dep_actual": "16:34:15",
 				"line": "t6"
 			}
 		]
@@ -8064,8 +8332,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:30:45",
-				"dep_actual": "16:30:45",
+				"arr_actual": "16:23:00",
+				"dep_actual": "16:23:15",
+				"spawn_time": "16:30:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -8077,8 +8346,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:34:00",
-				"dep_actual": "16:34:00",
+				"arr_actual": "16:35:00",
+				"dep_actual": "16:35:15",
 				"line": "t2"
 			}
 		]
@@ -8094,8 +8363,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:38:45",
-				"dep_actual": "16:38:45",
+				"arr_actual": "16:37:00",
+				"dep_actual": "16:37:15",
+				"spawn_time": "16:38:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -8107,8 +8377,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:42:00",
-				"dep_actual": "16:42:00",
+				"arr_actual": "16:43:00",
+				"dep_actual": "16:43:15",
 				"line": "t1"
 			}
 		]
@@ -8124,8 +8394,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:40:45",
-				"dep_actual": "16:40:45",
+				"arr_actual": "16:30:00",
+				"dep_actual": "16:30:15",
+				"spawn_time": "16:40:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -8137,8 +8408,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:44:00",
-				"dep_actual": "16:44:00",
+				"arr_actual": "16:45:00",
+				"dep_actual": "16:45:15",
 				"line": "t2"
 			}
 		]
@@ -8154,8 +8425,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:41:45",
-				"dep_actual": "16:41:45",
+				"arr_actual": "16:38:00",
+				"dep_actual": "16:38:15",
+				"spawn_time": "16:41:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -8167,8 +8439,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:45:00",
-				"dep_actual": "16:45:00",
+				"arr_actual": "16:46:00",
+				"dep_actual": "16:46:15",
 				"line": "t2"
 			}
 		]
@@ -8184,8 +8456,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:42:45",
-				"dep_actual": "16:42:45",
+				"arr_actual": "16:40:00",
+				"dep_actual": "16:40:15",
+				"spawn_time": "16:42:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -8197,8 +8470,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:46:00",
-				"dep_actual": "16:46:00",
+				"arr_actual": "16:49:00",
+				"dep_actual": "16:49:15",
 				"line": "t1"
 			}
 		]
@@ -8214,8 +8487,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:46:45",
-				"dep_actual": "16:46:45",
+				"arr_actual": "16:42:00",
+				"dep_actual": "16:42:15",
+				"spawn_time": "16:46:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -8227,8 +8501,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:50:00",
-				"dep_actual": "16:50:00",
+				"arr_actual": "16:51:00",
+				"dep_actual": "16:51:15",
 				"line": "t2"
 			}
 		]
@@ -8240,12 +8514,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:49:45",
-				"dep_actual": "16:49:45",
+				"arr_actual": "16:37:00",
+				"dep_actual": "16:39:00",
+				"spawn_time": "16:49:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -8257,8 +8532,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:54:00",
-				"dep_actual": "16:54:00",
+				"arr_actual": "17:04:00",
+				"dep_actual": "17:04:00",
 				"line": "t4"
 			}
 		]
@@ -8274,8 +8549,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:51:45",
-				"dep_actual": "16:51:45",
+				"arr_actual": "16:48:00",
+				"dep_actual": "16:48:15",
+				"spawn_time": "16:51:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -8287,8 +8563,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:55:00",
-				"dep_actual": "16:55:00",
+				"arr_actual": "16:56:00",
+				"dep_actual": "16:56:15",
 				"line": "t2"
 			}
 		]
@@ -8304,8 +8580,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:54:45",
-				"dep_actual": "16:54:45",
+				"arr_actual": "16:51:00",
+				"dep_actual": "16:51:15",
+				"spawn_time": "16:54:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -8317,8 +8594,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "16:58:00",
-				"dep_actual": "16:58:00",
+				"arr_actual": "17:01:00",
+				"dep_actual": "17:01:15",
 				"line": "t1"
 			}
 		]
@@ -8329,13 +8606,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Semarang Tawang",
 		"trainType": null,
-		"neighborBefore": "Matraman",
+		"neighborBefore": "Manggarai",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "16:58:45",
-				"dep_actual": "16:58:45",
+				"arr_actual": "16:54:00",
+				"dep_actual": "16:54:00",
+				"spawn_time": "16:58:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -8347,8 +8625,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:03:00",
-				"dep_actual": "17:03:00",
+				"arr_actual": "17:13:00",
+				"dep_actual": "17:15:00",
 				"line": "t1"
 			}
 		]
@@ -8364,8 +8642,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:01:45",
-				"dep_actual": "17:01:45",
+				"arr_actual": "16:55:00",
+				"dep_actual": "16:55:15",
+				"spawn_time": "17:01:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -8377,8 +8656,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:05:00",
-				"dep_actual": "17:05:00",
+				"arr_actual": "17:06:00",
+				"dep_actual": "17:06:15",
 				"line": "t2"
 			}
 		]
@@ -8394,8 +8673,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:02:45",
-				"dep_actual": "17:02:45",
+				"arr_actual": "16:57:00",
+				"dep_actual": "16:57:15",
+				"spawn_time": "17:02:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -8407,8 +8687,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:06:00",
-				"dep_actual": "17:06:00",
+				"arr_actual": "17:08:00",
+				"dep_actual": "17:08:15",
 				"line": "t6"
 			}
 		]
@@ -8424,8 +8704,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:07:45",
-				"dep_actual": "17:07:45",
+				"arr_actual": "17:03:00",
+				"dep_actual": "17:03:15",
+				"spawn_time": "17:07:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -8437,8 +8718,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:11:00",
-				"dep_actual": "17:11:00",
+				"arr_actual": "17:12:00",
+				"dep_actual": "17:12:15",
 				"line": "t2"
 			}
 		]
@@ -8450,12 +8731,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:07:45",
-				"dep_actual": "17:07:45",
+				"arr_actual": "16:54:00",
+				"dep_actual": "16:56:00",
+				"spawn_time": "17:07:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -8467,8 +8749,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:12:00",
-				"dep_actual": "17:12:00",
+				"arr_actual": "17:22:00",
+				"dep_actual": "17:22:00",
 				"line": "t4"
 			}
 		]
@@ -8484,8 +8766,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:08:45",
-				"dep_actual": "17:08:45",
+				"arr_actual": "17:05:00",
+				"dep_actual": "17:05:15",
+				"spawn_time": "17:08:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -8497,8 +8780,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:12:00",
-				"dep_actual": "17:12:00",
+				"arr_actual": "17:15:00",
+				"dep_actual": "17:15:15",
 				"line": "t1"
 			}
 		]
@@ -8514,8 +8797,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:13:15",
+				"arr_actual": "17:13:00",
 				"dep_actual": "17:13:15",
+				"spawn_time": "17:12:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -8527,8 +8811,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:16:00",
-				"dep_actual": "17:16:00",
+				"arr_actual": "17:20:00",
+				"dep_actual": "17:20:15",
 				"line": "t1"
 			}
 		]
@@ -8539,13 +8823,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Surabaya Gubeng",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:18:45",
-				"dep_actual": "17:18:45",
+				"arr_actual": "17:10:00",
+				"dep_actual": "17:10:00",
+				"spawn_time": "17:18:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -8557,8 +8842,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:23:00",
-				"dep_actual": "17:23:00",
+				"arr_actual": "17:33:00",
+				"dep_actual": "17:35:00",
 				"line": "t6"
 			}
 		]
@@ -8574,8 +8859,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:20:45",
-				"dep_actual": "17:20:45",
+				"arr_actual": "17:14:00",
+				"dep_actual": "17:14:15",
+				"spawn_time": "17:20:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -8587,8 +8873,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:24:00",
-				"dep_actual": "17:24:00",
+				"arr_actual": "17:25:00",
+				"dep_actual": "17:25:15",
 				"line": "t2"
 			}
 		]
@@ -8604,8 +8890,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:23:45",
-				"dep_actual": "17:23:45",
+				"arr_actual": "17:19:00",
+				"dep_actual": "17:19:15",
+				"spawn_time": "17:23:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -8617,8 +8904,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:27:00",
-				"dep_actual": "17:27:00",
+				"arr_actual": "17:28:00",
+				"dep_actual": "17:28:15",
 				"line": "t2"
 			}
 		]
@@ -8634,8 +8921,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:23:45",
-				"dep_actual": "17:23:45",
+				"arr_actual": "17:21:00",
+				"dep_actual": "17:21:15",
+				"spawn_time": "17:23:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -8647,8 +8935,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:27:00",
-				"dep_actual": "17:27:00",
+				"arr_actual": "17:30:00",
+				"dep_actual": "17:30:15",
 				"line": "t1"
 			}
 		]
@@ -8664,8 +8952,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:28:45",
-				"dep_actual": "17:28:45",
+				"arr_actual": "17:26:00",
+				"dep_actual": "17:26:15",
+				"spawn_time": "17:28:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -8677,8 +8966,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:32:00",
-				"dep_actual": "17:32:00",
+				"arr_actual": "17:35:00",
+				"dep_actual": "17:35:15",
 				"line": "t1"
 			}
 		]
@@ -8694,8 +8983,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:32:45",
-				"dep_actual": "17:32:45",
+				"arr_actual": "17:27:00",
+				"dep_actual": "17:27:15",
+				"spawn_time": "17:32:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -8707,8 +8997,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:36:00",
-				"dep_actual": "17:36:00",
+				"arr_actual": "17:37:00",
+				"dep_actual": "17:37:15",
 				"line": "t2"
 			}
 		]
@@ -8724,8 +9014,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:32:45",
-				"dep_actual": "17:32:45",
+				"arr_actual": "17:29:00",
+				"dep_actual": "17:29:15",
+				"spawn_time": "17:32:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -8737,8 +9028,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:36:00",
-				"dep_actual": "17:36:00",
+				"arr_actual": "17:38:00",
+				"dep_actual": "17:38:15",
 				"line": "t6"
 			}
 		]
@@ -8750,12 +9041,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:34:45",
-				"dep_actual": "17:34:45",
+				"arr_actual": "17:23:00",
+				"dep_actual": "17:25:00",
+				"spawn_time": "17:34:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -8767,8 +9059,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:39:00",
-				"dep_actual": "17:39:00",
+				"arr_actual": "17:48:00",
+				"dep_actual": "17:48:00",
 				"line": "t4"
 			}
 		]
@@ -8784,8 +9076,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:37:45",
-				"dep_actual": "17:37:45",
+				"arr_actual": "17:32:00",
+				"dep_actual": "17:32:15",
+				"spawn_time": "17:37:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -8797,8 +9090,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:41:00",
-				"dep_actual": "17:41:00",
+				"arr_actual": "17:42:00",
+				"dep_actual": "17:42:15",
 				"line": "t2"
 			}
 		]
@@ -8814,8 +9107,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:41:45",
-				"dep_actual": "17:41:45",
+				"arr_actual": "17:39:00",
+				"dep_actual": "17:39:15",
+				"spawn_time": "17:41:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -8827,8 +9121,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:45:00",
-				"dep_actual": "17:45:00",
+				"arr_actual": "17:48:00",
+				"dep_actual": "17:48:15",
 				"line": "t1"
 			}
 		]
@@ -8840,12 +9134,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:42:45",
-				"dep_actual": "17:42:45",
+				"arr_actual": "17:31:00",
+				"dep_actual": "17:33:00",
+				"spawn_time": "17:42:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -8857,8 +9152,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:47:00",
-				"dep_actual": "17:47:00",
+				"arr_actual": "17:51:00",
+				"dep_actual": "17:51:00",
 				"line": "t4"
 			}
 		]
@@ -8874,8 +9169,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:48:45",
-				"dep_actual": "17:48:45",
+				"arr_actual": "17:46:00",
+				"dep_actual": "17:46:15",
+				"spawn_time": "17:48:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -8887,8 +9183,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:52:00",
-				"dep_actual": "17:52:00",
+				"arr_actual": "17:55:00",
+				"dep_actual": "17:55:15",
 				"line": "t1"
 			}
 		]
@@ -8904,8 +9200,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:48:45",
-				"dep_actual": "17:48:45",
+				"arr_actual": "17:40:00",
+				"dep_actual": "17:40:15",
+				"spawn_time": "17:48:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -8917,8 +9214,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:52:00",
-				"dep_actual": "17:52:00",
+				"arr_actual": "17:53:00",
+				"dep_actual": "17:53:15",
 				"line": "t2"
 			}
 		]
@@ -8934,8 +9231,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:53:45",
-				"dep_actual": "17:53:45",
+				"arr_actual": "17:51:00",
+				"dep_actual": "17:51:15",
+				"spawn_time": "17:53:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -8947,8 +9245,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:57:00",
-				"dep_actual": "17:57:00",
+				"arr_actual": "18:00:00",
+				"dep_actual": "18:00:15",
 				"line": "t1"
 			}
 		]
@@ -8964,8 +9262,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:54:15",
+				"arr_actual": "17:54:00",
 				"dep_actual": "17:54:15",
+				"spawn_time": "17:53:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -8977,8 +9276,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:57:00",
-				"dep_actual": "17:57:00",
+				"arr_actual": "18:01:00",
+				"dep_actual": "18:01:15",
 				"line": "t1"
 			}
 		]
@@ -8994,8 +9293,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "17:53:45",
-				"dep_actual": "17:53:45",
+				"arr_actual": "17:47:00",
+				"dep_actual": "17:47:15",
+				"spawn_time": "17:53:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9007,8 +9307,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "17:57:00",
-				"dep_actual": "17:57:00",
+				"arr_actual": "17:58:00",
+				"dep_actual": "17:58:15",
 				"line": "t2"
 			}
 		]
@@ -9024,8 +9324,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:00:45",
-				"dep_actual": "18:00:45",
+				"arr_actual": "17:55:00",
+				"dep_actual": "17:55:15",
+				"spawn_time": "18:00:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9037,8 +9338,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:04:00",
-				"dep_actual": "18:04:00",
+				"arr_actual": "18:05:00",
+				"dep_actual": "18:05:15",
 				"line": "t2"
 			}
 		]
@@ -9054,8 +9355,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:04:45",
-				"dep_actual": "18:04:45",
+				"arr_actual": "18:02:00",
+				"dep_actual": "18:02:15",
+				"spawn_time": "18:04:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -9067,8 +9369,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:08:00",
-				"dep_actual": "18:08:00",
+				"arr_actual": "18:11:00",
+				"dep_actual": "18:11:15",
 				"line": "t1"
 			}
 		]
@@ -9084,8 +9386,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:04:45",
-				"dep_actual": "18:04:45",
+				"arr_actual": "18:02:00",
+				"dep_actual": "18:02:15",
+				"spawn_time": "18:04:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9097,8 +9400,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:08:00",
-				"dep_actual": "18:08:00",
+				"arr_actual": "18:09:00",
+				"dep_actual": "18:09:15",
 				"line": "t2"
 			}
 		]
@@ -9110,12 +9413,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Kampung Bandan",
 		"trainType": "freight",
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:07:45",
-				"dep_actual": "18:07:45",
+				"arr_actual": "17:50:00",
+				"dep_actual": "17:50:00",
+				"spawn_time": "18:07:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -9127,8 +9431,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:15:00",
-				"dep_actual": "18:15:00",
+				"arr_actual": "18:26:00",
+				"dep_actual": "18:26:00",
 				"line": "t4"
 			}
 		]
@@ -9144,8 +9448,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:09:45",
-				"dep_actual": "18:09:45",
+				"arr_actual": "18:05:00",
+				"dep_actual": "18:05:15",
+				"spawn_time": "18:09:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -9157,8 +9462,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:13:00",
-				"dep_actual": "18:13:00",
+				"arr_actual": "18:15:00",
+				"dep_actual": "18:15:15",
 				"line": "t6"
 			}
 		]
@@ -9174,8 +9479,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:09:45",
-				"dep_actual": "18:09:45",
+				"arr_actual": "18:05:00",
+				"dep_actual": "18:05:15",
+				"spawn_time": "18:09:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9187,8 +9493,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:13:00",
-				"dep_actual": "18:13:00",
+				"arr_actual": "18:14:00",
+				"dep_actual": "18:14:15",
 				"line": "t2"
 			}
 		]
@@ -9204,8 +9510,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:14:45",
-				"dep_actual": "18:14:45",
+				"arr_actual": "18:09:00",
+				"dep_actual": "18:09:15",
+				"spawn_time": "18:14:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -9217,8 +9524,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:18:00",
-				"dep_actual": "18:18:00",
+				"arr_actual": "18:21:00",
+				"dep_actual": "18:21:15",
 				"line": "t1"
 			}
 		]
@@ -9234,8 +9541,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:15:45",
-				"dep_actual": "18:15:45",
+				"arr_actual": "18:10:00",
+				"dep_actual": "18:10:15",
+				"spawn_time": "18:15:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9247,8 +9555,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:19:00",
-				"dep_actual": "18:19:00",
+				"arr_actual": "18:20:00",
+				"dep_actual": "18:20:15",
 				"line": "t2"
 			}
 		]
@@ -9259,13 +9567,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Lempuyangan",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:18:45",
-				"dep_actual": "18:18:45",
+				"arr_actual": "18:10:00",
+				"dep_actual": "18:10:00",
+				"spawn_time": "18:18:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -9277,8 +9586,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:23:00",
-				"dep_actual": "18:23:00",
+				"arr_actual": "18:34:00",
+				"dep_actual": "18:36:00",
 				"line": "t6"
 			}
 		]
@@ -9294,8 +9603,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:19:45",
-				"dep_actual": "18:19:45",
+				"arr_actual": "18:17:00",
+				"dep_actual": "18:17:15",
+				"spawn_time": "18:19:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -9307,8 +9617,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:23:00",
-				"dep_actual": "18:23:00",
+				"arr_actual": "18:26:00",
+				"dep_actual": "18:26:15",
 				"line": "t1"
 			}
 		]
@@ -9320,12 +9630,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:19:45",
-				"dep_actual": "18:19:45",
+				"arr_actual": "18:06:00",
+				"dep_actual": "18:08:00",
+				"spawn_time": "18:19:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -9337,8 +9648,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:24:00",
-				"dep_actual": "18:24:00",
+				"arr_actual": "18:33:00",
+				"dep_actual": "18:33:00",
 				"line": "t4"
 			}
 		]
@@ -9354,8 +9665,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:20:45",
-				"dep_actual": "18:20:45",
+				"arr_actual": "18:15:00",
+				"dep_actual": "18:15:15",
+				"spawn_time": "18:20:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9367,8 +9679,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:24:00",
-				"dep_actual": "18:24:00",
+				"arr_actual": "18:25:00",
+				"dep_actual": "18:25:15",
 				"line": "t2"
 			}
 		]
@@ -9384,8 +9696,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:27:45",
-				"dep_actual": "18:27:45",
+				"arr_actual": "18:24:00",
+				"dep_actual": "18:24:15",
+				"spawn_time": "18:27:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -9397,8 +9710,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:31:00",
-				"dep_actual": "18:31:00",
+				"arr_actual": "18:34:00",
+				"dep_actual": "18:34:15",
 				"line": "t1"
 			}
 		]
@@ -9414,8 +9727,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:32:45",
-				"dep_actual": "18:32:45",
+				"arr_actual": "18:30:00",
+				"dep_actual": "18:30:15",
+				"spawn_time": "18:32:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -9427,8 +9741,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:36:00",
-				"dep_actual": "18:36:00",
+				"arr_actual": "18:39:00",
+				"dep_actual": "18:39:15",
 				"line": "t1"
 			}
 		]
@@ -9444,8 +9758,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:32:45",
-				"dep_actual": "18:32:45",
+				"arr_actual": "18:25:00",
+				"dep_actual": "18:25:15",
+				"spawn_time": "18:32:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9457,8 +9772,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:36:00",
-				"dep_actual": "18:36:00",
+				"arr_actual": "18:37:00",
+				"dep_actual": "18:37:15",
 				"line": "t2"
 			}
 		]
@@ -9474,8 +9789,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:36:45",
-				"dep_actual": "18:36:45",
+				"arr_actual": "18:33:00",
+				"dep_actual": "18:33:15",
+				"spawn_time": "18:36:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9487,8 +9803,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:40:00",
-				"dep_actual": "18:40:00",
+				"arr_actual": "18:41:00",
+				"dep_actual": "18:41:15",
 				"line": "t2"
 			}
 		]
@@ -9499,13 +9815,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Bandung",
 		"trainType": null,
-		"neighborBefore": "Matraman",
+		"neighborBefore": "Manggarai",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:37:45",
-				"dep_actual": "18:37:45",
+				"arr_actual": "18:34:00",
+				"dep_actual": "18:34:00",
+				"spawn_time": "18:37:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -9517,8 +9834,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:42:00",
-				"dep_actual": "18:42:00",
+				"arr_actual": "18:53:00",
+				"dep_actual": "18:55:00",
 				"line": "t1"
 			}
 		]
@@ -9534,8 +9851,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:41:45",
-				"dep_actual": "18:41:45",
+				"arr_actual": "18:37:00",
+				"dep_actual": "18:37:15",
+				"spawn_time": "18:41:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -9547,8 +9865,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:45:00",
-				"dep_actual": "18:45:00",
+				"arr_actual": "18:47:00",
+				"dep_actual": "18:47:15",
 				"line": "t6"
 			}
 		]
@@ -9564,8 +9882,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:44:45",
-				"dep_actual": "18:44:45",
+				"arr_actual": "18:40:00",
+				"dep_actual": "18:40:15",
+				"spawn_time": "18:44:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9577,8 +9896,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:48:00",
-				"dep_actual": "18:48:00",
+				"arr_actual": "18:49:00",
+				"dep_actual": "18:49:15",
 				"line": "t2"
 			}
 		]
@@ -9590,12 +9909,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:48:45",
-				"dep_actual": "18:48:45",
+				"arr_actual": "18:36:00",
+				"dep_actual": "18:38:00",
+				"spawn_time": "18:48:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -9607,8 +9927,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:53:00",
-				"dep_actual": "18:53:00",
+				"arr_actual": "19:03:00",
+				"dep_actual": "19:03:00",
 				"line": "t4"
 			}
 		]
@@ -9624,8 +9944,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:49:45",
-				"dep_actual": "18:49:45",
+				"arr_actual": "18:47:00",
+				"dep_actual": "18:47:15",
+				"spawn_time": "18:49:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -9637,8 +9958,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:53:00",
-				"dep_actual": "18:53:00",
+				"arr_actual": "18:56:00",
+				"dep_actual": "18:56:15",
 				"line": "t1"
 			}
 		]
@@ -9654,8 +9975,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:51:45",
-				"dep_actual": "18:51:45",
+				"arr_actual": "18:46:00",
+				"dep_actual": "18:46:15",
+				"spawn_time": "18:51:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9667,8 +9989,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:55:00",
-				"dep_actual": "18:55:00",
+				"arr_actual": "18:56:00",
+				"dep_actual": "18:56:15",
 				"line": "t2"
 			}
 		]
@@ -9680,12 +10002,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "18:55:45",
-				"dep_actual": "18:55:45",
+				"arr_actual": "18:44:00",
+				"dep_actual": "18:46:00",
+				"spawn_time": "18:55:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -9697,8 +10020,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:00:00",
-				"dep_actual": "19:00:00",
+				"arr_actual": "19:06:00",
+				"dep_actual": "19:06:00",
 				"line": "t4"
 			}
 		]
@@ -9714,8 +10037,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "18:56:45",
-				"dep_actual": "18:56:45",
+				"arr_actual": "18:53:00",
+				"dep_actual": "18:53:15",
+				"spawn_time": "18:56:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -9727,8 +10051,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:00:00",
-				"dep_actual": "19:00:00",
+				"arr_actual": "19:03:00",
+				"dep_actual": "19:03:15",
 				"line": "t1"
 			}
 		]
@@ -9744,8 +10068,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:02:45",
-				"dep_actual": "19:02:45",
+				"arr_actual": "18:55:00",
+				"dep_actual": "18:55:15",
+				"spawn_time": "19:02:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9757,8 +10082,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:06:00",
-				"dep_actual": "19:06:00",
+				"arr_actual": "19:07:00",
+				"dep_actual": "19:07:15",
 				"line": "t2"
 			}
 		]
@@ -9774,8 +10099,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:08:45",
-				"dep_actual": "19:08:45",
+				"arr_actual": "19:02:00",
+				"dep_actual": "19:02:15",
+				"spawn_time": "19:08:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9787,8 +10113,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:12:00",
-				"dep_actual": "19:12:00",
+				"arr_actual": "19:13:00",
+				"dep_actual": "19:13:15",
 				"line": "t2"
 			}
 		]
@@ -9804,8 +10130,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:09:45",
-				"dep_actual": "19:09:45",
+				"arr_actual": "19:07:00",
+				"dep_actual": "19:07:15",
+				"spawn_time": "19:09:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -9817,8 +10144,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:13:00",
-				"dep_actual": "19:13:00",
+				"arr_actual": "19:16:00",
+				"dep_actual": "19:16:15",
 				"line": "t1"
 			}
 		]
@@ -9830,12 +10157,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:11:45",
-				"dep_actual": "19:11:45",
+				"arr_actual": "19:00:00",
+				"dep_actual": "19:02:00",
+				"spawn_time": "19:11:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -9847,8 +10175,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:16:00",
-				"dep_actual": "19:16:00",
+				"arr_actual": "19:22:00",
+				"dep_actual": "19:22:00",
 				"line": "t4"
 			}
 		]
@@ -9864,8 +10192,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:16:45",
-				"dep_actual": "19:16:45",
+				"arr_actual": "19:08:00",
+				"dep_actual": "19:08:15",
+				"spawn_time": "19:16:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -9877,8 +10206,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:20:00",
-				"dep_actual": "19:20:00",
+				"arr_actual": "19:23:00",
+				"dep_actual": "19:23:15",
 				"line": "t6"
 			}
 		]
@@ -9894,8 +10223,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:17:45",
-				"dep_actual": "19:17:45",
+				"arr_actual": "19:09:00",
+				"dep_actual": "19:09:15",
+				"spawn_time": "19:17:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9907,8 +10237,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:21:00",
-				"dep_actual": "19:21:00",
+				"arr_actual": "19:22:00",
+				"dep_actual": "19:22:15",
 				"line": "t2"
 			}
 		]
@@ -9924,8 +10254,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:22:45",
-				"dep_actual": "19:22:45",
+				"arr_actual": "19:15:00",
+				"dep_actual": "19:15:15",
+				"spawn_time": "19:22:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -9937,8 +10268,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:26:00",
-				"dep_actual": "19:26:00",
+				"arr_actual": "19:29:00",
+				"dep_actual": "19:29:15",
 				"line": "t1"
 			}
 		]
@@ -9954,8 +10285,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:22:45",
-				"dep_actual": "19:22:45",
+				"arr_actual": "19:16:00",
+				"dep_actual": "19:16:15",
+				"spawn_time": "19:22:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -9967,8 +10299,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:26:00",
-				"dep_actual": "19:26:00",
+				"arr_actual": "19:27:00",
+				"dep_actual": "19:27:15",
 				"line": "t2"
 			}
 		]
@@ -9984,8 +10316,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:27:45",
-				"dep_actual": "19:27:45",
+				"arr_actual": "19:25:00",
+				"dep_actual": "19:25:15",
+				"spawn_time": "19:27:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -9997,8 +10330,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:31:00",
-				"dep_actual": "19:31:00",
+				"arr_actual": "19:33:00",
+				"dep_actual": "19:33:15",
 				"line": "t1"
 			}
 		]
@@ -10010,12 +10343,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:28:45",
-				"dep_actual": "19:28:45",
+				"arr_actual": "19:19:00",
+				"dep_actual": "19:19:00",
+				"spawn_time": "19:28:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -10027,8 +10361,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:33:00",
-				"dep_actual": "19:33:00",
+				"arr_actual": "19:42:00",
+				"dep_actual": "19:42:00",
 				"line": "t4"
 			}
 		]
@@ -10044,8 +10378,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:29:45",
-				"dep_actual": "19:29:45",
+				"arr_actual": "19:23:00",
+				"dep_actual": "19:23:15",
+				"spawn_time": "19:29:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10057,8 +10392,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:33:00",
-				"dep_actual": "19:33:00",
+				"arr_actual": "19:34:00",
+				"dep_actual": "19:34:15",
 				"line": "t2"
 			}
 		]
@@ -10074,8 +10409,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:34:45",
-				"dep_actual": "19:34:45",
+				"arr_actual": "19:32:00",
+				"dep_actual": "19:32:15",
+				"spawn_time": "19:34:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -10087,8 +10423,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:38:00",
-				"dep_actual": "19:38:00",
+				"arr_actual": "19:41:00",
+				"dep_actual": "19:41:15",
 				"line": "t1"
 			}
 		]
@@ -10104,8 +10440,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:35:45",
-				"dep_actual": "19:35:45",
+				"arr_actual": "19:28:00",
+				"dep_actual": "19:28:15",
+				"spawn_time": "19:35:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10117,8 +10454,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:39:00",
-				"dep_actual": "19:39:00",
+				"arr_actual": "19:40:00",
+				"dep_actual": "19:40:15",
 				"line": "t2"
 			}
 		]
@@ -10134,8 +10471,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:36:45",
-				"dep_actual": "19:36:45",
+				"arr_actual": "19:32:00",
+				"dep_actual": "19:32:15",
+				"spawn_time": "19:36:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10147,8 +10485,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:40:00",
-				"dep_actual": "19:40:00",
+				"arr_actual": "19:41:00",
+				"dep_actual": "19:41:15",
 				"line": "t2"
 			}
 		]
@@ -10164,8 +10502,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:44:45",
-				"dep_actual": "19:44:45",
+				"arr_actual": "19:40:00",
+				"dep_actual": "19:40:15",
+				"spawn_time": "19:44:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -10177,8 +10516,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:48:00",
-				"dep_actual": "19:48:00",
+				"arr_actual": "19:51:00",
+				"dep_actual": "19:51:15",
 				"line": "t6"
 			}
 		]
@@ -10194,8 +10533,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:45:45",
-				"dep_actual": "19:45:45",
+				"arr_actual": "19:39:00",
+				"dep_actual": "19:39:15",
+				"spawn_time": "19:45:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10207,8 +10547,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:49:00",
-				"dep_actual": "19:49:00",
+				"arr_actual": "19:50:00",
+				"dep_actual": "19:50:15",
 				"line": "t2"
 			}
 		]
@@ -10224,8 +10564,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:50:45",
-				"dep_actual": "19:50:45",
+				"arr_actual": "19:48:00",
+				"dep_actual": "19:48:15",
+				"spawn_time": "19:50:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -10237,8 +10578,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:54:00",
-				"dep_actual": "19:54:00",
+				"arr_actual": "19:57:00",
+				"dep_actual": "19:57:15",
 				"line": "t1"
 			}
 		]
@@ -10254,8 +10595,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:52:45",
-				"dep_actual": "19:52:45",
+				"arr_actual": "19:46:00",
+				"dep_actual": "19:46:15",
+				"spawn_time": "19:52:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10267,8 +10609,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:56:00",
-				"dep_actual": "19:56:00",
+				"arr_actual": "19:57:00",
+				"dep_actual": "19:57:15",
 				"line": "t2"
 			}
 		]
@@ -10284,8 +10626,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:55:45",
-				"dep_actual": "19:55:45",
+				"arr_actual": "19:53:00",
+				"dep_actual": "19:53:15",
+				"spawn_time": "19:55:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10297,8 +10640,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:59:00",
-				"dep_actual": "19:59:00",
+				"arr_actual": "20:00:00",
+				"dep_actual": "20:00:15",
 				"line": "t2"
 			}
 		]
@@ -10309,13 +10652,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Semarang Tawang",
 		"trainType": null,
-		"neighborBefore": "Matraman",
+		"neighborBefore": "Manggarai",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "19:57:45",
-				"dep_actual": "19:57:45",
+				"arr_actual": "19:54:00",
+				"dep_actual": "19:54:00",
+				"spawn_time": "19:57:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -10327,8 +10671,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:02:00",
-				"dep_actual": "20:02:00",
+				"arr_actual": "20:12:00",
+				"dep_actual": "20:14:00",
 				"line": "t1"
 			}
 		]
@@ -10340,12 +10684,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "19:59:45",
-				"dep_actual": "19:59:45",
+				"arr_actual": "19:48:00",
+				"dep_actual": "19:50:00",
+				"spawn_time": "19:59:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -10357,8 +10702,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:04:00",
-				"dep_actual": "20:04:00",
+				"arr_actual": "20:09:00",
+				"dep_actual": "20:09:00",
 				"line": "t4"
 			}
 		]
@@ -10374,8 +10719,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:03:45",
-				"dep_actual": "20:03:45",
+				"arr_actual": "20:01:00",
+				"dep_actual": "20:01:15",
+				"spawn_time": "20:03:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -10387,8 +10733,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:07:00",
-				"dep_actual": "20:07:00",
+				"arr_actual": "20:10:00",
+				"dep_actual": "20:10:15",
 				"line": "t1"
 			}
 		]
@@ -10404,8 +10750,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:07:45",
-				"dep_actual": "20:07:45",
+				"arr_actual": "19:58:00",
+				"dep_actual": "19:58:15",
+				"spawn_time": "20:07:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10417,8 +10764,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:11:00",
-				"dep_actual": "20:11:00",
+				"arr_actual": "20:12:00",
+				"dep_actual": "20:12:15",
 				"line": "t2"
 			}
 		]
@@ -10434,8 +10781,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:12:45",
-				"dep_actual": "20:12:45",
+				"arr_actual": "20:03:00",
+				"dep_actual": "20:03:15",
+				"spawn_time": "20:12:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -10447,8 +10795,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:16:00",
-				"dep_actual": "20:16:00",
+				"arr_actual": "20:18:00",
+				"dep_actual": "20:18:15",
 				"line": "t6"
 			}
 		]
@@ -10464,8 +10812,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:13:45",
-				"dep_actual": "20:13:45",
+				"arr_actual": "20:07:00",
+				"dep_actual": "20:07:15",
+				"spawn_time": "20:13:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10477,8 +10826,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:17:00",
-				"dep_actual": "20:17:00",
+				"arr_actual": "20:18:00",
+				"dep_actual": "20:18:15",
 				"line": "t2"
 			}
 		]
@@ -10494,8 +10843,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:18:45",
-				"dep_actual": "20:18:45",
+				"arr_actual": "20:16:00",
+				"dep_actual": "20:16:15",
+				"spawn_time": "20:18:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -10507,8 +10857,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:22:00",
-				"dep_actual": "20:22:00",
+				"arr_actual": "20:25:00",
+				"dep_actual": "20:25:15",
 				"line": "t1"
 			}
 		]
@@ -10524,8 +10874,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:21:45",
-				"dep_actual": "20:21:45",
+				"arr_actual": "20:17:00",
+				"dep_actual": "20:17:15",
+				"spawn_time": "20:21:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10537,8 +10888,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:25:00",
-				"dep_actual": "20:25:00",
+				"arr_actual": "20:26:00",
+				"dep_actual": "20:26:15",
 				"line": "t2"
 			}
 		]
@@ -10554,8 +10905,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:24:45",
-				"dep_actual": "20:24:45",
+				"arr_actual": "20:21:00",
+				"dep_actual": "20:21:15",
+				"spawn_time": "20:24:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10567,8 +10919,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:28:00",
-				"dep_actual": "20:28:00",
+				"arr_actual": "20:29:00",
+				"dep_actual": "20:29:15",
 				"line": "t2"
 			}
 		]
@@ -10584,8 +10936,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:30:45",
-				"dep_actual": "20:30:45",
+				"arr_actual": "20:24:00",
+				"dep_actual": "20:24:15",
+				"spawn_time": "20:30:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -10597,8 +10950,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:34:00",
-				"dep_actual": "20:34:00",
+				"arr_actual": "20:36:00",
+				"dep_actual": "20:36:15",
 				"line": "t6"
 			}
 		]
@@ -10614,8 +10967,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:30:45",
-				"dep_actual": "20:30:45",
+				"arr_actual": "20:26:00",
+				"dep_actual": "20:26:15",
+				"spawn_time": "20:30:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10627,8 +10981,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:34:00",
-				"dep_actual": "20:34:00",
+				"arr_actual": "20:35:00",
+				"dep_actual": "20:35:15",
 				"line": "t2"
 			}
 		]
@@ -10640,12 +10994,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:32:45",
-				"dep_actual": "20:32:45",
+				"arr_actual": "20:20:00",
+				"dep_actual": "20:22:00",
+				"spawn_time": "20:32:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -10657,8 +11012,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:37:00",
-				"dep_actual": "20:37:00",
+				"arr_actual": "20:46:00",
+				"dep_actual": "20:46:00",
 				"line": "t4"
 			}
 		]
@@ -10674,8 +11029,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:35:45",
-				"dep_actual": "20:35:45",
+				"arr_actual": "20:33:00",
+				"dep_actual": "20:33:15",
+				"spawn_time": "20:35:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10687,8 +11043,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:39:00",
-				"dep_actual": "20:39:00",
+				"arr_actual": "20:40:00",
+				"dep_actual": "20:40:15",
 				"line": "t2"
 			}
 		]
@@ -10704,8 +11060,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:36:45",
-				"dep_actual": "20:36:45",
+				"arr_actual": "20:32:00",
+				"dep_actual": "20:32:15",
+				"spawn_time": "20:36:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -10717,8 +11074,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:40:00",
-				"dep_actual": "20:40:00",
+				"arr_actual": "20:43:00",
+				"dep_actual": "20:43:15",
 				"line": "t1"
 			}
 		]
@@ -10734,8 +11091,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:44:45",
-				"dep_actual": "20:44:45",
+				"arr_actual": "20:39:00",
+				"dep_actual": "20:39:15",
+				"spawn_time": "20:44:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -10747,8 +11105,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:48:00",
-				"dep_actual": "20:48:00",
+				"arr_actual": "20:50:00",
+				"dep_actual": "20:50:15",
 				"line": "t6"
 			}
 		]
@@ -10764,8 +11122,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:45:45",
-				"dep_actual": "20:45:45",
+				"arr_actual": "20:39:00",
+				"dep_actual": "20:39:15",
+				"spawn_time": "20:45:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10777,8 +11136,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:49:00",
-				"dep_actual": "20:49:00",
+				"arr_actual": "20:50:00",
+				"dep_actual": "20:50:15",
 				"line": "t2"
 			}
 		]
@@ -10794,8 +11153,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:50:45",
-				"dep_actual": "20:50:45",
+				"arr_actual": "20:48:00",
+				"dep_actual": "20:48:15",
+				"spawn_time": "20:50:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -10807,8 +11167,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:54:00",
-				"dep_actual": "20:54:00",
+				"arr_actual": "20:57:00",
+				"dep_actual": "20:57:15",
 				"line": "t1"
 			}
 		]
@@ -10820,12 +11180,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:52:45",
-				"dep_actual": "20:52:45",
+				"arr_actual": "20:40:00",
+				"dep_actual": "20:42:00",
+				"spawn_time": "20:52:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -10837,8 +11198,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:57:00",
-				"dep_actual": "20:57:00",
+				"arr_actual": "21:01:00",
+				"dep_actual": "21:01:00",
 				"line": "t4"
 			}
 		]
@@ -10854,8 +11215,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "20:58:45",
-				"dep_actual": "20:58:45",
+				"arr_actual": "20:54:00",
+				"dep_actual": "20:54:15",
+				"spawn_time": "20:58:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -10867,8 +11229,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:02:00",
-				"dep_actual": "21:02:00",
+				"arr_actual": "21:04:00",
+				"dep_actual": "21:04:15",
 				"line": "t6"
 			}
 		]
@@ -10884,8 +11246,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "20:59:45",
-				"dep_actual": "20:59:45",
+				"arr_actual": "20:54:00",
+				"dep_actual": "20:54:15",
+				"spawn_time": "20:59:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10897,8 +11260,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:03:00",
-				"dep_actual": "21:03:00",
+				"arr_actual": "21:04:00",
+				"dep_actual": "21:04:15",
 				"line": "t2"
 			}
 		]
@@ -10914,8 +11277,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:02:45",
-				"dep_actual": "21:02:45",
+				"arr_actual": "21:00:00",
+				"dep_actual": "21:00:15",
+				"spawn_time": "21:02:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -10927,8 +11291,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:06:00",
-				"dep_actual": "21:06:00",
+				"arr_actual": "21:09:00",
+				"dep_actual": "21:09:15",
 				"line": "t1"
 			}
 		]
@@ -10944,8 +11308,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:07:45",
-				"dep_actual": "21:07:45",
+				"arr_actual": "21:01:00",
+				"dep_actual": "21:01:15",
+				"spawn_time": "21:07:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -10957,8 +11322,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:11:00",
-				"dep_actual": "21:11:00",
+				"arr_actual": "21:12:00",
+				"dep_actual": "21:12:15",
 				"line": "t2"
 			}
 		]
@@ -10974,8 +11339,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:11:45",
-				"dep_actual": "21:11:45",
+				"arr_actual": "21:04:00",
+				"dep_actual": "21:04:15",
+				"spawn_time": "21:11:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -10987,8 +11353,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:15:00",
-				"dep_actual": "21:15:00",
+				"arr_actual": "21:17:00",
+				"dep_actual": "21:17:15",
 				"line": "t6"
 			}
 		]
@@ -11004,8 +11370,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:11:45",
-				"dep_actual": "21:11:45",
+				"arr_actual": "21:08:00",
+				"dep_actual": "21:08:15",
+				"spawn_time": "21:11:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -11017,8 +11384,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:15:00",
-				"dep_actual": "21:15:00",
+				"arr_actual": "21:16:00",
+				"dep_actual": "21:16:15",
 				"line": "t2"
 			}
 		]
@@ -11034,8 +11401,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:18:45",
-				"dep_actual": "21:18:45",
+				"arr_actual": "21:16:00",
+				"dep_actual": "21:16:15",
+				"spawn_time": "21:18:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -11047,8 +11415,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:22:00",
-				"dep_actual": "21:22:00",
+				"arr_actual": "21:25:00",
+				"dep_actual": "21:25:15",
 				"line": "t1"
 			}
 		]
@@ -11064,8 +11432,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:25:45",
-				"dep_actual": "21:25:45",
+				"arr_actual": "21:23:00",
+				"dep_actual": "21:23:15",
+				"spawn_time": "21:25:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -11077,8 +11446,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:29:00",
-				"dep_actual": "21:29:00",
+				"arr_actual": "21:32:00",
+				"dep_actual": "21:32:15",
 				"line": "t1"
 			}
 		]
@@ -11094,8 +11463,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:27:45",
-				"dep_actual": "21:27:45",
+				"arr_actual": "21:24:00",
+				"dep_actual": "21:24:15",
+				"spawn_time": "21:27:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -11107,8 +11477,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:31:00",
-				"dep_actual": "21:31:00",
+				"arr_actual": "21:32:00",
+				"dep_actual": "21:32:15",
 				"line": "t2"
 			}
 		]
@@ -11124,8 +11494,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:33:45",
-				"dep_actual": "21:33:45",
+				"arr_actual": "21:29:00",
+				"dep_actual": "21:29:15",
+				"spawn_time": "21:33:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -11137,8 +11508,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:37:00",
-				"dep_actual": "21:37:00",
+				"arr_actual": "21:40:00",
+				"dep_actual": "21:40:15",
 				"line": "t6"
 			}
 		]
@@ -11154,8 +11525,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:33:45",
-				"dep_actual": "21:33:45",
+				"arr_actual": "21:28:00",
+				"dep_actual": "21:28:15",
+				"spawn_time": "21:33:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -11167,8 +11539,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:37:00",
-				"dep_actual": "21:37:00",
+				"arr_actual": "21:38:00",
+				"dep_actual": "21:38:15",
 				"line": "t2"
 			}
 		]
@@ -11184,8 +11556,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:39:45",
-				"dep_actual": "21:39:45",
+				"arr_actual": "21:35:00",
+				"dep_actual": "21:35:15",
+				"spawn_time": "21:39:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -11197,8 +11570,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:43:00",
-				"dep_actual": "21:43:00",
+				"arr_actual": "21:44:00",
+				"dep_actual": "21:44:15",
 				"line": "t2"
 			}
 		]
@@ -11214,8 +11587,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:39:45",
-				"dep_actual": "21:39:45",
+				"arr_actual": "21:37:00",
+				"dep_actual": "21:37:15",
+				"spawn_time": "21:39:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -11227,8 +11601,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:43:00",
-				"dep_actual": "21:43:00",
+				"arr_actual": "21:46:00",
+				"dep_actual": "21:46:15",
 				"line": "t1"
 			}
 		]
@@ -11240,12 +11614,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": "intercity",
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:45:45",
-				"dep_actual": "21:45:45",
+				"arr_actual": "21:35:00",
+				"dep_actual": "21:35:00",
+				"spawn_time": "21:45:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -11257,8 +11632,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:50:00",
-				"dep_actual": "21:50:00",
+				"arr_actual": "21:54:00",
+				"dep_actual": "21:54:00",
 				"line": "t4"
 			}
 		]
@@ -11269,13 +11644,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Solo Balapan",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:47:45",
-				"dep_actual": "21:47:45",
+				"arr_actual": "21:40:00",
+				"dep_actual": "21:40:00",
+				"spawn_time": "21:47:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -11287,8 +11663,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:52:00",
-				"dep_actual": "21:52:00",
+				"arr_actual": "22:04:00",
+				"dep_actual": "22:06:00",
 				"line": "t6"
 			}
 		]
@@ -11304,8 +11680,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:48:45",
-				"dep_actual": "21:48:45",
+				"arr_actual": "21:43:00",
+				"dep_actual": "21:43:15",
+				"spawn_time": "21:48:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -11317,8 +11694,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:52:00",
-				"dep_actual": "21:52:00",
+				"arr_actual": "21:53:00",
+				"dep_actual": "21:53:15",
 				"line": "t2"
 			}
 		]
@@ -11330,12 +11707,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": "intercity",
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:53:45",
-				"dep_actual": "21:53:45",
+				"arr_actual": "21:40:00",
+				"dep_actual": "21:42:00",
+				"spawn_time": "21:53:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -11347,8 +11725,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:58:00",
-				"dep_actual": "21:58:00",
+				"arr_actual": "22:02:00",
+				"dep_actual": "22:02:00",
 				"line": "t4"
 			}
 		]
@@ -11364,8 +11742,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "21:54:45",
-				"dep_actual": "21:54:45",
+				"arr_actual": "21:52:00",
+				"dep_actual": "21:52:15",
+				"spawn_time": "21:54:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -11377,8 +11756,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:58:00",
-				"dep_actual": "21:58:00",
+				"arr_actual": "22:01:00",
+				"dep_actual": "22:01:15",
 				"line": "t1"
 			}
 		]
@@ -11394,8 +11773,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "21:59:45",
-				"dep_actual": "21:59:45",
+				"arr_actual": "21:49:00",
+				"dep_actual": "21:49:15",
+				"spawn_time": "21:59:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -11407,8 +11787,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:03:00",
-				"dep_actual": "22:03:00",
+				"arr_actual": "22:04:00",
+				"dep_actual": "22:04:15",
 				"line": "t2"
 			}
 		]
@@ -11424,8 +11804,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:02:45",
-				"dep_actual": "22:02:45",
+				"arr_actual": "21:56:00",
+				"dep_actual": "21:56:15",
+				"spawn_time": "22:02:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -11437,8 +11818,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:06:00",
-				"dep_actual": "22:06:00",
+				"arr_actual": "22:07:00",
+				"dep_actual": "22:07:15",
 				"line": "t2"
 			}
 		]
@@ -11450,12 +11831,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:06:45",
-				"dep_actual": "22:06:45",
+				"arr_actual": "21:53:00",
+				"dep_actual": "21:55:00",
+				"spawn_time": "22:06:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -11467,8 +11849,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:11:00",
-				"dep_actual": "22:11:00",
+				"arr_actual": "22:16:00",
+				"dep_actual": "22:16:00",
 				"line": "t4"
 			}
 		]
@@ -11484,8 +11866,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:08:45",
-				"dep_actual": "22:08:45",
+				"arr_actual": "22:05:00",
+				"dep_actual": "22:05:15",
+				"spawn_time": "22:08:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -11497,8 +11880,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:12:00",
-				"dep_actual": "22:12:00",
+				"arr_actual": "22:14:00",
+				"dep_actual": "22:14:15",
 				"line": "t6"
 			}
 		]
@@ -11514,8 +11897,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:11:45",
-				"dep_actual": "22:11:45",
+				"arr_actual": "22:03:00",
+				"dep_actual": "22:03:15",
+				"spawn_time": "22:11:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -11527,8 +11911,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:15:00",
-				"dep_actual": "22:15:00",
+				"arr_actual": "22:16:00",
+				"dep_actual": "22:16:15",
 				"line": "t2"
 			}
 		]
@@ -11544,8 +11928,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:13:45",
-				"dep_actual": "22:13:45",
+				"arr_actual": "22:09:00",
+				"dep_actual": "22:09:15",
+				"spawn_time": "22:13:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -11557,8 +11942,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:17:00",
-				"dep_actual": "22:17:00",
+				"arr_actual": "22:20:00",
+				"dep_actual": "22:20:15",
 				"line": "t1"
 			}
 		]
@@ -11569,13 +11954,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Kampung Bandan",
 		"destination": "Klari",
 		"trainType": "freight",
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:16:45",
-				"dep_actual": "22:16:45",
+				"arr_actual": "22:06:00",
+				"dep_actual": "22:06:00",
+				"spawn_time": "22:16:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -11587,8 +11973,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:31:00",
-				"dep_actual": "22:31:00",
+				"arr_actual": "22:52:00",
+				"dep_actual": "22:53:00",
 				"line": "t6"
 			}
 		]
@@ -11604,8 +11990,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:18:45",
-				"dep_actual": "22:18:45",
+				"arr_actual": "22:13:00",
+				"dep_actual": "22:13:15",
+				"spawn_time": "22:18:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -11617,8 +12004,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:22:00",
-				"dep_actual": "22:22:00",
+				"arr_actual": "22:23:00",
+				"dep_actual": "22:23:15",
 				"line": "t2"
 			}
 		]
@@ -11629,13 +12016,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Surabaya Pasarturi",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:23:45",
-				"dep_actual": "22:23:45",
+				"arr_actual": "22:15:00",
+				"dep_actual": "22:15:00",
+				"spawn_time": "22:23:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -11647,8 +12035,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:28:00",
-				"dep_actual": "22:28:00",
+				"arr_actual": "22:40:00",
+				"dep_actual": "22:42:00",
 				"line": "t6"
 			}
 		]
@@ -11664,8 +12052,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:24:45",
-				"dep_actual": "22:24:45",
+				"arr_actual": "22:22:00",
+				"dep_actual": "22:22:15",
+				"spawn_time": "22:24:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -11677,8 +12066,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:28:00",
-				"dep_actual": "22:28:00",
+				"arr_actual": "22:31:00",
+				"dep_actual": "22:31:15",
 				"line": "t1"
 			}
 		]
@@ -11694,8 +12083,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:24:45",
-				"dep_actual": "22:24:45",
+				"arr_actual": "22:19:00",
+				"dep_actual": "22:19:15",
+				"spawn_time": "22:24:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -11707,8 +12097,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:28:00",
-				"dep_actual": "22:28:00",
+				"arr_actual": "22:29:00",
+				"dep_actual": "22:29:15",
 				"line": "t2"
 			}
 		]
@@ -11724,8 +12114,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:31:45",
-				"dep_actual": "22:31:45",
+				"arr_actual": "22:29:00",
+				"dep_actual": "22:29:15",
+				"spawn_time": "22:31:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -11737,8 +12128,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:35:00",
-				"dep_actual": "22:35:00",
+				"arr_actual": "22:38:00",
+				"dep_actual": "22:38:15",
 				"line": "t1"
 			}
 		]
@@ -11754,8 +12145,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:31:45",
-				"dep_actual": "22:31:45",
+				"arr_actual": "22:28:00",
+				"dep_actual": "22:28:15",
+				"spawn_time": "22:31:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -11767,8 +12159,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:35:00",
-				"dep_actual": "22:35:00",
+				"arr_actual": "22:36:00",
+				"dep_actual": "22:36:15",
 				"line": "t2"
 			}
 		]
@@ -11784,8 +12176,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:38:45",
-				"dep_actual": "22:38:45",
+				"arr_actual": "22:34:00",
+				"dep_actual": "22:34:15",
+				"spawn_time": "22:38:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -11797,8 +12190,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:42:00",
-				"dep_actual": "22:42:00",
+				"arr_actual": "22:44:00",
+				"dep_actual": "22:44:15",
 				"line": "t6"
 			}
 		]
@@ -11814,8 +12207,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:44:45",
-				"dep_actual": "22:44:45",
+				"arr_actual": "22:41:00",
+				"dep_actual": "22:41:15",
+				"spawn_time": "22:44:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -11827,8 +12221,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:48:00",
-				"dep_actual": "22:48:00",
+				"arr_actual": "22:49:00",
+				"dep_actual": "22:49:15",
 				"line": "t2"
 			}
 		]
@@ -11844,8 +12238,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:53:45",
-				"dep_actual": "22:53:45",
+				"arr_actual": "22:52:00",
+				"dep_actual": "22:52:15",
+				"spawn_time": "22:53:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -11857,8 +12252,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:57:00",
-				"dep_actual": "22:57:00",
+				"arr_actual": "22:58:00",
+				"dep_actual": "22:58:15",
 				"line": "t1"
 			}
 		]
@@ -11869,13 +12264,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Semarang Tawang",
 		"trainType": null,
-		"neighborBefore": "Matraman",
+		"neighborBefore": "Manggarai",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "22:53:45",
-				"dep_actual": "22:53:45",
+				"arr_actual": "22:49:00",
+				"dep_actual": "22:49:00",
+				"spawn_time": "22:53:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -11887,8 +12283,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:58:00",
-				"dep_actual": "22:58:00",
+				"arr_actual": "23:07:00",
+				"dep_actual": "23:09:00",
 				"line": "t1"
 			}
 		]
@@ -11900,12 +12296,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Pasar Senen",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Pondok Jati",
+		"neighborAfter": "Pasar Senen",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "22:55:45",
-				"dep_actual": "22:55:45",
+				"arr_actual": "22:42:00",
+				"dep_actual": "22:44:00",
+				"spawn_time": "22:55:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -11917,8 +12314,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:00:00",
-				"dep_actual": "23:00:00",
+				"arr_actual": "23:09:00",
+				"dep_actual": "23:09:00",
 				"line": "t4"
 			}
 		]
@@ -11934,8 +12331,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:04:45",
-				"dep_actual": "23:04:45",
+				"arr_actual": "22:59:00",
+				"dep_actual": "22:59:15",
+				"spawn_time": "23:04:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -11947,8 +12345,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:08:00",
-				"dep_actual": "23:08:00",
+				"arr_actual": "23:10:00",
+				"dep_actual": "23:10:15",
 				"line": "t6"
 			}
 		]
@@ -11960,12 +12358,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"destination": "Gambir",
 		"trainType": null,
 		"neighborBefore": "Bekasi",
-		"neighborAfter": "Matraman",
+		"neighborAfter": "Manggarai",
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:04:45",
-				"dep_actual": "23:04:45",
+				"arr_actual": "22:52:00",
+				"dep_actual": "22:54:00",
+				"spawn_time": "23:04:45",
 				"line": "t4",
 				"entryLine": "t4"
 			},
@@ -11977,8 +12376,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:09:00",
-				"dep_actual": "23:09:00",
+				"arr_actual": "23:14:00",
+				"dep_actual": "23:14:00",
 				"line": "t4"
 			}
 		]
@@ -11994,8 +12393,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:05:45",
-				"dep_actual": "23:05:45",
+				"arr_actual": "22:55:00",
+				"dep_actual": "22:55:15",
+				"spawn_time": "23:05:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -12007,8 +12407,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:09:00",
-				"dep_actual": "23:09:00",
+				"arr_actual": "23:10:00",
+				"dep_actual": "23:10:15",
 				"line": "t2"
 			}
 		]
@@ -12024,8 +12424,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:10:45",
-				"dep_actual": "23:10:45",
+				"arr_actual": "23:03:00",
+				"dep_actual": "23:03:15",
+				"spawn_time": "23:10:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -12037,8 +12438,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:14:00",
-				"dep_actual": "23:14:00",
+				"arr_actual": "23:15:00",
+				"dep_actual": "23:15:15",
 				"line": "t2"
 			}
 		]
@@ -12054,8 +12455,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:12:45",
-				"dep_actual": "23:12:45",
+				"arr_actual": "23:10:00",
+				"dep_actual": "23:10:15",
+				"spawn_time": "23:12:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -12067,8 +12469,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:16:00",
-				"dep_actual": "23:16:00",
+				"arr_actual": "23:19:00",
+				"dep_actual": "23:19:15",
 				"line": "t1"
 			}
 		]
@@ -12084,8 +12486,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:17:45",
-				"dep_actual": "23:17:45",
+				"arr_actual": "23:10:00",
+				"dep_actual": "23:10:15",
+				"spawn_time": "23:17:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -12097,8 +12500,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:21:00",
-				"dep_actual": "23:21:00",
+				"arr_actual": "23:22:00",
+				"dep_actual": "23:22:15",
 				"line": "t2"
 			}
 		]
@@ -12109,13 +12512,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Gambir",
 		"destination": "Bandung",
 		"trainType": null,
-		"neighborBefore": "Matraman",
+		"neighborBefore": "Manggarai",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:17:45",
-				"dep_actual": "23:17:45",
+				"arr_actual": "23:14:00",
+				"dep_actual": "23:14:00",
+				"spawn_time": "23:17:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -12127,8 +12531,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:22:00",
-				"dep_actual": "23:22:00",
+				"arr_actual": "23:33:00",
+				"dep_actual": "23:35:00",
 				"line": "t1"
 			}
 		]
@@ -12144,8 +12548,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:23:45",
-				"dep_actual": "23:23:45",
+				"arr_actual": "23:20:00",
+				"dep_actual": "23:20:15",
+				"spawn_time": "23:23:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -12157,8 +12562,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:27:00",
-				"dep_actual": "23:27:00",
+				"arr_actual": "23:28:00",
+				"dep_actual": "23:28:15",
 				"line": "t2"
 			}
 		]
@@ -12174,8 +12579,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:26:45",
-				"dep_actual": "23:26:45",
+				"arr_actual": "23:23:00",
+				"dep_actual": "23:23:15",
+				"spawn_time": "23:26:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -12187,8 +12593,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:30:00",
-				"dep_actual": "23:30:00",
+				"arr_actual": "23:33:00",
+				"dep_actual": "23:33:15",
 				"line": "t1"
 			}
 		]
@@ -12199,13 +12605,14 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"origin": "Pasar Senen",
 		"destination": "Lempuyangan",
 		"trainType": null,
-		"neighborBefore": "Pondok Jati",
+		"neighborBefore": "Pasar Senen",
 		"neighborAfter": "Bekasi",
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:28:45",
-				"dep_actual": "23:28:45",
+				"arr_actual": "23:20:00",
+				"dep_actual": "23:20:00",
+				"spawn_time": "23:28:45",
 				"line": "t6",
 				"entryLine": "t6"
 			},
@@ -12217,8 +12624,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:33:00",
-				"dep_actual": "23:33:00",
+				"arr_actual": "23:43:00",
+				"dep_actual": "23:45:00",
 				"line": "t6"
 			}
 		]
@@ -12234,8 +12641,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:31:45",
-				"dep_actual": "23:31:45",
+				"arr_actual": "23:28:00",
+				"dep_actual": "23:28:15",
+				"spawn_time": "23:31:45",
 				"line": "t2",
 				"entryLine": "t2"
 			},
@@ -12247,8 +12655,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:35:00",
-				"dep_actual": "23:35:00",
+				"arr_actual": "23:36:00",
+				"dep_actual": "23:36:15",
 				"line": "t2"
 			}
 		]
@@ -12264,8 +12672,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:33:45",
-				"dep_actual": "23:33:45",
+				"arr_actual": "23:31:00",
+				"dep_actual": "23:31:15",
+				"spawn_time": "23:33:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -12277,8 +12686,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:37:00",
-				"dep_actual": "23:37:00",
+				"arr_actual": "23:40:00",
+				"dep_actual": "23:40:15",
 				"line": "t1"
 			}
 		]
@@ -12294,8 +12703,9 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 		"stops": [
 			{
 				"station": "JNG-W",
-				"arr_actual": "23:52:45",
-				"dep_actual": "23:52:45",
+				"arr_actual": "23:50:00",
+				"dep_actual": "23:50:15",
+				"spawn_time": "23:52:45",
 				"line": "t1",
 				"entryLine": "t1"
 			},
@@ -12307,8 +12717,8 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 			},
 			{
 				"station": "JNG-E",
-				"arr_actual": "23:56:00",
-				"dep_actual": "23:56:00",
+				"arr_actual": "23:59:00",
+				"dep_actual": "23:59:15",
 				"line": "t1"
 			}
 		]

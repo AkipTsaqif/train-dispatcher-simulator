@@ -104,7 +104,7 @@ check(
   const expectedY = (j: (typeof runtime.journeys)[number]): number => {
     const odd = lastTrainNumber(j.train.train_no) % 2 === 1;
     if (odd) return j.train.trainType === "krl" ? 464 : 400;
-    return j.train.neighborBefore === "Pondok Jati" ? 336 : 496;
+    return j.train.stops[0].line === "t6" || j.train.neighborBefore === "Pondok Jati" ? 336 : 496;
   };
   const wrongLine = runtime.journeys.filter((j) => j.plan.start.y !== expectedY(j));
   check(

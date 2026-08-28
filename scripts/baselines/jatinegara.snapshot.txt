@@ -4179,7 +4179,7 @@
             "waypointX": 424
           },
           {
-            "departAt": -85560,
+            "departAt": 195,
             "lineY": 400,
             "passThrough": false,
             "speed": 14.2222222222,
@@ -4187,7 +4187,7 @@
             "waypointX": 136
           },
           {
-            "departAt": -85539.75,
+            "departAt": 215.25,
             "lineY": 400,
             "passThrough": true,
             "speed": 14.2222222222,
@@ -4267,7 +4267,7 @@
             "waypointX": 424
           },
           {
-            "departAt": -85815,
+            "departAt": 135,
             "lineY": 464,
             "passThrough": false,
             "speed": 8.44444444444,
@@ -4275,7 +4275,7 @@
             "waypointX": 136
           },
           {
-            "departAt": -85780.8947368,
+            "departAt": 169.105263158,
             "lineY": 464,
             "passThrough": true,
             "speed": 8.44444444444,
@@ -7303,7 +7303,7 @@
             "waypointX": 424
           },
           {
-            "departAt": 91,
+            "departAt": 135,
             "lineY": 496,
             "passThrough": false,
             "speed": 11.2592592593,
@@ -7311,7 +7311,7 @@
             "waypointX": 952
           },
           {
-            "departAt": 137.894736842,
+            "departAt": 181.894736842,
             "lineY": 496,
             "passThrough": true,
             "speed": 11.2592592593,
@@ -8271,7 +8271,7 @@
             "waypointX": 424
           },
           {
-            "departAt": 75,
+            "departAt": 135,
             "lineY": 464,
             "passThrough": false,
             "speed": 8.44444444444,
@@ -8279,7 +8279,7 @@
             "waypointX": 136
           },
           {
-            "departAt": 109.105263158,
+            "departAt": 169.105263158,
             "lineY": 464,
             "passThrough": true,
             "speed": 8.44444444444,
@@ -12407,7 +12407,7 @@
             "waypointX": 424
           },
           {
-            "departAt": 31,
+            "departAt": 135,
             "lineY": 496,
             "passThrough": false,
             "speed": 11.2592592593,
@@ -12415,7 +12415,7 @@
             "waypointX": 952
           },
           {
-            "departAt": 77.8947368421,
+            "departAt": 181.894736842,
             "lineY": 496,
             "passThrough": true,
             "speed": 11.2592592593,
@@ -12891,7 +12891,7 @@
             "waypointX": 424
           },
           {
-            "departAt": 31,
+            "departAt": 135,
             "lineY": 496,
             "passThrough": false,
             "speed": 11.2592592593,
@@ -12899,7 +12899,7 @@
             "waypointX": 952
           },
           {
-            "departAt": 77.8947368421,
+            "departAt": 181.894736842,
             "lineY": 496,
             "passThrough": true,
             "speed": 11.2592592593,
@@ -13419,7 +13419,7 @@
             "waypointX": 424
           },
           {
-            "departAt": 91,
+            "departAt": 135,
             "lineY": 336,
             "passThrough": false,
             "speed": 11.2592592593,
@@ -13427,7 +13427,7 @@
             "waypointX": 952
           },
           {
-            "departAt": 137.894736842,
+            "departAt": 181.894736842,
             "lineY": 336,
             "passThrough": true,
             "speed": 11.2592592593,
@@ -13551,7 +13551,7 @@
             "waypointX": 424
           },
           {
-            "departAt": 91,
+            "departAt": 135,
             "lineY": 496,
             "passThrough": false,
             "speed": 11.2592592593,
@@ -13559,7 +13559,7 @@
             "waypointX": 952
           },
           {
-            "departAt": 137.894736842,
+            "departAt": 181.894736842,
             "lineY": 496,
             "passThrough": true,
             "speed": 11.2592592593,
@@ -13991,7 +13991,7 @@
             "waypointX": 424
           },
           {
-            "departAt": 91,
+            "departAt": 135,
             "lineY": 336,
             "passThrough": false,
             "speed": 11.2592592593,
@@ -13999,7 +13999,7 @@
             "waypointX": 952
           },
           {
-            "departAt": 137.894736842,
+            "departAt": 181.894736842,
             "lineY": 336,
             "passThrough": true,
             "speed": 11.2592592593,
@@ -16631,7 +16631,7 @@
             "waypointX": 424
           },
           {
-            "departAt": 105,
+            "departAt": 135,
             "lineY": 496,
             "passThrough": false,
             "speed": 11.2592592593,
@@ -16639,7 +16639,7 @@
             "waypointX": 952
           },
           {
-            "departAt": 151.894736842,
+            "departAt": 181.894736842,
             "lineY": 496,
             "passThrough": true,
             "speed": 11.2592592593,
@@ -17291,7 +17291,7 @@
             "waypointX": 424
           },
           {
-            "departAt": 91,
+            "departAt": 135,
             "lineY": 496,
             "passThrough": false,
             "speed": 11.2592592593,
@@ -17299,7 +17299,7 @@
             "waypointX": 952
           },
           {
-            "departAt": 137.894736842,
+            "departAt": 181.894736842,
             "lineY": 496,
             "passThrough": true,
             "speed": 11.2592592593,
@@ -18963,7 +18963,7 @@
             "waypointX": 424
           },
           {
-            "departAt": 75,
+            "departAt": 135,
             "lineY": 464,
             "passThrough": false,
             "speed": 8.44444444444,
@@ -18971,7 +18971,7 @@
             "waypointX": 136
           },
           {
-            "departAt": 109.105263158,
+            "departAt": 169.105263158,
             "lineY": 464,
             "passThrough": true,
             "speed": 8.44444444444,
@@ -21515,7 +21515,7 @@
             "waypointX": 424
           },
           {
-            "departAt": 91,
+            "departAt": 135,
             "lineY": 496,
             "passThrough": false,
             "speed": 11.2592592593,
@@ -21523,7 +21523,7 @@
             "waypointX": 952
           },
           {
-            "departAt": 137.894736842,
+            "departAt": 181.894736842,
             "lineY": 496,
             "passThrough": true,
             "speed": 11.2592592593,
