@@ -1189,3 +1189,53 @@ test.describe("dispatching table", () => {
     }
     expect(glitchDetected).toBe(false);
   });
+
+  test("initial landing page is blank with station and start hour selection form", async ({ page }) => {
+    // Visit root page with no query parameters
+    await page.goto("/");
+    await expect(page.getByText("Pengatur Perjalanan Kereta Api")).toBeVisible();
+    await expect(page.getByText("Stasiun Jatinegara")).toBeVisible();
+    await expect(page.getByText("Lintas Bekasi Timur – Tambun – Cibitung")).toBeVisible();
+    // No track diagram in the background while launcher is open
+    await expect(page.locator('svg[aria-label*="Meja pengatur"]')).toHaveCount(0);
+
+    // Choose Jatinegara at 06:00 and launch
+    await page.getByText("Stasiun Jatinegara").click();
+    await page.getByRole("button", { name: "06:00", exact: true }).click();
+    await page.getByRole("button", { name: "Mulai", exact: true }).click();
+
+    // Jatinegara diagram renders and simulation clock starts at 06:00
+    await expect(page.locator('svg[aria-label*="Jatinegara"]')).toBeVisible();
+    await expect(page.getByRole("timer")).toContainText("06:00:");
+
+    // Verify notifications contain no stray station names from the other layout
+    const notificationsText =
+      (await page.evaluate(
+        () => document.querySelector('[data-board="notifications"]')?.textContent ?? ""
+      )) ?? "";
+    expect(notificationsText).not.toContain("Cibitung");
+    expect(notificationsText).not.toContain("Bekasi Timur");
+
+    // Settings allows returning to launcher screen anytime
+    await page.getByRole("button", { name: "Pengaturan" }).click();
+    await page.getByRole("button", { name: "Ganti Stasiun / Waktu Mulai" }).click();
+    await expect(page.getByText("Pengatur Perjalanan Kereta Api")).toBeVisible();
+    await expect(page.locator('svg[aria-label*="Meja pengatur"]')).toHaveCount(0);
+  });
+
+  test("jatinegara 5509B enters from east track edge at its scheduled boundary time without teleporting", async ({ page }) => {
+    await page.clock.install();
+    await page.goto("/jng?start=06:00");
+    const marker = page.locator('[data-train="5509B"]');
+
+    // At 06:00:00, 5509B is not yet due (boundary is 06:01:45)
+    await expect(marker).toBeHidden();
+
+    // Advance to 06:01:46 (when 5509B spawns)
+    await page.clock.fastForward("00:01:46");
+    await expect(marker).toBeVisible();
+
+    // The train must enter from the far east track edge (x > 950), not jump to NE2 (x ≈ 776)
+    const initialX = Number(await marker.getAttribute("data-x"));
+    expect(initialX).toBeGreaterThan(950);
+  });

@@ -24807,6 +24807,7 @@
       "trainHalfLen": 58
     },
     "notificationPolicy": {
+      "approachMessage": "persiapan masuk stasiun Jatinegara",
       "boardLimit": 40,
       "departureCountdown": {
         "firstThresholdSeconds": 30,
@@ -24815,6 +24816,7 @@
         "urgentThresholdSeconds": 15
       },
       "heldAtSignalThresholdSeconds": 30,
+      "notifyOnApproach": true,
       "susulMeetStation": "JNG"
     },
     "signalSections": [

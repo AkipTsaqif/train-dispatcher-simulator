@@ -75,7 +75,11 @@ export type DispatchScenarioDefinition = {
   notifications: {
     boardLimit: number;
     heldAtSignalThresholdSeconds: number;
-    susulMeetStation: string;
+    susulMeetStation?: string;
+    /** If true, trains entering the approach emit an approach notification on the board. */
+    notifyOnApproach?: boolean;
+    /** Custom approach notification message (e.g. "persiapan masuk stasiun jatinegara"). */
+    approachMessage?: string;
     departureCountdown: {
       station: string;
       stopIndex: number;
