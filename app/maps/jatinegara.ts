@@ -35,6 +35,10 @@ const COMPILED = compileTopology(JATINEGARA_TOPOLOGY);
 
 const STATIONS: Station[] = [
 	{ code: "JNG", name: "Jatinegara", x: 202, y: 248, w: 130, h: 58 },
+	{ code: "MTR", name: "Matraman", x: 88, y: 552, w: 64, h: 20 },
+	{ code: "POK", name: "Pondok Jati", x: 296, y: 552, w: 64, h: 20 },
+	{ code: "KLD", name: "Klender", x: 552, y: 616, w: 64, h: 20 },
+	{ code: "BUA", name: "Buaran", x: 696, y: 616, w: 64, h: 20 },
 ];
 
 // Traffic-flow arrows at the map boundaries, authored as grid cells. The
@@ -54,6 +58,15 @@ const ARROW_CELLS: { x: number; group: string }[] = [
 	{ x: 960, group: "t5ap" },
 	{ x: 960, group: "t3" },
 	{ x: 960, group: "t1" },
+	{ x: 32, group: "mtr_hilir" },
+	{ x: 192, group: "mtr_hulu" },
+	{ x: 240, group: "pok_hilir" },
+	{ x: 400, group: "pok_hulu" },
+	// KLD/BKS strip: Hulu lines exit right toward JNG, Hilir lines exit left.
+	{ x: 776, group: "kld_t1" },
+	{ x: 456, group: "kld_t2" },
+	{ x: 776, group: "kld_t3" },
+	{ x: 456, group: "kld_t4" },
 ];
 
 /**
@@ -120,6 +133,65 @@ const ISLAND_PLATFORMS: StationShape[] = [
 	islandPlatform("t5", "t6", { x: 424, length: 64 }), // row 7
 	islandPlatform("t3", "t4", { x: 424, length: 64 }), // row 11
 	islandPlatform("t1", "t2", { x: 424, length: 64, labelY: 517 }), // row 15, named
+	{
+		// x is the bar CENTRE and must stay on the 8+16k lattice (see the
+		// matching platform pieces in app/pieces/jatinegara.ts): 120 makes the
+		// 64-unit bar span 88..152, i.e. exactly 4 grid cells.
+		code: "MTR",
+		x: 120,
+		y: 576,
+		side: "down",
+		length: 64,
+		offset: 11,
+		corner: "square",
+		label: false,
+	},
+	{
+		// Pondok Jati island, same shape as MTR shifted +208 (13 cells right).
+		code: "POK",
+		x: 328,
+		y: 576,
+		side: "down",
+		length: 64,
+		offset: 11,
+		corner: "square",
+		label: false,
+	},
+	// Klender and Buaran islands sit between the LOCAL pair, which is the
+	// BOTTOM pair of the band under right-hand running: kld_t2 (Hilir, y=640)
+	// above kld_t1 (Hulu, y=672). The bar hangs off the upper of the two.
+	// At scale 1:2 two drawn cells = 32 units, HALF the 64-unit island drawn
+	// elsewhere on the diagram - that is the compressed scale showing through.
+	//
+	// NOTE the x here is BAR GEOMETRY, not the stop point. The bar is drawn
+	// centred on this x and must start and end on CELL EDGES so it fills whole
+	// cells. The grid offset is [8,248], so cell edges are at 8+16k and cell
+	// CENTRES at 0+16k - the opposite of what the naming suggests.
+	// KLD occupies the 2 cells between K13 (centre 560) and K14 (centre 608),
+	// i.e. 568..600, so the bar centre is 584. The stop point in
+	// app/pieces/jatinegara.ts is the same 584 for this even-length platform.
+	{
+		code: "KLD",
+		x: 584,
+		y: 640,
+		side: "down",
+		length: 32,
+		offset: 11,
+		corner: "square",
+		label: false,
+	},
+	// BUA occupies the 2 cells between K16 (centre 704) and K17 (centre 752),
+	// i.e. 712..744, so the bar centre is 728.
+	{
+		code: "BUA",
+		x: 728,
+		y: 640,
+		side: "down",
+		length: 32,
+		offset: 11,
+		corner: "square",
+		label: false,
+	},
 ];
 
 export const JATINEGARA_MAP: DispatchMapDefinition = {
@@ -133,14 +205,14 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
 		shift: 0,
 		width: 992,
 		rowCount: 10,
-		gridBottomY: 540,
-		viewBox: { minX: -20, minY: 230, widthPadding: 60, height: 300 },
+		gridBottomY: 712,
+		viewBox: { minX: -20, minY: 230, widthPadding: 60, height: 500 },
 		// the column letters sit OUTSIDE the grid: above its top line (240) and
 		// below its bottom line (544); row numbers in the left/right gutters
 		ticks: {
 			size: 6,
 			topColumnLabelY: 240,
-			bottomColumnLabelY: 544,
+			bottomColumnLabelY: 712,
 			leftRowLabelX: -26,
 			rightRowLabelOffsetX: 36,
 		},
@@ -170,7 +242,7 @@ export const JATINEGARA_MAP: DispatchMapDefinition = {
 		kind: "schematic",
 		// margins around the diagram for the grid reference (letters above/below
 		// the grid, numbers left/right — outside, like the Tambun grid)
-		viewBox: { minX: -40, minY: 222, width: 1080, height: 330 },
+		viewBox: { minX: -40, minY: 222, width: 1080, height: 500 },
 		// Keep engine movement continuous, but snap the DRAWN markers to this
 		// 16-unit graph-paper lattice, like Bekasi. This is presentation only:
 		// stops, occupancy, conflicts, and route release retain their true

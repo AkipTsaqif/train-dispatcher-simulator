@@ -80,6 +80,23 @@ type ScheduleStop = {
   entryLine?: string;
   spawn_time?: string;
   meets?: { type: string; with: string }[];
+  /**
+   * Real Klender / Buaran times for the detached KLD/BKS corridor snippet.
+   *
+   * These are METADATA, not routable stops. The KLD strip is physically
+   * detached from the JNG throat, so making KLD/BUA real journey stops would
+   * resolve `stopXFor` against the journey's own line (t2, y=464), find no
+   * `stopXsByTrack.KLD.t2`, and dwell the train mid-diagram at x=584.
+   * The snippet layer reads these directly instead, exactly as MTR/POK are
+   * drawn from `plan.boundaryArr` rather than from schedule stops.
+   *
+   * Absent for the ~186 expresses that skip both stations; those run through
+   * the strip without dwelling.
+   */
+  kld_arr?: string;
+  kld_dep?: string;
+  bua_arr?: string;
+  bua_dep?: string;
 };
 
 type ScheduleEntry = {
@@ -217,9 +234,41 @@ for (const call of stationData.calls) {
   const nextArr = next?.arrival ?? next?.departure ?? secToHms(depSec + 60);
   const nextDep = next?.departure ?? next?.arrival ?? nextArr;
 
-  // Boundary spawn time: the train materializes at the track edge shortly
-  // before its scheduled JNG platform arrival (~75s travel).
-  const boundarySec = Math.max(0, arrSec - 75);
+  // Real Klender/Buaran calls from the source timetable, carried through as
+  // snippet metadata (see ScheduleStop above). 320 of the 506 JNG-calling
+  // trains stop at both; the rest are expresses that skip them.
+  const kldStop = train.stops.find((s) => s.station_code === "KLD");
+  const buaStop = train.stops.find((s) => s.station_code === "BUA");
+  const corridorTimes: Partial<ScheduleStop> = {
+    ...(kldStop?.arrival ? { kld_arr: kldStop.arrival } : {}),
+    ...(kldStop?.departure ?? kldStop?.arrival
+      ? { kld_dep: (kldStop!.departure ?? kldStop!.arrival)! }
+      : {}),
+    ...(buaStop?.arrival ? { bua_arr: buaStop.arrival } : {}),
+    ...(buaStop?.departure ?? buaStop?.arrival
+      ? { bua_dep: (buaStop!.departure ?? buaStop!.arrival)! }
+      : {}),
+  };
+
+  // Boundary spawn time:
+  // For westbound trains stopping at Klender (KLD), the train departs Klender
+  // at kld_dep and travels along the approach corridor toward Jatinegara at
+  // the real interstation pace (~1.37 u/s, taking ~99s to cross the 136 units
+  // from Klender platform to the JNG boundary edge). The boundary spawn time
+  // matches that exact arrival, so the train rolls into JNG with its real-life
+  // buffer/leeway before the scheduled JNG platform arrival/departure.
+  // For other trains (eastbound, or expresses without KLD stop), materializes
+  // ~75s before JNG platform arrival.
+  let boundarySec = Math.max(0, arrSec - 75);
+  if (!eastbound && kldStop?.departure) {
+    const kldDepSec = hmsToSec(kldStop.departure);
+    const kldArrSec = hmsToSec(kldStop.arrival ?? kldStop.departure);
+    const buaDepSec = buaStop?.departure ? hmsToSec(buaStop.departure) : kldArrSec - 105;
+    const interstationSec = Math.max(60, (kldArrSec - buaDepSec + 86400) % 86400);
+    const pace = 144 / interstationSec; // distance between BUA (728) and KLD (584) is 144u
+    const runKldToEdgeSec = Math.round(136 / pace); // distance from KLD (584) to handover edge (448) is 136u
+    boundarySec = (kldDepSec + runKldToEdgeSec) % 86400;
+  }
   const boundaryTime: string = secToHms(boundarySec);
 
   // Parse susul (overtake) from remarks — try the train file's JNG stop
@@ -231,15 +280,26 @@ for (const call of stationData.calls) {
   const neighborBefore = prev?.station_name ?? immPrev?.station_name ?? null;
   const neighborAfter = next?.station_name ?? immNext?.station_name ?? null;
 
-  // Line assignment:
-  // - odd westbound non-KRL: t4 (row 10)
-  // - westbound KRL: t2 (row 14)
-  // - eastbound from Pondok Jati (POK throat): t6 (row 6)
-  // - all other eastbound trains (Matraman throat): t1 (row 16)
+  // Line assignment. The two throats are SYMMETRIC: a train bound for Pondok
+  // Jati leaves on the POK side (t7/row 4) just as a train arriving from Pondok
+  // Jati enters on the POK side (t6/row 6). Destination decides the westbound
+  // line first; only Matraman-bound traffic falls through to the t2/t4 split.
+  // - westbound to Pondok Jati (POK throat): t7 (row 4)
+  // - westbound KRL to Matraman:            t2 (row 14)
+  // - other westbound to Matraman:          t4 (row 10)
+  // - eastbound from Pondok Jati:           t6 (row 6)
+  // - all other eastbound (Matraman throat): t1 (row 16)
   const fromPondokJati = eastbound && immPrev?.station_code === "POK";
+  const toPondokJati = !eastbound && immNext?.station_code === "POK";
   const line = !eastbound
-    ? train.train_type === "krl" ? "t2" : "t4"
-    : fromPondokJati ? "t6" : "t1";
+    ? toPondokJati
+      ? "t7"
+      : train.train_type === "krl"
+        ? "t2"
+        : "t4"
+    : fromPondokJati
+      ? "t6"
+      : "t1";
 
   const stops: ScheduleStop[] = [
     {
@@ -249,6 +309,7 @@ for (const call of stationData.calls) {
       spawn_time: boundaryTime,
       line,
       entryLine: line,
+      ...corridorTimes,
     },
     {
       station: "JNG",

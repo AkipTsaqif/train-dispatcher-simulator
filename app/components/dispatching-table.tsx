@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import {
 	initTrain,
 	advanceTrain,
+	hmsToSeconds,
 	occupiedSections,
 	reservationAhead,
 	footprintOf,
@@ -350,6 +351,18 @@ const fmtHms = (sec: number): string => {
 	return [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
 };
 
+/** Lift a wall-clock HH:MM:SS onto the same day as `reference`, choosing the
+ * closest occurrence. Required for snippets around midnight (23:57 → 00:04). */
+const clockNear = (hms: string, reference: number): number => {
+	const raw = hmsToSeconds(hms);
+	const day = 24 * 60 * 60;
+	const baseDay = Math.floor(reference / day) * day;
+	const candidates = [baseDay + raw - day, baseDay + raw, baseDay + raw + day];
+	return candidates.reduce((best, value) =>
+		Math.abs(value - reference) < Math.abs(best - reference) ? value : best,
+	);
+};
+
 // Column letter → 0-based index (A=0, Z=25, AA=26, ...).
 const colIdx = (letters: string): number => {
 	let n = 0;
@@ -567,6 +580,15 @@ const walkRoute = (
 // via lib/geometry.
 // ---------------------------------------------------------------------------
 
+type SnippetTrainPosition = {
+	/** Corridor ownership is required because MTR and POK deliberately share
+	 *  the same visual Y rows. Geometry alone cannot distinguish them. */
+	corridorId: "MTR" | "POK" | "KLD";
+	x: number;
+	y: number;
+	dir: Dir;
+};
+
 type SignalAspectDependencies = {
 	signals: SignalDef[];
 	normalDirectionByY: Record<number, Dir>;
@@ -579,6 +601,7 @@ type SignalAspectDependencies = {
 	}[];
 	signalOn: Record<string, boolean>;
 	trainStates: TrainState[];
+	snippetTrains?: SnippetTrainPosition[];
 	trainHalfLen: number;
 	routeOf: (id: string) => Route;
 	forcedRed: (id: string) => boolean;
@@ -655,6 +678,102 @@ const calculateSignalAspect = (
 			return "red";
 		}
 	}
+	// Corridor snippet signals. MTR and POK deliberately share Y rows, so
+	// EVERY occupancy query filters corridorId before looking at x/y/dir.
+	const huluBlockRules: Record<
+		string,
+		{ corridorId: "MTR" | "POK"; nextSignalId: string }
+	> = {
+		BM1: { corridorId: "MTR", nextSignalId: "NW1" },
+		// POK Hulu has two automatic blocks: J102 repeats J101, while J101
+		// repeats NW5 on the real row-6 JNG edge.
+		J102: { corridorId: "POK", nextSignalId: "J101" },
+		J101: { corridorId: "POK", nextSignalId: "NW5" },
+	};
+	const hilirBlockRules: Record<
+		string,
+		{ corridorId: "MTR" | "POK"; exitSignalId: string }
+	> = {
+		BJ2: { corridorId: "MTR", exitSignalId: "MAS" },
+		// B208 is on the real t7 edge, so its normal generic block logic
+		// protects that segment. B207 is the detached POK block signal.
+	};
+	const exitSignalRules: Record<string, { corridorId: "MTR" | "POK" }> = {
+		MAS: { corridorId: "MTR" },
+	};
+
+	const huluRule = huluBlockRules[id];
+	if (huluRule) {
+		const occupied = (dependencies.snippetTrains ?? []).some(
+			(t) =>
+				t.corridorId === huluRule.corridorId &&
+				t.dir === "right" &&
+				Math.abs(t.y - signal.lineY) < 10 &&
+				t.x >= signal.x - 32,
+		);
+		if (occupied) return "red";
+		const nextAspect = calculateSignalAspect(
+			huluRule.nextSignalId,
+			dependencies,
+			visited,
+			selfIdx,
+		);
+		return nextAspect === "red" ? "amber" : "green";
+	}
+
+	const hilirRule = hilirBlockRules[id];
+	if (hilirRule) {
+		const exitSignal = dependencies.signals.find(
+			(candidate) => candidate.id === hilirRule.exitSignalId,
+		);
+		const exitX = exitSignal?.x ?? signal.x - 96;
+		const occupied = (dependencies.snippetTrains ?? []).some(
+			(t) =>
+				t.corridorId === hilirRule.corridorId &&
+				t.dir === "left" &&
+				Math.abs(t.y - signal.lineY) < 10 &&
+				t.x <= signal.x + 32 &&
+				t.x >= exitX - 32,
+		);
+		if (occupied) return "red";
+		const exitAspect = calculateSignalAspect(
+			hilirRule.exitSignalId,
+			dependencies,
+			visited,
+			selfIdx,
+		);
+		return exitAspect === "red" ? "amber" : "green";
+	}
+
+	const exitRule = exitSignalRules[id];
+	if (exitRule) {
+		const corridorTrains = (dependencies.snippetTrains ?? []).filter(
+			(t) => t.corridorId === exitRule.corridorId,
+		);
+		const occupiedExit = corridorTrains.some(
+			(t) =>
+				t.dir === "left" &&
+				Math.abs(t.y - signal.lineY) < 10 &&
+				t.x <= signal.x &&
+				t.x >= signal.x - 48,
+		);
+		if (occupiedExit) return "red";
+		// Semi-automatic exit: clear while the train's LEADING edge is at
+		// most one 16-unit cell before the signal. The earlier centre-based
+		// threshold changed only after the 64-unit body had already passed it.
+		const approaching = corridorTrains.some(
+			(t) => {
+				if (t.dir !== "left" || Math.abs(t.y - signal.lineY) >= 10)
+					return false;
+				const leadingEdge = t.x - 32;
+				return (
+					leadingEdge > signal.x &&
+					leadingEdge <= signal.x + 16
+				);
+			},
+		);
+		return approaching ? "green" : "red";
+	}
 	if (signal.block) {
 		return nextId
 			? calculateSignalAspect(nextId, dependencies, visited, selfIdx) ===
@@ -673,6 +792,165 @@ const calculateSignalAspect = (
 			: "green"
 		: "green";
 };
+
+/** A corridor snippet: a detached 10-cell stub that shows a neighbouring
+ *  station, with trains handed over to/from a real JNG track edge.
+ *  `entryX` is the snippet's left edge; `handoverX` is where a marker sits the
+ *  moment its nose is at the JNG boundary. `huluY`/`hilirY` are shared by all
+ *  snippets so they read as one strip. */
+type CorridorSnippet = {
+	id: "MTR" | "POK" | "KLD";
+	label: string;
+	/** Which JNG edge this corridor hangs off. MTR/POK sit WEST of the station,
+	 *  so their Hulu runs left-to-right into JNG. KLD sits EAST (the Bekasi
+	 *  side), so its arrivals run right-to-left — the mirrored case. */
+	side?: "west" | "east";
+	/** East-side corridors are 4-track and drawn at 1:2, so their rows and
+	 *  platform stops differ per line instead of sharing one hulu/hilir pair. */
+	eastRows?: {
+		/** Local (stopping) pair: arrivals into JNG, departures out of JNG. */
+		localArrY: number;
+		localDepY: number;
+		/** Fast pair, used by trains with no KLD/BUA call. */
+		fastArrY: number;
+		fastDepY: number;
+		/** Stop points, east to west along the arrival direction. */
+		buaX: number;
+		kldX: number;
+	};
+	/** JNG spawn row that feeds this snippet's Hulu (eastbound INTO the station). */
+	huluFromY: number;
+	/** JNG spawn row fed BY this snippet's Hilir (westbound OUT of the station). */
+	hilirToY: number;
+	entryX: number;
+	platformX: number;
+	handoverX: number;
+	exitX: number;
+	boxX: number;
+	/** The leading edge of an eastbound snippet train crosses this x when its
+	 *  head must begin appearing at the JNG track edge. Usually box right. */
+	huluHandoverEdgeX: number;
+};
+
+/** Matraman snippet geometry. The platform centre must sit ON the marker
+ *  lattice (8 + 16k) or the dwelling marker lands half a cell off the grid;
+ *  120 = 8 + 16*7, so the 4-cell bar spans 88..152 between two grid lines. */
+const MTR_PLATFORM_X = 120;
+/** The two snippet track rows. Grid lines run at gridOffset.y + 16k (248,
+ *  264, ...), so a track on a multiple of 16 sits through the MIDDLE of a row
+ *  — the same lattice every JNG main uses. Keep any vertical move a whole
+ *  multiple of 32 to preserve that and the 32-unit spacing between the pair. */
+const MTR_HILIR_Y = 576;
+const MTR_HULU_Y = 608;
+/** Top edge of the dashed snippet frame; its height covers both rows. */
+const MTR_BOX_TOP = 532;
+const MTR_BOX_HEIGHT = 96;
+/** The Klender/Bekasi strip is a SECOND row band below MTR/POK. It is a
+ *  double-double corridor (4 tracks) drawn at 2x COMPRESSION: one drawn cell
+ *  is 32 units = 2 normal grid cells, so the 21-cell corridor is 672 wide -
+ *  wider than MTR and POK combined, which is why it cannot share their strip. */
+// RIGHT-HAND RUNNING, same as t1/t2, MTR and POK: inside a pair the westbound
+// track sits ABOVE its eastbound partner. The FAST pair occupies the top of
+// the band, the local (stopping) pair the bottom.
+// The fast pair deliberately SHARES the MTR/POK rows (576/608) so all three
+// snippet frames start on the same line and their titles align on row 19.
+const KLD_T4_Y = 576; // Hilir fast  (westbound <-)  same row as MTR/POK Hilir
+const KLD_T3_Y = 608; // Hulu  fast  (eastbound ->)  same row as MTR/POK Hulu
+const KLD_T2_Y = 640; // Hilir local (westbound <-)
+const KLD_T1_Y = 672; // Hulu  local (eastbound ->)
+// Same frame top as MTR/POK so all three snippet titles sit on row 19. The
+// top row's signals mount UP and reach 21 units above y=576 (to 555), which
+// still clears the title baseline at 544.
+const KLD_BOX_TOP = 532;
+const KLD_BOX_HEIGHT = 168;
+/** Compressed-cell size and span for the KLD strip. Starts at 40 (not 32) so
+ *  every compressed cell CENTRE lands on the 8+16k marker lattice; at 32 the
+ *  centres would be 0 mod 16 and a dwelling train would sit half a cell off
+ *  its platform - the same class of bug already fixed at MTR. */
+// SCALE 1:2 - a drawn cell is a normal 16-unit grid cell but stands for 2
+// cells of real distance, so the corridor reads at half length and trains
+// cross it at half the pixel speed of the 1:1 MTR/POK snippets.
+// Starts at column AB (x=448), leaving a 2-cell gap after the POK frame
+// (which ends at x=408). Track runs 448..784; the frame plus caption gutter
+// ends at 848 (column BA), inside the 992-unit diagram width.
+const KLD_CELL = 16;
+/** At scale 1:2, a normal 4-cell / 64u train is drawn as 2 cells / 32u.
+ *  This is the FINAL map-space half-length; SVG geometry divides it by the
+ *  shared CONTROL_SCALE before the marker group is scaled. */
+const KLD_TRAIN_HALF_LEN = KLD_CELL;
+/** The label shrinks by the same 1:2 ratio as the body (half-length 16 vs the
+ *  normal 32), so the train number stays proportional to its smaller box
+ *  instead of reading oversized against it. Also a FINAL map-space value. */
+const KLD_TRAIN_FONT_SIZE = 4;
+const KLD_START_X = 448;
+const KLD_CELLS = 21;
+const KLD_END_X = KLD_START_X + KLD_CELLS * KLD_CELL; // 368
+// Room to the right of the strip for the four row captions. At 1:2 the rows
+// are too dense to hold a caption inline between two blocks.
+const KLD_CAPTION_GUTTER = 56;
+/** Snippets run at the same 60 km/h as the JNG approach (16 units per 3 s),
+ *  so a train never changes pace across the boundary handover. */
+const MTR_SPEED_U_PER_S = 16 / 3;
+/** Where a snippet marker sits when the train's nose is at the JNG boundary —
+ *  the handover anchor, expressed relative to the snippet's own entry edge. */
+const MTR_HANDOVER_X = 160;
+/** Horizontal offset between the two snippet boxes (13 cells). */
+const POK_SNIPPET_OFFSET = 208;
+
+/** The corridor snippets, west to east. Matraman is tied to the t1/t2 throat;
+ *  Pondok Jati to the t6/t7 throat on the other side of the station. Both are
+ *  the same 10-cell shape, so all geometry is offset from `entryX`. */
+const CORRIDOR_SNIPPETS: CorridorSnippet[] = [
+	{
+		id: "MTR",
+		label: "LINTAS MATRAMAN (MTR)",
+		huluFromY: 496, // t1  row 16 — eastbound arrivals from Matraman
+		hilirToY: 464, // t2  row 14 — westbound departures toward Manggarai
+		entryX: 32,
+		platformX: MTR_PLATFORM_X,
+		handoverX: MTR_HANDOVER_X,
+		exitX: 32,
+		boxX: 24,
+		huluHandoverEdgeX: 192,
+	},
+	{
+		id: "POK",
+		label: "LINTAS PONDOK JATI (POK)",
+		huluFromY: 336, // t6  row 6 — eastbound arrivals from Pondok Jati
+		hilirToY: 304, // t7  row 4 — westbound departures toward Pondok Jati
+		entryX: 32 + POK_SNIPPET_OFFSET,
+		platformX: MTR_PLATFORM_X + POK_SNIPPET_OFFSET,
+		handoverX: MTR_HANDOVER_X + POK_SNIPPET_OFFSET,
+		exitX: 32 + POK_SNIPPET_OFFSET,
+		boxX: 24 + POK_SNIPPET_OFFSET,
+		huluHandoverEdgeX: 192 + POK_SNIPPET_OFFSET,
+	},
+	{
+		// Klender / Bekasi sits EAST of Jatinegara, so it is the mirror of the
+		// two western snippets: arrivals run right-to-left into the JNG east
+		// edge, departures run left-to-right away from it. It is also 4-track
+		// at scale 1:2, so the local and fast pairs have separate rows.
+		id: "KLD",
+		label: "LINTAS KLENDER – BEKASI (KLD/BKS)",
+		side: "east",
+		huluFromY: -1, // unused on the east side; rows come from eastRows
+		hilirToY: -1,
+		entryX: KLD_END_X, // arrivals appear at the EAST edge and run left
+		platformX: 584, // KLD, the last stop before the JNG boundary
+		handoverX: KLD_START_X,
+		exitX: KLD_END_X,
+		boxX: KLD_START_X - 8,
+		huluHandoverEdgeX: KLD_START_X,
+		eastRows: {
+			localArrY: KLD_T2_Y, // 640 — westbound local, into JNG
+			localDepY: KLD_T1_Y, // 672 — eastbound local, out of JNG
+			fastArrY: KLD_T4_Y, // 576 — westbound fast
+			fastDepY: KLD_T3_Y, // 608 — eastbound fast
+			buaX: 728,
+			kldX: 584,
+		},
+	},
+];
 
 const STATION_OPTIONS = [
 	{
@@ -1137,6 +1415,22 @@ export default function DispatchingTable({
 	const trainArrowRefs = useRef<(SVGPathElement | null)[]>([]);
 	const trainBendyRefs = useRef<(SVGPathElement | null)[]>([]);
 	const trainExclamRefs = useRef<(SVGGElement | null)[]>([]);
+	const snippetTrainGroupRefs = useRef<(SVGGElement | null)[]>([]);
+	const snippetTrainRectRefs = useRef<(SVGRectElement | null)[]>([]);
+	const snippetTrainTextRefs = useRef<(SVGTextElement | null)[]>([]);
+	const snippetTrainArrowRefs = useRef<(SVGPathElement | null)[]>([]);
+	const snippetTrainDefaultGeometryRef = useRef<
+		(
+			| {
+					rectX: string;
+					rectWidth: string;
+					arrowD: string;
+					fontSize: string;
+			  }
+			| null
+		)[]
+	>([]);
+	const snippetTrainsRef = useRef<SnippetTrainPosition[]>([]);
 	const [occupancyTick, setOccupancyTick] = useState(0);
 	const trainSectionKeyRef = useRef("");
 	// Independent route reservations: created when the player clears a signal,
@@ -1644,11 +1938,37 @@ export default function DispatchingTable({
 				// block is occupied. Admission is one-shot: once its predecessor's tail
 				// clears the first facing signal, it starts from the edge and remains
 				// admitted even if another train later enters that block.
-				if (simRef.current < dueAt) {
+				// Only the WEST-side snippets need this early visual entry. An
+				// eastbound train spawns at x=0 — exactly on the canvas edge — so
+				// without it the head would pop in whole. A westbound train already
+				// spawns PAST the right edge (~1048 on a 992-wide canvas) and clips
+				// in on its own, so forcing a handover there double-clips it and
+				// makes the body look short.
+				const approachSnippet =
+					IS_SCHEMATIC && DISPATCH_MAP.id === "jatinegara"
+						? plan.start.dir === "right"
+							? CORRIDOR_SNIPPETS.find(
+									(snip) => snip.huluFromY === plan.start.y,
+								)
+							: CORRIDOR_SNIPPETS.find(
+									(snip) => snip.side === "east",
+								)
+						: undefined;
+				// Both detached Hulu corridors hand over identically. The visual
+				// head appears on JNG during the final 6 seconds while the tail is
+				// still leaving the owning snippet. Previously only t1/MTR used this
+				// path, so t6/POK waited for the whole body and then popped in.
+				const isApproachingFromSnippet = approachSnippet !== undefined;
+				const visualEntryDueAt = isApproachingFromSnippet
+					? dueAt - 6
+					: dueAt;
+				if (simRef.current < visualEntryDueAt) {
 					g?.setAttribute("visibility", "hidden");
 					return "";
 				}
-				if (admittedSimRef.current[ti] === undefined) {
+				const isVisualEntering =
+					isApproachingFromSnippet && simRef.current < dueAt;
+				if (!isVisualEntering && admittedSimRef.current[ti] === undefined) {
 					if (edgeBlockOccupied(ti)) {
 						st.spawned = false;
 						g?.setAttribute("visibility", "hidden");
@@ -1659,7 +1979,21 @@ export default function DispatchingTable({
 					lastTickRef.current[ti] = simRef.current;
 				}
 				st.spawned = true;
-				if (RELATIVE_CLOCK) {
+				if (isVisualEntering) {
+					// Position during visual entry handover (0..32 units)
+					const prog = Math.max(0, (simRef.current - (dueAt - 6)) / 6);
+					if (plan.start.dir === "left") {
+						// Westbound entry from east: nose emerges at x=960 (canvas edge)
+						// and slides in over the 6 seconds before booked boundary arrival.
+						st.x = 992 - prog * 32;
+						st.y = plan.start.y;
+						st.dir = "left";
+					} else {
+						st.x = prog * 32;
+						st.y = plan.start.y;
+						st.dir = "right";
+					}
+				} else if (RELATIVE_CLOCK) {
 					// Relative clock (dwell.relativeAnchors scenarios): feed the engine
 					// real elapsed seconds each tick. The train runs its approach LIVE
 					// from the spawn edge and its station dwells last their scheduled
@@ -1842,7 +2176,8 @@ export default function DispatchingTable({
 						}
 					}
 				}
-				if (st.actualArr[1] !== null) {
+				if (st.actualArr[1] !== null && !st.approachResolved) {
+					st.approachResolved = true;
 					setNotices((ns) => {
 						const hasOpen = ns.some(
 							(x) =>
@@ -1918,7 +2253,8 @@ export default function DispatchingTable({
 								...ns,
 							].slice(0, NOTIFICATION_POLICY.boardLimit);
 						});
-					} else if (remaining <= 0) {
+					} else if (remaining <= 0 && !st.countdownResolved) {
+						st.countdownResolved = true;
 						setNotices((ns) =>
 							ns.map((x) =>
 								x.kind === "countdown" &&
@@ -2158,7 +2494,13 @@ export default function DispatchingTable({
 					// half-lengths are equal. Near a platform dwell the shift EASES to
 					// zero (leadFactor) so the marker glides onto the platform instead
 					// of jumping back a cell when the dwell starts.
-					const engineToVisualFront = frontCompensation * leadFactor;
+					const entryLeadRamp = isApproachingFromSnippet
+						? plan.start.dir === "left"
+							? Math.min(1, Math.max(0, (960 - st.x) / 96))
+							: Math.min(1, Math.max(0, (st.x - 32) / 96))
+						: 1;
+					const engineToVisualFront =
+						frontCompensation * leadFactor * entryLeadRamp;
 					const visualCenter =
 						st.x +
 						(st.dir === "right"
@@ -2400,9 +2742,366 @@ export default function DispatchingTable({
 							: `translate(${EXCLAM_OFFSET[0]}, ${EXCLAM_OFFSET[1]}) rotate(${-ang})`,
 					);
 				}
+
 				return occupiedSections(st, SIGNAL_SECTIONS_PTS, CELL);
 			});
-			const key = sections.join(",");
+
+			// --- Corridor Snippet Companion Rendering (Matraman, Pondok Jati) ---
+			// One code path drives every snippet; geometry comes from the
+			// CORRIDOR_SNIPPETS table so adding a corridor is data, not logic.
+			const snippetTrains: SnippetTrainPosition[] = [];
+			if (
+				IS_SCHEMATIC &&
+				DISPATCH_MAP.id === "jatinegara" &&
+				!startModalOpenRef.current
+			) {
+				JOURNEYS.forEach((j, ti) => {
+					const sg = snippetTrainGroupRefs.current[ti];
+					const srect = snippetTrainRectRefs.current[ti];
+					if (!sg || !srect) return;
+					const sarrow = snippetTrainArrowRefs.current[ti];
+					const stext = snippetTrainTextRefs.current[ti];
+					let defaultGeometry = snippetTrainDefaultGeometryRef.current[ti];
+					if (!defaultGeometry && sarrow) {
+						defaultGeometry = {
+							rectX: srect.getAttribute("x") ?? String(-TRAIN_HALF_LEN),
+							rectWidth:
+								srect.getAttribute("width") ?? String(2 * TRAIN_HALF_LEN),
+							arrowD: sarrow.getAttribute("d") ?? "",
+							fontSize:
+								stext?.getAttribute("font-size") ??
+								String(TRAIN_FONT_SIZE),
+						};
+						snippetTrainDefaultGeometryRef.current[ti] = defaultGeometry;
+					}
+					const plan = j.plan;
+					const st = trainStatesRef.current[ti];
+					const isKRL =
+						j.train.trainType === "krl" ||
+						j.train.name.includes("CL") ||
+						j.train.name.includes("Commuter");
+					const dwell = isKRL ? 30 : 0;
+					const eastbound = plan.start.dir === "right";
+					// Corridor membership is decided by the PHYSICAL track edge the
+					// journey spawns on, never by neighbour-name strings.
+					const snip = CORRIDOR_SNIPPETS.find((s) =>
+						s.side === "east"
+							? false // east corridors are matched separately below
+							: eastbound
+								? s.huluFromY === plan.start.y
+								: s.hilirToY === plan.start.y,
+					);
+					let showSnippet = false;
+					let sx = -1000;
+					let sy = -1000;
+					let sDwelling = false;
+
+					// ---- EAST-SIDE CORRIDOR (Klender / Bekasi) --------------------
+					// The mirror of MTR/POK: a WESTBOUND train arrives from Bekasi,
+					// runs right-to-left across the strip and hands over to the JNG
+					// east edge. Unlike the western snippets this is driven by the
+					// train's REAL Klender/Buaran times, carried on the boundary stop
+					// as metadata (see ScheduleStop.kld_arr). Trains with no KLD call
+					// are expresses: they use the FAST pair and never dwell.
+					const eastSnip = CORRIDOR_SNIPPETS.find(
+						(s) => s.side === "east" && s.eastRows,
+					);
+					if (eastSnip?.eastRows && !eastbound && !showSnippet) {
+						const rows = eastSnip.eastRows;
+						const bStop = j.train.stops.find((s) =>
+							s.trackmark.startsWith("JNG-"),
+						);
+						const isLocal =
+							bStop?.kld_arr !== undefined &&
+							bStop.kld_dep !== undefined &&
+							bStop.bua_arr !== undefined &&
+							bStop.bua_dep !== undefined;
+						const tBound = plan.boundaryArr;
+						const S = MTR_SPEED_U_PER_S;
+
+						const tBuaArr = isLocal
+							? clockNear(bStop.bua_arr!, tBound - 180)
+							: tBound;
+						const tBuaDep = isLocal
+							? clockNear(bStop.bua_dep!, tBuaArr)
+							: tBound;
+						const tKldArr = isLocal
+							? clockNear(bStop.kld_arr!, tBuaDep)
+							: tBound;
+						const tKldDep = isLocal
+							? clockNear(bStop.kld_dep!, tKldArr)
+							: tBound;
+
+						const buaToKldSeconds = Math.max(30, tKldArr - tBuaDep);
+						const localPace = Math.min(
+							S,
+							(rows.buaX - rows.kldX) / buaToKldSeconds,
+						);
+						const runInToBua = (eastSnip.entryX - rows.buaX) / localPace;
+						const tSpawn = isLocal
+							? tBuaArr - runInToBua
+							: tBound - (eastSnip.entryX - eastSnip.handoverX) / S;
+
+						if (
+							simRef.current >= tSpawn &&
+							simRef.current <= tBound + 6
+						) {
+							showSnippet = true;
+							sy = isLocal ? rows.localArrY : rows.fastArrY;
+							const t = simRef.current;
+							if (!isLocal) {
+								// Express: constant-speed run across the strip, no dwells.
+								sx = eastSnip.entryX - (t - tSpawn) * S;
+							} else if (t < tBuaArr) {
+								const p = Math.max(
+									0,
+									Math.min(1, (t - tSpawn) / Math.max(1, tBuaArr - tSpawn)),
+								);
+								sx = eastSnip.entryX + (rows.buaX - eastSnip.entryX) * p;
+							} else if (t < tBuaDep) {
+								sx = rows.buaX;
+								sDwelling = true;
+							} else if (t < tKldArr) {
+								const p = Math.max(
+									0,
+									Math.min(1, (t - tBuaDep) / Math.max(1, tKldArr - tBuaDep)),
+								);
+								sx = rows.buaX + (rows.kldX - rows.buaX) * p;
+							} else if (t < tKldDep) {
+								sx = rows.kldX;
+								sDwelling = true;
+							} else {
+								// Final leg: Klender -> handover edge (x=448). Reaches
+								// handoverX at tBound, then clears into the clip over 6s.
+								const p = Math.max(
+									0,
+									Math.min(1, (t - tKldDep) / Math.max(1, tBound - tKldDep)),
+								);
+								sx = rows.kldX + (eastSnip.handoverX - rows.kldX) * p;
+							}
+							snippetTrains.push({
+								corridorId: "KLD",
+								x: sx,
+								y: sy,
+								dir: "left",
+							});
+							const snappedX = sDwelling
+								? sx
+								: t < tBound - 6
+									? Math.max(
+											eastSnip.handoverX + KLD_TRAIN_HALF_LEN,
+											8 + Math.round((sx - 8) / 16) * 16,
+										)
+									: 8 + Math.round((sx - 8) / 16) * 16;
+							sg.setAttribute("visibility", "visible");
+							sg.setAttribute(
+								"transform",
+								`translate(${snappedX}, ${sy}) scale(${CONTROL_SCALE})`,
+							);
+							// KLD is drawn at scale 1:2: compress the train's longitudinal
+							// body from 4 cells (64u) to 2 cells (32u), and shrink the train
+							// number to match — the full-size label read as oversized on
+							// the half-length body. Height and controlScale stay the same.
+							const authoredHalf = KLD_TRAIN_HALF_LEN / CONTROL_SCALE;
+							srect.setAttribute("x", String(-authoredHalf));
+							srect.setAttribute("width", String(2 * authoredHalf));
+							if (sarrow)
+								sarrow.setAttribute(
+									"d",
+									arrowLeft(authoredHalf, TRAIN_ARROW_SCALE),
+								);
+							if (stext) {
+								const kldFontSize = KLD_TRAIN_FONT_SIZE / CONTROL_SCALE;
+								stext.setAttribute("font-size", String(kldFontSize));
+								stext.setAttribute("y", String(kldFontSize / 3));
+							}
+							// Clip the UNTRANSFORMED wrapper, not this translated
+							// marker. Otherwise SVG interprets the global clip rect in
+							// marker-local coordinates and silently clips the whole train.
+							sg.removeAttribute("clip-path");
+							sg.parentElement?.setAttribute(
+								"clip-path",
+								"url(#snippet-clip-KLD)",
+							);
+							sg.setAttribute("data-snippet-corridor", "KLD");
+							const cFill = sDwelling ? "#86efac" : "#bfdbfe";
+							const cStroke = sDwelling ? "#16a34a" : "#2563eb";
+							if (srect.getAttribute("fill") !== cFill)
+								srect.setAttribute("fill", cFill);
+							if (srect.getAttribute("stroke") !== cStroke)
+								srect.setAttribute("stroke", cStroke);
+							return;
+						}
+					}
+
+					if (snip && eastbound) {
+						// Eastbound: snippet Hulu row -> Jatinegara. The run to the
+						// handover edge is derived from distance / 60-km/h speed, not a
+						// fixed 15s, so the body-transfer duration is physically exact.
+						const tBound = plan.boundaryArr;
+						const runIn =
+							(snip.platformX - snip.entryX) / MTR_SPEED_U_PER_S;
+						const runOut =
+							(snip.huluHandoverEdgeX - snip.platformX) /
+							MTR_SPEED_U_PER_S;
+						const tDep = tBound - runOut;
+						const tArr = tDep - dwell;
+						const tSpawn = tArr - runIn;
+						if (
+							simRef.current >= tSpawn &&
+							// Keep the snippet half of the body alive for the SAME 6s
+							// visual handover window used by the JNG marker. At tBound the
+							// centre is only halfway through the transfer; clipping finishes
+							// the remaining tail over the next 6s.
+							simRef.current <= tBound + 6
+						) {
+							showSnippet = true;
+							sy = MTR_HULU_Y;
+							if (simRef.current < tArr) {
+								sx =
+									snip.entryX +
+									(simRef.current - tSpawn) *
+										MTR_SPEED_U_PER_S;
+							} else if (simRef.current < tDep) {
+								sx = snip.platformX;
+								sDwelling = true;
+							} else {
+								sx =
+									snip.platformX +
+									(simRef.current - tDep) *
+										MTR_SPEED_U_PER_S;
+							}
+							snippetTrains.push({
+								corridorId: snip.id,
+								x: sx,
+								y: sy,
+								dir: "right",
+							});
+						}
+					} else if (snip) {
+						// Westbound: Jatinegara -> snippet Hilir row.
+						const exitAnchor =
+							plan.legs[plan.legs.length - 1]?.departAt ??
+							(plan.legs[plan.legs.length - 2]?.departAt ?? 0) +
+								75;
+						const tExit =
+							(RELATIVE_CLOCK ? plan.boundaryArr : 0) +
+							exitAnchor;
+						// The schedule window only GATES which journey may use the
+						// snippet (keeps historical journeys out). It never drives
+						// motion: the anchor and the physical train disagree by ~10s.
+						const inScheduleWindow =
+							simRef.current >= tExit - 30 &&
+							simRef.current <= tExit + 120;
+
+						if (inScheduleWindow) {
+							const inHandover =
+								st.spawned && !st.done && st.x <= 64 && st.x > 0;
+							if (inHandover) {
+								// PHASE 1 — physical handover. The snippet marker is
+								// rigidly bound to the real train: cells lost on JNG
+								// are cells gained here, in the same frame.
+								showSnippet = true;
+								sy = MTR_HILIR_Y;
+								sx = snip.handoverX + 32 + (st.x - 32);
+								st.mtrEntryTime = null;
+							} else if (st.spawned && (st.done || st.x <= 0)) {
+								// PHASE 2 — the tail cleared JNG. Latch THIS sim
+								// second so the marker continues from handoverX at
+								// track speed with no jump.
+								if (
+									st.mtrEntryTime === null ||
+									st.mtrEntryTime === undefined
+								) {
+									st.mtrEntryTime = simRef.current;
+								}
+								const dt = simRef.current - st.mtrEntryTime;
+								const SPEED = MTR_SPEED_U_PER_S;
+								const runIn =
+									(snip.handoverX - snip.platformX) / SPEED;
+								const runOut =
+									(snip.platformX - snip.exitX) / SPEED;
+								sy = MTR_HILIR_Y;
+								if (dt < runIn) {
+									showSnippet = true;
+									sx = snip.handoverX - dt * SPEED;
+								} else if (dt < runIn + dwell) {
+									showSnippet = true;
+									sx = snip.platformX;
+									sDwelling = true;
+								} else if (dt < runIn + dwell + runOut) {
+									showSnippet = true;
+									sx =
+										snip.platformX -
+										(dt - runIn - dwell) * SPEED;
+								}
+							}
+							if (showSnippet) {
+								snippetTrains.push({
+									corridorId: snip.id,
+									x: sx,
+									y: sy,
+									dir: "left",
+								});
+							}
+						}
+					}
+
+					if (
+						snip &&
+						showSnippet &&
+						sx > snip.entryX - 64 &&
+						sx < snip.entryX + 224
+					) {
+						// Restore the normal 4-cell geometry after a journey used the
+						// same DOM marker on the 2-cell KLD approach.
+						if (defaultGeometry) {
+							srect.setAttribute("x", defaultGeometry.rectX);
+							srect.setAttribute("width", defaultGeometry.rectWidth);
+							if (sarrow) sarrow.setAttribute("d", defaultGeometry.arrowD);
+							if (stext) {
+								stext.setAttribute("font-size", defaultGeometry.fontSize);
+								stext.setAttribute(
+									"y",
+									String(Number(defaultGeometry.fontSize) / 3),
+								);
+							}
+						}
+						// Stepping strictly by 16 units on the 8 mod 16 grid lattice
+						const snappedX = sDwelling
+							? snip.platformX
+							: 8 + Math.round((sx - 8) / 16) * 16;
+						sg.setAttribute(
+							"transform",
+							`translate(${snappedX}, ${sy}) scale(${CONTROL_SCALE})`,
+						);
+						sg.setAttribute("visibility", "visible");
+						// A westbound journey uses BOTH corridors (KLD inbound, MTR
+						// outbound), so switch the UNTRANSFORMED wrapper clip per
+						// frame. Clipping this translated marker itself makes the
+						// global clip rect miss its local -58..58 geometry.
+						sg.removeAttribute("clip-path");
+						sg.parentElement?.setAttribute(
+							"clip-path",
+							`url(#snippet-clip-${snip.id})`,
+						);
+						sg.setAttribute("data-snippet-corridor", snip.id);
+						const cFill = sDwelling ? "#86efac" : "#bfdbfe";
+						const cStroke = sDwelling ? "#16a34a" : "#2563eb";
+						if (srect.getAttribute("fill") !== cFill)
+							srect.setAttribute("fill", cFill);
+						if (srect.getAttribute("stroke") !== cStroke)
+							srect.setAttribute("stroke", cStroke);
+					} else {
+						sg.setAttribute("visibility", "hidden");
+					}
+				});
+			}
+			snippetTrainsRef.current = snippetTrains;
+			const snippetKey = snippetTrains
+				.map((t) => `${t.corridorId}:${t.dir}:${Math.round(t.x / 16)}`)
+				.join(";");
+			const key = sections.join(",") + "|" + snippetKey;
 			if (key !== trainSectionKeyRef.current) {
 				trainSectionKeyRef.current = key;
 				setOccupancyTick((t) => t + 1);
@@ -2866,6 +3565,7 @@ export default function DispatchingTable({
 				signalSections: SIGNAL_SECTIONS_PTS,
 				signalOn,
 				trainStates: trainStatesRef.current,
+				snippetTrains: snippetTrainsRef.current,
 				trainHalfLen: MOVEMENT_DEFINITION.trainHalfLen,
 				routeOf,
 				forcedRed,
@@ -3172,8 +3872,8 @@ export default function DispatchingTable({
 
 	if (startModalOpen) {
 		return (
-			<main className="min-h-screen w-full flex items-center justify-center p-4 bg-slate-100 dark:bg-slate-900 text-slate-900 dark:text-slate-100 font-sans">
-				<div className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-6 sm:p-7 shadow-2xl">
+			<div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans overflow-y-auto">
+				<div className="w-full max-w-md rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-6 sm:p-7 shadow-2xl my-auto">
 					{/* Header */}
 					<div className="text-center mb-6">
 						<div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-green-600/15 text-green-600 dark:text-green-400 mb-3 border border-green-500/30">
@@ -3305,7 +4005,7 @@ export default function DispatchingTable({
 						Mulai
 					</button>
 				</div>
-			</main>
+			</div>
 		);
 	}
 
@@ -3757,6 +4457,31 @@ export default function DispatchingTable({
 								</clipPath>
 							) : null,
 						)}
+						{/* Each corridor MUST own a separate clip path. A single clip
+						    containing both rectangles is their geometric UNION: the tail
+						    of a Matraman train could then be painted inside the adjacent
+						    POK box because both snippets deliberately share Y rows. */}
+						{CORRIDOR_SNIPPETS.map((snip) => (
+							<clipPath
+								key={`snippet-clip-${snip.id}`}
+								id={`snippet-clip-${snip.id}`}
+							>
+								<rect
+									x={snip.boxX + 4}
+									y={MTR_BOX_TOP}
+									width={
+										snip.side === "east"
+											? KLD_END_X - KLD_START_X + 8
+											: 168
+									}
+									height={
+										snip.side === "east"
+											? KLD_BOX_HEIGHT
+											: MTR_BOX_HEIGHT
+									}
+								/>
+							</clipPath>
+						))}
 					</defs>
 
 					{/* Station platform cells — tinted footprint under the tracks (grid mode) */}
@@ -4232,6 +4957,224 @@ export default function DispatchingTable({
 										}}
 										x={0}
 										// baseline sits a third of the cap height below the centre
+										y={TRAIN_FONT_SIZE / 3}
+										textAnchor="middle"
+										fontSize={TRAIN_FONT_SIZE}
+										fontWeight={800}
+										fill="#1e3a8a"
+										pointerEvents="none"
+									>
+										{train.train_no}
+									</text>
+								</g>
+							</g>
+						);
+					})}
+
+					{/* Corridor Snippet Frames & Legends (Matraman, Pondok Jati).
+					    WEST-side only: this block is hard-wired to the 2-row MTR/POK
+					    shape (one hulu + one hilir caption at snip.platformX). The
+					    4-track east-side KLD strip draws its own frame and its own
+					    per-row captions below, so including it here would stamp
+					    "ke Pondok Jati" across the middle of the Klender box. */}
+					{currentDispatch.map.id === "jatinegara" &&
+						CORRIDOR_SNIPPETS.filter((s) => s.side !== "east").map((snip) => (
+							<g
+								key={`snippet-frame-${snip.id}`}
+								className="select-none pointer-events-none"
+							>
+								<rect
+									x={snip.boxX}
+									y={MTR_BOX_TOP}
+									width={176}
+									height={MTR_BOX_HEIGHT}
+									rx={6}
+									fill="#f8fafc"
+									fillOpacity={0.7}
+									stroke="#cbd5e1"
+									strokeWidth={1}
+									strokeDasharray="4 2"
+									className="dark:fill-slate-900/60 dark:stroke-slate-700"
+								/>
+								<text
+									x={snip.boxX + 8}
+									y={MTR_BOX_TOP + 12}
+									fontSize={8.5}
+									fontWeight={700}
+									fill="#64748b"
+									letterSpacing={0.5}
+									className="dark:fill-slate-400"
+								>
+									{snip.label}
+								</text>
+								<text
+									x={snip.platformX}
+									y={MTR_HILIR_Y - 10}
+									textAnchor="middle"
+									fontSize={6.5}
+									fontWeight={600}
+									fill="#94a3b8"
+									className="dark:fill-slate-500"
+								>
+									{snip.id === "MTR"
+										? "← Hilir (ke Manggarai)"
+										: "← Hilir (ke Pondok Jati)"}
+								</text>
+								<text
+									x={snip.platformX}
+									y={MTR_HULU_Y + 18}
+									textAnchor="middle"
+									fontSize={6.5}
+									fontWeight={600}
+									fill="#94a3b8"
+									className="dark:fill-slate-500"
+								>
+									→ Hulu (ke Jatinegara)
+								</text>
+							</g>
+						))}
+
+					{/* Klender / Bekasi strip — its own row band, 4 tracks, drawn at
+					    scale 1:2 (one drawn 16u cell stands for 2 real cells). */}
+					{currentDispatch.map.id === "jatinegara" && (
+						<g className="select-none pointer-events-none">
+							<rect
+								x={KLD_START_X - 8}
+								y={KLD_BOX_TOP}
+								width={KLD_END_X - KLD_START_X + 16 + KLD_CAPTION_GUTTER}
+								height={KLD_BOX_HEIGHT}
+								rx={6}
+								fill="#f8fafc"
+								fillOpacity={0.7}
+								stroke="#cbd5e1"
+								strokeWidth={1}
+								strokeDasharray="4 2"
+								className="dark:fill-slate-900/60 dark:stroke-slate-700"
+							/>
+							<text
+								x={KLD_START_X}
+								y={KLD_BOX_TOP + 12}
+								fontSize={8.5}
+								fontWeight={700}
+								fill="#64748b"
+								letterSpacing={0.5}
+								className="dark:fill-slate-400"
+							>
+								LINTAS KLENDER – BEKASI (KLD/BKS) · SKALA 1:2
+							</text>
+							{/* At scale 1:2 the local rows carry 7 blocks in 336 units,
+							    leaving no inline gap wide enough for a caption. The
+							    captions therefore live in a gutter OUTSIDE the last
+							    signal, and the frame is widened to enclose them. */}
+							{(
+								[
+									[KLD_T4_Y, "← t4 Hilir ekspres"],
+									[KLD_T3_Y, "→ t3 Hulu ekspres"],
+									[KLD_T2_Y, "← t2 Hilir lokal"],
+									[KLD_T1_Y, "→ t1 Hulu lokal"],
+								] as const
+							).map(([y, caption]) => (
+								<text
+									key={`kld-cap-${y}`}
+									x={KLD_END_X + 6}
+									y={y + 2}
+									textAnchor="start"
+									fontSize={6}
+									fontWeight={600}
+									fill="#94a3b8"
+									className="dark:fill-slate-500"
+								>
+									{caption}
+								</text>
+							))}
+						</g>
+					)}
+
+					{/* Snippet Train Markers — each journey is clipped ONLY to the
+					    corridor owned by its physical JNG edge. MTR and POK share Y
+					    rows, so a shared/union clip would leak one into the other.
+					    A WESTBOUND train uses TWO corridors in one journey: it
+					    arrives across KLD from Bekasi and later departs onto MTR.
+					    The clip therefore cannot be chosen statically per journey —
+					    the RAF loop switches the UNTRANSFORMED wrapper clip per
+					    frame. Never clip the translated marker itself: SVG evaluates
+					    the global clip rect in marker-local coordinates and hides it. */}
+					{JOURNEYS.map(({ train, plan }, ti) => {
+						const right = plan.start.dir === "right";
+						const snippet = CORRIDOR_SNIPPETS.find((snip) =>
+							snip.side === "east"
+								? false
+								: right
+									? snip.huluFromY === plan.start.y
+									: snip.hilirToY === plan.start.y,
+						);
+						return (
+							<g
+								key={`snippet-${train.train_no}`}
+								clipPath={
+									snippet
+										? `url(#snippet-clip-${snippet.id})`
+										: undefined
+								}
+							>
+								<g
+									data-snippet-train={train.train_no}
+									data-snippet-corridor={snippet?.id}
+									onClick={() => openTrain(ti)}
+									className="cursor-pointer"
+									ref={(el) => {
+										snippetTrainGroupRefs.current[ti] = el;
+									}}
+									transform="translate(-1000, -1000)"
+									visibility="hidden"
+								>
+									<rect
+										ref={(el) => {
+											snippetTrainRectRefs.current[ti] =
+												el;
+										}}
+										x={-TRAIN_HALF_LEN}
+										y={-TRAIN_HALF_HEIGHT}
+										width={2 * TRAIN_HALF_LEN}
+										height={2 * TRAIN_HALF_HEIGHT}
+										rx={5 * CONTROL_SCALE}
+										fill="#bfdbfe"
+										stroke="#2563eb"
+										strokeWidth={1.5 * CONTROL_SCALE}
+									/>
+									<path
+										ref={(el) => {
+											snippetTrainArrowRefs.current[ti] =
+												el;
+										}}
+										d={
+											right
+												? arrowRight(
+														TRAIN_HALF_LEN,
+														TRAIN_ARROW_SCALE,
+													)
+												: arrowLeft(
+														TRAIN_HALF_LEN,
+														TRAIN_ARROW_SCALE,
+													)
+										}
+										stroke="#1e3a8a"
+										strokeWidth={
+											2 *
+											CONTROL_SCALE *
+											TRAIN_ARROW_SCALE
+										}
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										fill="none"
+										pointerEvents="none"
+									/>
+									<text
+										ref={(el) => {
+											snippetTrainTextRefs.current[ti] =
+												el;
+										}}
+										x={0}
 										y={TRAIN_FONT_SIZE / 3}
 										textAnchor="middle"
 										fontSize={TRAIN_FONT_SIZE}

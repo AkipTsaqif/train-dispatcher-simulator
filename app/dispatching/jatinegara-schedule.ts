@@ -2,7 +2,7 @@
 // working timetable (506 JNG calls, 410 stops in
 // the full day window, 0 skipped — no corridor match).
 // Source: data/timetable/stations/jatinegara.json + per-train files.
-// Generated: 2026-08-28 by scripts/build-jng-schedule.ts — DO NOT EDIT BY HAND.
+// Generated: 2026-08-31 by scripts/build-jng-schedule.ts — DO NOT EDIT BY HAND.
 
 import type { ScheduleEntry } from "../lib/train-engine";
 
@@ -53,7 +53,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "00:00:15",
 				"spawn_time": "00:02:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "00:09:00",
+				"kld_dep": "00:09:15",
+				"bua_arr": "00:11:00",
+				"bua_dep": "00:11:15"
 			},
 			{
 				"station": "JNG",
@@ -82,21 +86,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "23:57:00",
 				"dep_actual": "23:57:15",
-				"spawn_time": "00:04:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "23:58:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "23:57:00",
+				"kld_dep": "23:57:15",
+				"bua_arr": "23:55:00",
+				"bua_dep": "23:55:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "00:06:00",
 				"dep_actual": "00:07:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "00:08:00",
 				"dep_actual": "00:08:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -114,20 +122,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "00:07:00",
 				"dep_actual": "00:09:00",
 				"spawn_time": "00:19:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "00:21:00",
 				"dep_actual": "00:23:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "00:32:00",
 				"dep_actual": "00:32:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -146,7 +154,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "00:17:15",
 				"spawn_time": "00:19:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "00:26:00",
+				"kld_dep": "00:26:15",
+				"bua_arr": "00:28:00",
+				"bua_dep": "00:28:15"
 			},
 			{
 				"station": "JNG",
@@ -175,9 +187,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "00:15:00",
 				"dep_actual": "00:15:15",
-				"spawn_time": "00:19:45",
+				"spawn_time": "00:16:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "00:15:00",
+				"kld_dep": "00:15:15",
+				"bua_arr": "00:13:00",
+				"bua_dep": "00:13:15"
 			},
 			{
 				"station": "JNG",
@@ -207,20 +223,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "00:31:00",
 				"dep_actual": "00:33:00",
 				"spawn_time": "00:44:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "00:46:00",
 				"dep_actual": "00:48:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "00:58:00",
 				"dep_actual": "00:58:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -300,20 +316,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "01:13:00",
 				"dep_actual": "01:15:00",
 				"spawn_time": "01:26:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "01:28:00",
 				"dep_actual": "01:30:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "01:40:00",
 				"dep_actual": "01:40:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -331,20 +347,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "01:32:00",
 				"dep_actual": "01:34:00",
 				"spawn_time": "01:44:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "01:46:00",
 				"dep_actual": "01:48:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "01:58:00",
 				"dep_actual": "01:58:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -393,20 +409,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "02:01:00",
 				"dep_actual": "02:03:00",
 				"spawn_time": "02:13:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "02:15:00",
 				"dep_actual": "02:17:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "02:27:00",
 				"dep_actual": "02:27:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -424,20 +440,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "02:09:00",
 				"dep_actual": "02:11:00",
 				"spawn_time": "02:21:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "02:23:00",
 				"dep_actual": "02:25:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "02:36:00",
 				"dep_actual": "02:36:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -455,20 +471,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "02:25:00",
 				"dep_actual": "02:27:00",
 				"spawn_time": "02:37:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "02:39:00",
 				"dep_actual": "02:41:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "02:51:00",
 				"dep_actual": "02:51:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -579,20 +595,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "03:50:00",
 				"dep_actual": "03:52:00",
 				"spawn_time": "04:03:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "04:05:00",
 				"dep_actual": "04:07:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "04:17:00",
 				"dep_actual": "04:17:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -642,7 +658,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "04:17:15",
 				"spawn_time": "04:19:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "04:25:00",
+				"kld_dep": "04:25:15",
+				"bua_arr": "04:27:00",
+				"bua_dep": "04:27:15"
 			},
 			{
 				"station": "JNG",
@@ -704,7 +724,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "04:28:15",
 				"spawn_time": "04:30:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "04:36:00",
+				"kld_dep": "04:36:15",
+				"bua_arr": "04:38:00",
+				"bua_dep": "04:38:15"
 			},
 			{
 				"station": "JNG",
@@ -735,7 +759,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "04:37:15",
 				"spawn_time": "04:39:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "04:45:00",
+				"kld_dep": "04:45:15",
+				"bua_arr": "04:47:00",
+				"bua_dep": "04:47:15"
 			},
 			{
 				"station": "JNG",
@@ -764,9 +792,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "04:41:00",
 				"dep_actual": "04:41:15",
-				"spawn_time": "04:46:45",
+				"spawn_time": "04:42:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "04:41:00",
+				"kld_dep": "04:41:15",
+				"bua_arr": "04:39:00",
+				"bua_dep": "04:39:15"
 			},
 			{
 				"station": "JNG",
@@ -797,7 +829,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "04:41:15",
 				"spawn_time": "04:46:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "04:52:00",
+				"kld_dep": "04:52:15",
+				"bua_arr": "04:54:00",
+				"bua_dep": "04:54:15"
 			},
 			{
 				"station": "JNG",
@@ -828,7 +864,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "04:50:15",
 				"spawn_time": "04:52:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "04:58:00",
+				"kld_dep": "04:58:15",
+				"bua_arr": "05:00:00",
+				"bua_dep": "05:00:15"
 			},
 			{
 				"station": "JNG",
@@ -857,9 +897,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "04:49:00",
 				"dep_actual": "04:49:15",
-				"spawn_time": "04:54:45",
+				"spawn_time": "04:50:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "04:49:00",
+				"kld_dep": "04:49:15",
+				"bua_arr": "04:47:00",
+				"bua_dep": "04:47:15"
 			},
 			{
 				"station": "JNG",
@@ -888,9 +932,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "04:55:00",
 				"dep_actual": "04:55:15",
-				"spawn_time": "05:00:45",
+				"spawn_time": "04:56:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "04:55:00",
+				"kld_dep": "04:55:15",
+				"bua_arr": "04:53:00",
+				"bua_dep": "04:53:15"
 			},
 			{
 				"station": "JNG",
@@ -921,7 +969,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "04:59:15",
 				"spawn_time": "05:01:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "05:07:00",
+				"kld_dep": "05:07:15",
+				"bua_arr": "05:09:00",
+				"bua_dep": "05:09:15"
 			},
 			{
 				"station": "JNG",
@@ -950,9 +1002,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "05:03:00",
 				"dep_actual": "05:03:15",
-				"spawn_time": "05:08:45",
+				"spawn_time": "05:04:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "05:03:00",
+				"kld_dep": "05:03:15",
+				"bua_arr": "05:01:00",
+				"bua_dep": "05:01:15"
 			},
 			{
 				"station": "JNG",
@@ -983,7 +1039,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "05:12:15",
 				"spawn_time": "05:14:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "05:20:00",
+				"kld_dep": "05:20:15",
+				"bua_arr": "05:22:00",
+				"bua_dep": "05:22:15"
 			},
 			{
 				"station": "JNG",
@@ -1012,9 +1072,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "05:09:00",
 				"dep_actual": "05:09:15",
-				"spawn_time": "05:14:45",
+				"spawn_time": "05:10:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "05:09:00",
+				"kld_dep": "05:09:15",
+				"bua_arr": "05:07:00",
+				"bua_dep": "05:07:15"
 			},
 			{
 				"station": "JNG",
@@ -1044,20 +1108,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "04:54:00",
 				"dep_actual": "04:54:00",
 				"spawn_time": "05:17:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "05:19:00",
 				"dep_actual": "05:30:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "05:42:00",
 				"dep_actual": "05:42:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -1075,20 +1139,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "05:06:00",
 				"dep_actual": "05:08:00",
 				"spawn_time": "05:19:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "05:21:00",
 				"dep_actual": "05:23:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "05:33:00",
 				"dep_actual": "05:33:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -1107,7 +1171,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "05:18:15",
 				"spawn_time": "05:20:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "05:26:00",
+				"kld_dep": "05:26:15",
+				"bua_arr": "05:28:00",
+				"bua_dep": "05:28:15"
 			},
 			{
 				"station": "JNG",
@@ -1136,21 +1204,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "05:19:00",
 				"dep_actual": "05:19:15",
-				"spawn_time": "05:23:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "05:20:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "05:19:00",
+				"kld_dep": "05:19:15",
+				"bua_arr": "05:17:00",
+				"bua_dep": "05:17:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "05:25:00",
 				"dep_actual": "05:26:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "05:28:00",
 				"dep_actual": "05:28:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -1169,7 +1241,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "05:24:15",
 				"spawn_time": "05:26:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "05:33:00",
+				"kld_dep": "05:33:15",
+				"bua_arr": "05:35:00",
+				"bua_dep": "05:35:15"
 			},
 			{
 				"station": "JNG",
@@ -1229,9 +1305,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "05:26:00",
 				"dep_actual": "05:26:15",
-				"spawn_time": "05:31:45",
+				"spawn_time": "05:27:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "05:26:00",
+				"kld_dep": "05:26:15",
+				"bua_arr": "05:24:00",
+				"bua_dep": "05:24:15"
 			},
 			{
 				"station": "JNG",
@@ -1262,7 +1342,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "05:31:15",
 				"spawn_time": "05:33:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "05:40:00",
+				"kld_dep": "05:40:15",
+				"bua_arr": "05:42:00",
+				"bua_dep": "05:42:15"
 			},
 			{
 				"station": "JNG",
@@ -1292,20 +1376,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "05:23:00",
 				"dep_actual": "05:25:00",
 				"spawn_time": "05:35:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "05:37:00",
 				"dep_actual": "05:39:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "05:51:00",
 				"dep_actual": "05:51:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -1324,7 +1408,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "05:34:15",
 				"spawn_time": "05:37:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "05:43:00",
+				"kld_dep": "05:43:15",
+				"bua_arr": "05:45:00",
+				"bua_dep": "05:45:15"
 			},
 			{
 				"station": "JNG",
@@ -1353,9 +1441,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "05:36:00",
 				"dep_actual": "05:36:15",
-				"spawn_time": "05:42:45",
+				"spawn_time": "05:37:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "05:36:00",
+				"kld_dep": "05:36:15",
+				"bua_arr": "05:34:00",
+				"bua_dep": "05:34:15"
 			},
 			{
 				"station": "JNG",
@@ -1386,7 +1478,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "05:43:15",
 				"spawn_time": "05:44:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "05:51:00",
+				"kld_dep": "05:51:15",
+				"bua_arr": "05:53:00",
+				"bua_dep": "05:53:15"
 			},
 			{
 				"station": "JNG",
@@ -1415,21 +1511,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "05:43:00",
 				"dep_actual": "05:43:15",
-				"spawn_time": "05:48:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "05:44:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "05:43:00",
+				"kld_dep": "05:43:15",
+				"bua_arr": "05:41:00",
+				"bua_dep": "05:41:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "05:50:00",
 				"dep_actual": "05:51:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "05:53:00",
 				"dep_actual": "05:53:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -1477,9 +1577,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "05:47:00",
 				"dep_actual": "05:47:15",
-				"spawn_time": "05:53:45",
+				"spawn_time": "05:48:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "05:47:00",
+				"kld_dep": "05:47:15",
+				"bua_arr": "05:45:00",
+				"bua_dep": "05:45:15"
 			},
 			{
 				"station": "JNG",
@@ -1510,7 +1614,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "05:50:15",
 				"spawn_time": "05:53:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "05:59:00",
+				"kld_dep": "05:59:15",
+				"bua_arr": "06:01:00",
+				"bua_dep": "06:01:15"
 			},
 			{
 				"station": "JNG",
@@ -1541,7 +1649,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "05:54:15",
 				"spawn_time": "05:57:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "06:04:00",
+				"kld_dep": "06:04:15",
+				"bua_arr": "06:06:00",
+				"bua_dep": "06:06:15"
 			},
 			{
 				"station": "JNG",
@@ -1570,9 +1682,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "05:55:00",
 				"dep_actual": "05:55:15",
-				"spawn_time": "06:01:45",
+				"spawn_time": "05:56:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "05:55:00",
+				"kld_dep": "05:55:15",
+				"bua_arr": "05:53:00",
+				"bua_dep": "05:53:15"
 			},
 			{
 				"station": "JNG",
@@ -1603,7 +1719,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "06:00:15",
 				"spawn_time": "06:02:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "06:09:00",
+				"kld_dep": "06:09:15",
+				"bua_arr": "06:11:00",
+				"bua_dep": "06:11:15"
 			},
 			{
 				"station": "JNG",
@@ -1634,7 +1754,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "06:05:15",
 				"spawn_time": "06:07:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "06:13:00",
+				"kld_dep": "06:13:15",
+				"bua_arr": "06:15:00",
+				"bua_dep": "06:15:15"
 			},
 			{
 				"station": "JNG",
@@ -1663,9 +1787,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "06:02:00",
 				"dep_actual": "06:02:15",
-				"spawn_time": "06:07:45",
+				"spawn_time": "06:03:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "06:02:00",
+				"kld_dep": "06:02:15",
+				"bua_arr": "06:00:00",
+				"bua_dep": "06:00:15"
 			},
 			{
 				"station": "JNG",
@@ -1758,7 +1886,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "06:11:15",
 				"spawn_time": "06:16:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "06:22:00",
+				"kld_dep": "06:22:15",
+				"bua_arr": "06:24:00",
+				"bua_dep": "06:24:15"
 			},
 			{
 				"station": "JNG",
@@ -1787,9 +1919,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "06:10:00",
 				"dep_actual": "06:10:15",
-				"spawn_time": "06:20:45",
+				"spawn_time": "06:11:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "06:10:00",
+				"kld_dep": "06:10:15",
+				"bua_arr": "06:08:00",
+				"bua_dep": "06:08:15"
 			},
 			{
 				"station": "JNG",
@@ -1818,21 +1954,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "06:18:00",
 				"dep_actual": "06:18:15",
-				"spawn_time": "06:21:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "06:19:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "06:18:00",
+				"kld_dep": "06:18:15",
+				"bua_arr": "06:16:00",
+				"bua_dep": "06:16:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "06:23:00",
 				"dep_actual": "06:24:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "06:26:00",
 				"dep_actual": "06:26:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -1849,9 +1989,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "06:23:00",
 				"dep_actual": "06:23:15",
-				"spawn_time": "06:27:45",
+				"spawn_time": "06:24:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "06:23:00",
+				"kld_dep": "06:23:15",
+				"bua_arr": "06:21:00",
+				"bua_dep": "06:21:15"
 			},
 			{
 				"station": "JNG",
@@ -1882,7 +2026,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "06:25:15",
 				"spawn_time": "06:27:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "06:34:00",
+				"kld_dep": "06:34:15",
+				"bua_arr": "06:36:00",
+				"bua_dep": "06:36:15"
 			},
 			{
 				"station": "JNG",
@@ -1912,20 +2060,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "06:17:00",
 				"dep_actual": "06:19:00",
 				"spawn_time": "06:29:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "06:31:00",
 				"dep_actual": "06:33:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "06:43:00",
 				"dep_actual": "06:43:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -1942,9 +2090,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "06:28:00",
 				"dep_actual": "06:28:15",
-				"spawn_time": "06:34:45",
+				"spawn_time": "06:29:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "06:28:00",
+				"kld_dep": "06:28:15",
+				"bua_arr": "06:26:00",
+				"bua_dep": "06:26:15"
 			},
 			{
 				"station": "JNG",
@@ -1975,7 +2127,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "06:29:15",
 				"spawn_time": "06:34:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "06:40:00",
+				"kld_dep": "06:40:15",
+				"bua_arr": "06:42:00",
+				"bua_dep": "06:42:15"
 			},
 			{
 				"station": "JNG",
@@ -2035,9 +2191,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "06:35:00",
 				"dep_actual": "06:35:15",
-				"spawn_time": "06:40:45",
+				"spawn_time": "06:36:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "06:35:00",
+				"kld_dep": "06:35:15",
+				"bua_arr": "06:33:00",
+				"bua_dep": "06:33:15"
 			},
 			{
 				"station": "JNG",
@@ -2068,7 +2228,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "06:39:15",
 				"spawn_time": "06:41:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "06:48:00",
+				"kld_dep": "06:48:15",
+				"bua_arr": "06:50:00",
+				"bua_dep": "06:50:15"
 			},
 			{
 				"station": "JNG",
@@ -2128,21 +2292,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "06:43:00",
 				"dep_actual": "06:43:15",
-				"spawn_time": "06:48:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "06:44:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "06:43:00",
+				"kld_dep": "06:43:15",
+				"bua_arr": "06:41:00",
+				"bua_dep": "06:41:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "06:50:00",
 				"dep_actual": "06:51:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "06:53:00",
 				"dep_actual": "06:53:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -2190,9 +2358,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "06:47:00",
 				"dep_actual": "06:47:15",
-				"spawn_time": "06:51:45",
+				"spawn_time": "06:48:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "06:47:00",
+				"kld_dep": "06:47:15",
+				"bua_arr": "06:45:00",
+				"bua_dep": "06:45:15"
 			},
 			{
 				"station": "JNG",
@@ -2223,7 +2395,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "06:52:15",
 				"spawn_time": "06:54:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "07:00:00",
+				"kld_dep": "07:00:15",
+				"bua_arr": "07:02:00",
+				"bua_dep": "07:02:15"
 			},
 			{
 				"station": "JNG",
@@ -2285,7 +2461,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "06:56:15",
 				"spawn_time": "06:58:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "07:05:00",
+				"kld_dep": "07:05:15",
+				"bua_arr": "07:07:00",
+				"bua_dep": "07:07:15"
 			},
 			{
 				"station": "JNG",
@@ -2314,9 +2494,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "06:54:00",
 				"dep_actual": "06:54:15",
-				"spawn_time": "07:00:45",
+				"spawn_time": "06:55:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "06:54:00",
+				"kld_dep": "06:54:15",
+				"bua_arr": "06:52:00",
+				"bua_dep": "06:52:15"
 			},
 			{
 				"station": "JNG",
@@ -2347,7 +2531,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "07:01:15",
 				"spawn_time": "07:03:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "07:10:00",
+				"kld_dep": "07:10:15",
+				"bua_arr": "07:12:00",
+				"bua_dep": "07:12:15"
 			},
 			{
 				"station": "JNG",
@@ -2376,9 +2564,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "07:00:00",
 				"dep_actual": "07:00:15",
-				"spawn_time": "07:05:45",
+				"spawn_time": "07:01:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "07:00:00",
+				"kld_dep": "07:00:15",
+				"bua_arr": "06:58:00",
+				"bua_dep": "06:58:15"
 			},
 			{
 				"station": "JNG",
@@ -2409,7 +2601,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "07:00:15",
 				"spawn_time": "07:07:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "07:13:00",
+				"kld_dep": "07:13:15",
+				"bua_arr": "07:15:00",
+				"bua_dep": "07:15:15"
 			},
 			{
 				"station": "JNG",
@@ -2438,9 +2634,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "07:07:00",
 				"dep_actual": "07:07:15",
-				"spawn_time": "07:14:45",
+				"spawn_time": "07:08:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "07:07:00",
+				"kld_dep": "07:07:15",
+				"bua_arr": "07:05:00",
+				"bua_dep": "07:05:15"
 			},
 			{
 				"station": "JNG",
@@ -2469,21 +2669,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "07:15:00",
 				"dep_actual": "07:15:15",
-				"spawn_time": "07:17:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "07:16:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "07:15:00",
+				"kld_dep": "07:15:15",
+				"bua_arr": "07:13:00",
+				"bua_dep": "07:13:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "07:19:00",
 				"dep_actual": "07:20:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "07:22:00",
 				"dep_actual": "07:22:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -2502,7 +2706,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "07:16:15",
 				"spawn_time": "07:18:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "07:25:00",
+				"kld_dep": "07:25:15",
+				"bua_arr": "07:27:00",
+				"bua_dep": "07:27:15"
 			},
 			{
 				"station": "JNG",
@@ -2532,20 +2740,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "07:07:00",
 				"dep_actual": "07:09:00",
 				"spawn_time": "07:20:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "07:22:00",
 				"dep_actual": "07:24:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "07:34:00",
 				"dep_actual": "07:34:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -2562,9 +2770,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "07:18:00",
 				"dep_actual": "07:18:15",
-				"spawn_time": "07:21:45",
+				"spawn_time": "07:19:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "07:18:00",
+				"kld_dep": "07:18:15",
+				"bua_arr": "07:16:00",
+				"bua_dep": "07:16:15"
 			},
 			{
 				"station": "JNG",
@@ -2595,7 +2807,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "07:21:15",
 				"spawn_time": "07:23:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "07:30:00",
+				"kld_dep": "07:30:15",
+				"bua_arr": "07:32:00",
+				"bua_dep": "07:32:15"
 			},
 			{
 				"station": "JNG",
@@ -2655,9 +2871,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "07:25:00",
 				"dep_actual": "07:25:15",
-				"spawn_time": "07:30:45",
+				"spawn_time": "07:26:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "07:25:00",
+				"kld_dep": "07:25:15",
+				"bua_arr": "07:23:00",
+				"bua_dep": "07:23:15"
 			},
 			{
 				"station": "JNG",
@@ -2687,20 +2907,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "07:21:00",
 				"dep_actual": "07:21:00",
 				"spawn_time": "07:30:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "07:32:00",
 				"dep_actual": "07:34:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "07:44:00",
 				"dep_actual": "07:44:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -2719,7 +2939,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "07:25:15",
 				"spawn_time": "07:32:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "07:38:00",
+				"kld_dep": "07:38:15",
+				"bua_arr": "07:40:00",
+				"bua_dep": "07:40:15"
 			},
 			{
 				"station": "JNG",
@@ -2748,21 +2972,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "07:34:00",
 				"dep_actual": "07:34:15",
-				"spawn_time": "07:37:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "07:35:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "07:34:00",
+				"kld_dep": "07:34:15",
+				"bua_arr": "07:32:00",
+				"bua_dep": "07:32:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "07:39:00",
 				"dep_actual": "07:40:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "07:42:00",
 				"dep_actual": "07:42:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -2781,7 +3009,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "07:34:15",
 				"spawn_time": "07:39:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "07:46:00",
+				"kld_dep": "07:46:15",
+				"bua_arr": "07:48:00",
+				"bua_dep": "07:48:15"
 			},
 			{
 				"station": "JNG",
@@ -2841,9 +3073,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "07:41:00",
 				"dep_actual": "07:41:15",
-				"spawn_time": "07:47:45",
+				"spawn_time": "07:42:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "07:41:00",
+				"kld_dep": "07:41:15",
+				"bua_arr": "07:39:00",
+				"bua_dep": "07:39:15"
 			},
 			{
 				"station": "JNG",
@@ -2874,7 +3110,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "07:50:15",
 				"spawn_time": "07:51:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "07:56:00",
+				"kld_dep": "07:56:15",
+				"bua_arr": "07:57:00",
+				"bua_dep": "07:57:15"
 			},
 			{
 				"station": "JNG",
@@ -2903,9 +3143,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "07:47:00",
 				"dep_actual": "07:47:15",
-				"spawn_time": "07:52:45",
+				"spawn_time": "07:48:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "07:47:00",
+				"kld_dep": "07:47:15",
+				"bua_arr": "07:45:00",
+				"bua_dep": "07:45:15"
 			},
 			{
 				"station": "JNG",
@@ -2936,7 +3180,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "07:45:15",
 				"spawn_time": "07:52:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "07:59:00",
+				"kld_dep": "07:59:15",
+				"bua_arr": "08:01:00",
+				"bua_dep": "08:01:15"
 			},
 			{
 				"station": "JNG",
@@ -3004,7 +3252,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "07:51:15",
 				"spawn_time": "07:58:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "08:05:00",
+				"kld_dep": "08:05:15",
+				"bua_arr": "08:07:00",
+				"bua_dep": "08:07:15"
 			},
 			{
 				"station": "JNG",
@@ -3033,9 +3285,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "07:55:00",
 				"dep_actual": "07:55:15",
-				"spawn_time": "08:02:45",
+				"spawn_time": "07:56:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "07:55:00",
+				"kld_dep": "07:55:15",
+				"bua_arr": "07:53:00",
+				"bua_dep": "07:53:15"
 			},
 			{
 				"station": "JNG",
@@ -3065,20 +3321,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "07:49:00",
 				"dep_actual": "07:51:00",
 				"spawn_time": "08:02:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "08:04:00",
 				"dep_actual": "08:06:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "08:16:00",
 				"dep_actual": "08:16:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -3128,7 +3384,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "08:01:15",
 				"spawn_time": "08:04:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "08:11:00",
+				"kld_dep": "08:11:15",
+				"bua_arr": "08:13:00",
+				"bua_dep": "08:13:15"
 			},
 			{
 				"station": "JNG",
@@ -3190,7 +3450,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "08:06:15",
 				"spawn_time": "08:10:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "08:16:00",
+				"kld_dep": "08:16:15",
+				"bua_arr": "08:18:00",
+				"bua_dep": "08:18:15"
 			},
 			{
 				"station": "JNG",
@@ -3219,9 +3483,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "08:02:00",
 				"dep_actual": "08:02:15",
-				"spawn_time": "08:14:45",
+				"spawn_time": "08:03:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "08:02:00",
+				"kld_dep": "08:02:15",
+				"bua_arr": "08:00:00",
+				"bua_dep": "08:00:15"
 			},
 			{
 				"station": "JNG",
@@ -3250,21 +3518,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "08:11:00",
 				"dep_actual": "08:11:15",
-				"spawn_time": "08:17:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "08:12:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "08:11:00",
+				"kld_dep": "08:11:15",
+				"bua_arr": "08:09:00",
+				"bua_dep": "08:09:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "08:19:00",
 				"dep_actual": "08:20:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "08:22:00",
 				"dep_actual": "08:22:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -3314,7 +3586,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "08:16:15",
 				"spawn_time": "08:20:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "08:27:00",
+				"kld_dep": "08:27:15",
+				"bua_arr": "08:29:00",
+				"bua_dep": "08:29:15"
 			},
 			{
 				"station": "JNG",
@@ -3343,9 +3619,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "08:16:00",
 				"dep_actual": "08:16:15",
-				"spawn_time": "08:21:45",
+				"spawn_time": "08:17:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "08:16:00",
+				"kld_dep": "08:16:15",
+				"bua_arr": "08:14:00",
+				"bua_dep": "08:14:15"
 			},
 			{
 				"station": "JNG",
@@ -3376,7 +3656,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "08:25:15",
 				"spawn_time": "08:27:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "08:34:00",
+				"kld_dep": "08:34:15",
+				"bua_arr": "08:36:00",
+				"bua_dep": "08:36:15"
 			},
 			{
 				"station": "JNG",
@@ -3405,9 +3689,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "08:27:00",
 				"dep_actual": "08:27:15",
-				"spawn_time": "08:32:45",
+				"spawn_time": "08:28:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "08:27:00",
+				"kld_dep": "08:27:15",
+				"bua_arr": "08:25:00",
+				"bua_dep": "08:25:15"
 			},
 			{
 				"station": "JNG",
@@ -3438,7 +3726,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "08:29:15",
 				"spawn_time": "08:36:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "08:42:00",
+				"kld_dep": "08:42:15",
+				"bua_arr": "08:44:00",
+				"bua_dep": "08:44:15"
 			},
 			{
 				"station": "JNG",
@@ -3467,21 +3759,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "08:34:00",
 				"dep_actual": "08:34:15",
-				"spawn_time": "08:36:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "08:35:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "08:34:00",
+				"kld_dep": "08:34:15",
+				"bua_arr": "08:32:00",
+				"bua_dep": "08:32:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "08:38:00",
 				"dep_actual": "08:39:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "08:41:00",
 				"dep_actual": "08:41:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -3529,9 +3825,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "08:38:00",
 				"dep_actual": "08:38:15",
-				"spawn_time": "08:43:45",
+				"spawn_time": "08:39:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "08:38:00",
+				"kld_dep": "08:38:15",
+				"bua_arr": "08:36:00",
+				"bua_dep": "08:36:15"
 			},
 			{
 				"station": "JNG",
@@ -3562,7 +3862,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "08:44:15",
 				"spawn_time": "08:45:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "08:50:00",
+				"kld_dep": "08:50:15",
+				"bua_arr": "08:51:00",
+				"bua_dep": "08:51:15"
 			},
 			{
 				"station": "JNG",
@@ -3592,20 +3896,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "08:35:00",
 				"dep_actual": "08:37:00",
 				"spawn_time": "08:48:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "08:50:00",
 				"dep_actual": "08:52:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "09:03:00",
 				"dep_actual": "09:03:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -3624,7 +3928,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "08:47:15",
 				"spawn_time": "08:49:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "08:56:00",
+				"kld_dep": "08:56:15",
+				"bua_arr": "08:58:00",
+				"bua_dep": "08:58:15"
 			},
 			{
 				"station": "JNG",
@@ -3653,9 +3961,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "08:45:00",
 				"dep_actual": "08:45:15",
-				"spawn_time": "08:51:45",
+				"spawn_time": "08:46:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "08:45:00",
+				"kld_dep": "08:45:15",
+				"bua_arr": "08:43:00",
+				"bua_dep": "08:43:15"
 			},
 			{
 				"station": "JNG",
@@ -3686,7 +3998,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "08:56:15",
 				"spawn_time": "08:57:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "09:04:00",
+				"kld_dep": "09:04:15",
+				"bua_arr": "09:06:00",
+				"bua_dep": "09:06:15"
 			},
 			{
 				"station": "JNG",
@@ -3746,9 +4062,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "08:57:00",
 				"dep_actual": "08:57:15",
-				"spawn_time": "09:02:45",
+				"spawn_time": "08:58:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "08:57:00",
+				"kld_dep": "08:57:15",
+				"bua_arr": "08:55:00",
+				"bua_dep": "08:55:15"
 			},
 			{
 				"station": "JNG",
@@ -3809,20 +4129,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "08:53:00",
 				"dep_actual": "08:55:00",
 				"spawn_time": "09:06:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "09:08:00",
 				"dep_actual": "09:10:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "09:20:00",
 				"dep_actual": "09:20:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -3839,9 +4159,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "09:02:00",
 				"dep_actual": "09:02:15",
-				"spawn_time": "09:07:45",
+				"spawn_time": "09:03:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "09:02:00",
+				"kld_dep": "09:02:15",
+				"bua_arr": "09:00:00",
+				"bua_dep": "09:00:15"
 			},
 			{
 				"station": "JNG",
@@ -3872,7 +4196,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "09:04:15",
 				"spawn_time": "09:08:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "09:14:00",
+				"kld_dep": "09:14:15",
+				"bua_arr": "09:16:00",
+				"bua_dep": "09:16:15"
 			},
 			{
 				"station": "JNG",
@@ -3901,21 +4229,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "09:15:00",
 				"dep_actual": "09:15:15",
-				"spawn_time": "09:17:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "09:16:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "09:15:00",
+				"kld_dep": "09:15:15",
+				"bua_arr": "09:13:00",
+				"bua_dep": "09:13:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "09:19:00",
 				"dep_actual": "09:20:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "09:22:00",
 				"dep_actual": "09:22:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -3934,7 +4266,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "09:17:15",
 				"spawn_time": "09:19:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "09:26:00",
+				"kld_dep": "09:26:15",
+				"bua_arr": "09:28:00",
+				"bua_dep": "09:28:15"
 			},
 			{
 				"station": "JNG",
@@ -3996,7 +4332,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "09:23:15",
 				"spawn_time": "09:26:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "09:33:00",
+				"kld_dep": "09:33:15",
+				"bua_arr": "09:35:00",
+				"bua_dep": "09:35:15"
 			},
 			{
 				"station": "JNG",
@@ -4025,9 +4365,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "09:20:00",
 				"dep_actual": "09:20:15",
-				"spawn_time": "09:28:45",
+				"spawn_time": "09:21:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "09:20:00",
+				"kld_dep": "09:20:15",
+				"bua_arr": "09:18:00",
+				"bua_dep": "09:18:15"
 			},
 			{
 				"station": "JNG",
@@ -4087,9 +4431,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "09:27:00",
 				"dep_actual": "09:27:15",
-				"spawn_time": "09:33:45",
+				"spawn_time": "09:28:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "09:27:00",
+				"kld_dep": "09:27:15",
+				"bua_arr": "09:25:00",
+				"bua_dep": "09:25:15"
 			},
 			{
 				"station": "JNG",
@@ -4120,7 +4468,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "09:32:15",
 				"spawn_time": "09:34:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "09:41:00",
+				"kld_dep": "09:41:15",
+				"bua_arr": "09:43:00",
+				"bua_dep": "09:43:15"
 			},
 			{
 				"station": "JNG",
@@ -4149,9 +4501,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "09:35:00",
 				"dep_actual": "09:35:15",
-				"spawn_time": "09:40:45",
+				"spawn_time": "09:36:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "09:35:00",
+				"kld_dep": "09:35:15",
+				"bua_arr": "09:33:00",
+				"bua_dep": "09:33:15"
 			},
 			{
 				"station": "JNG",
@@ -4182,7 +4538,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "09:38:15",
 				"spawn_time": "09:40:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "09:47:00",
+				"kld_dep": "09:47:15",
+				"bua_arr": "09:49:00",
+				"bua_dep": "09:49:15"
 			},
 			{
 				"station": "JNG",
@@ -4211,9 +4571,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "09:40:00",
 				"dep_actual": "09:40:15",
-				"spawn_time": "09:45:45",
+				"spawn_time": "09:41:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "09:40:00",
+				"kld_dep": "09:40:15",
+				"bua_arr": "09:38:00",
+				"bua_dep": "09:38:15"
 			},
 			{
 				"station": "JNG",
@@ -4244,7 +4608,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "09:38:15",
 				"spawn_time": "09:45:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "09:51:00",
+				"kld_dep": "09:51:15",
+				"bua_arr": "09:53:00",
+				"bua_dep": "09:53:15"
 			},
 			{
 				"station": "JNG",
@@ -4275,7 +4643,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "09:47:15",
 				"spawn_time": "09:50:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "09:57:00",
+				"kld_dep": "09:57:15",
+				"bua_arr": "09:59:00",
+				"bua_dep": "09:59:15"
 			},
 			{
 				"station": "JNG",
@@ -4304,21 +4676,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "09:47:00",
 				"dep_actual": "09:47:15",
-				"spawn_time": "09:50:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "09:48:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "09:47:00",
+				"kld_dep": "09:47:15",
+				"bua_arr": "09:45:00",
+				"bua_dep": "09:45:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "09:52:00",
 				"dep_actual": "09:53:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "09:55:00",
 				"dep_actual": "09:55:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -4335,9 +4711,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "09:50:00",
 				"dep_actual": "09:50:15",
-				"spawn_time": "09:55:45",
+				"spawn_time": "09:51:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "09:50:00",
+				"kld_dep": "09:50:15",
+				"bua_arr": "09:48:00",
+				"bua_dep": "09:48:15"
 			},
 			{
 				"station": "JNG",
@@ -4368,7 +4748,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "09:54:15",
 				"spawn_time": "09:57:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "10:04:00",
+				"kld_dep": "10:04:15",
+				"bua_arr": "10:06:00",
+				"bua_dep": "10:06:15"
 			},
 			{
 				"station": "JNG",
@@ -4397,9 +4781,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "09:56:00",
 				"dep_actual": "09:56:15",
-				"spawn_time": "10:00:45",
+				"spawn_time": "09:57:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "09:56:00",
+				"kld_dep": "09:56:15",
+				"bua_arr": "09:54:00",
+				"bua_dep": "09:54:15"
 			},
 			{
 				"station": "JNG",
@@ -4430,7 +4818,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "10:01:15",
 				"spawn_time": "10:06:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "10:12:00",
+				"kld_dep": "10:12:15",
+				"bua_arr": "10:14:00",
+				"bua_dep": "10:14:15"
 			},
 			{
 				"station": "JNG",
@@ -4461,7 +4853,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "10:08:15",
 				"spawn_time": "10:11:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "10:18:00",
+				"kld_dep": "10:18:15",
+				"bua_arr": "10:20:00",
+				"bua_dep": "10:20:15"
 			},
 			{
 				"station": "JNG",
@@ -4490,9 +4886,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "10:06:00",
 				"dep_actual": "10:06:15",
-				"spawn_time": "10:12:45",
+				"spawn_time": "10:07:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "10:06:00",
+				"kld_dep": "10:06:15",
+				"bua_arr": "10:04:00",
+				"bua_dep": "10:04:15"
 			},
 			{
 				"station": "JNG",
@@ -4521,21 +4921,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "10:13:00",
 				"dep_actual": "10:13:15",
-				"spawn_time": "10:15:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "10:14:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "10:13:00",
+				"kld_dep": "10:13:15",
+				"bua_arr": "10:11:00",
+				"bua_dep": "10:11:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "10:17:00",
 				"dep_actual": "10:18:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "10:20:00",
 				"dep_actual": "10:20:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -4585,7 +4989,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "10:21:15",
 				"spawn_time": "10:23:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "10:30:00",
+				"kld_dep": "10:30:15",
+				"bua_arr": "10:32:00",
+				"bua_dep": "10:32:15"
 			},
 			{
 				"station": "JNG",
@@ -4614,9 +5022,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "10:22:00",
 				"dep_actual": "10:22:15",
-				"spawn_time": "10:26:45",
+				"spawn_time": "10:23:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "10:22:00",
+				"kld_dep": "10:22:15",
+				"bua_arr": "10:20:00",
+				"bua_dep": "10:20:15"
 			},
 			{
 				"station": "JNG",
@@ -4647,7 +5059,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "10:26:15",
 				"spawn_time": "10:28:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "10:35:00",
+				"kld_dep": "10:35:15",
+				"bua_arr": "10:37:00",
+				"bua_dep": "10:37:15"
 			},
 			{
 				"station": "JNG",
@@ -4676,9 +5092,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "10:26:00",
 				"dep_actual": "10:26:15",
-				"spawn_time": "10:32:45",
+				"spawn_time": "10:27:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "10:26:00",
+				"kld_dep": "10:26:15",
+				"bua_arr": "10:24:00",
+				"bua_dep": "10:24:15"
 			},
 			{
 				"station": "JNG",
@@ -4709,7 +5129,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "10:26:15",
 				"spawn_time": "10:33:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "10:39:00",
+				"kld_dep": "10:39:15",
+				"bua_arr": "10:41:00",
+				"bua_dep": "10:41:15"
 			},
 			{
 				"station": "JNG",
@@ -4740,7 +5164,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "10:37:15",
 				"spawn_time": "10:39:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "10:46:00",
+				"kld_dep": "10:46:15",
+				"bua_arr": "10:48:00",
+				"bua_dep": "10:48:15"
 			},
 			{
 				"station": "JNG",
@@ -4769,9 +5197,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "10:36:00",
 				"dep_actual": "10:36:15",
-				"spawn_time": "10:42:45",
+				"spawn_time": "10:37:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "10:36:00",
+				"kld_dep": "10:36:15",
+				"bua_arr": "10:34:00",
+				"bua_dep": "10:34:15"
 			},
 			{
 				"station": "JNG",
@@ -4802,7 +5234,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "10:46:15",
 				"spawn_time": "10:48:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "10:55:00",
+				"kld_dep": "10:55:15",
+				"bua_arr": "10:57:00",
+				"bua_dep": "10:57:15"
 			},
 			{
 				"station": "JNG",
@@ -4831,21 +5267,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "10:40:00",
 				"dep_actual": "10:40:15",
-				"spawn_time": "10:48:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "10:41:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "10:40:00",
+				"kld_dep": "10:40:15",
+				"bua_arr": "10:38:00",
+				"bua_dep": "10:38:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "10:50:00",
 				"dep_actual": "10:51:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "10:53:00",
 				"dep_actual": "10:53:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -4895,7 +5335,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "10:52:15",
 				"spawn_time": "10:54:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "11:01:00",
+				"kld_dep": "11:01:15",
+				"bua_arr": "11:03:00",
+				"bua_dep": "11:03:15"
 			},
 			{
 				"station": "JNG",
@@ -4924,9 +5368,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "10:50:00",
 				"dep_actual": "10:50:15",
-				"spawn_time": "10:55:45",
+				"spawn_time": "10:51:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "10:50:00",
+				"kld_dep": "10:50:15",
+				"bua_arr": "10:48:00",
+				"bua_dep": "10:48:15"
 			},
 			{
 				"station": "JNG",
@@ -4957,7 +5405,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "11:01:15",
 				"spawn_time": "11:05:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "11:11:00",
+				"kld_dep": "11:11:15",
+				"bua_arr": "11:13:00",
+				"bua_dep": "11:13:15"
 			},
 			{
 				"station": "JNG",
@@ -4986,9 +5438,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "11:00:00",
 				"dep_actual": "11:00:15",
-				"spawn_time": "11:07:45",
+				"spawn_time": "11:01:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "11:00:00",
+				"kld_dep": "11:00:15",
+				"bua_arr": "10:58:00",
+				"bua_dep": "10:58:15"
 			},
 			{
 				"station": "JNG",
@@ -5019,7 +5475,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "11:08:15",
 				"spawn_time": "11:10:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "11:17:00",
+				"kld_dep": "11:17:15",
+				"bua_arr": "11:19:00",
+				"bua_dep": "11:19:15"
 			},
 			{
 				"station": "JNG",
@@ -5048,21 +5508,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "11:06:00",
 				"dep_actual": "11:06:15",
-				"spawn_time": "11:11:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "11:07:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "11:06:00",
+				"kld_dep": "11:06:15",
+				"bua_arr": "11:04:00",
+				"bua_dep": "11:04:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "11:13:00",
 				"dep_actual": "11:14:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "11:16:00",
 				"dep_actual": "11:16:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -5079,9 +5543,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "11:11:00",
 				"dep_actual": "11:11:15",
-				"spawn_time": "11:15:45",
+				"spawn_time": "11:12:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "11:11:00",
+				"kld_dep": "11:11:15",
+				"bua_arr": "11:09:00",
+				"bua_dep": "11:09:15"
 			},
 			{
 				"station": "JNG",
@@ -5112,7 +5580,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "11:16:15",
 				"spawn_time": "11:18:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "11:25:00",
+				"kld_dep": "11:25:15",
+				"bua_arr": "11:27:00",
+				"bua_dep": "11:27:15"
 			},
 			{
 				"station": "JNG",
@@ -5142,20 +5614,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "11:08:00",
 				"dep_actual": "11:10:00",
 				"spawn_time": "11:21:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "11:23:00",
 				"dep_actual": "11:25:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "11:35:00",
 				"dep_actual": "11:35:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -5172,9 +5644,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "11:17:00",
 				"dep_actual": "11:17:15",
-				"spawn_time": "11:22:45",
+				"spawn_time": "11:18:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "11:17:00",
+				"kld_dep": "11:17:15",
+				"bua_arr": "11:15:00",
+				"bua_dep": "11:15:15"
 			},
 			{
 				"station": "JNG",
@@ -5205,7 +5681,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "11:22:15",
 				"spawn_time": "11:24:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "11:31:00",
+				"kld_dep": "11:31:15",
+				"bua_arr": "11:33:00",
+				"bua_dep": "11:33:15"
 			},
 			{
 				"station": "JNG",
@@ -5236,7 +5716,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "11:25:15",
 				"spawn_time": "11:28:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "11:34:00",
+				"kld_dep": "11:34:15",
+				"bua_arr": "11:36:00",
+				"bua_dep": "11:36:15"
 			},
 			{
 				"station": "JNG",
@@ -5265,9 +5749,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "11:25:00",
 				"dep_actual": "11:25:15",
-				"spawn_time": "11:31:45",
+				"spawn_time": "11:26:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "11:25:00",
+				"kld_dep": "11:25:15",
+				"bua_arr": "11:23:00",
+				"bua_dep": "11:23:15"
 			},
 			{
 				"station": "JNG",
@@ -5298,7 +5786,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "11:28:15",
 				"spawn_time": "11:33:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "11:40:00",
+				"kld_dep": "11:40:15",
+				"bua_arr": "11:42:00",
+				"bua_dep": "11:42:15"
 			},
 			{
 				"station": "JNG",
@@ -5327,9 +5819,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "11:30:00",
 				"dep_actual": "11:30:15",
-				"spawn_time": "11:36:45",
+				"spawn_time": "11:31:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "11:30:00",
+				"kld_dep": "11:30:15",
+				"bua_arr": "11:28:00",
+				"bua_dep": "11:28:15"
 			},
 			{
 				"station": "JNG",
@@ -5360,7 +5856,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "11:43:15",
 				"spawn_time": "11:44:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "11:49:00",
+				"kld_dep": "11:49:15",
+				"bua_arr": "11:50:00",
+				"bua_dep": "11:50:15"
 			},
 			{
 				"station": "JNG",
@@ -5389,9 +5889,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "11:40:00",
 				"dep_actual": "11:40:15",
-				"spawn_time": "11:45:45",
+				"spawn_time": "11:41:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "11:40:00",
+				"kld_dep": "11:40:15",
+				"bua_arr": "11:38:00",
+				"bua_dep": "11:38:15"
 			},
 			{
 				"station": "JNG",
@@ -5422,7 +5926,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "11:41:15",
 				"spawn_time": "11:45:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "11:51:00",
+				"kld_dep": "11:51:15",
+				"bua_arr": "11:53:00",
+				"bua_dep": "11:53:15"
 			},
 			{
 				"station": "JNG",
@@ -5451,21 +5959,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "11:37:00",
 				"dep_actual": "11:37:15",
-				"spawn_time": "11:45:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "11:38:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "11:37:00",
+				"kld_dep": "11:37:15",
+				"bua_arr": "11:35:00",
+				"bua_dep": "11:35:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "11:47:00",
 				"dep_actual": "11:48:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "11:50:00",
 				"dep_actual": "11:50:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -5515,7 +6027,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "11:53:15",
 				"spawn_time": "11:54:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "11:59:00",
+				"kld_dep": "11:59:15",
+				"bua_arr": "12:00:00",
+				"bua_dep": "12:00:15"
 			},
 			{
 				"station": "JNG",
@@ -5544,9 +6060,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "11:50:00",
 				"dep_actual": "11:50:15",
-				"spawn_time": "11:56:45",
+				"spawn_time": "11:51:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "11:50:00",
+				"kld_dep": "11:50:15",
+				"bua_arr": "11:48:00",
+				"bua_dep": "11:48:15"
 			},
 			{
 				"station": "JNG",
@@ -5608,7 +6128,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "11:59:15",
 				"spawn_time": "12:00:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "12:05:00",
+				"kld_dep": "12:05:15",
+				"bua_arr": "12:06:00",
+				"bua_dep": "12:06:15"
 			},
 			{
 				"station": "JNG",
@@ -5639,7 +6163,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "12:01:15",
 				"spawn_time": "12:04:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "12:11:00",
+				"kld_dep": "12:11:15",
+				"bua_arr": "12:13:00",
+				"bua_dep": "12:13:15"
 			},
 			{
 				"station": "JNG",
@@ -5668,9 +6196,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "11:59:00",
 				"dep_actual": "11:59:15",
-				"spawn_time": "12:05:45",
+				"spawn_time": "12:00:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "11:59:00",
+				"kld_dep": "11:59:15",
+				"bua_arr": "11:57:00",
+				"bua_dep": "11:57:15"
 			},
 			{
 				"station": "JNG",
@@ -5701,7 +6233,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "12:01:15",
 				"spawn_time": "12:09:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "12:15:00",
+				"kld_dep": "12:15:15",
+				"bua_arr": "12:17:00",
+				"bua_dep": "12:17:15"
 			},
 			{
 				"station": "JNG",
@@ -5730,21 +6266,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "12:06:00",
 				"dep_actual": "12:06:15",
-				"spawn_time": "12:09:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "12:07:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "12:06:00",
+				"kld_dep": "12:06:15",
+				"bua_arr": "12:04:00",
+				"bua_dep": "12:04:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "12:11:00",
 				"dep_actual": "12:12:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "12:14:00",
 				"dep_actual": "12:14:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -5792,9 +6332,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "12:09:00",
 				"dep_actual": "12:09:15",
-				"spawn_time": "12:15:45",
+				"spawn_time": "12:10:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "12:09:00",
+				"kld_dep": "12:09:15",
+				"bua_arr": "12:07:00",
+				"bua_dep": "12:07:15"
 			},
 			{
 				"station": "JNG",
@@ -5825,7 +6369,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "12:16:15",
 				"spawn_time": "12:18:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "12:25:00",
+				"kld_dep": "12:25:15",
+				"bua_arr": "12:27:00",
+				"bua_dep": "12:27:15"
 			},
 			{
 				"station": "JNG",
@@ -5885,9 +6433,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "12:15:00",
 				"dep_actual": "12:15:15",
-				"spawn_time": "12:22:45",
+				"spawn_time": "12:16:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "12:15:00",
+				"kld_dep": "12:15:15",
+				"bua_arr": "12:13:00",
+				"bua_dep": "12:13:15"
 			},
 			{
 				"station": "JNG",
@@ -5918,7 +6470,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "12:23:15",
 				"spawn_time": "12:25:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "12:32:00",
+				"kld_dep": "12:32:15",
+				"bua_arr": "12:34:00",
+				"bua_dep": "12:34:15"
 			},
 			{
 				"station": "JNG",
@@ -5948,20 +6504,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "12:15:00",
 				"dep_actual": "12:17:00",
 				"spawn_time": "12:27:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "12:29:00",
 				"dep_actual": "12:31:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "12:41:00",
 				"dep_actual": "12:41:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -5978,9 +6534,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "12:24:00",
 				"dep_actual": "12:24:15",
-				"spawn_time": "12:30:45",
+				"spawn_time": "12:25:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "12:24:00",
+				"kld_dep": "12:24:15",
+				"bua_arr": "12:22:00",
+				"bua_dep": "12:22:15"
 			},
 			{
 				"station": "JNG",
@@ -6042,7 +6602,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "12:32:15",
 				"spawn_time": "12:34:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "12:41:00",
+				"kld_dep": "12:41:15",
+				"bua_arr": "12:43:00",
+				"bua_dep": "12:43:15"
 			},
 			{
 				"station": "JNG",
@@ -6073,7 +6637,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "12:36:15",
 				"spawn_time": "12:39:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "12:45:00",
+				"kld_dep": "12:45:15",
+				"bua_arr": "12:47:00",
+				"bua_dep": "12:47:15"
 			},
 			{
 				"station": "JNG",
@@ -6102,9 +6670,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "12:33:00",
 				"dep_actual": "12:33:15",
-				"spawn_time": "12:41:45",
+				"spawn_time": "12:34:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "12:33:00",
+				"kld_dep": "12:33:15",
+				"bua_arr": "12:31:00",
+				"bua_dep": "12:31:15"
 			},
 			{
 				"station": "JNG",
@@ -6133,21 +6705,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "12:41:00",
 				"dep_actual": "12:41:15",
-				"spawn_time": "12:44:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "12:42:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "12:41:00",
+				"kld_dep": "12:41:15",
+				"bua_arr": "12:39:00",
+				"bua_dep": "12:39:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "12:46:00",
 				"dep_actual": "12:47:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "12:49:00",
 				"dep_actual": "12:49:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -6166,7 +6742,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "12:51:15",
 				"spawn_time": "12:52:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "12:57:00",
+				"kld_dep": "12:57:15",
+				"bua_arr": "12:58:00",
+				"bua_dep": "12:58:15"
 			},
 			{
 				"station": "JNG",
@@ -6195,21 +6775,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "12:49:00",
 				"dep_actual": "12:49:15",
-				"spawn_time": "12:52:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "12:50:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "12:49:00",
+				"kld_dep": "12:49:15",
+				"bua_arr": "12:47:00",
+				"bua_dep": "12:47:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "12:54:00",
 				"dep_actual": "12:55:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "12:57:00",
 				"dep_actual": "12:57:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -6228,7 +6812,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "12:51:15",
 				"spawn_time": "12:53:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "13:00:00",
+				"kld_dep": "13:00:15",
+				"bua_arr": "13:02:00",
+				"bua_dep": "13:02:15"
 			},
 			{
 				"station": "JNG",
@@ -6259,7 +6847,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "12:57:15",
 				"spawn_time": "12:59:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "13:06:00",
+				"kld_dep": "13:06:15",
+				"bua_arr": "13:08:00",
+				"bua_dep": "13:08:15"
 			},
 			{
 				"station": "JNG",
@@ -6288,9 +6880,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "12:56:00",
 				"dep_actual": "12:56:15",
-				"spawn_time": "13:01:45",
+				"spawn_time": "12:57:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "12:56:00",
+				"kld_dep": "12:56:15",
+				"bua_arr": "12:54:00",
+				"bua_dep": "12:54:15"
 			},
 			{
 				"station": "JNG",
@@ -6319,9 +6915,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "13:02:00",
 				"dep_actual": "13:02:15",
-				"spawn_time": "13:06:45",
+				"spawn_time": "13:03:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "13:02:00",
+				"kld_dep": "13:02:15",
+				"bua_arr": "13:00:00",
+				"bua_dep": "13:00:15"
 			},
 			{
 				"station": "JNG",
@@ -6352,7 +6952,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "13:03:15",
 				"spawn_time": "13:06:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "13:12:00",
+				"kld_dep": "13:12:15",
+				"bua_arr": "13:14:00",
+				"bua_dep": "13:14:15"
 			},
 			{
 				"station": "JNG",
@@ -6381,21 +6985,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "13:07:00",
 				"dep_actual": "13:07:15",
-				"spawn_time": "13:11:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "13:08:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "13:07:00",
+				"kld_dep": "13:07:15",
+				"bua_arr": "13:05:00",
+				"bua_dep": "13:05:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "13:13:00",
 				"dep_actual": "13:14:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "13:16:00",
 				"dep_actual": "13:16:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -6414,7 +7022,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "13:21:15",
 				"spawn_time": "13:22:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "13:29:00",
+				"kld_dep": "13:29:15",
+				"bua_arr": "13:31:00",
+				"bua_dep": "13:31:15"
 			},
 			{
 				"station": "JNG",
@@ -6443,9 +7055,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "13:17:00",
 				"dep_actual": "13:17:15",
-				"spawn_time": "13:22:45",
+				"spawn_time": "13:18:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "13:17:00",
+				"kld_dep": "13:17:15",
+				"bua_arr": "13:15:00",
+				"bua_dep": "13:15:15"
 			},
 			{
 				"station": "JNG",
@@ -6474,21 +7090,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "13:24:00",
 				"dep_actual": "13:24:15",
-				"spawn_time": "13:27:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "13:25:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "13:24:00",
+				"kld_dep": "13:24:15",
+				"bua_arr": "13:22:00",
+				"bua_dep": "13:22:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "13:29:00",
 				"dep_actual": "13:30:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "13:32:00",
 				"dep_actual": "13:32:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -6507,7 +7127,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "13:30:15",
 				"spawn_time": "13:31:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "13:36:00",
+				"kld_dep": "13:36:15",
+				"bua_arr": "13:37:00",
+				"bua_dep": "13:37:15"
 			},
 			{
 				"station": "JNG",
@@ -6538,7 +7162,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "13:28:15",
 				"spawn_time": "13:31:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "13:38:00",
+				"kld_dep": "13:38:15",
+				"bua_arr": "13:40:00",
+				"bua_dep": "13:40:15"
 			},
 			{
 				"station": "JNG",
@@ -6567,9 +7195,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "13:30:00",
 				"dep_actual": "13:30:15",
-				"spawn_time": "13:34:45",
+				"spawn_time": "13:31:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "13:30:00",
+				"kld_dep": "13:30:15",
+				"bua_arr": "13:28:00",
+				"bua_dep": "13:28:15"
 			},
 			{
 				"station": "JNG",
@@ -6598,9 +7230,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "13:36:00",
 				"dep_actual": "13:36:15",
-				"spawn_time": "13:40:45",
+				"spawn_time": "13:37:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "13:36:00",
+				"kld_dep": "13:36:15",
+				"bua_arr": "13:34:00",
+				"bua_dep": "13:34:15"
 			},
 			{
 				"station": "JNG",
@@ -6631,7 +7267,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "13:40:15",
 				"spawn_time": "13:42:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "13:49:00",
+				"kld_dep": "13:49:15",
+				"bua_arr": "13:51:00",
+				"bua_dep": "13:51:15"
 			},
 			{
 				"station": "JNG",
@@ -6693,7 +7333,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "13:45:15",
 				"spawn_time": "13:47:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "13:54:00",
+				"kld_dep": "13:54:15",
+				"bua_arr": "13:56:00",
+				"bua_dep": "13:56:15"
 			},
 			{
 				"station": "JNG",
@@ -6786,7 +7430,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "13:56:15",
 				"spawn_time": "13:58:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "14:05:00",
+				"kld_dep": "14:05:15",
+				"bua_arr": "14:07:00",
+				"bua_dep": "14:07:15"
 			},
 			{
 				"station": "JNG",
@@ -6815,9 +7463,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "13:50:00",
 				"dep_actual": "13:50:15",
-				"spawn_time": "13:59:45",
+				"spawn_time": "13:51:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "13:50:00",
+				"kld_dep": "13:50:15",
+				"bua_arr": "13:48:00",
+				"bua_dep": "13:48:15"
 			},
 			{
 				"station": "JNG",
@@ -6846,21 +7498,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "13:57:00",
 				"dep_actual": "13:57:15",
-				"spawn_time": "14:00:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "13:58:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "13:57:00",
+				"kld_dep": "13:57:15",
+				"bua_arr": "13:55:00",
+				"bua_dep": "13:55:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "14:02:00",
 				"dep_actual": "14:03:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "14:05:00",
 				"dep_actual": "14:05:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -6877,9 +7533,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "14:01:00",
 				"dep_actual": "14:01:15",
-				"spawn_time": "14:06:45",
+				"spawn_time": "14:02:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "14:01:00",
+				"kld_dep": "14:01:15",
+				"bua_arr": "13:59:00",
+				"bua_dep": "13:59:15"
 			},
 			{
 				"station": "JNG",
@@ -6910,7 +7570,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "14:06:15",
 				"spawn_time": "14:07:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "14:12:00",
+				"kld_dep": "14:12:15",
+				"bua_arr": "14:13:00",
+				"bua_dep": "14:13:15"
 			},
 			{
 				"station": "JNG",
@@ -6941,7 +7605,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "14:01:15",
 				"spawn_time": "14:07:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "14:13:00",
+				"kld_dep": "14:13:15",
+				"bua_arr": "14:15:00",
+				"bua_dep": "14:15:15"
 			},
 			{
 				"station": "JNG",
@@ -6970,9 +7638,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "14:07:00",
 				"dep_actual": "14:07:15",
-				"spawn_time": "14:12:45",
+				"spawn_time": "14:08:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "14:07:00",
+				"kld_dep": "14:07:15",
+				"bua_arr": "14:05:00",
+				"bua_dep": "14:05:15"
 			},
 			{
 				"station": "JNG",
@@ -7002,20 +7674,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "13:58:00",
 				"dep_actual": "14:01:00",
 				"spawn_time": "14:12:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "14:14:00",
 				"dep_actual": "14:16:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "14:26:00",
 				"dep_actual": "14:26:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -7034,7 +7706,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "14:16:15",
 				"spawn_time": "14:18:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "14:25:00",
+				"kld_dep": "14:25:15",
+				"bua_arr": "14:27:00",
+				"bua_dep": "14:27:15"
 			},
 			{
 				"station": "JNG",
@@ -7063,21 +7739,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "14:13:00",
 				"dep_actual": "14:13:15",
-				"spawn_time": "14:20:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "14:14:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "14:13:00",
+				"kld_dep": "14:13:15",
+				"bua_arr": "14:11:00",
+				"bua_dep": "14:11:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "14:22:00",
 				"dep_actual": "14:23:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "14:25:00",
 				"dep_actual": "14:25:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -7094,9 +7774,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "14:18:00",
 				"dep_actual": "14:18:15",
-				"spawn_time": "14:23:45",
+				"spawn_time": "14:19:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "14:18:00",
+				"kld_dep": "14:18:15",
+				"bua_arr": "14:16:00",
+				"bua_dep": "14:16:15"
 			},
 			{
 				"station": "JNG",
@@ -7127,7 +7811,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "14:23:15",
 				"spawn_time": "14:25:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "14:32:00",
+				"kld_dep": "14:32:15",
+				"bua_arr": "14:34:00",
+				"bua_dep": "14:34:15"
 			},
 			{
 				"station": "JNG",
@@ -7156,9 +7844,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "14:24:00",
 				"dep_actual": "14:24:15",
-				"spawn_time": "14:29:45",
+				"spawn_time": "14:25:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "14:24:00",
+				"kld_dep": "14:24:15",
+				"bua_arr": "14:22:00",
+				"bua_dep": "14:22:15"
 			},
 			{
 				"station": "JNG",
@@ -7189,7 +7881,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "14:30:15",
 				"spawn_time": "14:33:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "14:40:00",
+				"kld_dep": "14:40:15",
+				"bua_arr": "14:42:00",
+				"bua_dep": "14:42:15"
 			},
 			{
 				"station": "JNG",
@@ -7218,9 +7914,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "14:29:00",
 				"dep_actual": "14:29:15",
-				"spawn_time": "14:34:45",
+				"spawn_time": "14:30:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "14:29:00",
+				"kld_dep": "14:29:15",
+				"bua_arr": "14:27:00",
+				"bua_dep": "14:27:15"
 			},
 			{
 				"station": "JNG",
@@ -7282,7 +7982,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "14:37:15",
 				"spawn_time": "14:39:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "14:46:00",
+				"kld_dep": "14:46:15",
+				"bua_arr": "14:48:00",
+				"bua_dep": "14:48:15"
 			},
 			{
 				"station": "JNG",
@@ -7311,9 +8015,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "14:36:00",
 				"dep_actual": "14:36:15",
-				"spawn_time": "14:42:45",
+				"spawn_time": "14:37:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "14:36:00",
+				"kld_dep": "14:36:15",
+				"bua_arr": "14:34:00",
+				"bua_dep": "14:34:15"
 			},
 			{
 				"station": "JNG",
@@ -7344,7 +8052,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "14:40:15",
 				"spawn_time": "14:43:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "14:49:00",
+				"kld_dep": "14:49:15",
+				"bua_arr": "14:51:00",
+				"bua_dep": "14:51:15"
 			},
 			{
 				"station": "JNG",
@@ -7373,21 +8085,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "14:42:00",
 				"dep_actual": "14:42:15",
-				"spawn_time": "14:48:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "14:43:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "14:42:00",
+				"kld_dep": "14:42:15",
+				"bua_arr": "14:40:00",
+				"bua_dep": "14:40:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "14:50:00",
 				"dep_actual": "14:51:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "14:53:00",
 				"dep_actual": "14:53:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -7406,7 +8122,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "14:47:15",
 				"spawn_time": "14:49:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "14:56:00",
+				"kld_dep": "14:56:15",
+				"bua_arr": "14:58:00",
+				"bua_dep": "14:58:15"
 			},
 			{
 				"station": "JNG",
@@ -7435,9 +8155,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "14:47:00",
 				"dep_actual": "14:47:15",
-				"spawn_time": "14:52:45",
+				"spawn_time": "14:48:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "14:47:00",
+				"kld_dep": "14:47:15",
+				"bua_arr": "14:45:00",
+				"bua_dep": "14:45:15"
 			},
 			{
 				"station": "JNG",
@@ -7468,7 +8192,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "14:53:15",
 				"spawn_time": "14:55:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "15:02:00",
+				"kld_dep": "15:02:15",
+				"bua_arr": "15:04:00",
+				"bua_dep": "15:04:15"
 			},
 			{
 				"station": "JNG",
@@ -7497,21 +8225,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "14:54:00",
 				"dep_actual": "14:54:15",
-				"spawn_time": "14:57:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "14:55:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "14:54:00",
+				"kld_dep": "14:54:15",
+				"bua_arr": "14:52:00",
+				"bua_dep": "14:52:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "14:59:00",
 				"dep_actual": "15:00:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "15:02:00",
 				"dep_actual": "15:02:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -7528,9 +8260,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "14:57:00",
 				"dep_actual": "14:57:15",
-				"spawn_time": "15:01:45",
+				"spawn_time": "14:58:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "14:57:00",
+				"kld_dep": "14:57:15",
+				"bua_arr": "14:55:00",
+				"bua_dep": "14:55:15"
 			},
 			{
 				"station": "JNG",
@@ -7561,7 +8297,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "15:01:15",
 				"spawn_time": "15:03:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "15:10:00",
+				"kld_dep": "15:10:15",
+				"bua_arr": "15:12:00",
+				"bua_dep": "15:12:15"
 			},
 			{
 				"station": "JNG",
@@ -7592,7 +8332,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "15:07:15",
 				"spawn_time": "15:09:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "15:16:00",
+				"kld_dep": "15:16:15",
+				"bua_arr": "15:18:00",
+				"bua_dep": "15:18:15"
 			},
 			{
 				"station": "JNG",
@@ -7623,7 +8367,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "15:08:15",
 				"spawn_time": "15:16:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "15:22:00",
+				"kld_dep": "15:22:15",
+				"bua_arr": "15:24:00",
+				"bua_dep": "15:24:15"
 			},
 			{
 				"station": "JNG",
@@ -7652,21 +8400,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "15:11:00",
 				"dep_actual": "15:11:15",
-				"spawn_time": "15:16:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "15:12:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "15:11:00",
+				"kld_dep": "15:11:15",
+				"bua_arr": "15:09:00",
+				"bua_dep": "15:09:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "15:18:00",
 				"dep_actual": "15:19:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "15:21:00",
 				"dep_actual": "15:21:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -7685,7 +8437,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "15:21:15",
 				"spawn_time": "15:23:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "15:30:00",
+				"kld_dep": "15:30:15",
+				"bua_arr": "15:32:00",
+				"bua_dep": "15:32:15"
 			},
 			{
 				"station": "JNG",
@@ -7714,9 +8470,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "15:19:00",
 				"dep_actual": "15:19:15",
-				"spawn_time": "15:24:45",
+				"spawn_time": "15:20:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "15:19:00",
+				"kld_dep": "15:19:15",
+				"bua_arr": "15:17:00",
+				"bua_dep": "15:17:15"
 			},
 			{
 				"station": "JNG",
@@ -7747,7 +8507,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "15:27:15",
 				"spawn_time": "15:29:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "15:36:00",
+				"kld_dep": "15:36:15",
+				"bua_arr": "15:38:00",
+				"bua_dep": "15:38:15"
 			},
 			{
 				"station": "JNG",
@@ -7776,9 +8540,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "15:30:00",
 				"dep_actual": "15:30:15",
-				"spawn_time": "15:34:45",
+				"spawn_time": "15:31:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "15:30:00",
+				"kld_dep": "15:30:15",
+				"bua_arr": "15:28:00",
+				"bua_dep": "15:28:15"
 			},
 			{
 				"station": "JNG",
@@ -7807,9 +8575,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "15:34:00",
 				"dep_actual": "15:34:15",
-				"spawn_time": "15:39:45",
+				"spawn_time": "15:35:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "15:34:00",
+				"kld_dep": "15:34:15",
+				"bua_arr": "15:32:00",
+				"bua_dep": "15:32:15"
 			},
 			{
 				"station": "JNG",
@@ -7840,7 +8612,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "15:34:15",
 				"spawn_time": "15:39:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "15:45:00",
+				"kld_dep": "15:45:15",
+				"bua_arr": "15:47:00",
+				"bua_dep": "15:47:15"
 			},
 			{
 				"station": "JNG",
@@ -7871,7 +8647,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "15:39:15",
 				"spawn_time": "15:45:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "15:52:00",
+				"kld_dep": "15:52:15",
+				"bua_arr": "15:54:00",
+				"bua_dep": "15:54:15"
 			},
 			{
 				"station": "JNG",
@@ -7902,7 +8682,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "15:47:15",
 				"spawn_time": "15:50:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "15:57:00",
+				"kld_dep": "15:57:15",
+				"bua_arr": "15:59:00",
+				"bua_dep": "15:59:15"
 			},
 			{
 				"station": "JNG",
@@ -7931,21 +8715,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "15:45:00",
 				"dep_actual": "15:45:15",
-				"spawn_time": "15:50:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "15:46:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "15:45:00",
+				"kld_dep": "15:45:15",
+				"bua_arr": "15:43:00",
+				"bua_dep": "15:43:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "15:52:00",
 				"dep_actual": "15:53:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "15:55:00",
 				"dep_actual": "15:55:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -7962,9 +8750,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "15:51:00",
 				"dep_actual": "15:51:15",
-				"spawn_time": "15:56:45",
+				"spawn_time": "15:52:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "15:51:00",
+				"kld_dep": "15:51:15",
+				"bua_arr": "15:49:00",
+				"bua_dep": "15:49:15"
 			},
 			{
 				"station": "JNG",
@@ -7995,7 +8787,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "15:55:15",
 				"spawn_time": "16:00:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "16:06:00",
+				"kld_dep": "16:06:15",
+				"bua_arr": "16:08:00",
+				"bua_dep": "16:08:15"
 			},
 			{
 				"station": "JNG",
@@ -8057,7 +8853,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "16:01:15",
 				"spawn_time": "16:05:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "16:12:00",
+				"kld_dep": "16:12:15",
+				"bua_arr": "16:14:00",
+				"bua_dep": "16:14:15"
 			},
 			{
 				"station": "JNG",
@@ -8086,9 +8886,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "16:01:00",
 				"dep_actual": "16:01:15",
-				"spawn_time": "16:06:45",
+				"spawn_time": "16:02:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "16:01:00",
+				"kld_dep": "16:01:15",
+				"bua_arr": "15:59:00",
+				"bua_dep": "15:59:15"
 			},
 			{
 				"station": "JNG",
@@ -8119,7 +8923,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "16:08:15",
 				"spawn_time": "16:11:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "16:18:00",
+				"kld_dep": "16:18:15",
+				"bua_arr": "16:20:00",
+				"bua_dep": "16:20:15"
 			},
 			{
 				"station": "JNG",
@@ -8148,9 +8956,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "16:07:00",
 				"dep_actual": "16:07:15",
-				"spawn_time": "16:11:45",
+				"spawn_time": "16:08:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "16:07:00",
+				"kld_dep": "16:07:15",
+				"bua_arr": "16:05:00",
+				"bua_dep": "16:05:15"
 			},
 			{
 				"station": "JNG",
@@ -8179,21 +8991,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "16:13:00",
 				"dep_actual": "16:13:15",
-				"spawn_time": "16:16:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "16:14:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "16:13:00",
+				"kld_dep": "16:13:15",
+				"bua_arr": "16:11:00",
+				"bua_dep": "16:11:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "16:18:00",
 				"dep_actual": "16:19:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "16:21:00",
 				"dep_actual": "16:21:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -8212,7 +9028,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "16:18:15",
 				"spawn_time": "16:20:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "16:27:00",
+				"kld_dep": "16:27:15",
+				"bua_arr": "16:29:00",
+				"bua_dep": "16:29:15"
 			},
 			{
 				"station": "JNG",
@@ -8242,20 +9062,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "16:08:00",
 				"dep_actual": "16:10:00",
 				"spawn_time": "16:20:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "16:22:00",
 				"dep_actual": "16:24:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "16:34:00",
 				"dep_actual": "16:34:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -8272,9 +9092,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "16:18:00",
 				"dep_actual": "16:18:15",
-				"spawn_time": "16:23:45",
+				"spawn_time": "16:19:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "16:18:00",
+				"kld_dep": "16:18:15",
+				"bua_arr": "16:16:00",
+				"bua_dep": "16:16:15"
 			},
 			{
 				"station": "JNG",
@@ -8305,7 +9129,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "16:24:15",
 				"spawn_time": "16:28:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "16:34:00",
+				"kld_dep": "16:34:15",
+				"bua_arr": "16:36:00",
+				"bua_dep": "16:36:15"
 			},
 			{
 				"station": "JNG",
@@ -8334,9 +9162,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "16:23:00",
 				"dep_actual": "16:23:15",
-				"spawn_time": "16:30:45",
+				"spawn_time": "16:24:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "16:23:00",
+				"kld_dep": "16:23:15",
+				"bua_arr": "16:21:00",
+				"bua_dep": "16:21:15"
 			},
 			{
 				"station": "JNG",
@@ -8367,7 +9199,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "16:37:15",
 				"spawn_time": "16:38:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "16:43:00",
+				"kld_dep": "16:43:15",
+				"bua_arr": "16:44:00",
+				"bua_dep": "16:44:15"
 			},
 			{
 				"station": "JNG",
@@ -8396,9 +9232,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "16:30:00",
 				"dep_actual": "16:30:15",
-				"spawn_time": "16:40:45",
+				"spawn_time": "16:31:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "16:30:00",
+				"kld_dep": "16:30:15",
+				"bua_arr": "16:28:00",
+				"bua_dep": "16:28:15"
 			},
 			{
 				"station": "JNG",
@@ -8427,21 +9267,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "16:38:00",
 				"dep_actual": "16:38:15",
-				"spawn_time": "16:41:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "16:39:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "16:38:00",
+				"kld_dep": "16:38:15",
+				"bua_arr": "16:36:00",
+				"bua_dep": "16:36:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "16:43:00",
 				"dep_actual": "16:44:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "16:46:00",
 				"dep_actual": "16:46:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -8460,7 +9304,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "16:40:15",
 				"spawn_time": "16:42:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "16:49:00",
+				"kld_dep": "16:49:15",
+				"bua_arr": "16:51:00",
+				"bua_dep": "16:51:15"
 			},
 			{
 				"station": "JNG",
@@ -8489,9 +9337,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "16:42:00",
 				"dep_actual": "16:42:15",
-				"spawn_time": "16:46:45",
+				"spawn_time": "16:43:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "16:42:00",
+				"kld_dep": "16:42:15",
+				"bua_arr": "16:40:00",
+				"bua_dep": "16:40:15"
 			},
 			{
 				"station": "JNG",
@@ -8521,20 +9373,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "16:37:00",
 				"dep_actual": "16:39:00",
 				"spawn_time": "16:49:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "16:51:00",
 				"dep_actual": "16:53:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "17:04:00",
 				"dep_actual": "17:04:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -8551,9 +9403,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "16:48:00",
 				"dep_actual": "16:48:15",
-				"spawn_time": "16:51:45",
+				"spawn_time": "16:49:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "16:48:00",
+				"kld_dep": "16:48:15",
+				"bua_arr": "16:46:00",
+				"bua_dep": "16:46:15"
 			},
 			{
 				"station": "JNG",
@@ -8584,7 +9440,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "16:51:15",
 				"spawn_time": "16:54:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "17:01:00",
+				"kld_dep": "17:01:15",
+				"bua_arr": "17:03:00",
+				"bua_dep": "17:03:15"
 			},
 			{
 				"station": "JNG",
@@ -8644,21 +9504,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "16:55:00",
 				"dep_actual": "16:55:15",
-				"spawn_time": "17:01:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "16:56:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "16:55:00",
+				"kld_dep": "16:55:15",
+				"bua_arr": "16:53:00",
+				"bua_dep": "16:53:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "17:03:00",
 				"dep_actual": "17:04:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "17:06:00",
 				"dep_actual": "17:06:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -8677,7 +9541,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "16:57:15",
 				"spawn_time": "17:02:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "17:08:00",
+				"kld_dep": "17:08:15",
+				"bua_arr": "17:10:00",
+				"bua_dep": "17:10:15"
 			},
 			{
 				"station": "JNG",
@@ -8706,9 +9574,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "17:03:00",
 				"dep_actual": "17:03:15",
-				"spawn_time": "17:07:45",
+				"spawn_time": "17:04:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "17:03:00",
+				"kld_dep": "17:03:15",
+				"bua_arr": "17:01:00",
+				"bua_dep": "17:01:15"
 			},
 			{
 				"station": "JNG",
@@ -8738,20 +9610,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "16:54:00",
 				"dep_actual": "16:56:00",
 				"spawn_time": "17:07:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "17:09:00",
 				"dep_actual": "17:11:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "17:22:00",
 				"dep_actual": "17:22:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -8770,7 +9642,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "17:05:15",
 				"spawn_time": "17:08:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "17:15:00",
+				"kld_dep": "17:15:15",
+				"bua_arr": "17:17:00",
+				"bua_dep": "17:17:15"
 			},
 			{
 				"station": "JNG",
@@ -8801,7 +9677,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "17:13:15",
 				"spawn_time": "17:12:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "17:20:00",
+				"kld_dep": "17:20:15",
+				"bua_arr": "17:24:00",
+				"bua_dep": "17:24:15"
 			},
 			{
 				"station": "JNG",
@@ -8861,21 +9741,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "17:14:00",
 				"dep_actual": "17:14:15",
-				"spawn_time": "17:20:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "17:15:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "17:14:00",
+				"kld_dep": "17:14:15",
+				"bua_arr": "17:12:00",
+				"bua_dep": "17:12:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "17:22:00",
 				"dep_actual": "17:23:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "17:25:00",
 				"dep_actual": "17:25:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -8892,9 +9776,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "17:19:00",
 				"dep_actual": "17:19:15",
-				"spawn_time": "17:23:45",
+				"spawn_time": "17:20:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "17:19:00",
+				"kld_dep": "17:19:15",
+				"bua_arr": "17:17:00",
+				"bua_dep": "17:17:15"
 			},
 			{
 				"station": "JNG",
@@ -8925,7 +9813,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "17:21:15",
 				"spawn_time": "17:23:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "17:30:00",
+				"kld_dep": "17:30:15",
+				"bua_arr": "17:32:00",
+				"bua_dep": "17:32:15"
 			},
 			{
 				"station": "JNG",
@@ -8956,7 +9848,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "17:26:15",
 				"spawn_time": "17:28:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "17:35:00",
+				"kld_dep": "17:35:15",
+				"bua_arr": "17:37:00",
+				"bua_dep": "17:37:15"
 			},
 			{
 				"station": "JNG",
@@ -8985,9 +9881,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "17:27:00",
 				"dep_actual": "17:27:15",
-				"spawn_time": "17:32:45",
+				"spawn_time": "17:28:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "17:27:00",
+				"kld_dep": "17:27:15",
+				"bua_arr": "17:25:00",
+				"bua_dep": "17:25:15"
 			},
 			{
 				"station": "JNG",
@@ -9018,7 +9918,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "17:29:15",
 				"spawn_time": "17:32:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "17:38:00",
+				"kld_dep": "17:38:15",
+				"bua_arr": "17:40:00",
+				"bua_dep": "17:40:15"
 			},
 			{
 				"station": "JNG",
@@ -9048,20 +9952,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "17:23:00",
 				"dep_actual": "17:25:00",
 				"spawn_time": "17:34:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "17:36:00",
 				"dep_actual": "17:38:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "17:48:00",
 				"dep_actual": "17:48:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -9078,9 +9982,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "17:32:00",
 				"dep_actual": "17:32:15",
-				"spawn_time": "17:37:45",
+				"spawn_time": "17:33:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "17:32:00",
+				"kld_dep": "17:32:15",
+				"bua_arr": "17:30:00",
+				"bua_dep": "17:30:15"
 			},
 			{
 				"station": "JNG",
@@ -9111,7 +10019,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "17:39:15",
 				"spawn_time": "17:41:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "17:48:00",
+				"kld_dep": "17:48:15",
+				"bua_arr": "17:50:00",
+				"bua_dep": "17:50:15"
 			},
 			{
 				"station": "JNG",
@@ -9173,7 +10085,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "17:46:15",
 				"spawn_time": "17:48:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "17:55:00",
+				"kld_dep": "17:55:15",
+				"bua_arr": "17:57:00",
+				"bua_dep": "17:57:15"
 			},
 			{
 				"station": "JNG",
@@ -9202,21 +10118,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "17:40:00",
 				"dep_actual": "17:40:15",
-				"spawn_time": "17:48:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "17:41:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "17:40:00",
+				"kld_dep": "17:40:15",
+				"bua_arr": "17:38:00",
+				"bua_dep": "17:38:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "17:50:00",
 				"dep_actual": "17:51:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "17:53:00",
 				"dep_actual": "17:53:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -9235,7 +10155,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "17:51:15",
 				"spawn_time": "17:53:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "18:00:00",
+				"kld_dep": "18:00:15",
+				"bua_arr": "18:02:00",
+				"bua_dep": "18:02:15"
 			},
 			{
 				"station": "JNG",
@@ -9266,7 +10190,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "17:54:15",
 				"spawn_time": "17:53:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "18:01:00",
+				"kld_dep": "18:01:15",
+				"bua_arr": "18:05:00",
+				"bua_dep": "18:05:15"
 			},
 			{
 				"station": "JNG",
@@ -9295,9 +10223,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "17:47:00",
 				"dep_actual": "17:47:15",
-				"spawn_time": "17:53:45",
+				"spawn_time": "17:48:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "17:47:00",
+				"kld_dep": "17:47:15",
+				"bua_arr": "17:45:00",
+				"bua_dep": "17:45:15"
 			},
 			{
 				"station": "JNG",
@@ -9326,9 +10258,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "17:55:00",
 				"dep_actual": "17:55:15",
-				"spawn_time": "18:00:45",
+				"spawn_time": "17:56:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "17:55:00",
+				"kld_dep": "17:55:15",
+				"bua_arr": "17:53:00",
+				"bua_dep": "17:53:15"
 			},
 			{
 				"station": "JNG",
@@ -9359,7 +10295,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "18:02:15",
 				"spawn_time": "18:04:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "18:11:00",
+				"kld_dep": "18:11:15",
+				"bua_arr": "18:13:00",
+				"bua_dep": "18:13:15"
 			},
 			{
 				"station": "JNG",
@@ -9388,21 +10328,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "18:02:00",
 				"dep_actual": "18:02:15",
-				"spawn_time": "18:04:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "18:03:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "18:02:00",
+				"kld_dep": "18:02:15",
+				"bua_arr": "18:00:00",
+				"bua_dep": "18:00:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "18:06:00",
 				"dep_actual": "18:07:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "18:09:00",
 				"dep_actual": "18:09:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -9420,20 +10364,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "17:50:00",
 				"dep_actual": "17:50:00",
 				"spawn_time": "18:07:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "18:09:00",
 				"dep_actual": "18:14:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "18:26:00",
 				"dep_actual": "18:26:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -9452,7 +10396,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "18:05:15",
 				"spawn_time": "18:09:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "18:15:00",
+				"kld_dep": "18:15:15",
+				"bua_arr": "18:17:00",
+				"bua_dep": "18:17:15"
 			},
 			{
 				"station": "JNG",
@@ -9481,9 +10429,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "18:05:00",
 				"dep_actual": "18:05:15",
-				"spawn_time": "18:09:45",
+				"spawn_time": "18:06:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "18:05:00",
+				"kld_dep": "18:05:15",
+				"bua_arr": "18:03:00",
+				"bua_dep": "18:03:15"
 			},
 			{
 				"station": "JNG",
@@ -9514,7 +10466,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "18:09:15",
 				"spawn_time": "18:14:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "18:21:00",
+				"kld_dep": "18:21:15",
+				"bua_arr": "18:23:00",
+				"bua_dep": "18:23:15"
 			},
 			{
 				"station": "JNG",
@@ -9543,9 +10499,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "18:10:00",
 				"dep_actual": "18:10:15",
-				"spawn_time": "18:15:45",
+				"spawn_time": "18:11:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "18:10:00",
+				"kld_dep": "18:10:15",
+				"bua_arr": "18:08:00",
+				"bua_dep": "18:08:15"
 			},
 			{
 				"station": "JNG",
@@ -9607,7 +10567,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "18:17:15",
 				"spawn_time": "18:19:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "18:26:00",
+				"kld_dep": "18:26:15",
+				"bua_arr": "18:28:00",
+				"bua_dep": "18:28:15"
 			},
 			{
 				"station": "JNG",
@@ -9637,20 +10601,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "18:06:00",
 				"dep_actual": "18:08:00",
 				"spawn_time": "18:19:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "18:21:00",
 				"dep_actual": "18:23:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "18:33:00",
 				"dep_actual": "18:33:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -9667,9 +10631,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "18:15:00",
 				"dep_actual": "18:15:15",
-				"spawn_time": "18:20:45",
+				"spawn_time": "18:16:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "18:15:00",
+				"kld_dep": "18:15:15",
+				"bua_arr": "18:13:00",
+				"bua_dep": "18:13:15"
 			},
 			{
 				"station": "JNG",
@@ -9700,7 +10668,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "18:24:15",
 				"spawn_time": "18:27:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "18:34:00",
+				"kld_dep": "18:34:15",
+				"bua_arr": "18:36:00",
+				"bua_dep": "18:36:15"
 			},
 			{
 				"station": "JNG",
@@ -9731,7 +10703,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "18:30:15",
 				"spawn_time": "18:32:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "18:39:00",
+				"kld_dep": "18:39:15",
+				"bua_arr": "18:41:00",
+				"bua_dep": "18:41:15"
 			},
 			{
 				"station": "JNG",
@@ -9760,9 +10736,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "18:25:00",
 				"dep_actual": "18:25:15",
-				"spawn_time": "18:32:45",
+				"spawn_time": "18:26:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "18:25:00",
+				"kld_dep": "18:25:15",
+				"bua_arr": "18:23:00",
+				"bua_dep": "18:23:15"
 			},
 			{
 				"station": "JNG",
@@ -9791,21 +10771,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "18:33:00",
 				"dep_actual": "18:33:15",
-				"spawn_time": "18:36:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "18:34:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "18:33:00",
+				"kld_dep": "18:33:15",
+				"bua_arr": "18:31:00",
+				"bua_dep": "18:31:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "18:38:00",
 				"dep_actual": "18:39:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "18:41:00",
 				"dep_actual": "18:41:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -9855,7 +10839,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "18:37:15",
 				"spawn_time": "18:41:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "18:47:00",
+				"kld_dep": "18:47:15",
+				"bua_arr": "18:49:00",
+				"bua_dep": "18:49:15"
 			},
 			{
 				"station": "JNG",
@@ -9884,9 +10872,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "18:40:00",
 				"dep_actual": "18:40:15",
-				"spawn_time": "18:44:45",
+				"spawn_time": "18:41:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "18:40:00",
+				"kld_dep": "18:40:15",
+				"bua_arr": "18:38:00",
+				"bua_dep": "18:38:15"
 			},
 			{
 				"station": "JNG",
@@ -9916,20 +10908,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "18:36:00",
 				"dep_actual": "18:38:00",
 				"spawn_time": "18:48:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "18:50:00",
 				"dep_actual": "18:52:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "19:03:00",
 				"dep_actual": "19:03:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -9948,7 +10940,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "18:47:15",
 				"spawn_time": "18:49:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "18:56:00",
+				"kld_dep": "18:56:15",
+				"bua_arr": "18:58:00",
+				"bua_dep": "18:58:15"
 			},
 			{
 				"station": "JNG",
@@ -9977,9 +10973,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "18:46:00",
 				"dep_actual": "18:46:15",
-				"spawn_time": "18:51:45",
+				"spawn_time": "18:47:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "18:46:00",
+				"kld_dep": "18:46:15",
+				"bua_arr": "18:44:00",
+				"bua_dep": "18:44:15"
 			},
 			{
 				"station": "JNG",
@@ -10041,7 +11041,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "18:53:15",
 				"spawn_time": "18:56:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "19:03:00",
+				"kld_dep": "19:03:15",
+				"bua_arr": "19:05:00",
+				"bua_dep": "19:05:15"
 			},
 			{
 				"station": "JNG",
@@ -10070,9 +11074,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "18:55:00",
 				"dep_actual": "18:55:15",
-				"spawn_time": "19:02:45",
+				"spawn_time": "18:56:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "18:55:00",
+				"kld_dep": "18:55:15",
+				"bua_arr": "18:53:00",
+				"bua_dep": "18:53:15"
 			},
 			{
 				"station": "JNG",
@@ -10101,21 +11109,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "19:02:00",
 				"dep_actual": "19:02:15",
-				"spawn_time": "19:08:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "19:03:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "19:02:00",
+				"kld_dep": "19:02:15",
+				"bua_arr": "19:00:00",
+				"bua_dep": "19:00:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "19:10:00",
 				"dep_actual": "19:11:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "19:13:00",
 				"dep_actual": "19:13:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -10134,7 +11146,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "19:07:15",
 				"spawn_time": "19:09:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "19:16:00",
+				"kld_dep": "19:16:15",
+				"bua_arr": "19:18:00",
+				"bua_dep": "19:18:15"
 			},
 			{
 				"station": "JNG",
@@ -10196,7 +11212,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "19:08:15",
 				"spawn_time": "19:16:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "19:23:00",
+				"kld_dep": "19:23:15",
+				"bua_arr": "19:25:00",
+				"bua_dep": "19:25:15"
 			},
 			{
 				"station": "JNG",
@@ -10225,9 +11245,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "19:09:00",
 				"dep_actual": "19:09:15",
-				"spawn_time": "19:17:45",
+				"spawn_time": "19:10:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "19:09:00",
+				"kld_dep": "19:09:15",
+				"bua_arr": "19:07:00",
+				"bua_dep": "19:07:15"
 			},
 			{
 				"station": "JNG",
@@ -10258,7 +11282,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "19:15:15",
 				"spawn_time": "19:22:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "19:29:00",
+				"kld_dep": "19:29:15",
+				"bua_arr": "19:31:00",
+				"bua_dep": "19:31:15"
 			},
 			{
 				"station": "JNG",
@@ -10287,9 +11315,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "19:16:00",
 				"dep_actual": "19:16:15",
-				"spawn_time": "19:22:45",
+				"spawn_time": "19:17:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "19:16:00",
+				"kld_dep": "19:16:15",
+				"bua_arr": "19:14:00",
+				"bua_dep": "19:14:15"
 			},
 			{
 				"station": "JNG",
@@ -10320,7 +11352,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "19:25:15",
 				"spawn_time": "19:27:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "19:33:00",
+				"kld_dep": "19:33:15",
+				"bua_arr": "19:35:00",
+				"bua_dep": "19:35:15"
 			},
 			{
 				"station": "JNG",
@@ -10350,20 +11386,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "19:19:00",
 				"dep_actual": "19:19:00",
 				"spawn_time": "19:28:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "19:30:00",
 				"dep_actual": "19:32:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "19:42:00",
 				"dep_actual": "19:42:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -10380,9 +11416,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "19:23:00",
 				"dep_actual": "19:23:15",
-				"spawn_time": "19:29:45",
+				"spawn_time": "19:24:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "19:23:00",
+				"kld_dep": "19:23:15",
+				"bua_arr": "19:21:00",
+				"bua_dep": "19:21:15"
 			},
 			{
 				"station": "JNG",
@@ -10413,7 +11453,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "19:32:15",
 				"spawn_time": "19:34:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "19:41:00",
+				"kld_dep": "19:41:15",
+				"bua_arr": "19:43:00",
+				"bua_dep": "19:43:15"
 			},
 			{
 				"station": "JNG",
@@ -10442,21 +11486,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "19:28:00",
 				"dep_actual": "19:28:15",
-				"spawn_time": "19:35:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "19:29:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "19:28:00",
+				"kld_dep": "19:28:15",
+				"bua_arr": "19:26:00",
+				"bua_dep": "19:26:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "19:37:00",
 				"dep_actual": "19:38:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "19:40:00",
 				"dep_actual": "19:40:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -10473,9 +11521,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "19:32:00",
 				"dep_actual": "19:32:15",
-				"spawn_time": "19:36:45",
+				"spawn_time": "19:33:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "19:32:00",
+				"kld_dep": "19:32:15",
+				"bua_arr": "19:30:00",
+				"bua_dep": "19:30:15"
 			},
 			{
 				"station": "JNG",
@@ -10506,7 +11558,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "19:40:15",
 				"spawn_time": "19:44:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "19:51:00",
+				"kld_dep": "19:51:15",
+				"bua_arr": "19:53:00",
+				"bua_dep": "19:53:15"
 			},
 			{
 				"station": "JNG",
@@ -10535,9 +11591,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "19:39:00",
 				"dep_actual": "19:39:15",
-				"spawn_time": "19:45:45",
+				"spawn_time": "19:40:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "19:39:00",
+				"kld_dep": "19:39:15",
+				"bua_arr": "19:37:00",
+				"bua_dep": "19:37:15"
 			},
 			{
 				"station": "JNG",
@@ -10568,7 +11628,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "19:48:15",
 				"spawn_time": "19:50:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "19:57:00",
+				"kld_dep": "19:57:15",
+				"bua_arr": "19:59:00",
+				"bua_dep": "19:59:15"
 			},
 			{
 				"station": "JNG",
@@ -10597,9 +11661,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "19:46:00",
 				"dep_actual": "19:46:15",
-				"spawn_time": "19:52:45",
+				"spawn_time": "19:47:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "19:46:00",
+				"kld_dep": "19:46:15",
+				"bua_arr": "19:44:00",
+				"bua_dep": "19:44:15"
 			},
 			{
 				"station": "JNG",
@@ -10628,21 +11696,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "19:53:00",
 				"dep_actual": "19:53:15",
-				"spawn_time": "19:55:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "19:54:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "19:53:00",
+				"kld_dep": "19:53:15",
+				"bua_arr": "19:51:00",
+				"bua_dep": "19:51:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "19:57:00",
 				"dep_actual": "19:58:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "20:00:00",
 				"dep_actual": "20:00:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -10723,7 +11795,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "20:01:15",
 				"spawn_time": "20:03:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "20:10:00",
+				"kld_dep": "20:10:15",
+				"bua_arr": "20:12:00",
+				"bua_dep": "20:12:15"
 			},
 			{
 				"station": "JNG",
@@ -10752,9 +11828,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "19:58:00",
 				"dep_actual": "19:58:15",
-				"spawn_time": "20:07:45",
+				"spawn_time": "19:59:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "19:58:00",
+				"kld_dep": "19:58:15",
+				"bua_arr": "19:56:00",
+				"bua_dep": "19:56:15"
 			},
 			{
 				"station": "JNG",
@@ -10785,7 +11865,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "20:03:15",
 				"spawn_time": "20:12:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "20:18:00",
+				"kld_dep": "20:18:15",
+				"bua_arr": "20:20:00",
+				"bua_dep": "20:20:15"
 			},
 			{
 				"station": "JNG",
@@ -10814,9 +11898,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "20:07:00",
 				"dep_actual": "20:07:15",
-				"spawn_time": "20:13:45",
+				"spawn_time": "20:08:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "20:07:00",
+				"kld_dep": "20:07:15",
+				"bua_arr": "20:05:00",
+				"bua_dep": "20:05:15"
 			},
 			{
 				"station": "JNG",
@@ -10847,7 +11935,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "20:16:15",
 				"spawn_time": "20:18:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "20:25:00",
+				"kld_dep": "20:25:15",
+				"bua_arr": "20:27:00",
+				"bua_dep": "20:27:15"
 			},
 			{
 				"station": "JNG",
@@ -10876,9 +11968,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "20:17:00",
 				"dep_actual": "20:17:15",
-				"spawn_time": "20:21:45",
+				"spawn_time": "20:18:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "20:17:00",
+				"kld_dep": "20:17:15",
+				"bua_arr": "20:15:00",
+				"bua_dep": "20:15:15"
 			},
 			{
 				"station": "JNG",
@@ -10907,21 +12003,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "20:21:00",
 				"dep_actual": "20:21:15",
-				"spawn_time": "20:24:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "20:22:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "20:21:00",
+				"kld_dep": "20:21:15",
+				"bua_arr": "20:19:00",
+				"bua_dep": "20:19:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "20:26:00",
 				"dep_actual": "20:27:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "20:29:00",
 				"dep_actual": "20:29:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -10940,7 +12040,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "20:24:15",
 				"spawn_time": "20:30:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "20:36:00",
+				"kld_dep": "20:36:15",
+				"bua_arr": "20:38:00",
+				"bua_dep": "20:38:15"
 			},
 			{
 				"station": "JNG",
@@ -10969,9 +12073,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "20:26:00",
 				"dep_actual": "20:26:15",
-				"spawn_time": "20:30:45",
+				"spawn_time": "20:27:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "20:26:00",
+				"kld_dep": "20:26:15",
+				"bua_arr": "20:24:00",
+				"bua_dep": "20:24:15"
 			},
 			{
 				"station": "JNG",
@@ -11001,20 +12109,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "20:20:00",
 				"dep_actual": "20:22:00",
 				"spawn_time": "20:32:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "20:34:00",
 				"dep_actual": "20:36:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "20:46:00",
 				"dep_actual": "20:46:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -11031,21 +12139,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "20:33:00",
 				"dep_actual": "20:33:15",
-				"spawn_time": "20:35:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "20:34:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "20:33:00",
+				"kld_dep": "20:33:15",
+				"bua_arr": "20:31:00",
+				"bua_dep": "20:31:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "20:37:00",
 				"dep_actual": "20:38:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "20:40:00",
 				"dep_actual": "20:40:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -11064,7 +12176,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "20:32:15",
 				"spawn_time": "20:36:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "20:43:00",
+				"kld_dep": "20:43:15",
+				"bua_arr": "20:45:00",
+				"bua_dep": "20:45:15"
 			},
 			{
 				"station": "JNG",
@@ -11095,7 +12211,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "20:39:15",
 				"spawn_time": "20:44:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "20:50:00",
+				"kld_dep": "20:50:15",
+				"bua_arr": "20:52:00",
+				"bua_dep": "20:52:15"
 			},
 			{
 				"station": "JNG",
@@ -11124,9 +12244,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "20:39:00",
 				"dep_actual": "20:39:15",
-				"spawn_time": "20:45:45",
+				"spawn_time": "20:40:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "20:39:00",
+				"kld_dep": "20:39:15",
+				"bua_arr": "20:37:00",
+				"bua_dep": "20:37:15"
 			},
 			{
 				"station": "JNG",
@@ -11157,7 +12281,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "20:48:15",
 				"spawn_time": "20:50:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "20:57:00",
+				"kld_dep": "20:57:15",
+				"bua_arr": "20:59:00",
+				"bua_dep": "20:59:15"
 			},
 			{
 				"station": "JNG",
@@ -11219,7 +12347,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "20:54:15",
 				"spawn_time": "20:58:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "21:04:00",
+				"kld_dep": "21:04:15",
+				"bua_arr": "21:06:00",
+				"bua_dep": "21:06:15"
 			},
 			{
 				"station": "JNG",
@@ -11248,9 +12380,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "20:54:00",
 				"dep_actual": "20:54:15",
-				"spawn_time": "20:59:45",
+				"spawn_time": "20:55:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "20:54:00",
+				"kld_dep": "20:54:15",
+				"bua_arr": "20:52:00",
+				"bua_dep": "20:52:15"
 			},
 			{
 				"station": "JNG",
@@ -11281,7 +12417,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "21:00:15",
 				"spawn_time": "21:02:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "21:09:00",
+				"kld_dep": "21:09:15",
+				"bua_arr": "21:11:00",
+				"bua_dep": "21:11:15"
 			},
 			{
 				"station": "JNG",
@@ -11310,9 +12450,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "21:01:00",
 				"dep_actual": "21:01:15",
-				"spawn_time": "21:07:45",
+				"spawn_time": "21:02:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "21:01:00",
+				"kld_dep": "21:01:15",
+				"bua_arr": "20:59:00",
+				"bua_dep": "20:59:15"
 			},
 			{
 				"station": "JNG",
@@ -11343,7 +12487,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "21:04:15",
 				"spawn_time": "21:11:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "21:17:00",
+				"kld_dep": "21:17:15",
+				"bua_arr": "21:19:00",
+				"bua_dep": "21:19:15"
 			},
 			{
 				"station": "JNG",
@@ -11372,21 +12520,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "21:08:00",
 				"dep_actual": "21:08:15",
-				"spawn_time": "21:11:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "21:09:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "21:08:00",
+				"kld_dep": "21:08:15",
+				"bua_arr": "21:06:00",
+				"bua_dep": "21:06:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "21:13:00",
 				"dep_actual": "21:14:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "21:16:00",
 				"dep_actual": "21:16:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -11405,7 +12557,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "21:16:15",
 				"spawn_time": "21:18:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "21:25:00",
+				"kld_dep": "21:25:15",
+				"bua_arr": "21:27:00",
+				"bua_dep": "21:27:15"
 			},
 			{
 				"station": "JNG",
@@ -11436,7 +12592,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "21:23:15",
 				"spawn_time": "21:25:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "21:32:00",
+				"kld_dep": "21:32:15",
+				"bua_arr": "21:34:00",
+				"bua_dep": "21:34:15"
 			},
 			{
 				"station": "JNG",
@@ -11465,21 +12625,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "21:24:00",
 				"dep_actual": "21:24:15",
-				"spawn_time": "21:27:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "21:25:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "21:24:00",
+				"kld_dep": "21:24:15",
+				"bua_arr": "21:22:00",
+				"bua_dep": "21:22:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "21:29:00",
 				"dep_actual": "21:30:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "21:32:00",
 				"dep_actual": "21:32:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -11498,7 +12662,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "21:29:15",
 				"spawn_time": "21:33:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "21:40:00",
+				"kld_dep": "21:40:15",
+				"bua_arr": "21:42:00",
+				"bua_dep": "21:42:15"
 			},
 			{
 				"station": "JNG",
@@ -11527,9 +12695,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "21:28:00",
 				"dep_actual": "21:28:15",
-				"spawn_time": "21:33:45",
+				"spawn_time": "21:29:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "21:28:00",
+				"kld_dep": "21:28:15",
+				"bua_arr": "21:26:00",
+				"bua_dep": "21:26:15"
 			},
 			{
 				"station": "JNG",
@@ -11558,9 +12730,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "21:35:00",
 				"dep_actual": "21:35:15",
-				"spawn_time": "21:39:45",
+				"spawn_time": "21:36:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "21:35:00",
+				"kld_dep": "21:35:15",
+				"bua_arr": "21:33:00",
+				"bua_dep": "21:33:15"
 			},
 			{
 				"station": "JNG",
@@ -11591,7 +12767,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "21:37:15",
 				"spawn_time": "21:39:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "21:46:00",
+				"kld_dep": "21:46:15",
+				"bua_arr": "21:48:00",
+				"bua_dep": "21:48:15"
 			},
 			{
 				"station": "JNG",
@@ -11682,9 +12862,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "21:43:00",
 				"dep_actual": "21:43:15",
-				"spawn_time": "21:48:45",
+				"spawn_time": "21:44:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "21:43:00",
+				"kld_dep": "21:43:15",
+				"bua_arr": "21:41:00",
+				"bua_dep": "21:41:15"
 			},
 			{
 				"station": "JNG",
@@ -11746,7 +12930,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "21:52:15",
 				"spawn_time": "21:54:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "22:01:00",
+				"kld_dep": "22:01:15",
+				"bua_arr": "22:03:00",
+				"bua_dep": "22:03:15"
 			},
 			{
 				"station": "JNG",
@@ -11775,9 +12963,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "21:49:00",
 				"dep_actual": "21:49:15",
-				"spawn_time": "21:59:45",
+				"spawn_time": "21:50:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "21:49:00",
+				"kld_dep": "21:49:15",
+				"bua_arr": "21:47:00",
+				"bua_dep": "21:47:15"
 			},
 			{
 				"station": "JNG",
@@ -11806,21 +12998,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "21:56:00",
 				"dep_actual": "21:56:15",
-				"spawn_time": "22:02:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "21:57:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "21:56:00",
+				"kld_dep": "21:56:15",
+				"bua_arr": "21:54:00",
+				"bua_dep": "21:54:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "22:04:00",
 				"dep_actual": "22:05:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "22:07:00",
 				"dep_actual": "22:07:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -11870,7 +13066,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "22:05:15",
 				"spawn_time": "22:08:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "22:14:00",
+				"kld_dep": "22:14:15",
+				"bua_arr": "22:16:00",
+				"bua_dep": "22:16:15"
 			},
 			{
 				"station": "JNG",
@@ -11899,9 +13099,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "22:03:00",
 				"dep_actual": "22:03:15",
-				"spawn_time": "22:11:45",
+				"spawn_time": "22:04:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "22:03:00",
+				"kld_dep": "22:03:15",
+				"bua_arr": "22:01:00",
+				"bua_dep": "22:01:15"
 			},
 			{
 				"station": "JNG",
@@ -11932,7 +13136,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "22:09:15",
 				"spawn_time": "22:13:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "22:20:00",
+				"kld_dep": "22:20:15",
+				"bua_arr": "22:22:00",
+				"bua_dep": "22:22:15"
 			},
 			{
 				"station": "JNG",
@@ -11992,9 +13200,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "22:13:00",
 				"dep_actual": "22:13:15",
-				"spawn_time": "22:18:45",
+				"spawn_time": "22:14:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "22:13:00",
+				"kld_dep": "22:13:15",
+				"bua_arr": "22:11:00",
+				"bua_dep": "22:11:15"
 			},
 			{
 				"station": "JNG",
@@ -12056,7 +13268,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "22:22:15",
 				"spawn_time": "22:24:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "22:31:00",
+				"kld_dep": "22:31:15",
+				"bua_arr": "22:33:00",
+				"bua_dep": "22:33:15"
 			},
 			{
 				"station": "JNG",
@@ -12085,9 +13301,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "22:19:00",
 				"dep_actual": "22:19:15",
-				"spawn_time": "22:24:45",
+				"spawn_time": "22:20:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "22:19:00",
+				"kld_dep": "22:19:15",
+				"bua_arr": "22:17:00",
+				"bua_dep": "22:17:15"
 			},
 			{
 				"station": "JNG",
@@ -12118,7 +13338,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "22:29:15",
 				"spawn_time": "22:31:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "22:38:00",
+				"kld_dep": "22:38:15",
+				"bua_arr": "22:40:00",
+				"bua_dep": "22:40:15"
 			},
 			{
 				"station": "JNG",
@@ -12147,21 +13371,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "22:28:00",
 				"dep_actual": "22:28:15",
-				"spawn_time": "22:31:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "22:29:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "22:28:00",
+				"kld_dep": "22:28:15",
+				"bua_arr": "22:26:00",
+				"bua_dep": "22:26:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "22:33:00",
 				"dep_actual": "22:34:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "22:36:00",
 				"dep_actual": "22:36:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -12180,7 +13408,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "22:34:15",
 				"spawn_time": "22:38:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "22:44:00",
+				"kld_dep": "22:44:15",
+				"bua_arr": "22:46:00",
+				"bua_dep": "22:46:15"
 			},
 			{
 				"station": "JNG",
@@ -12209,9 +13441,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "22:41:00",
 				"dep_actual": "22:41:15",
-				"spawn_time": "22:44:45",
+				"spawn_time": "22:42:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "22:41:00",
+				"kld_dep": "22:41:15",
+				"bua_arr": "22:39:00",
+				"bua_dep": "22:39:15"
 			},
 			{
 				"station": "JNG",
@@ -12242,7 +13478,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "22:52:15",
 				"spawn_time": "22:53:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "22:58:00",
+				"kld_dep": "22:58:15",
+				"bua_arr": "22:59:00",
+				"bua_dep": "22:59:15"
 			},
 			{
 				"station": "JNG",
@@ -12303,20 +13543,20 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"arr_actual": "22:42:00",
 				"dep_actual": "22:44:00",
 				"spawn_time": "22:55:45",
-				"line": "t4",
-				"entryLine": "t4"
+				"line": "t7",
+				"entryLine": "t7"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "22:57:00",
 				"dep_actual": "22:59:00",
-				"line": "t4"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "23:09:00",
 				"dep_actual": "23:09:00",
-				"line": "t4"
+				"line": "t7"
 			}
 		]
 	},
@@ -12335,7 +13575,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "22:59:15",
 				"spawn_time": "23:04:45",
 				"line": "t6",
-				"entryLine": "t6"
+				"entryLine": "t6",
+				"kld_arr": "23:10:00",
+				"kld_dep": "23:10:15",
+				"bua_arr": "23:12:00",
+				"bua_dep": "23:12:15"
 			},
 			{
 				"station": "JNG",
@@ -12395,21 +13639,25 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "22:55:00",
 				"dep_actual": "22:55:15",
-				"spawn_time": "23:05:45",
-				"line": "t2",
-				"entryLine": "t2"
+				"spawn_time": "22:56:54",
+				"line": "t7",
+				"entryLine": "t7",
+				"kld_arr": "22:55:00",
+				"kld_dep": "22:55:15",
+				"bua_arr": "22:53:00",
+				"bua_dep": "22:53:15"
 			},
 			{
 				"station": "JNG",
 				"arr_actual": "23:07:00",
 				"dep_actual": "23:08:00",
-				"line": "t2"
+				"line": "t7"
 			},
 			{
 				"station": "JNG-W",
 				"arr_actual": "23:10:00",
 				"dep_actual": "23:10:15",
-				"line": "t2"
+				"line": "t7"
 			}
 		]
 	},
@@ -12426,9 +13674,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "23:03:00",
 				"dep_actual": "23:03:15",
-				"spawn_time": "23:10:45",
+				"spawn_time": "23:04:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "23:03:00",
+				"kld_dep": "23:03:15",
+				"bua_arr": "23:01:00",
+				"bua_dep": "23:01:15"
 			},
 			{
 				"station": "JNG",
@@ -12459,7 +13711,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "23:10:15",
 				"spawn_time": "23:12:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "23:19:00",
+				"kld_dep": "23:19:15",
+				"bua_arr": "23:21:00",
+				"bua_dep": "23:21:15"
 			},
 			{
 				"station": "JNG",
@@ -12488,9 +13744,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "23:10:00",
 				"dep_actual": "23:10:15",
-				"spawn_time": "23:17:45",
+				"spawn_time": "23:11:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "23:10:00",
+				"kld_dep": "23:10:15",
+				"bua_arr": "23:08:00",
+				"bua_dep": "23:08:15"
 			},
 			{
 				"station": "JNG",
@@ -12550,9 +13810,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "23:20:00",
 				"dep_actual": "23:20:15",
-				"spawn_time": "23:23:45",
+				"spawn_time": "23:21:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "23:20:00",
+				"kld_dep": "23:20:15",
+				"bua_arr": "23:18:00",
+				"bua_dep": "23:18:15"
 			},
 			{
 				"station": "JNG",
@@ -12583,7 +13847,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "23:23:15",
 				"spawn_time": "23:26:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "23:33:00",
+				"kld_dep": "23:33:15",
+				"bua_arr": "23:35:00",
+				"bua_dep": "23:35:15"
 			},
 			{
 				"station": "JNG",
@@ -12643,9 +13911,13 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"station": "JNG-E",
 				"arr_actual": "23:28:00",
 				"dep_actual": "23:28:15",
-				"spawn_time": "23:31:45",
+				"spawn_time": "23:29:54",
 				"line": "t2",
-				"entryLine": "t2"
+				"entryLine": "t2",
+				"kld_arr": "23:28:00",
+				"kld_dep": "23:28:15",
+				"bua_arr": "23:26:00",
+				"bua_dep": "23:26:15"
 			},
 			{
 				"station": "JNG",
@@ -12676,7 +13948,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "23:31:15",
 				"spawn_time": "23:33:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "23:40:00",
+				"kld_dep": "23:40:15",
+				"bua_arr": "23:42:00",
+				"bua_dep": "23:42:15"
 			},
 			{
 				"station": "JNG",
@@ -12707,7 +13983,11 @@ export const JATINEGARA_SCHEDULE: ScheduleEntry[] = [
 				"dep_actual": "23:50:15",
 				"spawn_time": "23:52:45",
 				"line": "t1",
-				"entryLine": "t1"
+				"entryLine": "t1",
+				"kld_arr": "23:59:00",
+				"kld_dep": "23:59:15",
+				"bua_arr": "00:01:00",
+				"bua_dep": "00:01:15"
 			},
 			{
 				"station": "JNG",

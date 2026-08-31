@@ -1334,7 +1334,7 @@
           {
             "departAt": 838.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -1518,7 +1518,7 @@
           {
             "departAt": 1618.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -1656,7 +1656,7 @@
           {
             "departAt": 2278.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -1886,7 +1886,7 @@
           {
             "departAt": 3298.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -2806,7 +2806,7 @@
           {
             "departAt": 15838.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -2852,7 +2852,7 @@
           {
             "departAt": 16488,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -2990,7 +2990,7 @@
           {
             "departAt": 17088,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -3036,7 +3036,7 @@
           {
             "departAt": 17448,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -3128,7 +3128,7 @@
           {
             "departAt": 17698.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -3174,7 +3174,7 @@
           {
             "departAt": 18408,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -3358,7 +3358,7 @@
           {
             "departAt": 19378.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -3450,7 +3450,7 @@
           {
             "departAt": 19668,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -3496,7 +3496,7 @@
           {
             "departAt": 20148,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -3542,7 +3542,7 @@
           {
             "departAt": 20218.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -3588,7 +3588,7 @@
           {
             "departAt": 20988,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -3634,7 +3634,7 @@
           {
             "departAt": 21358.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -3726,7 +3726,7 @@
           {
             "departAt": 21888,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -3772,7 +3772,7 @@
           {
             "departAt": 22558.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -3818,7 +3818,7 @@
           {
             "departAt": 22608,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -3956,7 +3956,7 @@
           {
             "departAt": 22968,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -4002,7 +4002,7 @@
           {
             "departAt": 22918.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -4048,7 +4048,7 @@
           {
             "departAt": 23278.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -4186,7 +4186,7 @@
           {
             "departAt": 23748,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -4278,7 +4278,7 @@
           {
             "departAt": 24298.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -4324,7 +4324,7 @@
           {
             "departAt": 24048,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -4370,7 +4370,7 @@
           {
             "departAt": 24948,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -4462,7 +4462,7 @@
           {
             "departAt": 25608,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -4508,7 +4508,7 @@
           {
             "departAt": 25618.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -4646,7 +4646,7 @@
           {
             "departAt": 26448,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -4830,7 +4830,7 @@
           {
             "departAt": 27108,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -4876,7 +4876,7 @@
           {
             "departAt": 26878.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -5060,7 +5060,7 @@
           {
             "departAt": 28128,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -5106,7 +5106,7 @@
           {
             "departAt": 27838.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -5152,7 +5152,7 @@
           {
             "departAt": 28558.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -5336,7 +5336,7 @@
           {
             "departAt": 29268,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -5474,7 +5474,7 @@
           {
             "departAt": 29998.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -5520,7 +5520,7 @@
           {
             "departAt": 29868,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -5612,7 +5612,7 @@
           {
             "departAt": 30478.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -5658,7 +5658,7 @@
           {
             "departAt": 30898.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -5842,7 +5842,7 @@
           {
             "departAt": 31368,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -6072,7 +6072,7 @@
           {
             "departAt": 32338.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -6118,7 +6118,7 @@
           {
             "departAt": 32508,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -6164,7 +6164,7 @@
           {
             "departAt": 32998.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -6302,7 +6302,7 @@
           {
             "departAt": 33408,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -6348,7 +6348,7 @@
           {
             "departAt": 33708,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -6440,7 +6440,7 @@
           {
             "departAt": 34018.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -6486,7 +6486,7 @@
           {
             "departAt": 34308,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -6716,7 +6716,7 @@
           {
             "departAt": 34978.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -6762,7 +6762,7 @@
           {
             "departAt": 35148,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -6946,7 +6946,7 @@
           {
             "departAt": 36228,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -6992,7 +6992,7 @@
           {
             "departAt": 36478.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -7130,7 +7130,7 @@
           {
             "departAt": 37068,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -7176,7 +7176,7 @@
           {
             "departAt": 36958.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -7268,7 +7268,7 @@
           {
             "departAt": 37318.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -7314,7 +7314,7 @@
           {
             "departAt": 37788,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -7406,7 +7406,7 @@
           {
             "departAt": 38098.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -7452,7 +7452,7 @@
           {
             "departAt": 38758.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -7544,7 +7544,7 @@
           {
             "departAt": 38868,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -7636,7 +7636,7 @@
           {
             "departAt": 39408,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -7912,7 +7912,7 @@
           {
             "departAt": 40128,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -8050,7 +8050,7 @@
           {
             "departAt": 40678.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -8096,7 +8096,7 @@
           {
             "departAt": 40848,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -8188,7 +8188,7 @@
           {
             "departAt": 41988,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -8280,7 +8280,7 @@
           {
             "departAt": 41578.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -8418,7 +8418,7 @@
           {
             "departAt": 42888,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -8464,7 +8464,7 @@
           {
             "departAt": 42538.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -8556,7 +8556,7 @@
           {
             "departAt": 43188,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -8648,7 +8648,7 @@
           {
             "departAt": 43438.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -8832,7 +8832,7 @@
           {
             "departAt": 44388,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -8878,7 +8878,7 @@
           {
             "departAt": 44278.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -9016,7 +9016,7 @@
           {
             "departAt": 44998.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -9062,7 +9062,7 @@
           {
             "departAt": 45468,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -9154,7 +9154,7 @@
           {
             "departAt": 46198.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -9200,7 +9200,7 @@
           {
             "departAt": 45778.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -9338,7 +9338,7 @@
           {
             "departAt": 46668,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -9430,7 +9430,7 @@
           {
             "departAt": 47508,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -9476,7 +9476,7 @@
           {
             "departAt": 47038.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -9614,7 +9614,7 @@
           {
             "departAt": 47758.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -9660,7 +9660,7 @@
           {
             "departAt": 48648,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -9706,7 +9706,7 @@
           {
             "departAt": 48538.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -9752,7 +9752,7 @@
           {
             "departAt": 48898.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -9798,7 +9798,7 @@
           {
             "departAt": 49368,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -9936,7 +9936,7 @@
           {
             "departAt": 50388,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -10074,7 +10074,7 @@
           {
             "departAt": 51048,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -10166,7 +10166,7 @@
           {
             "departAt": 51238.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -10212,7 +10212,7 @@
           {
             "departAt": 51768,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -10350,7 +10350,7 @@
           {
             "departAt": 52428,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -10488,7 +10488,7 @@
           {
             "departAt": 53278.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -10534,7 +10534,7 @@
           {
             "departAt": 53638.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -10580,7 +10580,7 @@
           {
             "departAt": 54048,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -10718,7 +10718,7 @@
           {
             "departAt": 54658.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -10810,7 +10810,7 @@
           {
             "departAt": 55198.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -10856,7 +10856,7 @@
           {
             "departAt": 55368,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -10948,7 +10948,7 @@
           {
             "departAt": 55918.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -11040,7 +11040,7 @@
           {
             "departAt": 56928,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -11086,7 +11086,7 @@
           {
             "departAt": 56758.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -11178,7 +11178,7 @@
           {
             "departAt": 57528,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -11224,7 +11224,7 @@
           {
             "departAt": 57538.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -11270,7 +11270,7 @@
           {
             "departAt": 58248,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -11362,7 +11362,7 @@
           {
             "departAt": 58668,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -11408,7 +11408,7 @@
           {
             "departAt": 59388,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -11500,7 +11500,7 @@
           {
             "departAt": 59278.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -11592,7 +11592,7 @@
           {
             "departAt": 59758.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -11684,7 +11684,7 @@
           {
             "departAt": 60228,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -11776,7 +11776,7 @@
           {
             "departAt": 60828,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -11822,7 +11822,7 @@
           {
             "departAt": 60478.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -11914,7 +11914,7 @@
           {
             "departAt": 61018.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -12006,7 +12006,7 @@
           {
             "departAt": 61728,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -12052,7 +12052,7 @@
           {
             "departAt": 62088,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -12098,7 +12098,7 @@
           {
             "departAt": 62038.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -12282,7 +12282,7 @@
           {
             "departAt": 63528,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -12466,7 +12466,7 @@
           {
             "departAt": 64558.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -12512,7 +12512,7 @@
           {
             "departAt": 64668,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -12604,7 +12604,7 @@
           {
             "departAt": 65038.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -12696,7 +12696,7 @@
           {
             "departAt": 66048,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -12880,7 +12880,7 @@
           {
             "departAt": 66358.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -12926,7 +12926,7 @@
           {
             "departAt": 67008,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -12972,7 +12972,7 @@
           {
             "departAt": 66478.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -13064,7 +13064,7 @@
           {
             "departAt": 67618.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -13202,7 +13202,7 @@
           {
             "departAt": 67788,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -13432,7 +13432,7 @@
           {
             "departAt": 68988,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -13478,7 +13478,7 @@
           {
             "departAt": 68998.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -13524,7 +13524,7 @@
           {
             "departAt": 68688,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -13570,7 +13570,7 @@
           {
             "departAt": 69528,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -13616,7 +13616,7 @@
           {
             "departAt": 69358.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -13846,7 +13846,7 @@
           {
             "departAt": 70858.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -13892,7 +13892,7 @@
           {
             "departAt": 70788,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -14076,7 +14076,7 @@
           {
             "departAt": 71518.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -14122,7 +14122,7 @@
           {
             "departAt": 71868,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -14168,7 +14168,7 @@
           {
             "departAt": 72468,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -14352,7 +14352,7 @@
           {
             "departAt": 72658.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -14398,7 +14398,7 @@
           {
             "departAt": 73248,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -14490,7 +14490,7 @@
           {
             "departAt": 73908,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -14582,7 +14582,7 @@
           {
             "departAt": 73978.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -14766,7 +14766,7 @@
           {
             "departAt": 74748,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -14858,7 +14858,7 @@
           {
             "departAt": 74878.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -14904,7 +14904,7 @@
           {
             "departAt": 75838.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -14996,7 +14996,7 @@
           {
             "departAt": 76188,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -15088,7 +15088,7 @@
           {
             "departAt": 76738.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -15226,7 +15226,7 @@
           {
             "departAt": 77088,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -15272,7 +15272,7 @@
           {
             "departAt": 77518.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -15456,7 +15456,7 @@
           {
             "departAt": 78828,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -15548,7 +15548,7 @@
           {
             "departAt": 78838.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -15686,7 +15686,7 @@
           {
             "departAt": 79188,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -15732,7 +15732,7 @@
           {
             "departAt": 79558.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -15824,7 +15824,7 @@
           {
             "departAt": 80218.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -15962,7 +15962,7 @@
           {
             "departAt": 80448,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -16054,7 +16054,7 @@
           {
             "departAt": 81118.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -16100,7 +16100,7 @@
           {
             "departAt": 81768,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -16330,7 +16330,7 @@
           {
             "departAt": 82788,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -16376,7 +16376,7 @@
           {
             "departAt": 82798.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -16422,7 +16422,7 @@
           {
             "departAt": 83268,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -16468,7 +16468,7 @@
           {
             "departAt": 83218.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -16652,7 +16652,7 @@
           {
             "departAt": 84778.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -16698,7 +16698,7 @@
           {
             "departAt": 85188,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522
@@ -16836,7 +16836,7 @@
           {
             "departAt": 86158.5,
             "lineY": 205,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 7.0303030303,
             "station": "CIT",
             "waypointX": 1914
@@ -16882,7 +16882,7 @@
           {
             "departAt": 86208,
             "lineY": 89,
-            "passThrough": false,
+            "passThrough": true,
             "speed": 4.68686868687,
             "station": "BKST",
             "waypointX": -522

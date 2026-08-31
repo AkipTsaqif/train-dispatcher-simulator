@@ -974,9 +974,9 @@ test.describe("dispatching table", () => {
 
   test("jatinegara visual marker stops behind NE2 at AU, not AV", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/jng?start=06:01:45");
-    // 5509B is a westbound KRL on t2 (boundary 06:01:45, JNG arr 06:03/dep 06:04).
-    // At start=06:01:45 it is entering JNG westbound on t2 toward NE2.
+    await page.goto("/jng?start=05:56:54");
+    // 5509B is a westbound KRL on t2 (boundary 05:56:54, JNG arr 06:03/dep 06:04).
+    // At start=05:56:54 it is entering JNG westbound on t2 toward NE2.
     const marker = page.locator('[data-train="5509B"]');
     await expect(marker).toBeVisible();
 
@@ -999,8 +999,8 @@ test.describe("dispatching table", () => {
 
   test("jatinegara body bends as soon as the NOSE reaches a thrown point", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/jng?start=06:01:45");
-    // 5509B is a westbound KRL on t2 (y=464), entering JNG at 06:01:45.
+    await page.goto("/jng?start=05:56:54");
+    // 5509B is a westbound KRL on t2 (y=464), entering JNG at 05:56:54.
     const marker = page.locator('[data-train="5509B"]');
     await expect(marker).toBeVisible();
 
@@ -1029,8 +1029,8 @@ test.describe("dispatching table", () => {
 
   test("jatinegara train body bends through a thrown crossover", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/jng?start=06:01:45");
-    // 5509B is a westbound KRL on t2 (y=464), entering JNG at 06:01:45.
+    await page.goto("/jng?start=05:56:54");
+    // 5509B is a westbound KRL on t2 (y=464), entering JNG at 05:56:54.
     const marker = page.locator('[data-train="5509B"]');
     await expect(marker).toBeVisible();
     const body = marker.locator('path[data-train-body="articulated"]');
@@ -1119,11 +1119,12 @@ test.describe("dispatching table", () => {
     }
   });
 
-  test("jatinegara interactive table — 26 signal controls, manual route set works", async ({ page }) => {
+  test("jatinegara interactive table — player-controlled signals and manual route set work", async ({ page }) => {
     // Start with an empty board: at realistic running speeds service trains
     // would occupy the mains and block the NW1 route this test sets.
     await page.goto("/jng?start=00:00&controls=1");
-    // all 26 signals are clickable controls (schematic mode, no grid chrome)
+    // Player-controlled JNG signals remain interactive; automatic corridor
+    // blocks render passively and are not added to this button set.
     await expect(page.getByRole("button", { name: /^NW1 · MERAH/ })).toBeVisible();
     await expect(page.getByRole("button", { name: /^NW1A · MERAH/ })).toBeVisible();
     await expect(page.getByRole("button", { name: /^XW2A · MERAH/ })).toBeVisible();
@@ -1177,7 +1178,7 @@ test.describe("dispatching table", () => {
       const paths = await page.evaluate(() =>
         [...document.querySelectorAll('path[stroke="#f59e0b"]')].map((p) => p.getAttribute("d") ?? "")
       );
-      // NW1 reservation starts at 128,496 and ends at 304,496. Once 5024C has passed
+      // NW1 reservation starts at 112,496 and ends at 304,496. Once 5024C has passed
       // x=304, NW1 reservation must NEVER re-appear in full (128,496 -> 304,496).
       if (x > 314 && paths.some((d) => d.includes("128,496") && d.includes("304,496"))) {
         glitchDetected = true;
@@ -1222,14 +1223,14 @@ test.describe("dispatching table", () => {
 
   test("jatinegara 5509B enters from east track edge at its scheduled boundary time without teleporting", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/jng?start=06:00");
+    await page.goto("/jng?start=05:55");
     const marker = page.locator('[data-train="5509B"]');
 
-    // At 06:00:00, 5509B is not yet due (boundary is 06:01:45)
+    // At 05:55:00, 5509B is not yet due on JNG boundary (boundary is 05:56:54)
     await expect(marker).toBeHidden();
 
-    // Advance to 06:01:46 (when 5509B spawns)
-    await page.clock.fastForward("00:01:46");
+    // Advance to 05:56:55 (when 5509B spawns on JNG east edge)
+    await page.clock.fastForward("00:01:55");
     await expect(marker).toBeVisible();
 
     // The train must enter from the far east track edge (x > 950), not jump to NE2 (x ≈ 776)
@@ -1239,15 +1240,15 @@ test.describe("dispatching table", () => {
 
   test("jatinegara holds a following train off-map until the leader tail clears NE2", async ({ page }) => {
     await page.clock.install();
-    await page.goto("/jng?start=06:01:45&controls=1");
+    await page.goto("/jng?start=05:56:54&controls=1");
     const leader = page.locator('[data-train="5509B"]');
     const follower = page.locator('[data-train="5037B"]');
 
     await expect(leader).toBeVisible();
     // Leave NE2 red, so 5509B occupies the east t2 approach block. 5037B is
-    // due at 06:07:45 but must remain outside the diagram rather than spawning
+    // due at 06:03:54 but must remain outside the diagram rather than spawning
     // behind 5509B as an amber following/queue train.
-    await page.clock.fastForward("00:06:10");
+    await page.clock.fastForward("00:07:05");
     await expect(leader).toHaveAttribute("data-x", "840");
     await expect(follower).toBeHidden();
 
@@ -1276,3 +1277,246 @@ test.describe("dispatching table", () => {
     const followerX = Number(await follower.getAttribute("data-x"));
     expect(followerX).toBeGreaterThan(950);
   });
+
+  test("matraman snippet renders with signals BM1, BJ2, MAS, platform MTR and semi-auto MAS clears on approach", async ({ page }) => {
+    test.setTimeout(80000);
+    await page.goto("/jng?start=06:04:30&controls=1");
+
+    // Snippet signals must be present in the SVG
+    await expect(page.locator('[aria-label^="Signal BM1"]')).toBeVisible();
+    await expect(page.locator('[aria-label^="Signal BJ2"]')).toBeVisible();
+    await expect(page.locator('[aria-label^="Signal MAS"]')).toBeVisible();
+
+    // MAS default is red
+    await expect(page.locator('[aria-label^="Signal MAS"]')).toHaveAttribute("aria-label", /aspect red/);
+
+    // 5509B enters from JNG, dwells, departs at ~06:05:29, and approaches MAS
+    // (x=64). As its leading edge reaches 1 cell before MAS, MAS flips green.
+    await expect(
+      page.locator('[aria-label^="Signal MAS"]'),
+    ).toHaveAttribute("aria-label", /aspect green/, { timeout: 70000 });
+
+    // Once the train passes, MAS returns to red.
+    await expect(
+      page.locator('[aria-label^="Signal MAS"]'),
+    ).toHaveAttribute("aria-label", /aspect red/, { timeout: 20000 });
+  });
+
+  test("matraman snippet shows no ghost trains at start and the hilir handover never jumps", async ({
+    page,
+  }) => {
+    // NOTE: no page.clock.install() here — this test needs REAL elapsed time so
+    // the engine ticks frame by frame through the handover. A virtual clock
+    // collapses the transition into a single tick and hides the very jump this
+    // test exists to catch.
+    await page.goto("/jng?start=06:00:00&controls=1");
+    await expect(page.locator('[aria-label^="Signal BM1"]')).toBeVisible();
+
+    // No historical/off-corridor train may occupy a WEST-side snippet at
+    // start. 177B runs to Pasar Senen via t4 (Pondok Jati) and must never
+    // appear here.
+    // Scoped to MTR/POK: the east-side KLD strip legitimately shows westbound
+    // arrivals already inbound from Bekasi at 06:00:00 (5509B is dwelling at
+    // Buaran on its real 05:53 call), which is not a ghost.
+    const visibleAtStart = await page.evaluate(() =>
+      Array.from(document.querySelectorAll("[data-snippet-train]"))
+        .filter((el) => getComputedStyle(el).visibility !== "hidden")
+        .filter(
+          (el) => el.getAttribute("data-snippet-corridor") !== "KLD",
+        )
+        .map((el) => el.getAttribute("data-snippet-train")),
+    );
+    expect(visibleAtStart).toEqual([]);
+
+    // Walk 5509B through the JNG -> Matraman handover and assert the snippet
+    // marker only ever advances one 16-unit cell at a time (never teleports).
+    const readX = () =>
+      page.evaluate(() => {
+        const el = document.querySelector('[data-snippet-train="5509B"]');
+        if (!el || getComputedStyle(el).visibility === "hidden") return null;
+        const m = (el.getAttribute("transform") || "").match(
+          /translate\(([-\d.]+)/,
+        );
+        return m ? Number(m[1]) : null;
+      });
+
+    // Start AT the handover window. A single large fastForward would collapse
+    // the whole journey into one engine tick and skip the transition entirely.
+    // 5509B's tail crosses the JNG west edge at ~06:04:54.
+    await page.goto("/jng?start=06:04:48&controls=1");
+    await expect(page.locator('[aria-label^="Signal BM1"]')).toBeVisible();
+
+    // All three corridor boxes intentionally share Y rows. The train must own
+    // the MTR corridor and clip ONLY to MTR — never to a union containing the
+    // adjacent POK rectangle.
+    // The clip lives on the UNTRANSFORMED wrapper and is switched per frame:
+    // a westbound journey crosses KLD inbound and MTR outbound. Putting the
+    // global clip rect on the translated marker clips the whole train away.
+    const mtr5509 = page.locator('[data-snippet-train="5509B"]');
+    await expect(mtr5509).toHaveAttribute("data-snippet-corridor", "MTR");
+    await expect(mtr5509.locator("..")).toHaveAttribute(
+      "clip-path",
+      "url(#snippet-clip-MTR)",
+    );
+    expect(await page.locator("#snippet-clip-MTR rect").count()).toBe(1);
+    expect(await page.locator("#snippet-clip-POK rect").count()).toBe(1);
+
+    let prev: number | null = null;
+    let sawTrain = false;
+    // ~22s of real time keeps us inside the default 30s test timeout while
+    // still covering the whole JNG -> Matraman transition.
+    for (let i = 0; i < 22; i++) {
+      const x = await readX();
+      if (x !== null) {
+        sawTrain = true;
+        if (prev !== null) {
+          // one grid cell is 16 units; anything larger is a teleport
+          expect(Math.abs(x - prev)).toBeLessThanOrEqual(16);
+        }
+        prev = x;
+      }
+      await page.waitForTimeout(1000);
+    }
+    expect(sawTrain).toBe(true);
+  });
+
+  test("pondok jati snippet is tied to the POK throat (rows 4 and 6), not Matraman", async ({
+    page,
+  }) => {
+    await page.goto("/jng?start=06:16:20&controls=1");
+
+    // Its four automatic block signals exist alongside Matraman's.
+    await expect(page.locator('[aria-label^="Signal J101"]')).toBeVisible();
+    await expect(page.locator('[aria-label^="Signal J102"]')).toBeVisible();
+    await expect(page.locator('[aria-label^="Signal B207"]')).toBeVisible();
+    await expect(page.locator('[aria-label^="Signal B208"]')).toBeVisible();
+    // Automatic blocks are passive: no role=button / player click target.
+    await expect(
+      page.locator('[role="button"][aria-label^="Signal J102"]'),
+    ).toHaveCount(0);
+
+    // 5506 arrives from Pondok Jati on t6/row 6 and must dwell in the POK box
+    // (x=328), not the Matraman box (x=120).
+    const pok = page.locator('[data-snippet-train="5506"]');
+    await expect(pok).toBeVisible();
+    await expect(pok).toHaveAttribute("data-snippet-corridor", "POK");
+    // Clip is switched per frame on the untransformed wrapper (see MTR above).
+    await expect(pok.locator("..")).toHaveAttribute(
+      "clip-path",
+      "url(#snippet-clip-POK)",
+    );
+    const t = await pok.getAttribute("transform");
+    expect(t).toContain("translate(328");
+
+    // It is still IN the snippet, so it has not entered JNG yet — the main
+    // marker stays hidden until the handover.
+    await expect(page.locator('[data-train="5506"]')).toBeHidden();
+
+    // Once it hands over it must appear on row 6 (y=336, the POK throat),
+    // proving the snippet is bound to the track edge and not a neighbour name.
+    await expect(page.locator('[data-train="5506"]')).toHaveAttribute(
+      "data-y",
+      "336",
+      { timeout: 60000 },
+    );
+
+    // Matraman must NOT have picked this train up.
+    await expect(
+      page.locator('[data-snippet-train="5506"]'),
+    ).not.toHaveAttribute("transform", /translate\(1[0-9][0-9],/);
+  });
+
+test("klender snippet features full dwell sequence at BUA and KLD, paints 2-cell scaled body with reduced font, and seamlessly hands over to JNG without gaps or stalls", async ({
+  page,
+}) => {
+  test.setTimeout(180000);
+  // Real elapsed time starting at 05:54:40: 5509B approaches Klender,
+  // dwells at Klender 05:55:00-05:55:15, runs at the real ~1.37 u/s pace,
+  // and hands over seamlessly into JNG east edge at 05:56:54.
+  await page.goto("/jng?start=05:54:40&controls=1");
+  await page.waitForSelector('svg[role="img"]', { state: "visible" });
+
+  const snip = page.locator('[data-snippet-train="5509B"]');
+  const jng = page.locator('[data-train="5509B"]');
+
+  const read = async (loc: ReturnType<typeof page.locator>) => {
+    if ((await loc.count()) === 0) return null;
+    if ((await loc.getAttribute("visibility")) === "hidden") return null;
+    const t = (await loc.getAttribute("transform")) ?? "";
+    const m = t.match(/translate\(([-\d.]+),\s*([-\d.]+)/);
+    if (!m || Number(m[1]) < -500) return null;
+    return { x: Math.round(Number(m[1])), y: Math.round(Number(m[2])) };
+  };
+
+  // KLD is 1:2, so its body is 2 cells / 32u (half-length 16). The main JNG
+  // body is 4 cells / 64u (half-length 32). During handover the combined
+  // clipped body grows smoothly from 32u to 64u and must never drop below 32u.
+  const visible = (s: { x: number } | null, j: { x: number } | null) => {
+    const sv = s ? Math.max(0, Math.min(s.x + 16, 784) - Math.max(s.x - 16, 448)) : 0;
+    const jv = j ? Math.max(0, Math.min(j.x + 32, 992) - Math.max(j.x - 32, 0)) : 0;
+    return sv + jv;
+  };
+
+  let sawKldDwell = false;
+  let sawHandover = false;
+  let painted = false;
+  let checkedGeometry = false;
+  let minBody = Number.POSITIVE_INFINITY;
+  let corridor: string | null = null;
+
+  for (let i = 0; i < 350; i++) {
+    const s = await read(snip);
+    const j = await read(jng);
+    if (s) {
+      corridor ??= await snip.getAttribute("data-snippet-corridor");
+      expect(s.y).toBe(640);
+      if (s.x === 584) sawKldDwell = true; // Klender dwell
+      if (j) sawHandover = true;
+
+      if (!checkedGeometry) {
+        checkedGeometry = true;
+        const body = snip.locator("rect");
+        // Assert 2-cell (32u) map width
+        const mapWidth = await body.evaluate((el) => {
+          const svg = (el as SVGElement).ownerSVGElement!;
+          return (
+            el.getBoundingClientRect().width *
+            (svg.viewBox.baseVal.width / svg.getBoundingClientRect().width)
+          );
+        });
+        expect(mapWidth).toBeCloseTo(32, 2);
+        // Assert scaled font size
+        const kldFontSize = Number(
+          await snip.locator("text").getAttribute("font-size"),
+        );
+        expect(kldFontSize).toBeCloseTo(8 / 0.55 / 2, 1);
+        painted = await snip.evaluate((el) => {
+          const b = el.getBoundingClientRect();
+          const top = document.elementFromPoint(
+            b.x + b.width / 2,
+            b.y + b.height / 2,
+          );
+          return top?.closest("[data-snippet-train]") === el;
+        });
+        await expect(snip.locator("..")).toHaveAttribute(
+          "clip-path",
+          "url(#snippet-clip-KLD)",
+        );
+        await expect(snip).not.toHaveAttribute("clip-path", /snippet-clip/);
+      }
+    }
+    // Entering from off-diagram at the east edge is a partial body by design:
+    // the train emerges nose-first. Only measure the body once it is clear of
+    // the east entry edge (x <= 768).
+    const enteringEast = s !== null && s.x > 768;
+    if ((s || j) && !enteringEast) minBody = Math.min(minBody, visible(s, j));
+    if (sawKldDwell && sawHandover && j && s === null) break;
+    await page.waitForTimeout(400);
+  }
+
+  expect(corridor).toBe("KLD");
+  expect(painted).toBe(true);
+  expect(sawKldDwell).toBe(true);
+  expect(sawHandover).toBe(true);
+  expect(minBody).toBeGreaterThanOrEqual(32);
+});

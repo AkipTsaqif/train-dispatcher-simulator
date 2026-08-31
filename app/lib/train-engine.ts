@@ -25,6 +25,12 @@ export type TrainStop = {
    * through the throat under its own points. */
   entryLine?: string;
   spawn_time?: string;
+  /** Real Klender / Buaran times for the detached KLD/BKS corridor snippet.
+   *  METADATA ONLY — see ScheduleStop below for why these are not real stops. */
+  kld_arr?: string;
+  kld_dep?: string;
+  bua_arr?: string;
+  bua_dep?: string;
 };
 
 export type Train = {
@@ -56,6 +62,17 @@ export type ScheduleStop = {
   entryLine?: string;
   /** Optional approach spawn timestamp (HH:MM:SS) for virtual boundary stops. */
   spawn_time?: string;
+  /**
+   * Real Klender / Buaran times for the detached KLD/BKS corridor snippet.
+   * METADATA ONLY — these are deliberately not routable stops, because the
+   * KLD strip is detached from the JNG throat and a real stop would resolve
+   * against the journey's own line and dwell mid-diagram. The snippet layer
+   * reads them directly. Absent for expresses that skip both stations.
+   */
+  kld_arr?: string;
+  kld_dep?: string;
+  bua_arr?: string;
+  bua_dep?: string;
 };
 
 export type ScheduleEntry = {
@@ -145,6 +162,12 @@ export const createTrains = (
         ...(stop.spawn_time ? { spawn_time: stop.spawn_time } : {}),
         ...(stop.line === undefined ? {} : { line: stop.line }),
         ...(stop.entryLine === undefined ? {} : { entryLine: stop.entryLine }),
+        // Detached-corridor metadata; carried through verbatim so the KLD
+        // snippet layer can drive its dwells from real timetable times.
+        ...(stop.kld_arr === undefined ? {} : { kld_arr: stop.kld_arr }),
+        ...(stop.kld_dep === undefined ? {} : { kld_dep: stop.kld_dep }),
+        ...(stop.bua_arr === undefined ? {} : { bua_arr: stop.bua_arr }),
+        ...(stop.bua_dep === undefined ? {} : { bua_dep: stop.bua_dep }),
       })),
     }));
 
@@ -246,6 +269,9 @@ export type TrainState = {
   holdNotified: boolean; // a >30s hold notification was fired for this hold
   notificationId: number | null; // id of the fired notification (to resolve it)
   susulWarned: boolean; // the origin-departure susul warning was shown for this train
+  approachResolved?: boolean;
+  countdownResolved?: boolean;
+  mtrEntryTime?: number | null;
   idx: number; // journey index (the aspect's occupancy check skips the caller)
   signalClearedAt: number | null; // sim time the held signal turned proceed (driver-reaction delay starts)
   /** True when a red departure signal holds the centre at a station waypoint. */
@@ -406,11 +432,12 @@ export function buildJourney(
       s.trackmark === "JNG-W" ||
       s.trackmark === "JNG-E" ||
       s.spawn_time !== undefined;
+    const rawDep = s.dep < originArr ? s.dep + 86400 : s.dep;
     anchors[i] =
       isVirtualBoundary || s.arr === s.dep
         ? arr
         : holdUntilScheduledDepartureByStation[s.trackmark]
-          ? s.dep
+          ? rawDep
           : arr + minimumStopSeconds;
   }
   // A spawned train's clock (st.time) counts from its materialization
@@ -539,6 +566,9 @@ export function initTrain(journey: JourneyPlan, nodes: Record<string, GraphNodeL
     holdNotified: false,
     notificationId: null,
     susulWarned: false,
+    approachResolved: false,
+    countdownResolved: false,
+    mtrEntryTime: null,
     idx: -1,
   };
 }

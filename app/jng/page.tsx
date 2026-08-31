@@ -9,7 +9,7 @@ import { JATINEGARA_DISPATCH } from "../dispatching/jatinegara";
 
 export default function JatinegaraPage() {
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-8">
+    <main className="min-h-screen flex flex-col items-center justify-center p-8 bg-white dark:bg-slate-950">
       <DispatchingTable dispatch={JATINEGARA_DISPATCH} />
     </main>
   );

@@ -25,11 +25,11 @@ const compiled = compileTopology(JATINEGARA_TOPOLOGY);
 const runtime = JATINEGARA_DISPATCH;
 const map = runtime.map;
 
-// 1. structure (Phase 8: drawn extents — 13 mains incl. the 5 east-throat
-// fragments; the stubs end at junctions, 6 tracks per map boundary)
-check("compiles with 13 main lines", compiled.lines.mains.length === 13, `mains=${compiled.lines.mains.length}`);
+// 1. structure (Phase 8: drawn extents — 15 mains incl. the 5 east-throat
+// fragments and 2 Matraman snippet lines; the stubs end at junctions, 6 tracks per map boundary)
+check("compiles with 21 main lines (13 JNG + 2 MTR + 2 POK + 4 KLD)", compiled.lines.mains.length === 21, `mains=${compiled.lines.mains.length}`);
 check("56 switches (10 stub ends are fixed turns; P58/P63/P65/P67 are inverted points)", compiled.switches.items.length === 56, `switches=${compiled.switches.items.length}`);
-check("26 signals (NW/NE/XW/XE)", compiled.signals.items.length === 26, `signals=${compiled.signals.items.length}`);
+check("55 signals (26 JNG + 3 MTR + 4 POK + 22 KLD automatic blocks)", compiled.signals.items.length === 55, `signals=${compiled.signals.items.length}`);
 check(
   "24 coupled point pairs (PC1..PC24) + 8 singles",
   (() => {
@@ -63,10 +63,88 @@ check(
 
 // 2. multi-length platforms
 const jngXs = compiled.stationStopXs["JNG"];
+const mtrXs = compiled.stationStopXs["MTR"];
 check(
   "JNG has per-track platform Xs — all aligned to the drawn islands at 424",
   jngXs?.t1 === 424 && jngXs?.t2 === 424 && jngXs?.t5 === 424 && jngXs?.t6 === 424 && jngXs?.t8 === 424,
   JSON.stringify(jngXs)
+);
+check(
+  "MTR has platform Xs on mtr_hulu and mtr_hilir aligned at 120",
+  mtrXs?.mtr_hulu === 120 && mtrXs?.mtr_hilir === 120,
+  JSON.stringify(mtrXs)
+);
+check(
+  "MTR platform centre sits ON the 8+16k marker lattice (a dwelling train lands on the grid)",
+  mtrXs?.mtr_hulu !== undefined && (mtrXs.mtr_hulu - 8) % 16 === 0,
+  `x=${mtrXs?.mtr_hulu} -> (x-8) mod 16 = ${
+    mtrXs?.mtr_hulu === undefined ? "n/a" : (mtrXs.mtr_hulu - 8) % 16
+  }`
+);
+const mtrHilirY = compiled.lines.mains.find((m) => m.trackGroupId === "mtr_hilir")?.lineY;
+const mtrHuluY = compiled.lines.mains.find((m) => m.trackGroupId === "mtr_hulu")?.lineY;
+// Grid lines run at gridOffset.y + 16k (248, 264, ...), so a track on a
+// multiple of 16 sits through the MIDDLE of a row — same as every JNG main.
+check(
+  "MTR rows share the JNG row lattice (0 mod 16) and stay 32 apart, Hilir above Hulu",
+  mtrHilirY !== undefined &&
+    mtrHuluY !== undefined &&
+    mtrHilirY % 16 === 0 &&
+    mtrHuluY % 16 === 0 &&
+    mtrHuluY - mtrHilirY === 32,
+  `hilir=${mtrHilirY} hulu=${mtrHuluY} gap=${
+    mtrHilirY !== undefined && mtrHuluY !== undefined ? mtrHuluY - mtrHilirY : "n/a"
+  }`
+);
+check(
+  "the whole MTR snippet fits inside the drawn grid (no track below gridBottomY)",
+  mtrHuluY !== undefined && mtrHuluY < map.grid.gridBottomY,
+  `hulu=${mtrHuluY} gridBottomY=${map.grid.gridBottomY}`
+);
+
+// --- Pondok Jati snippet: a clone of MTR shifted +208, tied to the POK throat
+const pokXs = compiled.stationStopXs["POK"];
+const pokHilirY = compiled.lines.mains.find((m) => m.trackGroupId === "pok_hilir")?.lineY;
+const pokHuluY = compiled.lines.mains.find((m) => m.trackGroupId === "pok_hulu")?.lineY;
+check(
+  "POK has platform Xs on pok_hulu and pok_hilir aligned at 328",
+  pokXs?.pok_hulu === 328 && pokXs?.pok_hilir === 328,
+  JSON.stringify(pokXs)
+);
+check(
+  "POK platform centre sits ON the 8+16k marker lattice",
+  pokXs?.pok_hulu !== undefined && (pokXs.pok_hulu - 8) % 16 === 0,
+  `x=${pokXs?.pok_hulu}`
+);
+check(
+  "POK snippet shares the MTR rows (one visual strip), Hilir above Hulu",
+  pokHilirY === mtrHilirY && pokHuluY === mtrHuluY,
+  `pok hilir=${pokHilirY} hulu=${pokHuluY} vs mtr hilir=${mtrHilirY} hulu=${mtrHuluY}`
+);
+check(
+  "POK snippet starts at column O (x=240) and does not overlap the MTR box",
+  (() => {
+    const pokW = compiled.nodes["pok_hilir_w"];
+    const mtrE = compiled.nodes["mtr_hilir_e"];
+    return pokW?.x === 240 && mtrE?.x !== undefined && pokW.x > mtrE.x;
+  })(),
+  `pok_w=${compiled.nodes["pok_hilir_w"]?.x} mtr_e=${compiled.nodes["mtr_hilir_e"]?.x}`
+);
+check(
+  "POK signals B208/B207/J101/J102 sit at their requested cells with automatic-block facings",
+  (() => {
+    const g = (id: string) => compiled.signals.items.find((s) => s.id === id);
+    const b208 = g("B208"), b207 = g("B207"), j101 = g("J101"), j102 = g("J102");
+    return (
+      // D4 = [64,304] on the real t7 edge
+      b208?.x === 64 && b208.y === 304 && b208.dir === "left" && b208.block === true &&
+      // Q20/Q23 = x272 on the detached POK rows
+      b207?.x === 272 && b207.y === pokHilirY && b207.dir === "left" && b207.block === true &&
+      j102?.x === 272 && j102.y === pokHuluY && j102.dir === "right" && j102.block === true &&
+      j101?.x === 368 && j101.y === pokHuluY && j101.dir === "right" && j101.block === true
+    );
+  })(),
+  JSON.stringify(compiled.signals.items.filter((s) => ["B208", "B207", "J101", "J102"].includes(s.id)))
 );
 check(
   "boundary stops translate with their reachable extent (t5 east 432, t8 west R2, t1 west 136)",
@@ -94,16 +172,21 @@ check(
     allDwell,
     JSON.stringify(stops)
   );
-  // Verify line assignment policy across the full timetable:
-  // - odd-numbered westbound non-KRL: t4 (row 10, y=400)
-  // - westbound KRL: t2 (row 14, y=464)
-  // - eastbound POK: t6 (row 6, y=336)
+  // Verify line assignment policy across the full timetable. The two throats
+  // are SYMMETRIC: Pondok Jati traffic uses the POK side in BOTH directions.
+  // - westbound to Pondok Jati: t7 (row 4, y=304)
+  // - westbound KRL to Matraman: t2 (row 14, y=464)
+  // - other westbound to Matraman: t4 (row 10, y=400)
+  // - eastbound from Pondok Jati: t6 (row 6, y=336)
   // - other eastbound: t1 (row 16, y=496)
   const lastTrainNumber = (code: string): number =>
     Number(code.match(/(\d+)(?!.*\d)/)?.[1]);
   const expectedY = (j: (typeof runtime.journeys)[number]): number => {
     const odd = lastTrainNumber(j.train.train_no) % 2 === 1;
-    if (odd) return j.train.trainType === "krl" ? 464 : 400;
+    if (odd) {
+      if (j.train.stops[0].line === "t7" || j.train.neighborAfter === "Pondok Jati") return 304;
+      return j.train.trainType === "krl" ? 464 : 400;
+    }
     return j.train.stops[0].line === "t6" || j.train.neighborBefore === "Pondok Jati" ? 336 : 496;
   };
   const wrongLine = runtime.journeys.filter((j) => j.plan.start.y !== expectedY(j));
@@ -113,10 +196,16 @@ check(
     wrongLine.slice(0, 8).map((j) => `${j.train.train_no}:${j.plan.start.y}->${expectedY(j)}`).join(",")
   );
   const oddNonKrl = runtime.journeys.find(
-    (j) => lastTrainNumber(j.train.train_no) % 2 === 1 && j.train.trainType !== "krl"
+    (j) =>
+      lastTrainNumber(j.train.train_no) % 2 === 1 &&
+      j.train.trainType !== "krl" &&
+      j.train.neighborAfter !== "Pondok Jati"
   );
   const oddKrl = runtime.journeys.find(
-    (j) => lastTrainNumber(j.train.train_no) % 2 === 1 && j.train.trainType === "krl"
+    (j) =>
+      lastTrainNumber(j.train.train_no) % 2 === 1 &&
+      j.train.trainType === "krl" &&
+      j.train.neighborAfter !== "Pondok Jati"
   );
   if (oddNonKrl) {
     check(
@@ -132,7 +221,204 @@ check(
       JSON.stringify(oddKrl.plan.start)
     );
   }
+  // The POK throat must be symmetric: both directions carry real traffic.
+  const toPok = runtime.journeys.filter((j) => j.plan.start.y === 304);
+  const fromPok = runtime.journeys.filter((j) => j.plan.start.y === 336);
+  check(
+    "the POK throat is symmetric — t7 (row 4) carries the Pondok Jati departures",
+    toPok.length > 0 && toPok.every((j) => j.plan.start.dir === "left"),
+    `t7 journeys=${toPok.length}`
+  );
+  check(
+    "t6 (row 6) carries the Pondok Jati arrivals",
+    fromPok.length > 0 && fromPok.every((j) => j.plan.start.dir === "right"),
+    `t6 journeys=${fromPok.length}`
+  );
 }
+
+// --- Klender/Bekasi strip: 4-track double-double at 2x compression --------
+{
+  const row = (id: string) => compiled.lines.mains.find((m) => m.trackGroupId === id)?.lineY;
+  const t1 = row("kld_t1"), t2 = row("kld_t2"), t3 = row("kld_t3"), t4 = row("kld_t4");
+  // Right-hand running, fast pair on top:  t4 <- / t3 -> / t2 <- / t1 ->
+  check(
+    "KLD is a 4-track band, rows 32 apart, whose FAST pair shares the MTR/POK rows",
+    t4 === 576 && t3 === 608 && t2 === 640 && t1 === 672 &&
+      t4 === mtrHilirY && t3 === mtrHuluY,
+    `t4=${t4} t3=${t3} t2=${t2} t1=${t1} mtrHilir=${mtrHilirY} mtrHulu=${mtrHuluY}`
+  );
+  // The three snippet frames must line up horizontally and not collide: POK
+  // ends at x=400 and KLD starts at column AB (x=448), a 2-cell gap.
+  check(
+    "KLD sits right of POK with a 2-cell gap and stays inside the diagram width",
+    (() => {
+      const kldW = compiled.nodes["kld_t1_w"]?.x;
+      const kldE = compiled.nodes["kld_t1_e"]?.x;
+      const pokE = compiled.nodes["pok_hulu_e"]?.x;
+      return kldW === 448 && kldE === 784 && pokE !== undefined &&
+        kldW - pokE === 48 && kldE <= map.grid.width;
+    })(),
+    `pokEnd=${compiled.nodes["pok_hulu_e"]?.x} kld=${compiled.nodes["kld_t1_w"]?.x}..${compiled.nodes["kld_t1_e"]?.x} width=${map.grid.width}`
+  );
+  check(
+    "KLD obeys RIGHT-HAND running: in each pair the westbound track sits ABOVE its eastbound partner",
+    t4 !== undefined && t3 !== undefined && t2 !== undefined && t1 !== undefined &&
+      t4 < t3 && t2 < t1,
+    `fast: hilir=${t4} above hulu=${t3} | local: hilir=${t2} above hulu=${t1}`
+  );
+  check(
+    "the FAST pair sits above the local pair",
+    t3 !== undefined && t2 !== undefined && t3 < t2,
+    `fast bottom=${t3} local top=${t2}`
+  );
+  const dir = (id: string) =>
+    compiled.lines.mains.find((m) => m.trackGroupId === id)?.normalBearing.dx;
+  check(
+    "KLD directions alternate Hulu(->) / Hilir(<-) on both the local and fast pairs",
+    dir("kld_t1") === 1 && dir("kld_t2") === -1 && dir("kld_t3") === 1 && dir("kld_t4") === -1,
+    `t1=${dir("kld_t1")} t2=${dir("kld_t2")} t3=${dir("kld_t3")} t4=${dir("kld_t4")}`
+  );
+  // A compressed cell is 32u; every centre must still land on the 8+16k marker
+  // lattice or a dwelling train sits half a cell off its platform.
+  const kldSignals = compiled.signals.items.filter((s) => /^K[1-4]\d$/.test(s.id));
+  check(
+    "all 22 KLD signals are automatic blocks on cell centres (0+16k)",
+    kldSignals.length === 22 &&
+      kldSignals.every((s) => s.block === true && s.x % 16 === 0),
+    `count=${kldSignals.length} offLattice=${kldSignals.filter((s) => s.x % 16 !== 0).map((s) => `${s.id}@${s.x}`).join(",")}`
+  );
+  // A signal marks the boundary between two blocks, so it belongs on a
+  // gridline. This must hold for EVERY signal in the layout, not just KLD -
+  // an earlier KLD revision used the 8+16k marker lattice instead, which put
+  // its signals mid-cell while all 33 others sat on corners.
+  check(
+    "every signal in the layout sits on a cell centre (0+16k)",
+    compiled.signals.items.every((s) => Number.isInteger(s.x) === false || s.x % 16 === 0 || s.id === "NE8"),
+    compiled.signals.items.filter((s) => Number.isInteger(s.x) && s.x % 16 !== 0 && s.id !== "NE8").map((s) => `${s.id}@${s.x}`).join(",") || "all on corners (NE8 exempt: sits on a diagonal)"
+  );
+  const onRow = (y: number | undefined) => kldSignals.filter((s) => s.y === y).length;
+  check(
+    "local pair carries 7 blocks each; the fast pair carries 4 each",
+    onRow(t1) === 7 && onRow(t2) === 7 && onRow(t3) === 4 && onRow(t4) === 4,
+    `t1=${onRow(t1)} t2=${onRow(t2)} t3=${onRow(t3)} t4=${onRow(t4)}`
+  );
+  // SCALE 1:2 is the whole point of this strip, and it is only visible in the
+  // signal PITCH. Drawn at 1 cell = 16u, the authored "2 empty cells" between
+  // local blocks must render as a 48-unit gap (3 columns: signal + 2 empty)
+  // and the fast pair's "4 empty cells" as 80 units. An earlier revision drew
+  // one cell as 32u, which silently doubled both gaps into a 2x EXPANSION.
+  const rowGaps = (y: number | undefined) => {
+    const xs = kldSignals.filter((s) => s.y === y).map((s) => s.x).sort((a, b) => a - b);
+    return xs.slice(1).map((x, i) => x - xs[i]);
+  };
+  check(
+    "KLD is drawn at SCALE 1:2 - local blocks 48u apart (2 empty cells), fast blocks 80u (4 empty)",
+    rowGaps(t1).every((g) => g === 48) && rowGaps(t2).every((g) => g === 48) &&
+      rowGaps(t3).every((g) => g === 80) && rowGaps(t4).every((g) => g === 80),
+    `local=${rowGaps(t1).join(",")} fast=${rowGaps(t3).join(",")}`
+  );
+  check(
+    "one KLD cell is 16 units, so the 21-cell strip spans exactly 336 units",
+    (() => {
+      const w = compiled.nodes["kld_t1_e"]?.x - compiled.nodes["kld_t1_w"]?.x;
+      return w === 21 * 16;
+    })(),
+    `span=${compiled.nodes["kld_t1_e"]?.x - compiled.nodes["kld_t1_w"]?.x} expected=${21 * 16}`
+  );
+  const kldXs = compiled.stationStopXs["KLD"];
+  const buaXs = compiled.stationStopXs["BUA"];
+  check(
+    "Klender and Buaran serve the LOCAL pair only and line up across both rows",
+    kldXs?.kld_t1 === 584 && kldXs?.kld_t2 === 584 &&
+      buaXs?.kld_t1 === 728 && buaXs?.kld_t2 === 728 &&
+      kldXs?.kld_t3 === undefined && buaXs?.kld_t3 === undefined,
+    `KLD=${JSON.stringify(kldXs)} BUA=${JSON.stringify(buaXs)}`
+  );
+  // The island bar hangs off the UPPER track of its pair, so it must be
+  // anchored to the local Hilir row - not to whatever row happens to be first.
+  // The platforms occupy the 2 cells BEFORE a block signal (t1 cells 9-10 and
+  // 18-19), never the cell a signal already stands on.
+  check(
+    "no KLD platform shares a cell with a block signal",
+    [584, 728].every((px) => !kldSignals.some((s) => s.x === px)),
+    `platformXs=584,728 signalXs=${[...new Set(kldSignals.map((s) => s.x))].sort((a, b) => a - b).join(",")}`
+  );
+  // Signals sit at 0 mod 16 and stop points at 8 mod 16 - offset by half a
+  // cell from each other. That is physically right: a train stops INSIDE a
+  // block, not on the boundary that a signal marks.
+  check(
+    "every platform stop point sits on the 8+16k lattice, offset from the signals",
+    Object.values(compiled.stationPlatformCenterX).every((x) => (x - 8) % 16 === 0),
+    Object.entries(compiled.stationPlatformCenterX).filter(([, x]) => (x - 8) % 16 !== 0).map(([c, x]) => `${c}@${x}`).join(",") || "all offset from signals"
+  );
+  // The DRAWN BAR is a different quantity from the stop point: it must begin
+  // and end on CELL EDGES so it fills whole cells rather than starting
+  // mid-cell. This is the check that was missing when KLD's bar spanned
+  // 160..192 - two cell centres - and so looked shifted by half a cell.
+  check(
+    "every drawn island bar starts and ends on a cell edge (fills whole cells)",
+    map.presentation.kind !== "schematic" ||
+      (map.presentation.stationShapes ?? []).every((s) => {
+        const half = (s.length ?? 64) / 2;
+        return (s.x - half - 8) % 16 === 0 && (s.x + half - 8) % 16 === 0;
+      }),
+    (map.presentation.kind === "schematic" ? map.presentation.stationShapes ?? [] : [])
+      .filter((s) => {
+        const half = (s.length ?? 64) / 2;
+        return (s.x - half - 8) % 16 !== 0 || (s.x + half - 8) % 16 !== 0;
+      })
+      .map((s) => `${s.code}@${s.x} spans ${s.x - (s.length ?? 64) / 2}..${s.x + (s.length ?? 64) / 2}`)
+      .join(" ") || "all bars fill whole cells"
+  );
+  check(
+    "the KLD/BUA island bars are drawn between the LOCAL pair",
+    map.presentation.kind === "schematic" &&
+      (map.presentation.stationShapes ?? [])
+        .filter((s) => s.code === "KLD" || s.code === "BUA")
+        .every((s) => s.y === t2),
+    (map.presentation.kind === "schematic" ? map.presentation.stationShapes ?? [] : [])
+      .filter((s) => s.code === "KLD" || s.code === "BUA")
+      .map((s) => `${s.code}@y=${s.y}`)
+      .join(" ") + ` (local hilir row = ${t2})`
+  );
+  check(
+    "the whole KLD strip fits inside the widened canvas",
+    t4 !== undefined && t4 < map.grid.gridBottomY && 784 <= map.grid.width,
+    `t4=${t4} gridBottomY=${map.grid.gridBottomY} right=784 width=${map.grid.width}`
+  );
+  // At 2x compression, cell CENTRES (8+16k, so trains dwell square on their
+  // platforms) and piece ENDPOINTS (0+16k, required by verify:grid-ref) have
+  // opposite parity. Both hold only because the drawn track overhangs the
+  // first and last cell centre by half a normal cell.
+  check(
+    "KLD track endpoints sit on the 0-mod-16 corner lattice, cell centres on 8-mod-16",
+    (() => {
+      const ends = ["kld_t1", "kld_t2", "kld_t3", "kld_t4"].flatMap((id) => [
+        compiled.nodes[`${id}_w`]?.x,
+        compiled.nodes[`${id}_e`]?.x,
+      ]);
+      const endsOk = ends.every((x) => x !== undefined && x % 16 === 0);
+      // Cell centres are where PLATFORMS (stop points) live, not signals.
+      const centresOk = [584, 728].every((x) => (x - 8) % 16 === 0);
+      return endsOk && centresOk && ends.includes(448) && ends.includes(784);
+    })(),
+    `ends=${["kld_t1", "kld_t2", "kld_t3", "kld_t4"].map((id) => `${compiled.nodes[`${id}_w`]?.x}..${compiled.nodes[`${id}_e`]?.x}`).join(" ")}`
+  );
+}
+
+// Signal-position edits requested as exact grid cells.
+check(
+  "NW1/NW3/NW5 moved to G16/J12/J6",
+  (() => {
+    const g = (id: string) => compiled.signals.items.find((s) => s.id === id);
+    return (
+      g("NW1")?.x === 112 && g("NW1")?.y === 496 &&
+      g("NW3")?.x === 160 && g("NW3")?.y === 432 &&
+      g("NW5")?.x === 160 && g("NW5")?.y === 336
+    );
+  })(),
+  JSON.stringify(compiled.signals.items.filter((s) => ["NW1", "NW3", "NW5"].includes(s.id)))
+);
 
 // 4. a route through the throat from an entry signal
 {
