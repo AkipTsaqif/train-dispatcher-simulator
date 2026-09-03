@@ -1342,6 +1342,11 @@ test("jatinegara marker never steps backward at a pass-through boundary", async 
 			continue;
 		}
 		const x = Number(raw);
+		// Once the train has visibly reached the east boundary, it is handing
+		// into the detached Klender strip. Its main-map marker then clips away
+		// while the snippet marker takes over, so it is no longer part of this
+		// JNG-only monotonicity assertion.
+		if (prev !== null && prev >= 952 && x < prev) break;
 		// Eastbound: the drawn x must never decrease. Any decrease is the glitch.
 		if (prev !== null && x < prev)
 			backward = `x went ${prev} -> ${x} at step ${step}`;
@@ -1351,6 +1356,25 @@ test("jatinegara marker never steps backward at a pass-through boundary", async 
 	// Sanity: the train really did traverse the station, so the sweep above
 	// actually covered the arrival, the dwell, and the exit boundary.
 	expect(prev === null ? -Infinity : prev).toBeGreaterThan(424);
+});
+
+test("jatinegara visual marker stops behind NW1 at G16, not E16", async ({
+	page,
+}) => {
+	await page.clock.install();
+	await page.goto("/jng?start=06:02:35&controls=1");
+	// 5024C is an eastbound KRL on t1 (boundary 06:02:45).
+	// NW1 at x=112 (column G16 edge) is RED by default.
+	const marker = page.locator('[data-train="5024C"]');
+	for (let s = 0; s < 25; s++) {
+		await page.clock.fastForward("00:00:01");
+	}
+	// The 4-cell drawn marker (64u long) must stop right behind NW1 (112),
+	// with center at 72 (spanning 40..104, head in cell G16 [96..112]),
+	// not pulled back to E16 (center 56, head at 88).
+	await expect(marker).toHaveAttribute("data-x", "72");
+	const transform = await marker.getAttribute("transform");
+	expect(transform).toContain("translate(72, 496)");
 });
 
 test.skip("jatinegara J410 enters on t6 and crosses onto t5 through xov10", async ({
@@ -1577,6 +1601,9 @@ test("jatinegara interactive table — player-controlled signals and manual rout
 	).toBeVisible();
 	await expect(
 		page.getByRole("button", { name: /^XW2A · MERAH/ }),
+	).toBeVisible();
+	await expect(
+		page.getByRole("button", { name: /^XW7A · MERAH/ }),
 	).toBeVisible();
 	await expect(page.getByRole("button", { name: /^XE8 ·/ })).toBeVisible();
 	await expect(page.getByText("A", { exact: true })).toHaveCount(2); // the graph-paper grid chrome is shown (top + bottom letters)
@@ -2152,6 +2179,75 @@ test("eastbound train 5022C departs JNG on t1 and seamlessly enters Klender snip
 	expect(transform).toContain("672"); // y=672 is localDepY (kld_t1)
 });
 
+test("a JNG route running off the map repeats the corridor signal beyond it", async ({
+	page,
+}) => {
+	test.setTimeout(90000);
+	// Every corridor strip is drawn on its own row band and is NOT in the
+	// topology graph, so a route leaving JNG reaches a boundary node, finds no
+	// further exit, and walkRoute reports no next signal. The "no next signal =
+	// open line = green" rule then lit the signal green over a red corridor
+	// block — XE1 green while K11 was red, XW2A green while BJ2 was red.
+	//
+	// The tie-in is keyed by the BOUNDARY the route ends at, not by signal id,
+	// so it follows the points: XW2A/XW3/XW4/XW5 each end on their own line
+	// with the points normal, but any of them ends at the t2 west edge once
+	// the crossovers are set toward Matraman.
+	await page.goto("/jng?start=06:06&controls=1");
+	await page.waitForSelector('svg[role="img"]', { state: "visible" });
+
+	const aspectOf = async (id: string) =>
+		(
+			(await page
+				.locator(`[aria-label^="Signal ${id} ("]`)
+				.first()
+				.getAttribute("aria-label")) ?? ""
+		).match(/aspect (\w+)/)?.[1];
+
+	// The boundary each corridor hangs off, and the block signal just beyond
+	// it. Keyed by the route's END POINT — see CORRIDOR_ENTRY_SIGNAL_BY_BOUNDARY.
+	const corridorAt: Record<string, string> = {
+		"32,464": "BJ2", // t2 west -> Matraman
+		"32,304": "B207", // t7 west -> Pondok Jati
+		"960,496": "K11", // t1 east -> Klender local
+		"960,432": "K31", // t3 east -> Klender fast
+	};
+
+	// BJ2 is red at 06:06 — this is the reported case, so assert we really are
+	// testing the interesting direction rather than a vacuously green corridor.
+	expect(await aspectOf("BJ2")).toBe("red");
+
+	let covered = 0;
+	for (const id of ["XW2A", "XW3", "XW4", "XW5", "XE1", "XE3"]) {
+		const button = page.locator(
+			`[role="button"][aria-label^="Signal ${id} ("]`,
+		);
+		if ((await button.count()) === 0) continue;
+		if ((await aspectOf(id)) === "red")
+			await button.first().click({ force: true });
+		const aspect = await aspectOf(id);
+		// a refused route (points not set for it) legitimately stays red
+		if (aspect === "red") continue;
+
+		// where the cleared route actually ends decides which corridor applies
+		const end = await page.evaluate(
+			() =>
+				[...document.querySelectorAll('path[stroke="#f59e0b"]')]
+					.map((p) => (p.getAttribute("d") ?? "").split(" ").pop())
+					.pop() ?? "",
+		);
+		const beyond = corridorAt[end];
+		if (!beyond) continue; // genuinely leaves the modelled railway
+
+		covered++;
+		expect(aspect, `${id} ends at ${end} and must repeat ${beyond}`).toBe(
+			(await aspectOf(beyond)) === "red" ? "amber" : "green",
+		);
+	}
+	// guard against the loop silently asserting nothing
+	expect(covered).toBeGreaterThan(0);
+});
+
 test("following train 5037B is held at K27 in Klender snippet while 5509B is held at NE2 and does not spawn on JNG", async ({
 	page,
 }) => {
@@ -2183,4 +2279,56 @@ test("following train 5037B is held at K27 in Klender snippet while 5509B is hel
 	});
 	// Follower remains hidden on JNG while held at K27
 	await expect(followerJng).toBeHidden();
+});
+
+test("a train released after being held in Klender snippet advances at normal pace without teleporting or sprinting", async ({
+	page,
+}) => {
+	test.setTimeout(90000);
+	// Start at 06:03:30 with 5509B held at NE2 and 5037B held at K27
+	await page.goto("/jng?start=06:03:30&controls=1");
+	await page.waitForSelector('svg[role="img"]', { state: "visible" });
+
+	const followerSnip = page.locator('[data-snippet-train="5037B"]');
+	await expect(followerSnip).toBeVisible({ timeout: 20000 });
+
+	// Clear NE2 (route across throat) to release K27
+	await page.locator('[role="button"][aria-label*="(PC16)"]').first().click();
+	await page.locator('[role="button"][aria-label^="Signal NE2"]').click();
+
+	const readX = async () => {
+		const t = (await followerSnip.getAttribute("transform")) ?? "";
+		const m = t.match(/translate\(([-\d.]+)/);
+		return m ? Number(m[1]) : null;
+	};
+
+	let prevX = await readX();
+	let maxStepDelta = 0;
+	let firstX: number | null = null;
+	let lastX: number | null = null;
+	const t0 = Date.now();
+	// Track 5037B's position step-by-step as it moves from K27 (488/472) toward handover (448)
+	for (let i = 0; i < 30; i++) {
+		await page.waitForTimeout(300);
+		const curX = await readX();
+		if (curX !== null) {
+			firstX ??= curX;
+			lastX = curX;
+			if (prevX !== null) {
+				const delta = Math.abs(curX - prevX);
+				if (delta > maxStepDelta) maxStepDelta = delta;
+			}
+			prevX = curX;
+		}
+	}
+	const elapsedSec = (Date.now() - t0) / 1000;
+	// The rendered SVG snaps to 16-unit grid lines, so a single grid step is at most 16 units.
+	// It must never teleport multiple grid cells in a single poll (e.g. 32-120 units).
+	expect(maxStepDelta).toBeLessThanOrEqual(16);
+	// Total distance over ~9 seconds must be modest (~1-2 grid cells = 16-32 units), pace ~1.37 u/s
+	if (firstX !== null && lastX !== null) {
+		const totalMoved = Math.abs(lastX - firstX);
+		const avgSpeed = totalMoved / elapsedSec;
+		expect(avgSpeed).toBeLessThan(3.0); // well within normal corridor pace, not sprinting
+	}
 });

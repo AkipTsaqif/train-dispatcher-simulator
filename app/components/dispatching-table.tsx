@@ -635,6 +635,87 @@ const trainOccupies = (
 		return polylinesOverlap(footprintOf(train, trainHalfLen), pts);
 	});
 
+/**
+ * Where a JNG route that runs off the map hands over to a corridor snippet,
+ * and the first signal it must repeat once it gets there.
+ *
+ * Every corridor strip (MTR, POK, KLD) is drawn on its own row band and is
+ * deliberately NOT part of the topology graph. So a route leaving JNG reaches
+ * a boundary node, finds no further exit, and `walkRoute` reports NO next
+ * signal — at which point the final rule in `calculateSignalAspect` ("no next
+ * signal = open line = green") lights the signal green no matter what is
+ * standing in the corridor beyond it.
+ *
+ * KEYED BY THE BOUNDARY THE ROUTE ACTUALLY ENDS AT, never by signal id. Which
+ * corridor a signal leads to is a fact about the POINTS, not about the signal:
+ * XW2A/XW3/XW4/XW5 each end on their own line with the points normal, but any
+ * of them ends at the t2 west edge once the crossovers are set for Matraman.
+ * An id-keyed table would tie the wrong signals permanently and miss the
+ * diverted ones — the very case the user hits. A boundary key follows the
+ * points for free, and a boundary with no corridor beyond it (t4 west toward
+ * Manggarai, t6/t8 west) is simply absent and stays correctly green.
+ *
+ * This is a REPEAT, not a route: nothing here joins the two graphs, so route
+ * search, occupancy, reservations, and the compiled baselines are unchanged.
+ */
+const CORRIDOR_ENTRY_SIGNAL_BY_BOUNDARY: Record<string, string> = {
+	"32,464": "BJ2", // t2 west  -> Matraman hilir    (117 westbound services)
+	"32,304": "B207", // t7 west  -> Pondok Jati hilir  (43 + 30 services)
+	"960,496": "K11", // t1 east  -> Klender local  (kld_t1)
+	"960,432": "K31", // t3 east  -> Klender fast   (kld_t3)
+};
+
+/** The corridor signal a route hands over to, or undefined when it genuinely
+ *  leaves the modelled railway. `pts` is the route polyline from `walkRoute`. */
+const corridorEntrySignal = (pts: LeveledPoint[]): string | undefined => {
+	const end = pts[pts.length - 1];
+	if (!end) return undefined;
+	return CORRIDOR_ENTRY_SIGNAL_BY_BOUNDARY[`${end[0]},${end[1]}`];
+};
+
+const HULU_BLOCK_RULES: Record<
+	string,
+	{ corridorId: "MTR" | "POK"; nextSignalId: string }
+> = {
+	BM1: { corridorId: "MTR", nextSignalId: "NW1" },
+	J102: { corridorId: "POK", nextSignalId: "J101" },
+	J101: { corridorId: "POK", nextSignalId: "NW5" },
+};
+const HILIR_BLOCK_RULES: Record<
+	string,
+	{ corridorId: "MTR" | "POK"; exitSignalId: string }
+> = {
+	BJ2: { corridorId: "MTR", exitSignalId: "MAS" },
+};
+const EXIT_SIGNAL_RULES: Record<string, { corridorId: "MTR" | "POK" }> = {
+	MAS: { corridorId: "MTR" },
+};
+const KLD_NEXT_SIGNAL_MAP: Record<string, string> = {
+	K11: "K12",
+	K12: "K13",
+	K13: "K14",
+	K14: "K15",
+	K15: "K16",
+	K16: "K17",
+
+	K21: "K22",
+	K22: "K23",
+	K23: "K24",
+	K24: "K25",
+	K25: "K26",
+	K26: "K27",
+	K27: "NE2",
+
+	K31: "K32",
+	K32: "K33",
+	K33: "K34",
+
+	K41: "K42",
+	K42: "K43",
+	K43: "K44",
+	K44: "NE4",
+};
+
 const calculateSignalAspect = (
 	id: string,
 	dependencies: SignalAspectDependencies,
@@ -651,11 +732,22 @@ const calculateSignalAspect = (
 	if (normalDir && signal.dir === normalDir && dependencies.forcedRed(id)) {
 		return "red";
 	}
-	const nextId = dependencies.routeOf(id).nextSignalId;
+	// The corridor tie-in is the FALLBACK, never an override: while the route
+	// walker still finds a real next signal on the JNG graph (a train routed to
+	// a platform rather than off the map) that answer wins. Only a route that
+	// actually runs off a boundary consults the corridor beyond it.
+	const ownRoute = dependencies.routeOf(id);
+	const nextId = ownRoute.nextSignalId ?? corridorEntrySignal(ownRoute.pts);
 	const section = dependencies.signalSections.find(
 		(candidate) => candidate.sig === id,
 	);
-	if (section) {
+	if (
+		section &&
+		!/^K[1-4]\d$/.test(id) &&
+		!HULU_BLOCK_RULES[id] &&
+		!HILIR_BLOCK_RULES[id] &&
+		!EXIT_SIGNAL_RULES[id]
+	) {
 		const skip =
 			selfIdx !== undefined
 				? [selfIdx]
@@ -683,31 +775,8 @@ const calculateSignalAspect = (
 			return "red";
 		}
 	}
-	// Corridor snippet signals. MTR and POK deliberately share Y rows, so
-	// EVERY occupancy query filters corridorId before looking at x/y/dir.
-	const huluBlockRules: Record<
-		string,
-		{ corridorId: "MTR" | "POK"; nextSignalId: string }
-	> = {
-		BM1: { corridorId: "MTR", nextSignalId: "NW1" },
-		// POK Hulu has two automatic blocks: J102 repeats J101, while J101
-		// repeats NW5 on the real row-6 JNG edge.
-		J102: { corridorId: "POK", nextSignalId: "J101" },
-		J101: { corridorId: "POK", nextSignalId: "NW5" },
-	};
-	const hilirBlockRules: Record<
-		string,
-		{ corridorId: "MTR" | "POK"; exitSignalId: string }
-	> = {
-		BJ2: { corridorId: "MTR", exitSignalId: "MAS" },
-		// B208 is on the real t7 edge, so its normal generic block logic
-		// protects that segment. B207 is the detached POK block signal.
-	};
-	const exitSignalRules: Record<string, { corridorId: "MTR" | "POK" }> = {
-		MAS: { corridorId: "MTR" },
-	};
 
-	const huluRule = huluBlockRules[id];
+	const huluRule = HULU_BLOCK_RULES[id];
 	if (huluRule) {
 		let occupied = (dependencies.snippetTrains ?? []).some(
 			(t) =>
@@ -744,7 +813,7 @@ const calculateSignalAspect = (
 		return nextAspect === "red" ? "amber" : "green";
 	}
 
-	const hilirRule = hilirBlockRules[id];
+	const hilirRule = HILIR_BLOCK_RULES[id];
 	if (hilirRule) {
 		const exitSignal = dependencies.signals.find(
 			(candidate) => candidate.id === hilirRule.exitSignalId,
@@ -768,7 +837,7 @@ const calculateSignalAspect = (
 		return exitAspect === "red" ? "amber" : "green";
 	}
 
-	const exitRule = exitSignalRules[id];
+	const exitRule = EXIT_SIGNAL_RULES[id];
 	if (exitRule) {
 		const corridorTrains = (dependencies.snippetTrains ?? []).filter(
 			(t) => t.corridorId === exitRule.corridorId,
@@ -792,37 +861,6 @@ const calculateSignalAspect = (
 		});
 		return approaching ? "green" : "red";
 	}
-
-	// Klender / Bekasi snippet automatic block signals.
-	// All 22 signals are automatic blocks on the 4-track corridor (scale 1:2).
-	// t1 (Hulu local) and t3 (Hulu fast) run eastbound (->);
-	// t2 (Hilir local) and t4 (Hilir fast) run westbound (<-).
-	// In the westbound direction, K27 ties into home signal NE2, and K44 ties into NE4.
-	const kldNextSignalMap: Record<string, string> = {
-		K11: "K12",
-		K12: "K13",
-		K13: "K14",
-		K14: "K15",
-		K15: "K16",
-		K16: "K17",
-
-		K21: "K22",
-		K22: "K23",
-		K23: "K24",
-		K24: "K25",
-		K25: "K26",
-		K26: "K27",
-		K27: "NE2",
-
-		K31: "K32",
-		K32: "K33",
-		K33: "K34",
-
-		K41: "K42",
-		K42: "K43",
-		K43: "K44",
-		K44: "NE4",
-	};
 
 	if (/^K[1-4]\d$/.test(id) && section) {
 		let occupied = (dependencies.snippetTrains ?? []).some(
@@ -849,7 +887,7 @@ const calculateSignalAspect = (
 			);
 		}
 		if (occupied) return "red";
-		const nextSignalId = kldNextSignalMap[id];
+		const nextSignalId = KLD_NEXT_SIGNAL_MAP[id];
 		if (nextSignalId) {
 			const nextAspect = calculateSignalAspect(
 				nextSignalId,
@@ -1374,6 +1412,7 @@ export default function DispatchingTable({
 	const RELATIVE_CLOCK = DISPATCH_SCENARIO.dwell?.relativeAnchors === true;
 	const spawnSimRef = useRef<(number | undefined)[]>([]);
 	const lastTickRef = useRef<(number | undefined)[]>([]);
+	const visualEntryStartRef = useRef<(number | undefined)[]>([]);
 	/**
 	 * Actual edge-admission time for each train. A due train may wait outside
 	 * the diagram while the approach block is occupied; once admitted, its
@@ -1513,7 +1552,11 @@ export default function DispatchingTable({
 	>([]);
 	const snippetTrainsRef = useRef<SnippetTrainPosition[]>([]);
 	const snippetPosRef = useRef<{
-		[ti: number]: { x: number; lastTime: number };
+		[ti: number]: {
+			x: number;
+			lastTime: number;
+			dwellingUntil?: number;
+		};
 	}>({});
 	const [occupancyTick, setOccupancyTick] = useState(0);
 	const trainSectionKeyRef = useRef("");
@@ -1808,6 +1851,7 @@ export default function DispatchingTable({
 		spawnSimRef.current = journeysList.map(() => undefined);
 		lastTickRef.current = journeysList.map(() => undefined);
 		admittedSimRef.current = journeysList.map(() => undefined);
+		visualEntryStartRef.current = journeysList.map(() => undefined);
 		snippetPosRef.current = {};
 		// pass 1 — place with meets holds OFF so every partner's crossing time is
 		// recorded; pass 2 re-places from scratch with the holds active, reading
@@ -2044,109 +2088,166 @@ export default function DispatchingTable({
 				// still leaving the owning snippet. Previously only t1/MTR used this
 				// path, so t6/POK waited for the whole body and then popped in.
 				const isApproachingFromSnippet = approachSnippet !== undefined;
-				const visualEntryDueAt = isApproachingFromSnippet
-					? dueAt - 6
-					: dueAt;
-				if (simRef.current < visualEntryDueAt) {
-					g?.setAttribute("visibility", "hidden");
-					return "";
-				}
-				const isDelayedByBlock =
-					admittedSimRef.current[ti] !== undefined
-						? admittedSimRef.current[ti]! > dueAt
-						: false;
-				const isVisualEntering = isApproachingFromSnippet
-					? isDelayedByBlock
-						? simRef.current < admittedSimRef.current[ti]! + 6
-						: simRef.current < dueAt
-					: false;
-				if (
-					!isVisualEntering &&
-					admittedSimRef.current[ti] === undefined
-				) {
-					if (edgeBlockOccupied(ti)) {
+				if (isApproachingFromSnippet) {
+					const visualEntryDueAt = dueAt - 6;
+					if (simRef.current < visualEntryDueAt) {
 						st.spawned = false;
 						g?.setAttribute("visibility", "hidden");
 						return "";
 					}
-					admittedSimRef.current[ti] = simRef.current;
-					spawnSimRef.current[ti] = simRef.current;
-					lastTickRef.current[ti] = simRef.current;
-				}
-				if (isVisualEntering && edgeBlockOccupied(ti)) {
-					st.spawned = false;
-					g?.setAttribute("visibility", "hidden");
-					return "";
-				}
-				st.spawned = true;
-				if (isVisualEntering) {
-					// Position during visual entry handover (0..32 units)
-					const vStart = isDelayedByBlock
-						? admittedSimRef.current[ti]!
-						: dueAt - 6;
-					const prog = Math.max(
-						0,
-						Math.min(1, (simRef.current - vStart) / 6),
-					);
-					if (plan.start.dir === "left") {
-						// Westbound entry from east: nose emerges at x=960 (canvas edge)
-						// and slides in over the 6 seconds before booked boundary arrival.
-						st.x = 992 - prog * 32;
-						st.y = plan.start.y;
-						st.dir = "left";
-					} else {
-						st.x = prog * 32;
-						st.y = plan.start.y;
-						st.dir = "right";
+					if (visualEntryStartRef.current[ti] === undefined) {
+						if (edgeBlockOccupied(ti)) {
+							st.spawned = false;
+							g?.setAttribute("visibility", "hidden");
+							return "";
+						}
+						visualEntryStartRef.current[ti] =
+							simRef.current > dueAt + 6 &&
+							admittedSimRef.current[ti] !== undefined
+								? dueAt - 6
+								: Math.max(visualEntryDueAt, simRef.current);
 					}
-				} else if (RELATIVE_CLOCK) {
-					// Relative clock (dwell.relativeAnchors scenarios): feed the engine
-					// real elapsed seconds each tick. The train runs its approach LIVE
-					// from the spawn edge and its station dwells last their scheduled
-					// DURATION — no first-tick mega-budget teleporting it to its hold
-					// point. While stopped, time is frozen (no schedule consumed).
-					// A train that first becomes due mid-run was never placed. Its clock
-					// therefore starts at its actual edge-admission time, which may be later
-					// than the booked boundary while the preceding tail clears the block.
-					const spawnedAt =
-						spawnSimRef.current[ti] ??
-						admittedSimRef.current[ti] ??
-						dueAt;
-					const last = Math.max(
-						lastTickRef.current[ti] ?? spawnedAt,
-						spawnedAt,
-					);
-					if (st.stopped || st.done) {
-						advanceTrain(st, 0, ctx, plan.legs);
-						if (!st.stopped && !st.done)
-							lastTickRef.current[ti] = simRef.current; // resume without a jump
-					} else if (simRef.current > last) {
-						const timeBefore = st.time;
-						advanceTrain(st, simRef.current - last, ctx, plan.legs);
-						const consumed = st.time - timeBefore;
-						// Advance lastTick only by the schedule time actually processed.
-						// If stopFrameAtDwellArrival capped the frame at the platform, the
-						// leftover sim budget remains to be processed on subsequent ticks
-						// rather than being permanently discarded.
-						lastTickRef.current[ti] = Math.min(
-							simRef.current,
-							last + consumed,
+					const vStart = visualEntryStartRef.current[ti]!;
+					const isVisualEntering = simRef.current < vStart + 6;
+					st.spawned = true;
+					if (isVisualEntering) {
+						// Position during visual entry handover.
+						// At prog=0 (vStart = dueAt - 6), the nose is at edgeX.
+						// At prog=1 (vStart + 6 = dueAt), the train has reached edgeX and hands over to the engine.
+						const prog = Math.max(
+							0,
+							Math.min(1, (simRef.current - vStart) / 6),
 						);
+						if (plan.start.dir === "left") {
+							st.x =
+								960 +
+								(1 - prog) * MOVEMENT_DEFINITION.trainHalfLen;
+							st.y = plan.start.y;
+							st.dir = "left";
+						} else {
+							st.x =
+								32 -
+								(1 - prog) * MOVEMENT_DEFINITION.trainHalfLen;
+							st.y = plan.start.y;
+							st.dir = "right";
+						}
+					} else {
+						if (admittedSimRef.current[ti] === undefined) {
+							admittedSimRef.current[ti] = simRef.current;
+							spawnSimRef.current[ti] = simRef.current;
+							lastTickRef.current[ti] = simRef.current;
+							const edgeX = plan.start.dir === "left" ? 960 : 32;
+							st.x = edgeX;
+							st.segFrom = [edgeX, plan.start.y];
+							const nextNode = Object.values(DISPATCH_MAP.nodes)
+								.filter(
+									(n) =>
+										n.y === plan.start.y &&
+										(plan.start.dir === "left"
+											? n.x < edgeX
+											: n.x > edgeX),
+								)
+								.sort((a, b) =>
+									plan.start.dir === "left"
+										? b.x - a.x
+										: a.x - b.x,
+								)[0];
+							if (nextNode) {
+								const nextKey = Object.keys(
+									DISPATCH_MAP.nodes,
+								).find(
+									(k) => DISPATCH_MAP.nodes[k] === nextNode,
+								);
+								st.segTo = [nextNode.x, nextNode.y];
+								st.nxtNode = nextKey ?? null;
+							}
+						}
+						if (RELATIVE_CLOCK) {
+							const spawnedAt =
+								spawnSimRef.current[ti] ??
+								admittedSimRef.current[ti] ??
+								dueAt;
+							const last = Math.max(
+								lastTickRef.current[ti] ?? spawnedAt,
+								spawnedAt,
+							);
+							if (st.stopped || st.done) {
+								advanceTrain(st, 0, ctx, plan.legs);
+								if (!st.stopped && !st.done)
+									lastTickRef.current[ti] = simRef.current;
+							} else if (simRef.current > last) {
+								const timeBefore = st.time;
+								advanceTrain(
+									st,
+									simRef.current - last,
+									ctx,
+									plan.legs,
+								);
+								const consumed = st.time - timeBefore;
+								lastTickRef.current[ti] = Math.min(
+									simRef.current,
+									last + consumed,
+								);
+							}
+						}
 					}
 				} else {
-					// advance only the travel time since the origin (big sim jumps must not
-					// let the train run before it materializes). While stopped, no travel
-					// time is consumed — the engine only re-checks the release condition,
-					// and on release the budget resets so the train resumes without a jump.
-					const travel = Math.max(0, simRef.current - st.originArr); // = sim (originArr 0)
-					if (st.stopped) {
-						advanceTrain(st, 0, ctx, plan.legs);
-						if (!st.stopped) st.time = travel; // absorb signal/junction stop time on release
+					if (simRef.current < dueAt) {
+						st.spawned = false;
+						g?.setAttribute("visibility", "hidden");
+						return "";
+					}
+					if (admittedSimRef.current[ti] === undefined) {
+						if (edgeBlockOccupied(ti)) {
+							st.spawned = false;
+							g?.setAttribute("visibility", "hidden");
+							return "";
+						}
+						admittedSimRef.current[ti] = simRef.current;
+						spawnSimRef.current[ti] = simRef.current;
+						lastTickRef.current[ti] = simRef.current;
+					}
+					st.spawned = true;
+					if (RELATIVE_CLOCK) {
+						const spawnedAt =
+							spawnSimRef.current[ti] ??
+							admittedSimRef.current[ti] ??
+							dueAt;
+						const last = Math.max(
+							lastTickRef.current[ti] ?? spawnedAt,
+							spawnedAt,
+						);
+						if (st.stopped || st.done) {
+							advanceTrain(st, 0, ctx, plan.legs);
+							if (!st.stopped && !st.done)
+								lastTickRef.current[ti] = simRef.current;
+						} else if (simRef.current > last) {
+							const timeBefore = st.time;
+							advanceTrain(
+								st,
+								simRef.current - last,
+								ctx,
+								plan.legs,
+							);
+							const consumed = st.time - timeBefore;
+							lastTickRef.current[ti] = Math.min(
+								simRef.current,
+								last + consumed,
+							);
+						}
 					} else {
-						const delta = travel - st.time;
-						if (delta > 0 && !st.done)
-							advanceTrain(st, delta, ctx, plan.legs);
-						// st.time is advanced by the engine (movement + scheduled dwells)
+						const travel = Math.max(
+							0,
+							simRef.current - st.originArr,
+						);
+						if (st.stopped) {
+							advanceTrain(st, 0, ctx, plan.legs);
+							if (!st.stopped) st.time = travel;
+						} else {
+							const delta = travel - st.time;
+							if (delta > 0 && !st.done)
+								advanceTrain(st, delta, ctx, plan.legs);
+						}
 					}
 				}
 				// Signal-pass consumption: signals the train's leading edge crossed
@@ -2530,9 +2631,10 @@ export default function DispatchingTable({
 				// those too, pulling the marker back by the full front compensation
 				// at the boundary and then pushing it forward again — the one-cell
 				// "glitch" at JNG-E/JNG-W. `dwellsAt` is the single source of truth.
+				const frontCompensation =
+					MOVEMENT_DEFINITION.trainHalfLen - VISUAL_HALF_LEN;
 				const easeState = dwellEaseRef.current[ti] ?? { leg: -1, x: 0 };
 				let easeX: number | null = null;
-				const dwellStopIdx = st.leg - 1 + (st.approach ? 0 : 1);
 				const dwellsAt = (legIdx: number, arrival: number): boolean => {
 					const l = plan.legs[legIdx];
 					return (
@@ -2543,32 +2645,29 @@ export default function DispatchingTable({
 						st.time < l.departAt
 					);
 				};
-				const arrivedBeforeAnchor =
+				if (atPlatformDwell) {
+					easeX = renderLeg.waypointX;
+				} else if (
 					st.leg > 0 &&
-					st.actualArr[dwellStopIdx] != null &&
-					dwellsAt(st.leg, st.actualArr[dwellStopIdx]!);
-				if (arrivedBeforeAnchor) {
+					plan.legs[st.leg - 1]?.departAt !== undefined &&
+					!plan.legs[st.leg - 1]?.passThrough &&
+					Math.abs(st.x - plan.legs[st.leg - 1].waypointX) <
+						frontCompensation
+				) {
+					// Departing a dwell platform: ramp leadFactor from 0 -> 1 as engine leaves
 					easeX = plan.legs[st.leg - 1].waypointX;
-				} else if (easeState.leg === st.leg) {
-					// Keep the platform anchor for the rest of this leg. leadFactor below
-					// ramps from 0→1 over frontCompensation as the engine leaves, so the
-					// drawn marker advances one grid cell at a time instead of jumping
-					// two cells when the dwell ends.
-					easeX = easeState.x;
 				} else {
 					const expectedArr =
 						st.time +
 						Math.abs(renderLeg.waypointX - st.x) /
 							Math.max(1e-6, renderLeg.speed);
-					if (dwellsAt(st.leg + 1, expectedArr))
+					if (dwellsAt(st.leg, expectedArr))
 						easeX = renderLeg.waypointX;
 				}
 				dwellEaseRef.current[ti] =
 					easeX === null
 						? { leg: -1, x: 0 }
 						: { leg: st.leg, x: easeX };
-				const frontCompensation =
-					MOVEMENT_DEFINITION.trainHalfLen - VISUAL_HALF_LEN;
 				const leadFactor =
 					easeX === null || frontCompensation <= 0
 						? 1
@@ -2602,13 +2701,7 @@ export default function DispatchingTable({
 					// half-lengths are equal. Near a platform dwell the shift EASES to
 					// zero (leadFactor) so the marker glides onto the platform instead
 					// of jumping back a cell when the dwell starts.
-					const entryLeadRamp = isApproachingFromSnippet
-						? plan.start.dir === "left"
-							? Math.min(1, Math.max(0, (960 - st.x) / 96))
-							: Math.min(1, Math.max(0, (st.x - 32) / 96))
-						: 1;
-					const engineToVisualFront =
-						frontCompensation * leadFactor * entryLeadRamp;
+					const engineToVisualFront = frontCompensation * leadFactor;
 					const visualCenter =
 						st.x +
 						(st.dir === "right"
@@ -2912,10 +3005,8 @@ export default function DispatchingTable({
 					// ---- EAST-SIDE CORRIDOR (Klender / Bekasi) --------------------
 					// The mirror of MTR/POK: a WESTBOUND train arrives from Bekasi,
 					// runs right-to-left across the strip and hands over to the JNG
-					// east edge. Unlike the western snippets this is driven by the
-					// train's REAL Klender/Buaran times, carried on the boundary stop
-					// as metadata (see ScheduleStop.kld_arr). Trains with no KLD call
-					// are expresses: they use the FAST pair and never dwell.
+					// east edge. Driven at physical pace derived from timetable spacing,
+					// with dwells at Buaran and Klender.
 					const eastSnip = CORRIDOR_SNIPPETS.find(
 						(s) => s.side === "east" && s.eastRows,
 					);
@@ -2962,35 +3053,26 @@ export default function DispatchingTable({
 						const hasClearedSnippet =
 							admittedSimRef.current[ti] !== undefined &&
 							simRef.current > admittedSimRef.current[ti]! + 6;
+						const pastSnippetRun =
+							snippetPosRef.current[ti] === undefined &&
+							simRef.current > tBound + 6;
 
 						if (
 							simRef.current >= tSpawn &&
 							!hasClearedSnippet &&
+							!pastSnippetRun &&
 							(snippetPosRef.current[ti] !== undefined ||
 								simRef.current <= tBound + 6)
 						) {
 							sy = isLocal ? rows.localArrY : rows.fastArrY;
+							const pace = isLocal ? localPace : S;
 
-							if (
-								isLocal &&
-								simRef.current >= tBuaArr &&
-								simRef.current < tBuaDep
-							) {
-								sx = rows.buaX;
-								sDwelling = true;
-							} else if (
-								isLocal &&
-								simRef.current >= tKldArr &&
-								simRef.current < tKldDep
-							) {
-								sx = rows.kldX;
-								sDwelling = true;
-							} else {
-								let nominalX = eastSnip.entryX;
+							if (snippetPosRef.current[ti] === undefined) {
+								let initX = eastSnip.entryX;
+								let initDwellingUntil: number | undefined;
 								const t = simRef.current;
 								if (!isLocal) {
-									nominalX =
-										eastSnip.entryX - (t - tSpawn) * S;
+									initX = eastSnip.entryX - (t - tSpawn) * S;
 								} else if (t < tBuaArr) {
 									const p = Math.max(
 										0,
@@ -3000,9 +3082,12 @@ export default function DispatchingTable({
 												Math.max(1, tBuaArr - tSpawn),
 										),
 									);
-									nominalX =
+									initX =
 										eastSnip.entryX +
 										(rows.buaX - eastSnip.entryX) * p;
+								} else if (t < tBuaDep) {
+									initX = rows.buaX;
+									initDwellingUntil = tBuaDep;
 								} else if (t < tKldArr) {
 									const p = Math.max(
 										0,
@@ -3012,8 +3097,11 @@ export default function DispatchingTable({
 												Math.max(1, tKldArr - tBuaDep),
 										),
 									);
-									nominalX =
+									initX =
 										rows.buaX + (rows.kldX - rows.buaX) * p;
+								} else if (t < tKldDep) {
+									initX = rows.kldX;
+									initDwellingUntil = tKldDep;
 								} else {
 									const p = Math.max(
 										0,
@@ -3023,12 +3111,67 @@ export default function DispatchingTable({
 												Math.max(1, tBound - tKldDep),
 										),
 									);
-									nominalX =
+									initX =
 										rows.kldX +
 										(eastSnip.handoverX - rows.kldX) * p;
 								}
+								snippetPosRef.current[ti] = {
+									x: initX,
+									lastTime: simRef.current,
+									dwellingUntil: initDwellingUntil,
+								};
+							}
 
-								let targetX = nominalX;
+							const prev = snippetPosRef.current[ti]!;
+							const dt = Math.max(
+								0,
+								simRef.current - prev.lastTime,
+							);
+							prev.lastTime = simRef.current;
+
+							if (
+								prev.dwellingUntil !== undefined &&
+								simRef.current < prev.dwellingUntil
+							) {
+								sx = prev.x;
+								sDwelling = true;
+							} else {
+								if (
+									prev.dwellingUntil !== undefined &&
+									simRef.current >= prev.dwellingUntil
+								) {
+									prev.dwellingUntil = undefined;
+								}
+
+								let targetX = prev.x - dt * pace;
+
+								if (isLocal) {
+									if (
+										prev.x > rows.buaX &&
+										targetX <= rows.buaX
+									) {
+										targetX = rows.buaX;
+										sDwelling = true;
+										const dwellDur = Math.max(
+											15,
+											tBuaDep - tBuaArr,
+										);
+										prev.dwellingUntil =
+											simRef.current + dwellDur;
+									} else if (
+										prev.x > rows.kldX &&
+										targetX <= rows.kldX
+									) {
+										targetX = rows.kldX;
+										sDwelling = true;
+										const dwellDur = Math.max(
+											15,
+											tKldDep - tKldArr,
+										);
+										prev.dwellingUntil =
+											simRef.current + dwellDur;
+									}
+								}
 
 								const lineSignals = SIGNALS.filter(
 									(s) =>
@@ -3039,25 +3182,21 @@ export default function DispatchingTable({
 
 								for (const sig of lineSignals) {
 									const stopX = sig.x + KLD_TRAIN_HALF_LEN;
-									if (targetX < stopX) {
+									if (prev.x >= stopX && targetX < stopX) {
 										const aspect = aspectOf(
 											sig.id,
 											undefined,
 											ti,
 										);
 										if (aspect === "red") {
-											targetX = Math.max(targetX, stopX);
+											targetX = stopX;
 											break;
 										}
 									}
 								}
 								sx = targetX;
+								prev.x = sx;
 							}
-
-							snippetPosRef.current[ti] = {
-								x: sx,
-								lastTime: simRef.current,
-							};
 
 							if (
 								sx >=
@@ -3194,131 +3333,122 @@ export default function DispatchingTable({
 							sy = isLocal ? rows.localDepY : rows.fastDepY;
 							sx = eastSnip.handoverX + (st.x - 960) * 0.5;
 							st.kldEntryTime = null;
+							snippetPosRef.current[ti] = {
+								x: sx,
+								lastTime: simRef.current,
+							};
 						} else if (st.spawned && (st.done || st.x > 960)) {
-							// PHASE 2 — the tail cleared JNG. Latch THIS sim second so
-							// the marker continues from KLD handoverX at track speed / schedule.
+							// PHASE 2 — the tail cleared JNG. Move across Klender strip at physical pace.
 							if (
 								st.kldEntryTime === null ||
 								st.kldEntryTime === undefined
 							) {
 								st.kldEntryTime = simRef.current;
 							}
-							const tEntry = st.kldEntryTime;
-							const dt = simRef.current - tEntry;
 							sy = isLocal ? rows.localDepY : rows.fastDepY;
+
+							if (snippetPosRef.current[ti] === undefined) {
+								snippetPosRef.current[ti] = {
+									x: eastSnip.handoverX + KLD_TRAIN_HALF_LEN,
+									lastTime: simRef.current,
+								};
+							}
+
+							const prev = snippetPosRef.current[ti]!;
+							const dt = Math.max(
+								0,
+								simRef.current - prev.lastTime,
+							);
+							prev.lastTime = simRef.current;
 
 							if (!isLocal) {
 								// Express: run across the fast strip to exit.
 								const runSpeed = S * 0.5;
-								sx =
-									eastSnip.handoverX +
-									KLD_TRAIN_HALF_LEN +
-									dt * runSpeed;
+								prev.x += dt * runSpeed;
+								sx = prev.x;
 								if (sx <= eastSnip.exitX + 32) {
 									showSnippet = true;
+								} else {
+									delete snippetPosRef.current[ti];
 								}
 							} else {
 								// Local: run to Klender, dwell, run to Buaran, dwell, run to exit.
-								const startX =
-									eastSnip.handoverX + KLD_TRAIN_HALF_LEN;
-								if (tKldArr > tEntry) {
-									if (simRef.current < tKldArr) {
-										const p = Math.max(
-											0,
-											Math.min(
-												1,
-												(simRef.current - tEntry) /
-													Math.max(
-														1,
-														tKldArr - tEntry,
-													),
-											),
-										);
-										sx = startX + (rows.kldX - startX) * p;
-										showSnippet = true;
-									} else if (simRef.current < tKldDep) {
-										sx = rows.kldX;
+								if (
+									prev.dwellingUntil !== undefined &&
+									simRef.current < prev.dwellingUntil
+								) {
+									sx = prev.x;
+									sDwelling = true;
+									showSnippet = true;
+								} else {
+									if (
+										prev.dwellingUntil !== undefined &&
+										simRef.current >= prev.dwellingUntil
+									) {
+										prev.dwellingUntil = undefined;
+									}
+
+									let targetX = prev.x + dt * localPace;
+
+									if (
+										prev.x < rows.kldX &&
+										targetX >= rows.kldX
+									) {
+										targetX = rows.kldX;
 										sDwelling = true;
-										showSnippet = true;
-									} else if (simRef.current < tBuaArr) {
-										const p = Math.max(
-											0,
-											Math.min(
-												1,
-												(simRef.current - tKldDep) /
-													Math.max(
-														1,
-														tBuaArr - tKldDep,
-													),
-											),
+										const dwellDur = Math.max(
+											15,
+											tKldDep - tKldArr,
 										);
-										sx =
-											rows.kldX +
-											(rows.buaX - rows.kldX) * p;
-										showSnippet = true;
-									} else if (simRef.current < tBuaDep) {
-										sx = rows.buaX;
+										prev.dwellingUntil =
+											simRef.current + dwellDur;
+									} else if (
+										prev.x < rows.buaX &&
+										targetX >= rows.buaX
+									) {
+										targetX = rows.buaX;
 										sDwelling = true;
-										showSnippet = true;
-									} else {
-										sx =
-											rows.buaX +
-											(simRef.current - tBuaDep) *
-												localPace;
-										if (sx <= eastSnip.exitX + 32) {
-											showSnippet = true;
+										const dwellDur = Math.max(
+											15,
+											tBuaDep - tBuaArr,
+										);
+										prev.dwellingUntil =
+											simRef.current + dwellDur;
+									}
+
+									// Eastbound automatic block signals
+									const lineSignals = SIGNALS.filter(
+										(s) =>
+											s.block &&
+											Math.abs(s.y - sy) < 10 &&
+											s.dir === "right",
+									).sort((a, b) => a.x - b.x);
+
+									for (const sig of lineSignals) {
+										const stopX =
+											sig.x - KLD_TRAIN_HALF_LEN;
+										if (
+											prev.x <= stopX &&
+											targetX > stopX
+										) {
+											const aspect = aspectOf(
+												sig.id,
+												undefined,
+												ti,
+											);
+											if (aspect === "red") {
+												targetX = stopX;
+												break;
+											}
 										}
 									}
-								} else {
-									const runToKld =
-										(rows.kldX - startX) / localPace;
-									const runKldToBua =
-										(rows.buaX - rows.kldX) / localPace;
-									const runBuaToExit =
-										(eastSnip.exitX - rows.buaX) /
-										localPace;
-									if (dt < runToKld) {
-										sx = startX + dt * localPace;
+
+									sx = targetX;
+									prev.x = sx;
+									if (sx <= eastSnip.exitX + 32) {
 										showSnippet = true;
-									} else if (dt < runToKld + dwell) {
-										sx = rows.kldX;
-										sDwelling = true;
-										showSnippet = true;
-									} else if (
-										dt <
-										runToKld + dwell + runKldToBua
-									) {
-										sx =
-											rows.kldX +
-											(dt - runToKld - dwell) * localPace;
-										showSnippet = true;
-									} else if (
-										dt <
-										runToKld + dwell + runKldToBua + dwell
-									) {
-										sx = rows.buaX;
-										sDwelling = true;
-										showSnippet = true;
-									} else if (
-										dt <
-										runToKld +
-											dwell +
-											runKldToBua +
-											dwell +
-											runBuaToExit +
-											10
-									) {
-										sx =
-											rows.buaX +
-											(dt -
-												runToKld -
-												dwell -
-												runKldToBua -
-												dwell) *
-												localPace;
-										if (sx <= eastSnip.exitX + 32) {
-											showSnippet = true;
-										}
+									} else {
+										delete snippetPosRef.current[ti];
 									}
 								}
 							}
