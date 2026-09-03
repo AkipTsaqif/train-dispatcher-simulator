@@ -357,7 +357,11 @@ const clockNear = (hms: string, reference: number): number => {
 	const raw = hmsToSeconds(hms);
 	const day = 24 * 60 * 60;
 	const baseDay = Math.floor(reference / day) * day;
-	const candidates = [baseDay + raw - day, baseDay + raw, baseDay + raw + day];
+	const candidates = [
+		baseDay + raw - day,
+		baseDay + raw,
+		baseDay + raw + day,
+	];
 	return candidates.reduce((best, value) =>
 		Math.abs(value - reference) < Math.abs(best - reference) ? value : best,
 	);
@@ -587,6 +591,7 @@ type SnippetTrainPosition = {
 	x: number;
 	y: number;
 	dir: Dir;
+	idx?: number;
 };
 
 type SignalAspectDependencies = {
@@ -704,13 +709,31 @@ const calculateSignalAspect = (
 
 	const huluRule = huluBlockRules[id];
 	if (huluRule) {
-		const occupied = (dependencies.snippetTrains ?? []).some(
+		let occupied = (dependencies.snippetTrains ?? []).some(
 			(t) =>
+				(selfIdx === undefined || t.idx !== selfIdx) &&
 				t.corridorId === huluRule.corridorId &&
 				t.dir === "right" &&
 				Math.abs(t.y - signal.lineY) < 10 &&
-				t.x >= signal.x - 32,
+				(id === "J102"
+					? t.x >= signal.x - 32 && t.x < 368 - 16
+					: t.x >= signal.x - 32),
 		);
+		if (!occupied && (id === "BM1" || id === "J101")) {
+			// A train waiting at or approaching the JNG home signal (NW1 on t1 / NW5 on t6)
+			// occupies the block section between the corridor exit signal and that home signal.
+			const entryX = id === "BM1" ? 112 : 160;
+			const entryY = id === "BM1" ? 496 : 336;
+			occupied = dependencies.trainStates.some(
+				(t) =>
+					(selfIdx === undefined || t.idx !== selfIdx) &&
+					t.spawned &&
+					!t.done &&
+					t.dir === "right" &&
+					t.y === entryY &&
+					t.x - dependencies.trainHalfLen < entryX,
+			);
+		}
 		if (occupied) return "red";
 		const nextAspect = calculateSignalAspect(
 			huluRule.nextSignalId,
@@ -761,19 +784,84 @@ const calculateSignalAspect = (
 		// Semi-automatic exit: clear while the train's LEADING edge is at
 		// most one 16-unit cell before the signal. The earlier centre-based
 		// threshold changed only after the 64-unit body had already passed it.
-		const approaching = corridorTrains.some(
-			(t) => {
-				if (t.dir !== "left" || Math.abs(t.y - signal.lineY) >= 10)
-					return false;
-				const leadingEdge = t.x - 32;
-				return (
-					leadingEdge > signal.x &&
-					leadingEdge <= signal.x + 16
-				);
-			},
-		);
+		const approaching = corridorTrains.some((t) => {
+			if (t.dir !== "left" || Math.abs(t.y - signal.lineY) >= 10)
+				return false;
+			const leadingEdge = t.x - 32;
+			return leadingEdge > signal.x && leadingEdge <= signal.x + 16;
+		});
 		return approaching ? "green" : "red";
 	}
+
+	// Klender / Bekasi snippet automatic block signals.
+	// All 22 signals are automatic blocks on the 4-track corridor (scale 1:2).
+	// t1 (Hulu local) and t3 (Hulu fast) run eastbound (->);
+	// t2 (Hilir local) and t4 (Hilir fast) run westbound (<-).
+	// In the westbound direction, K27 ties into home signal NE2, and K44 ties into NE4.
+	const kldNextSignalMap: Record<string, string> = {
+		K11: "K12",
+		K12: "K13",
+		K13: "K14",
+		K14: "K15",
+		K15: "K16",
+		K16: "K17",
+
+		K21: "K22",
+		K22: "K23",
+		K23: "K24",
+		K24: "K25",
+		K25: "K26",
+		K26: "K27",
+		K27: "NE2",
+
+		K31: "K32",
+		K32: "K33",
+		K33: "K34",
+
+		K41: "K42",
+		K42: "K43",
+		K43: "K44",
+		K44: "NE4",
+	};
+
+	if (/^K[1-4]\d$/.test(id) && section) {
+		let occupied = (dependencies.snippetTrains ?? []).some(
+			(t) =>
+				(selfIdx === undefined || t.idx !== selfIdx) &&
+				t.corridorId === "KLD" &&
+				Math.abs(t.y - signal.lineY) < 10 &&
+				t.x - 16 < section.hi &&
+				t.x + 16 > section.lo,
+		);
+		if (!occupied && (id === "K27" || id === "K44")) {
+			// A train waiting at or approaching the JNG home signal (NE2 on t2 / NE4 on t4)
+			// occupies the block section between the corridor exit signal and that home signal.
+			const entryX = id === "K27" ? 800 : 848;
+			const entryY = id === "K27" ? 464 : 400;
+			occupied = dependencies.trainStates.some(
+				(t) =>
+					(selfIdx === undefined || t.idx !== selfIdx) &&
+					t.spawned &&
+					!t.done &&
+					t.dir === "left" &&
+					t.y === entryY &&
+					t.x + dependencies.trainHalfLen > entryX,
+			);
+		}
+		if (occupied) return "red";
+		const nextSignalId = kldNextSignalMap[id];
+		if (nextSignalId) {
+			const nextAspect = calculateSignalAspect(
+				nextSignalId,
+				dependencies,
+				visited,
+				selfIdx,
+			);
+			return nextAspect === "red" ? "amber" : "green";
+		}
+		return "green";
+	}
+
 	if (signal.block) {
 		return nextId
 			? calculateSignalAspect(nextId, dependencies, visited, selfIdx) ===
@@ -1333,9 +1421,7 @@ export default function DispatchingTable({
 				!sig.ai &&
 				sig.dir === plan.start.dir &&
 				Math.abs(sig.y - plan.start.y) < 1e-6 &&
-				(plan.start.dir === "right"
-					? sig.x > entryX
-					: sig.x < entryX),
+				(plan.start.dir === "right" ? sig.x > entryX : sig.x < entryX),
 		);
 		return candidates.sort((a, b) =>
 			plan.start.dir === "right" ? a.x - b.x : b.x - a.x,
@@ -1373,9 +1459,7 @@ export default function DispatchingTable({
 					? other.x + MOVEMENT_DEFINITION.trainHalfLen
 					: other.x - MOVEMENT_DEFINITION.trainHalfLen;
 			const spawnSide =
-				other.dir === "left"
-					? other.x >= gate.x
-					: other.x <= gate.x;
+				other.dir === "left" ? other.x >= gate.x : other.x <= gate.x;
 			const tailNotClear =
 				other.dir === "left" ? rear >= gate.x : rear <= gate.x;
 			return spawnSide || (sameEntry && tailNotClear);
@@ -1420,17 +1504,17 @@ export default function DispatchingTable({
 	const snippetTrainTextRefs = useRef<(SVGTextElement | null)[]>([]);
 	const snippetTrainArrowRefs = useRef<(SVGPathElement | null)[]>([]);
 	const snippetTrainDefaultGeometryRef = useRef<
-		(
-			| {
-					rectX: string;
-					rectWidth: string;
-					arrowD: string;
-					fontSize: string;
-			  }
-			| null
-		)[]
+		({
+			rectX: string;
+			rectWidth: string;
+			arrowD: string;
+			fontSize: string;
+		} | null)[]
 	>([]);
 	const snippetTrainsRef = useRef<SnippetTrainPosition[]>([]);
+	const snippetPosRef = useRef<{
+		[ti: number]: { x: number; lastTime: number };
+	}>({});
 	const [occupancyTick, setOccupancyTick] = useState(0);
 	const trainSectionKeyRef = useRef("");
 	// Independent route reservations: created when the player clears a signal,
@@ -1724,6 +1808,7 @@ export default function DispatchingTable({
 		spawnSimRef.current = journeysList.map(() => undefined);
 		lastTickRef.current = journeysList.map(() => undefined);
 		admittedSimRef.current = journeysList.map(() => undefined);
+		snippetPosRef.current = {};
 		// pass 1 — place with meets holds OFF so every partner's crossing time is
 		// recorded; pass 2 re-places from scratch with the holds active, reading
 		// the pass-1 crossings (a held train must sit at the meet station even
@@ -1966,9 +2051,19 @@ export default function DispatchingTable({
 					g?.setAttribute("visibility", "hidden");
 					return "";
 				}
-				const isVisualEntering =
-					isApproachingFromSnippet && simRef.current < dueAt;
-				if (!isVisualEntering && admittedSimRef.current[ti] === undefined) {
+				const isDelayedByBlock =
+					admittedSimRef.current[ti] !== undefined
+						? admittedSimRef.current[ti]! > dueAt
+						: false;
+				const isVisualEntering = isApproachingFromSnippet
+					? isDelayedByBlock
+						? simRef.current < admittedSimRef.current[ti]! + 6
+						: simRef.current < dueAt
+					: false;
+				if (
+					!isVisualEntering &&
+					admittedSimRef.current[ti] === undefined
+				) {
 					if (edgeBlockOccupied(ti)) {
 						st.spawned = false;
 						g?.setAttribute("visibility", "hidden");
@@ -1978,10 +2073,21 @@ export default function DispatchingTable({
 					spawnSimRef.current[ti] = simRef.current;
 					lastTickRef.current[ti] = simRef.current;
 				}
+				if (isVisualEntering && edgeBlockOccupied(ti)) {
+					st.spawned = false;
+					g?.setAttribute("visibility", "hidden");
+					return "";
+				}
 				st.spawned = true;
 				if (isVisualEntering) {
 					// Position during visual entry handover (0..32 units)
-					const prog = Math.max(0, (simRef.current - (dueAt - 6)) / 6);
+					const vStart = isDelayedByBlock
+						? admittedSimRef.current[ti]!
+						: dueAt - 6;
+					const prog = Math.max(
+						0,
+						Math.min(1, (simRef.current - vStart) / 6),
+					);
 					if (plan.start.dir === "left") {
 						// Westbound entry from east: nose emerges at x=960 (canvas edge)
 						// and slides in over the 6 seconds before booked boundary arrival.
@@ -2003,7 +2109,9 @@ export default function DispatchingTable({
 					// therefore starts at its actual edge-admission time, which may be later
 					// than the booked boundary while the preceding tail clears the block.
 					const spawnedAt =
-						spawnSimRef.current[ti] ?? admittedSimRef.current[ti] ?? dueAt;
+						spawnSimRef.current[ti] ??
+						admittedSimRef.current[ti] ??
+						dueAt;
 					const last = Math.max(
 						lastTickRef.current[ti] ?? spawnedAt,
 						spawnedAt,
@@ -2196,7 +2304,7 @@ export default function DispatchingTable({
 										resolvedDuration: Math.round(
 											simRef.current - x.since,
 										),
-								  }
+									}
 								: x,
 						);
 					});
@@ -2761,18 +2869,23 @@ export default function DispatchingTable({
 					if (!sg || !srect) return;
 					const sarrow = snippetTrainArrowRefs.current[ti];
 					const stext = snippetTrainTextRefs.current[ti];
-					let defaultGeometry = snippetTrainDefaultGeometryRef.current[ti];
+					let defaultGeometry =
+						snippetTrainDefaultGeometryRef.current[ti];
 					if (!defaultGeometry && sarrow) {
 						defaultGeometry = {
-							rectX: srect.getAttribute("x") ?? String(-TRAIN_HALF_LEN),
+							rectX:
+								srect.getAttribute("x") ??
+								String(-TRAIN_HALF_LEN),
 							rectWidth:
-								srect.getAttribute("width") ?? String(2 * TRAIN_HALF_LEN),
+								srect.getAttribute("width") ??
+								String(2 * TRAIN_HALF_LEN),
 							arrowD: sarrow.getAttribute("d") ?? "",
 							fontSize:
 								stext?.getAttribute("font-size") ??
 								String(TRAIN_FONT_SIZE),
 						};
-						snippetTrainDefaultGeometryRef.current[ti] = defaultGeometry;
+						snippetTrainDefaultGeometryRef.current[ti] =
+							defaultGeometry;
 					}
 					const plan = j.plan;
 					const st = trainStatesRef.current[ti];
@@ -2837,59 +2950,141 @@ export default function DispatchingTable({
 							S,
 							(rows.buaX - rows.kldX) / buaToKldSeconds,
 						);
-						const runInToBua = (eastSnip.entryX - rows.buaX) / localPace;
+						const runInToBua =
+							(eastSnip.entryX - rows.buaX) / localPace;
 						const tSpawn = isLocal
 							? tBuaArr - runInToBua
-							: tBound - (eastSnip.entryX - eastSnip.handoverX) / S;
+							: tBound -
+								(eastSnip.entryX - eastSnip.handoverX) / S;
+
+						// A train is eligible for snippet simulation if it has spawned at entryX
+						// and has not yet cleared the handover window into JNG.
+						const hasClearedSnippet =
+							admittedSimRef.current[ti] !== undefined &&
+							simRef.current > admittedSimRef.current[ti]! + 6;
 
 						if (
 							simRef.current >= tSpawn &&
-							simRef.current <= tBound + 6
+							!hasClearedSnippet &&
+							(snippetPosRef.current[ti] !== undefined ||
+								simRef.current <= tBound + 6)
 						) {
-							showSnippet = true;
 							sy = isLocal ? rows.localArrY : rows.fastArrY;
-							const t = simRef.current;
-							if (!isLocal) {
-								// Express: constant-speed run across the strip, no dwells.
-								sx = eastSnip.entryX - (t - tSpawn) * S;
-							} else if (t < tBuaArr) {
-								const p = Math.max(
-									0,
-									Math.min(1, (t - tSpawn) / Math.max(1, tBuaArr - tSpawn)),
-								);
-								sx = eastSnip.entryX + (rows.buaX - eastSnip.entryX) * p;
-							} else if (t < tBuaDep) {
+
+							if (
+								isLocal &&
+								simRef.current >= tBuaArr &&
+								simRef.current < tBuaDep
+							) {
 								sx = rows.buaX;
 								sDwelling = true;
-							} else if (t < tKldArr) {
-								const p = Math.max(
-									0,
-									Math.min(1, (t - tBuaDep) / Math.max(1, tKldArr - tBuaDep)),
-								);
-								sx = rows.buaX + (rows.kldX - rows.buaX) * p;
-							} else if (t < tKldDep) {
+							} else if (
+								isLocal &&
+								simRef.current >= tKldArr &&
+								simRef.current < tKldDep
+							) {
 								sx = rows.kldX;
 								sDwelling = true;
 							} else {
-								// Final leg: Klender -> handover edge (x=448). Reaches
-								// handoverX at tBound, then clears into the clip over 6s.
-								const p = Math.max(
-									0,
-									Math.min(1, (t - tKldDep) / Math.max(1, tBound - tKldDep)),
-								);
-								sx = rows.kldX + (eastSnip.handoverX - rows.kldX) * p;
+								let nominalX = eastSnip.entryX;
+								const t = simRef.current;
+								if (!isLocal) {
+									nominalX =
+										eastSnip.entryX - (t - tSpawn) * S;
+								} else if (t < tBuaArr) {
+									const p = Math.max(
+										0,
+										Math.min(
+											1,
+											(t - tSpawn) /
+												Math.max(1, tBuaArr - tSpawn),
+										),
+									);
+									nominalX =
+										eastSnip.entryX +
+										(rows.buaX - eastSnip.entryX) * p;
+								} else if (t < tKldArr) {
+									const p = Math.max(
+										0,
+										Math.min(
+											1,
+											(t - tBuaDep) /
+												Math.max(1, tKldArr - tBuaDep),
+										),
+									);
+									nominalX =
+										rows.buaX + (rows.kldX - rows.buaX) * p;
+								} else {
+									const p = Math.max(
+										0,
+										Math.min(
+											1,
+											(t - tKldDep) /
+												Math.max(1, tBound - tKldDep),
+										),
+									);
+									nominalX =
+										rows.kldX +
+										(eastSnip.handoverX - rows.kldX) * p;
+								}
+
+								let targetX = nominalX;
+
+								const lineSignals = SIGNALS.filter(
+									(s) =>
+										s.block &&
+										Math.abs(s.y - sy) < 10 &&
+										s.dir === "left",
+								).sort((a, b) => b.x - a.x);
+
+								for (const sig of lineSignals) {
+									const stopX = sig.x + KLD_TRAIN_HALF_LEN;
+									if (targetX < stopX) {
+										const aspect = aspectOf(
+											sig.id,
+											undefined,
+											ti,
+										);
+										if (aspect === "red") {
+											targetX = Math.max(targetX, stopX);
+											break;
+										}
+									}
+								}
+								sx = targetX;
 							}
+
+							snippetPosRef.current[ti] = {
+								x: sx,
+								lastTime: simRef.current,
+							};
+
+							if (
+								sx >=
+								eastSnip.handoverX - KLD_TRAIN_HALF_LEN - 16
+							) {
+								showSnippet = true;
+							} else {
+								delete snippetPosRef.current[ti];
+							}
+						} else {
+							delete snippetPosRef.current[ti];
+						}
+
+						if (showSnippet) {
 							snippetTrains.push({
 								corridorId: "KLD",
 								x: sx,
 								y: sy,
 								dir: "left",
+								idx: ti,
 							});
 							const snappedX = sDwelling
 								? sx
-								: t < tBound - 6
+								: simRef.current < tBound - 6
 									? Math.max(
-											eastSnip.handoverX + KLD_TRAIN_HALF_LEN,
+											eastSnip.handoverX +
+												KLD_TRAIN_HALF_LEN,
 											8 + Math.round((sx - 8) / 16) * 16,
 										)
 									: 8 + Math.round((sx - 8) / 16) * 16;
@@ -2902,22 +3097,273 @@ export default function DispatchingTable({
 							// body from 4 cells (64u) to 2 cells (32u), and shrink the train
 							// number to match — the full-size label read as oversized on
 							// the half-length body. Height and controlScale stay the same.
-							const authoredHalf = KLD_TRAIN_HALF_LEN / CONTROL_SCALE;
+							const authoredHalf =
+								KLD_TRAIN_HALF_LEN / CONTROL_SCALE;
 							srect.setAttribute("x", String(-authoredHalf));
-							srect.setAttribute("width", String(2 * authoredHalf));
+							srect.setAttribute(
+								"width",
+								String(2 * authoredHalf),
+							);
 							if (sarrow)
 								sarrow.setAttribute(
 									"d",
 									arrowLeft(authoredHalf, TRAIN_ARROW_SCALE),
 								);
 							if (stext) {
-								const kldFontSize = KLD_TRAIN_FONT_SIZE / CONTROL_SCALE;
-								stext.setAttribute("font-size", String(kldFontSize));
-								stext.setAttribute("y", String(kldFontSize / 3));
+								const kldFontSize =
+									KLD_TRAIN_FONT_SIZE / CONTROL_SCALE;
+								stext.setAttribute(
+									"font-size",
+									String(kldFontSize),
+								);
+								stext.setAttribute(
+									"y",
+									String(kldFontSize / 3),
+								);
 							}
 							// Clip the UNTRANSFORMED wrapper, not this translated
 							// marker. Otherwise SVG interprets the global clip rect in
 							// marker-local coordinates and silently clips the whole train.
+							sg.removeAttribute("clip-path");
+							sg.parentElement?.setAttribute(
+								"clip-path",
+								"url(#snippet-clip-KLD)",
+							);
+							sg.setAttribute("data-snippet-corridor", "KLD");
+							const cFill = sDwelling ? "#86efac" : "#bfdbfe";
+							const cStroke = sDwelling ? "#16a34a" : "#2563eb";
+							if (srect.getAttribute("fill") !== cFill)
+								srect.setAttribute("fill", cFill);
+							if (srect.getAttribute("stroke") !== cStroke)
+								srect.setAttribute("stroke", cStroke);
+							return;
+						}
+					}
+
+					// ---- EAST-SIDE CORRIDOR DEPARTURE (JNG -> Klender / Bekasi) ----
+					// An EASTBOUND train departs JNG (e.g. 5022C on t1), runs past the
+					// east track edge (x=960), and continues into Klender snippet at
+					// x=448 (beside K11 on local t1 / K31 on fast t3), running left-to-right.
+					if (eastSnip?.eastRows && eastbound && !showSnippet) {
+						const rows = eastSnip.eastRows;
+						const bStop =
+							j.train.stops.find(
+								(s) =>
+									s.kld_arr !== undefined &&
+									s.bua_arr !== undefined,
+							) ??
+							j.train.stops.find((s) =>
+								s.trackmark?.startsWith("JNG-"),
+							);
+						const isLocal =
+							bStop?.kld_arr !== undefined &&
+							bStop.kld_dep !== undefined &&
+							bStop.bua_arr !== undefined &&
+							bStop.bua_dep !== undefined;
+						const S = MTR_SPEED_U_PER_S;
+						const tKldArr = isLocal
+							? clockNear(bStop.kld_arr!, simRef.current)
+							: 0;
+						const tKldDep = isLocal
+							? clockNear(bStop.kld_dep!, tKldArr)
+							: 0;
+						const tBuaArr = isLocal
+							? clockNear(bStop.bua_arr!, tKldDep)
+							: 0;
+						const tBuaDep = isLocal
+							? clockNear(bStop.bua_dep!, tBuaArr)
+							: 0;
+
+						const buaToKldSeconds = Math.max(30, tBuaArr - tKldDep);
+						const localPace = Math.min(
+							S,
+							(rows.buaX - rows.kldX) / buaToKldSeconds,
+						);
+
+						const inHandover =
+							st.spawned &&
+							!st.done &&
+							st.x >= 928 &&
+							st.x <= 992;
+
+						if (inHandover) {
+							// PHASE 1 — physical handover. The snippet marker emerges at
+							// KLD west edge (x=448, beside K11/K31) as the real train
+							// reaches JNG east edge (x=960).
+							showSnippet = true;
+							sy = isLocal ? rows.localDepY : rows.fastDepY;
+							sx = eastSnip.handoverX + (st.x - 960) * 0.5;
+							st.kldEntryTime = null;
+						} else if (st.spawned && (st.done || st.x > 960)) {
+							// PHASE 2 — the tail cleared JNG. Latch THIS sim second so
+							// the marker continues from KLD handoverX at track speed / schedule.
+							if (
+								st.kldEntryTime === null ||
+								st.kldEntryTime === undefined
+							) {
+								st.kldEntryTime = simRef.current;
+							}
+							const tEntry = st.kldEntryTime;
+							const dt = simRef.current - tEntry;
+							sy = isLocal ? rows.localDepY : rows.fastDepY;
+
+							if (!isLocal) {
+								// Express: run across the fast strip to exit.
+								const runSpeed = S * 0.5;
+								sx =
+									eastSnip.handoverX +
+									KLD_TRAIN_HALF_LEN +
+									dt * runSpeed;
+								if (sx <= eastSnip.exitX + 32) {
+									showSnippet = true;
+								}
+							} else {
+								// Local: run to Klender, dwell, run to Buaran, dwell, run to exit.
+								const startX =
+									eastSnip.handoverX + KLD_TRAIN_HALF_LEN;
+								if (tKldArr > tEntry) {
+									if (simRef.current < tKldArr) {
+										const p = Math.max(
+											0,
+											Math.min(
+												1,
+												(simRef.current - tEntry) /
+													Math.max(
+														1,
+														tKldArr - tEntry,
+													),
+											),
+										);
+										sx = startX + (rows.kldX - startX) * p;
+										showSnippet = true;
+									} else if (simRef.current < tKldDep) {
+										sx = rows.kldX;
+										sDwelling = true;
+										showSnippet = true;
+									} else if (simRef.current < tBuaArr) {
+										const p = Math.max(
+											0,
+											Math.min(
+												1,
+												(simRef.current - tKldDep) /
+													Math.max(
+														1,
+														tBuaArr - tKldDep,
+													),
+											),
+										);
+										sx =
+											rows.kldX +
+											(rows.buaX - rows.kldX) * p;
+										showSnippet = true;
+									} else if (simRef.current < tBuaDep) {
+										sx = rows.buaX;
+										sDwelling = true;
+										showSnippet = true;
+									} else {
+										sx =
+											rows.buaX +
+											(simRef.current - tBuaDep) *
+												localPace;
+										if (sx <= eastSnip.exitX + 32) {
+											showSnippet = true;
+										}
+									}
+								} else {
+									const runToKld =
+										(rows.kldX - startX) / localPace;
+									const runKldToBua =
+										(rows.buaX - rows.kldX) / localPace;
+									const runBuaToExit =
+										(eastSnip.exitX - rows.buaX) /
+										localPace;
+									if (dt < runToKld) {
+										sx = startX + dt * localPace;
+										showSnippet = true;
+									} else if (dt < runToKld + dwell) {
+										sx = rows.kldX;
+										sDwelling = true;
+										showSnippet = true;
+									} else if (
+										dt <
+										runToKld + dwell + runKldToBua
+									) {
+										sx =
+											rows.kldX +
+											(dt - runToKld - dwell) * localPace;
+										showSnippet = true;
+									} else if (
+										dt <
+										runToKld + dwell + runKldToBua + dwell
+									) {
+										sx = rows.buaX;
+										sDwelling = true;
+										showSnippet = true;
+									} else if (
+										dt <
+										runToKld +
+											dwell +
+											runKldToBua +
+											dwell +
+											runBuaToExit +
+											10
+									) {
+										sx =
+											rows.buaX +
+											(dt -
+												runToKld -
+												dwell -
+												runKldToBua -
+												dwell) *
+												localPace;
+										if (sx <= eastSnip.exitX + 32) {
+											showSnippet = true;
+										}
+									}
+								}
+							}
+						}
+
+						if (showSnippet) {
+							snippetTrains.push({
+								corridorId: "KLD",
+								x: sx,
+								y: sy,
+								dir: "right",
+								idx: ti,
+							});
+							const snappedX = sDwelling
+								? sx
+								: 8 + Math.round((sx - 8) / 16) * 16;
+							sg.setAttribute("visibility", "visible");
+							sg.setAttribute(
+								"transform",
+								`translate(${snappedX}, ${sy}) scale(${CONTROL_SCALE})`,
+							);
+							const authoredHalf =
+								KLD_TRAIN_HALF_LEN / CONTROL_SCALE;
+							srect.setAttribute("x", String(-authoredHalf));
+							srect.setAttribute(
+								"width",
+								String(2 * authoredHalf),
+							);
+							if (sarrow)
+								sarrow.setAttribute(
+									"d",
+									arrowRight(authoredHalf, TRAIN_ARROW_SCALE),
+								);
+							if (stext) {
+								const kldFontSize =
+									KLD_TRAIN_FONT_SIZE / CONTROL_SCALE;
+								stext.setAttribute(
+									"font-size",
+									String(kldFontSize),
+								);
+								stext.setAttribute(
+									"y",
+									String(kldFontSize / 3),
+								);
+							}
 							sg.removeAttribute("clip-path");
 							sg.parentElement?.setAttribute(
 								"clip-path",
@@ -2968,14 +3414,29 @@ export default function DispatchingTable({
 							} else {
 								sx =
 									snip.platformX +
-									(simRef.current - tDep) *
-										MTR_SPEED_U_PER_S;
+									(simRef.current - tDep) * MTR_SPEED_U_PER_S;
+							}
+							if (
+								snip.id === "MTR" &&
+								!st.spawned &&
+								sx >= 128 &&
+								aspectOf("BM1") === "red"
+							) {
+								sx = Math.min(sx, 128);
+							} else if (
+								snip.id === "POK" &&
+								!st.spawned &&
+								sx >= 336 &&
+								aspectOf("J101") === "red"
+							) {
+								sx = Math.min(sx, 336);
 							}
 							snippetTrains.push({
 								corridorId: snip.id,
 								x: sx,
 								y: sy,
 								dir: "right",
+								idx: ti,
 							});
 						}
 					} else if (snip) {
@@ -2996,7 +3457,10 @@ export default function DispatchingTable({
 
 						if (inScheduleWindow) {
 							const inHandover =
-								st.spawned && !st.done && st.x <= 64 && st.x > 0;
+								st.spawned &&
+								!st.done &&
+								st.x <= 64 &&
+								st.x > 0;
 							if (inHandover) {
 								// PHASE 1 — physical handover. The snippet marker is
 								// rigidly bound to the real train: cells lost on JNG
@@ -3042,6 +3506,7 @@ export default function DispatchingTable({
 									x: sx,
 									y: sy,
 									dir: "left",
+									idx: ti,
 								});
 							}
 						}
@@ -3057,13 +3522,25 @@ export default function DispatchingTable({
 						// same DOM marker on the 2-cell KLD approach.
 						if (defaultGeometry) {
 							srect.setAttribute("x", defaultGeometry.rectX);
-							srect.setAttribute("width", defaultGeometry.rectWidth);
-							if (sarrow) sarrow.setAttribute("d", defaultGeometry.arrowD);
+							srect.setAttribute(
+								"width",
+								defaultGeometry.rectWidth,
+							);
+							if (sarrow)
+								sarrow.setAttribute(
+									"d",
+									defaultGeometry.arrowD,
+								);
 							if (stext) {
-								stext.setAttribute("font-size", defaultGeometry.fontSize);
+								stext.setAttribute(
+									"font-size",
+									defaultGeometry.fontSize,
+								);
 								stext.setAttribute(
 									"y",
-									String(Number(defaultGeometry.fontSize) / 3),
+									String(
+										Number(defaultGeometry.fontSize) / 3,
+									),
 								);
 							}
 						}
@@ -3098,9 +3575,27 @@ export default function DispatchingTable({
 				});
 			}
 			snippetTrainsRef.current = snippetTrains;
-			const snippetKey = snippetTrains
-				.map((t) => `${t.corridorId}:${t.dir}:${Math.round(t.x / 16)}`)
-				.join(";");
+			const snippetSections = snippetTrains.flatMap((t) => {
+				if (t.corridorId === "KLD") {
+					return SIGNAL_SECTIONS.filter(
+						(s) =>
+							/^K[1-4]\d$/.test(s.sig) &&
+							Math.abs(s.lineY - t.y) < 10 &&
+							t.x - 16 < s.hi &&
+							t.x + 16 > s.lo,
+					).map((s) => s.sig);
+				}
+				return [];
+			});
+			const snippetKey =
+				snippetTrains
+					.map(
+						(t) =>
+							`${t.corridorId}:${t.dir}:${Math.round(t.x / 8)}`,
+					)
+					.join(";") +
+				"#" +
+				snippetSections.join(",");
 			const key = sections.join(",") + "|" + snippetKey;
 			if (key !== trainSectionKeyRef.current) {
 				trainSectionKeyRef.current = key;
@@ -3638,12 +4133,12 @@ export default function DispatchingTable({
 					i === 0 && isBoundary
 						? s.dep_actual // previous station: departed on schedule
 						: i === train.stops.length - 1 && isBoundary
-						? actualSec != null
-							? fmtHms(actualSec)
-							: "—" // next station: not yet reached
-						: actualSec != null
-						? fmtHms(actualSec)
-						: "—",
+							? actualSec != null
+								? fmtHms(actualSec)
+								: "—" // next station: not yet reached
+							: actualSec != null
+								? fmtHms(actualSec)
+								: "—",
 				meets: s.meets,
 			};
 		});
@@ -3671,7 +4166,8 @@ export default function DispatchingTable({
 					train.stops[i].trackmark === "JNG-E" ||
 					train.stops[i].arr === train.stops[i].dep ||
 					train.stops[i].spawn_time !== undefined;
-				if (isBoundary && (i === 0 || i === train.stops.length - 1)) continue;
+				if (isBoundary && (i === 0 || i === train.stops.length - 1))
+					continue;
 				slip =
 					st.actualArr[i]! - (plan.schedArr[i] ?? train.stops[i].arr);
 				lastReached = i;
@@ -4978,61 +5474,63 @@ export default function DispatchingTable({
 					    per-row captions below, so including it here would stamp
 					    "ke Pondok Jati" across the middle of the Klender box. */}
 					{currentDispatch.map.id === "jatinegara" &&
-						CORRIDOR_SNIPPETS.filter((s) => s.side !== "east").map((snip) => (
-							<g
-								key={`snippet-frame-${snip.id}`}
-								className="select-none pointer-events-none"
-							>
-								<rect
-									x={snip.boxX}
-									y={MTR_BOX_TOP}
-									width={176}
-									height={MTR_BOX_HEIGHT}
-									rx={6}
-									fill="#f8fafc"
-									fillOpacity={0.7}
-									stroke="#cbd5e1"
-									strokeWidth={1}
-									strokeDasharray="4 2"
-									className="dark:fill-slate-900/60 dark:stroke-slate-700"
-								/>
-								<text
-									x={snip.boxX + 8}
-									y={MTR_BOX_TOP + 12}
-									fontSize={8.5}
-									fontWeight={700}
-									fill="#64748b"
-									letterSpacing={0.5}
-									className="dark:fill-slate-400"
+						CORRIDOR_SNIPPETS.filter((s) => s.side !== "east").map(
+							(snip) => (
+								<g
+									key={`snippet-frame-${snip.id}`}
+									className="select-none pointer-events-none"
 								>
-									{snip.label}
-								</text>
-								<text
-									x={snip.platformX}
-									y={MTR_HILIR_Y - 10}
-									textAnchor="middle"
-									fontSize={6.5}
-									fontWeight={600}
-									fill="#94a3b8"
-									className="dark:fill-slate-500"
-								>
-									{snip.id === "MTR"
-										? "← Hilir (ke Manggarai)"
-										: "← Hilir (ke Pondok Jati)"}
-								</text>
-								<text
-									x={snip.platformX}
-									y={MTR_HULU_Y + 18}
-									textAnchor="middle"
-									fontSize={6.5}
-									fontWeight={600}
-									fill="#94a3b8"
-									className="dark:fill-slate-500"
-								>
-									→ Hulu (ke Jatinegara)
-								</text>
-							</g>
-						))}
+									<rect
+										x={snip.boxX}
+										y={MTR_BOX_TOP}
+										width={176}
+										height={MTR_BOX_HEIGHT}
+										rx={6}
+										fill="#f8fafc"
+										fillOpacity={0.7}
+										stroke="#cbd5e1"
+										strokeWidth={1}
+										strokeDasharray="4 2"
+										className="dark:fill-slate-900/60 dark:stroke-slate-700"
+									/>
+									<text
+										x={snip.boxX + 8}
+										y={MTR_BOX_TOP + 12}
+										fontSize={8.5}
+										fontWeight={700}
+										fill="#64748b"
+										letterSpacing={0.5}
+										className="dark:fill-slate-400"
+									>
+										{snip.label}
+									</text>
+									<text
+										x={snip.platformX}
+										y={MTR_HILIR_Y - 10}
+										textAnchor="middle"
+										fontSize={6.5}
+										fontWeight={600}
+										fill="#94a3b8"
+										className="dark:fill-slate-500"
+									>
+										{snip.id === "MTR"
+											? "← Hilir (ke Manggarai)"
+											: "← Hilir (ke Pondok Jati)"}
+									</text>
+									<text
+										x={snip.platformX}
+										y={MTR_HULU_Y + 18}
+										textAnchor="middle"
+										fontSize={6.5}
+										fontWeight={600}
+										fill="#94a3b8"
+										className="dark:fill-slate-500"
+									>
+										→ Hulu (ke Jatinegara)
+									</text>
+								</g>
+							),
+						)}
 
 					{/* Klender / Bekasi strip — its own row band, 4 tracks, drawn at
 					    scale 1:2 (one drawn 16u cell stands for 2 real cells). */}
@@ -5041,7 +5539,12 @@ export default function DispatchingTable({
 							<rect
 								x={KLD_START_X - 8}
 								y={KLD_BOX_TOP}
-								width={KLD_END_X - KLD_START_X + 16 + KLD_CAPTION_GUTTER}
+								width={
+									KLD_END_X -
+									KLD_START_X +
+									16 +
+									KLD_CAPTION_GUTTER
+								}
 								height={KLD_BOX_HEIGHT}
 								rx={6}
 								fill="#f8fafc"
@@ -5973,7 +6476,8 @@ export default function DispatchingTable({
 										>
 											<span
 												className={`mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-													n.kind === "susul" || n.kind === "approach"
+													n.kind === "susul" ||
+													n.kind === "approach"
 														? "bg-amber-100 text-amber-700"
 														: n.kind === "countdown"
 															? "bg-blue-500 text-white"
@@ -5982,7 +6486,8 @@ export default function DispatchingTable({
 																: "bg-red-500 text-white"
 												}`}
 											>
-												{n.kind === "susul" || n.kind === "approach"
+												{n.kind === "susul" ||
+												n.kind === "approach"
 													? "!"
 													: n.resolved
 														? "✓"

@@ -8,20 +8,25 @@
 
 - **Active phase:** 10 (JNG schematic refinement & timetable ops) — **COMPLETE**.
 - **Current status:**
-  - JNG layout: 17 mains (13 JNG + 2 MTR + 2 POK), 56 switches (24 coupled pairs + 8 singles), 33 signals (26 core + 3 MTR + 4 POK), 6 island platforms (4 JNG + 1 MTR + 1 POK).
-  - Snippets: Matraman (cols B–L) and Pondok Jati (cols O–Y) bottom insets with automatic blocks, platform dwell, and seamless bidirectional handover.
-  - Full 24-hour timetable: 410 trains (192 EB, 218 WB) via `scripts/build-jng-schedule.ts`.
-  - Line assignment: POK westbound → t7/row 4; POK eastbound → t6/row 6; MTR westbound KRL → t2/row 14; MTR other westbound → t4/row 10; MTR eastbound → t1/row 16.
+    - JNG layout: 17 mains (13 JNG + 2 MTR + 2 POK), 56 switches (24 coupled pairs + 8 singles), 33 signals (26 core + 3 MTR + 4 POK), 6 island platforms (4 JNG + 1 MTR + 1 POK).
+    - Snippets: Matraman (cols B–L) and Pondok Jati (cols O–Y) bottom insets with automatic blocks, platform dwell, and seamless bidirectional handover.
+    - Full 24-hour timetable: 410 trains (192 EB, 218 WB) via `scripts/build-jng-schedule.ts`.
+    - Line assignment: POK westbound → t7/row 4; POK eastbound → t6/row 6; MTR westbound KRL → t2/row 14; MTR other westbound → t4/row 10; MTR eastbound → t1/row 16.
+
 ## Phase state
 
-| Phase | Title | State |
-|---|---|---|
-| 0–8 | Core engine (bearings, multi-main, loops, routes, flyovers, schematic, terminating) | **DONE** |
-| 9 | Piece assembly (PieceSet → assemblePieces → TopologyDefinition) | **DONE** |
-| 10 | JNG schematic refinement, real 24h timetable, articulated train presentation | **DONE** |
+| Phase | Title                                                                               | State    |
+| ----- | ----------------------------------------------------------------------------------- | -------- |
+| 0–8   | Core engine (bearings, multi-main, loops, routes, flyovers, schematic, terminating) | **DONE** |
+| 9     | Piece assembly (PieceSet → assemblePieces → TopologyDefinition)                     | **DONE** |
+| 10    | JNG schematic refinement, real 24h timetable, articulated train presentation        | **DONE** |
 
 ## Key decisions & recent changes
 
+- **2026-09-03:** Fixed following train hold and admission gating across corridor snippets: following trains (e.g. 5037B on t2) are held at red snippet block signals (`K27`, `K26`, etc.) while earlier trains occupy the block or hold at home signals (`NE2`, `NE4`, `NW1`, `NW5`). Gated visual entry and JNG spawn so followers do not appear on JNG until the entrance block is cleared. Added `selfIdx` scoping to snippet aspect queries so trains do not block themselves.
+- **2026-09-03:** Added Eastbound departures into Klender snippet. Eastbound trains exiting JNG at x=960 (e.g. 5022C on t1 local, expresses on t3 fast) now seamlessly hand over to the Klender snippet west edge (x=448, beside K11/K31) running left-to-right, dwell at Klender (584) and Buaran (728), and exit eastward past K17/K34.
+- **2026-09-02:** Extended boundary automatic block signals (`K27`/`K44` on Klender, `BM1` on Matraman, and `J101` on Pondok Jati) to check main JNG approach block occupancy into their respective home signals (`NE2`, `NE4`, `NW1`, `NW5`). A train holding before or waiting at a red home signal now keeps its boundary block signal red (and the preceding block signal amber), clearing only when the train crosses past the home signal.
+- **2026-09-02:** Wired Klender (KLD) corridor automatic block signals (`K11..K17`, `K21..K27`, `K31..K34`, `K41..K44`) to track snippet train occupancy and 3-aspect block progression. Westbound arrival signal `K27` ties into JNG home signal `NE2` (amber when NE2 is closed/red, green when NE2 is cleared to proceed), and `K44` ties into `NE4`. `snippetKey` in the simulation loop now indexes KLD occupied signal sections for instantaneous DOM signal aspect updates.
 - **2026-08-28:** Added Klender/Bekasi (KLD/BKS) double-double snippet on its OWN row band. Placed to the RIGHT of POK starting at col AB (x=448..784), 2-cell gap after the POK frame; frame top matches MTR/POK so all three snippet titles sit on row 19. RIGHT-HAND running like every other pair (westbound above its eastbound partner), fast pair on top and sharing the MTR/POK rows: t4 `<-` 576, t3 `->` 608, t2 `<-` 640, t1 `->` 672. Canvas back to `gridBottomY` 712 / viewBox 500. KLD is now WIRED to the engine as the first EAST-side corridor (mirror of MTR/POK: arrivals run right-to-left into the JNG east edge). `build-jng-schedule.ts` now carries each train's REAL Klender/Buaran times (`kld_arr`/`kld_dep`/`bua_arr`/`bua_dep`) on the boundary stop as METADATA — not routable stops, since the detached strip would resolve `stopXFor` against the journey's own line and dwell mid-diagram at x=584. 320 of 410 trains have them; the 90 without are expresses that use the fast pair and never dwell. 22 automatic blocks, KLD+BUA islands on the local (bottom) pair. SCALE 1:2 = a drawn 16u cell stands for 2 real cells, so local blocks are 48u apart (2 empty cells) and fast blocks 80u (4 empty); strip spans 32..368. An earlier revision drew 1 cell as 32u, which was a 2x EXPANSION (5 empty cells) - verifier now asserts the 48u/80u pitch. Also had the TWO LATTICES swapped: signals belong on cell CORNERS (0+16k, a block boundary) and platform stop points on cell CENTRES (8+16k, the marker lattice) - I had each on the other. Verifier now asserts both layout-wide, over all 55 signals and all 7 platforms. Drawn at 2× compression (1 cell = 32u): 21 cells = 672u, wider than MTR+POK combined, so it could not share their strip. Canvas grew `gridBottomY` 640→808, viewBox 428→596. Two subtleties: (a) cell CENTRES need 8-mod-16 (trains dwell square) but piece ENDPOINTS need 0-mod-16 (`verify:grid-ref`) — opposite parity at 2×, resolved by overhanging the track half a normal cell each end (32..720); (b) the 21u signal glyph exceeds the 32u row gap, so alternating up/down per row collides — local pair mounts UP, fast pair mounts DOWN so each pair points away from the other.
 - **2026-08-28:** Real KLD timetable timing: trains now take the real ~2 minutes between Buaran and Klender (1.37 u/s pace), dwell on their real timetable times (e.g. 5509B BUA 05:53:00-05:53:15, KLD 05:55:00-05:55:15), depart Klender at 05:55:15, and hand over to JNG at 05:56:54. The train reaches JNG platform around 05:58:30 and dwells with real-life 5-minute buffer until scheduled departure 06:04:00. Zero gap, zero stall.
 - **2026-08-28:** Fixed KLD corridor handover: now completely seamless like MTR/POK. Approach timing is anchored backwards from JNG boundary arrival (`tBound`); train departs Klender at `tBound - runKldToEdge`, reaching handover edge (x=448) at `tBound` exactly as JNG visual entry emerges at east track edge (x=960) over `tBound - 6s..tBound`. Zero gap, zero stall on K27, zero shrinkage.
