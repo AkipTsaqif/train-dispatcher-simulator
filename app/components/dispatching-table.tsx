@@ -2646,11 +2646,23 @@ export default function DispatchingTable({
 					);
 				};
 				if (atPlatformDwell) {
-					easeX = renderLeg.waypointX;
+					// The train is dwelling at the station it just ARRIVED at, not
+					// the one `renderLeg` (plan.legs[st.leg]) is heading toward next
+					// — `st.leg` was already incremented to the outgoing leg the
+					// instant the train reached the platform (see advanceTrain's
+					// waypoint handling), so `renderLeg.waypointX` is the NEXT
+					// station's x. The dwelled-at platform is the PREVIOUS leg's
+					// waypoint. Using the wrong (next-station) x here inflates
+					// leadFactor to 1, applying the full front compensation and
+					// pulling the drawn marker a whole cell back off the platform.
+					easeX =
+						st.leg > 0
+							? plan.legs[st.leg - 1].waypointX
+							: renderLeg.waypointX;
 				} else if (
 					st.leg > 0 &&
-					plan.legs[st.leg - 1]?.departAt !== undefined &&
-					!plan.legs[st.leg - 1]?.passThrough &&
+					plan.legs[st.leg]?.departAt !== undefined &&
+					!plan.legs[st.leg]?.passThrough &&
 					Math.abs(st.x - plan.legs[st.leg - 1].waypointX) <
 						frontCompensation
 				) {
@@ -2661,7 +2673,7 @@ export default function DispatchingTable({
 						st.time +
 						Math.abs(renderLeg.waypointX - st.x) /
 							Math.max(1e-6, renderLeg.speed);
-					if (dwellsAt(st.leg, expectedArr))
+					if (dwellsAt(st.leg + 1, expectedArr))
 						easeX = renderLeg.waypointX;
 				}
 				dwellEaseRef.current[ti] =

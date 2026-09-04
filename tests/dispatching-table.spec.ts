@@ -1200,6 +1200,22 @@ test.describe("dispatching table", () => {
 	});
 });
 
+test("jatinegara westbound train 5509B dwells at platform centre x=424 without pullback", async ({
+	page,
+}) => {
+	await page.goto("/jng?start=06:00:00&controls=1");
+	const marker = page.locator('[data-train="5509B"]');
+	await expect(marker).toBeVisible({ timeout: 10000 });
+	// At 06:00:00 5509B is actively dwelling at JNG platform (scheduled 06:03-06:04).
+	// Its visual marker must sit at platform centre x=424 (Y-AB island), not pulled
+	// back to 392 (W-Z) by misreading the next-leg waypoint during dwell easing.
+	await expect(marker).toHaveAttribute("data-x", "424");
+	await expect(marker).toHaveAttribute(
+		"transform",
+		/translate\(424,\s*464\)/,
+	);
+});
+
 test("shift-click routes the last signal to the clicked one and auto-sets points", async ({
 	page,
 }) => {
